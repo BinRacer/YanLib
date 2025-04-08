@@ -1,0 +1,74 @@
+cmake_minimum_required(VERSION 3.30)
+project(YanLib)
+
+set(CMAKE_CXX_STANDARD 20)
+
+add_library(YanLib STATIC
+        src/helper/convert.cpp
+        src/helper/convert.h
+        src/sync/mutex.cpp
+        src/sync/mutex.h
+        src/sync/fence.cpp
+        src/sync/fence.h
+        src/sync/rwlock.cpp
+        src/sync/rwlock.h
+        src/sync/semaphore.cpp
+        src/sync/semaphore.h
+        src/sync/event.cpp
+        src/sync/event.h
+        src/sync/timer.cpp
+        src/sync/timer.h
+        src/sync/barrier.cpp
+        src/sync/barrier.h
+        src/sync/condvar.cpp
+        src/sync/condvar.h
+        src/mem/mmap.cpp
+        src/mem/mmap.h
+        src/mem/allocate.cpp
+        src/mem/allocate.h
+        src/mem/heap.cpp
+        src/mem/heap.h
+        src/io/fs.cpp
+        src/io/fs.h
+        src/io/tcp_server.cpp
+        src/io/tcp_server.h
+        src/io/tcp_client.cpp
+        src/io/tcp_client.h
+        src/io/udp_server.cpp
+        src/io/udp_server.h
+        src/io/udp_client.cpp
+        src/io/udp_client.h
+        src/io/http.cpp
+        src/io/http.h
+        src/io/ftp.cpp
+        src/io/ftp.h
+        src/crypto/md5.cpp
+        src/crypto/md5.h
+        src/crypto/sha1.cpp
+        src/crypto/sha1.h
+        src/crypto/sha256.cpp
+        src/crypto/sha256.h
+        src/crypto/sha384.cpp
+        src/crypto/sha384.h
+        src/crypto/sha512.cpp
+        src/crypto/sha512.h
+)
+
+# 公共头文件目录（仅暴露给外部使用者）
+target_include_directories(YanLib
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+# 私有头文件目录（仅内部使用）
+target_include_directories(YanLib
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/Lib)
+
+add_executable(app main.cpp)
+
+target_link_libraries(app PRIVATE YanLib)

@@ -11,9 +11,17 @@
 #include "src/hash/sha384.h"
 #include "src/hash/sha512.h"
 #include "src/io/fs.h"
+#include "src/crypto/base64.h"
+#include "src/crypto/base16.h"
+#include "src/crypto/base32.h"
+#include "src/crypto/base58.h"
+#include "src/crypto/base62.h"
+#include "src/crypto/base85.h"
+#include "src/crypto/base91.h"
 
 namespace io = YanLib::io;
 namespace hash = YanLib::hash;
+namespace crypto = YanLib::crypto;
 
 int main(int argc, const char *argv[]) {
     SetConsoleOutputCP(CP_UTF8);
@@ -92,5 +100,62 @@ int main(int argc, const char *argv[]) {
     // std::cout << sha512_file2.hash_string() << std::endl;
     // hash::sha512 sha512_string("123456");
     // std::cout << sha512_string.hash_string() << std::endl;
+
+    // std::string input = "Hello World!你好世界";
+    // std::vector<unsigned char> input_vec(input.begin(), input.end());
+    // std::vector<unsigned char> encode_vec = crypto::base64::encode(input_vec);
+    // std::vector<unsigned char> decode_vec = crypto::base64::decode(encode_vec);
+    // std::for_each(encode_vec.begin(), encode_vec.end(), [](unsigned char c) {
+    //     std::cout << c;
+    // });
+    // std::cout << std::endl;
+    // std::for_each(decode_vec.begin(), decode_vec.end(), [](unsigned char c) {
+    //     std::cout << c;
+    // });
+    // std::cout << std::endl;
+
+    // std::string encode_string = crypto::base64::encode_string("Hello World!你好世界");
+    // std::string decode_string = crypto::base64::decode_string("SGVsbG8gV29ybGQh5L2g5aW95LiW55WM");
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // std::string encode_wstring = crypto::base64::encode_wstring(L"Hello World!");
+    // std::string decode_wstring = crypto::base64::decode_wstring(L"SGVsbG8gV29ybGQh");
+    // std::cout << encode_wstring << std::endl;
+    // std::cout << decode_wstring << std::endl;
+
+    // bool encode_file = crypto::base64::encode_file(
+    //     L"C:\\Users\\curry\\Downloads\\license.dat",
+    //     L"C:\\Users\\curry\\Downloads\\encode.txt"
+    // );
+    // bool decode_file = crypto::base64::decode_file(
+    //     L"C:\\Users\\curry\\Downloads\\encode.txt",
+    //     L"C:\\Users\\curry\\Downloads\\decode.txt");
+    // std::cout << std::boolalpha << encode_file << std::endl;
+    // std::cout << decode_file << std::endl;
+
+    std::string encode_string = crypto::base16::encode_string("Hello World!你好");
+    std::string decode_string = crypto::base16::decode_string(encode_string);
+    std::cout << encode_string << std::endl;
+    std::cout << decode_string << std::endl;
+    encode_string = crypto::base32::encode_string("Hello World!你好");
+    decode_string = crypto::base32::decode_string(encode_string);
+    std::cout << encode_string << std::endl;
+    std::cout << decode_string << std::endl;
+    encode_string = crypto::base58::encode_string("Hello World!你好");
+    decode_string = crypto::base58::decode_string(encode_string);
+    std::cout << encode_string << std::endl;
+    std::cout << decode_string << std::endl;
+    encode_string = crypto::base62::encode_string("Hello World!你好世界");
+    decode_string = crypto::base62::decode_string(encode_string);
+    std::cout << encode_string << std::endl;
+    std::cout << decode_string << std::endl;
+    encode_string = crypto::base85::encode_string("Hello World!你好世界");
+    decode_string = crypto::base85::decode_string(encode_string);
+    std::cout << encode_string << std::endl;
+    std::cout << decode_string << std::endl;
+    encode_string = crypto::base91::encode_string("Hello World!你好世界");
+    decode_string = crypto::base91::decode_string(encode_string);
+    std::cout << encode_string << std::endl;
+    std::cout << decode_string << std::endl;
     return 0;
 }

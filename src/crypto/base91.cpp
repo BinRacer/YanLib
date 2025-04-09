@@ -1,0 +1,106 @@
+//
+// Created by forkernel on 2025/4/9.
+//
+
+#include "base91.h"
+
+namespace YanLib::crypto {
+    std::vector<unsigned char> base91::encode(const std::vector<unsigned char> &data) {
+        constexpr unsigned char BASE91_CHARS[] =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                "abcdefghijklmnopqrstuvwxyz"
+                "0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
+        if (data.empty()) return {};
+        std::vector<unsigned char> encoded;
+        encoded.reserve(data.size());
+        unsigned int b = 0;
+        int n = 0;
+        for (auto byte: data) {
+            b |= static_cast<unsigned int>(byte) << n;
+            n += 8;
+
+            while (n >= 13) {
+                unsigned int v = b & 0x1FFF;
+                if (v > 88) {
+                    b >>= 13;
+                    n -= 13;
+                } else {
+                    v = b & 0x3FFF;
+                    b >>= 14;
+                    n -= 14;
+                }
+                encoded.push_back(BASE91_CHARS[v % 91]);
+                encoded.push_back(BASE91_CHARS[v / 91]);
+            }
+        }
+
+        if (n > 0) {
+            encoded.push_back(BASE91_CHARS[b % 91]);
+            if (n > 7 || b >= 91) {
+                encoded.push_back(BASE91_CHARS[b / 91]);
+            }
+        }
+
+        return encoded;
+    }
+
+    std::vector<unsigned char> base91::decode(const std::vector<unsigned char> &data) {
+        constexpr unsigned char BASE91_CHARS[] =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                "abcdefghijklmnopqrstuvwxyz"
+                "0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
+        if (data.empty()) return {};
+
+        std::vector<int> reverse_table(256, -1);
+        for (int i = 0; i < 91; ++i) {
+            reverse_table[BASE91_CHARS[i]] = i;
+        }
+
+        std::vector<unsigned char> decoded;
+        decoded.reserve(data.size() * 3 / 4);
+
+        uint32_t buffer = 0;
+        int bits_count = 0;
+        int value = -1;
+
+        for (auto c: data) {
+            const int idx = reverse_table[c];
+            if (idx == -1) continue;
+
+            if (value < 0) {
+                value = idx;
+            } else {
+                value += idx * 91;
+                buffer |= value << bits_count;
+                bits_count += (value & 0x1FFF) > 88 ? 13 : 14;
+
+                while (bits_count >= 8) {
+                    decoded.push_back(static_cast<unsigned char>(buffer & 0xFF));
+                    buffer >>= 8;
+                    bits_count -= 8;
+                }
+                value = -1;
+            }
+        }
+
+        if (value != -1) {
+            decoded.push_back(static_cast<unsigned char>(
+                (buffer | (value << bits_count)) & 0xFF));
+        }
+        return decoded;
+    }
+
+    std::string base91::encode_string(const std::string &data) {
+        std::vector<unsigned char> input(data.begin(), data.end());
+        std::vector<unsigned char> encoded = encode(input);
+        std::string result(encoded.begin(), encoded.end());
+        return result;
+    }
+
+    std::string base91::decode_string(const std::string &data) {
+        std::vector<unsigned char> input(data.begin(), data.end());
+        std::vector<unsigned char> decoded = decode(input);
+        std::string result(decoded.begin(), decoded.end());
+        return result;
+    }
+}

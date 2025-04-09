@@ -52,6 +52,20 @@ add_library(YanLib STATIC
         src/hash/sha384.h
         src/hash/sha512.cpp
         src/hash/sha512.h
+        src/crypto/base16.cpp
+        src/crypto/base16.h
+        src/crypto/base32.cpp
+        src/crypto/base32.h
+        src/crypto/base58.cpp
+        src/crypto/base58.h
+        src/crypto/base62.cpp
+        src/crypto/base62.h
+        src/crypto/base64.cpp
+        src/crypto/base64.h
+        src/crypto/base85.cpp
+        src/crypto/base85.h
+        src/crypto/base91.cpp
+        src/crypto/base91.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

@@ -1,0 +1,96 @@
+//
+// Created by forkernel on 2025/4/9.
+//
+
+#include "base58.h"
+
+namespace YanLib::crypto {
+    std::vector<unsigned char> base58::encode(const std::vector<unsigned char> &data) {
+        constexpr unsigned char BASE58_CHARS[] =
+                "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        if (data.empty()) return {};
+        size_t leading_zeros = 0;
+        while (leading_zeros < data.size() && data[leading_zeros] == 0) {
+            ++leading_zeros;
+        }
+        std::vector<int> digits;
+        for (const unsigned char byte: data) {
+            int carry = byte;
+            for (auto &digit: digits) {
+                carry += digit * 256;
+                digit = carry % 58;
+                carry /= 58;
+            }
+            while (carry > 0) {
+                digits.push_back(carry % 58);
+                carry /= 58;
+            }
+        }
+        std::vector<unsigned char> result(leading_zeros, '1');
+        for (auto it = digits.rbegin(); it != digits.rend(); ++it) {
+            result.push_back(BASE58_CHARS[*it]);
+        }
+        return result;
+    }
+
+    std::vector<unsigned char> base58::decode(const std::vector<unsigned char> &data) {
+        static const std::vector<int> table = []() {
+            std::vector<int> t(256, -1);
+            constexpr unsigned char BASE58_CHARS[] =
+                    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+            for (int i = 0; i < 58; ++i) {
+                t[BASE58_CHARS[i]] = i;
+            }
+            return t;
+        }();
+
+        if (data.empty()) return {};
+
+        size_t leading_ones = 0;
+        while (leading_ones < data.size() && data[leading_ones] == '1') {
+            ++leading_ones;
+        }
+
+        const size_t max_bytes = (data.size() - leading_ones) * 138 / 100 + 1;
+        std::vector<unsigned char> bytes;
+        bytes.reserve(max_bytes);
+
+        for (size_t i = leading_ones; i < data.size(); ++i) {
+            const unsigned char c = data[i];
+            const int pos = table[c];
+            if (pos == -1) return {};
+
+            int carry = pos;
+            for (auto &byte: bytes) {
+                carry += static_cast<int>(byte) * 58;
+                byte = carry % 256;
+                carry /= 256;
+            }
+
+            while (carry > 0) {
+                bytes.push_back(carry % 256);
+                carry /= 256;
+            }
+        }
+
+        std::vector<unsigned char> result;
+        result.reserve(leading_ones + bytes.size());
+        result.insert(result.end(), leading_ones, 0x00);
+        result.insert(result.end(), bytes.rbegin(), bytes.rend());
+        return result;
+    }
+
+    std::string base58::encode_string(const std::string &data) {
+        std::vector<unsigned char> input(data.begin(), data.end());
+        std::vector<unsigned char> encoded = encode(input);
+        std::string result(encoded.begin(), encoded.end());
+        return result;
+    }
+
+    std::string base58::decode_string(const std::string &data) {
+        std::vector<unsigned char> input(data.begin(), data.end());
+        std::vector<unsigned char> decoded = decode(input);
+        std::string result(decoded.begin(), decoded.end());
+        return result;
+    }
+}

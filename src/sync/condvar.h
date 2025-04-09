@@ -6,80 +6,78 @@
 #define CONDVAR_H
 #include <Windows.h>
 
-namespace YanLib {
-    namespace sync {
-        class condVarCS {
-        private:
-            CONDITION_VARIABLE condition_variable{};
-            CRITICAL_SECTION critical_section{};
+namespace YanLib::sync {
+    class condVarCS {
+    private:
+        CONDITION_VARIABLE condition_variable{};
+        CRITICAL_SECTION critical_section{};
 
-        public:
-            condVarCS(const condVarCS &other) = delete;
+    public:
+        condVarCS(const condVarCS &other) = delete;
 
-            condVarCS(condVarCS &&other) = delete;
+        condVarCS(condVarCS &&other) = delete;
 
-            condVarCS &operator=(const condVarCS &other) = delete;
+        condVarCS &operator=(const condVarCS &other) = delete;
 
-            condVarCS &operator=(condVarCS &&other) = delete;
+        condVarCS &operator=(condVarCS &&other) = delete;
 
-            condVarCS();
+        condVarCS();
 
-            ~condVarCS();
+        ~condVarCS();
 
-            void lock();
+        void lock();
 
-            BOOL try_lock();
+        BOOL try_lock();
 
-            void unlock();
+        void unlock();
 
-            bool sleep(DWORD dwMilliseconds = INFINITE);
+        bool sleep(DWORD dwMilliseconds = INFINITE);
 
-            void wake();
+        void wake();
 
-            void wake_all();
+        void wake_all();
 
-            DWORD err_code() const;
-        };
-    }
+        DWORD err_code() const;
+    };
+}
 
-    namespace sync {
-        class condVarSRW {
-        private:
-            CONDITION_VARIABLE condition_variable{};
-            SRWLOCK rw_lock{};
+namespace sync {
+    class condVarSRW {
+    private:
+        CONDITION_VARIABLE condition_variable{};
+        SRWLOCK rw_lock{};
 
-        public:
-            condVarSRW(const condVarSRW &other) = delete;
+    public:
+        condVarSRW(const condVarSRW &other) = delete;
 
-            condVarSRW(condVarSRW &&other) noexcept = delete;
+        condVarSRW(condVarSRW &&other) noexcept = delete;
 
-            condVarSRW &operator=(const condVarSRW &other) = delete;
+        condVarSRW &operator=(const condVarSRW &other) = delete;
 
-            condVarSRW &operator=(condVarSRW &&other) noexcept = delete;
+        condVarSRW &operator=(condVarSRW &&other) noexcept = delete;
 
-            condVarSRW();
+        condVarSRW();
 
-            ~condVarSRW();
+        ~condVarSRW();
 
-            void read_lock();
+        void read_lock();
 
-            BOOLEAN try_read_lock();
+        BOOLEAN try_read_lock();
 
-            void read_unlock();
+        void read_unlock();
 
-            void write_lock();
+        void write_lock();
 
-            BOOLEAN try_write_lock();
+        BOOLEAN try_write_lock();
 
-            void write_unlock();
+        void write_unlock();
 
-            bool sleep(DWORD dwMilliseconds = INFINITE,
-                       ULONG Flags = CONDITION_VARIABLE_LOCKMODE_SHARED);
+        bool sleep(DWORD dwMilliseconds = INFINITE,
+                   ULONG Flags = CONDITION_VARIABLE_LOCKMODE_SHARED);
 
-            void wake();
+        void wake();
 
-            void wake_all();
-        };
-    }
+        void wake_all();
+    };
 }
 #endif //CONDVAR_H

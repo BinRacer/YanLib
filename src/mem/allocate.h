@@ -9,44 +9,42 @@
 #include <list>
 #include "../sync/rwlock.h"
 
-namespace YanLib {
-    namespace mem {
-        class allocate {
-        private:
-            std::list<void *> lpMemory;
-            DWORD error_code;
-            sync::rwlock rwlock;
+namespace YanLib::mem {
+    class allocate {
+    private:
+        std::list<void *> lpMemory;
+        DWORD error_code;
+        sync::rwlock rwlock;
 
-        public:
-            allocate(const allocate &other) = delete;
+    public:
+        allocate(const allocate &other) = delete;
 
-            allocate(allocate &&other) = delete;
+        allocate(allocate &&other) = delete;
 
-            allocate &operator=(const allocate &other) = delete;
+        allocate &operator=(const allocate &other) = delete;
 
-            allocate &operator=(allocate &&other) = delete;
+        allocate &operator=(allocate &&other) = delete;
 
-            allocate();
+        allocate();
 
-            ~allocate();
+        ~allocate();
 
-            void *malloc(size_t dwSize);
+        void *malloc(size_t dwSize);
 
-            bool free(void *lpAddr);
+        bool free(void *lpAddr);
 
-            void *malloc_reserve(size_t dwSize);
+        void *malloc_reserve(size_t dwSize);
 
-            bool free_reserve(void *lpAddr, size_t dwSize = 0);
+        bool free_reserve(void *lpAddr, size_t dwSize = 0);
 
-            void *realloc(void *lpOldAddr, size_t dwNewSize);
+        void *realloc(void *lpOldAddr, size_t dwNewSize);
 
-            DWORD err_code() const;
+        DWORD err_code() const;
 
-            std::string err_string() const;
+        std::string err_string() const;
 
-            std::wstring err_wstring() const;
-        };
-    }
+        std::wstring err_wstring() const;
+    };
 }
 
 #endif //ALLOCATE_H

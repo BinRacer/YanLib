@@ -6,37 +6,35 @@
 #define FENCE_H
 #include <Windows.h>
 
-namespace YanLib {
-    namespace sync {
-        class fence {
-        private:
-            CRITICAL_SECTION critical_section{};
+namespace YanLib::sync {
+    class fence {
+    private:
+        CRITICAL_SECTION critical_section{};
 
-        public:
-            fence(const fence &other) = delete;
+    public:
+        fence(const fence &other) = delete;
 
-            fence(fence &&other) = delete;
+        fence(fence &&other) = delete;
 
-            fence &operator=(const fence &other) = delete;
+        fence &operator=(const fence &other) = delete;
 
-            fence &operator=(fence &&other) = delete;
+        fence &operator=(fence &&other) = delete;
 
-            fence() = delete;
+        fence() = delete;
 
-            ~fence();
+        ~fence();
 
-            void init();
+        void init();
 
-            void init_with_spin(DWORD dwSpinCount = 4000);
+        void init_with_spin(DWORD dwSpinCount = 4000);
 
-            DWORD set_spin_count(DWORD dwSpinCount);
+        DWORD set_spin_count(DWORD dwSpinCount);
 
-            void lock();
+        void lock();
 
-            BOOL try_lock();
+        BOOL try_lock();
 
-            void unlock();
-        };
-    }
+        void unlock();
+    };
 }
 #endif //FENCE_H

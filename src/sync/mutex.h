@@ -7,44 +7,42 @@
 #include <Windows.h>
 #include <string>
 
-namespace YanLib {
-    namespace sync {
-        class mutex {
-        private:
-            HANDLE mutex_handle;
-            DWORD error_code;
+namespace YanLib::sync {
+    class mutex {
+    private:
+        HANDLE mutex_handle;
+        DWORD error_code;
 
-        public:
-            mutex(const mutex &other) = delete;
+    public:
+        mutex(const mutex &other) = delete;
 
-            mutex(mutex &&other) = delete;
+        mutex(mutex &&other) = delete;
 
-            mutex &operator=(const mutex &other) = delete;
+        mutex &operator=(const mutex &other) = delete;
 
-            mutex &operator=(mutex &&other) = delete;
+        mutex &operator=(mutex &&other) = delete;
 
-            mutex();
+        mutex();
 
-            ~mutex();
+        ~mutex();
 
-            bool create(LPSECURITY_ATTRIBUTES lpMutexAttributes = nullptr,
-                        BOOL bInitialOwner = FALSE,
-                        const wchar_t * lpName = nullptr);
+        bool create(LPSECURITY_ATTRIBUTES lpMutexAttributes = nullptr,
+                    BOOL bInitialOwner = FALSE,
+                    const wchar_t *lpName = nullptr);
 
-            bool open(const wchar_t * lpName,
-                      DWORD dwDesiredAccess = MUTEX_ALL_ACCESS,
-                      BOOL bInheritHandle = FALSE);
+        bool open(const wchar_t *lpName,
+                  DWORD dwDesiredAccess = MUTEX_ALL_ACCESS,
+                  BOOL bInheritHandle = FALSE);
 
-            bool lock(DWORD dwMilliseconds = INFINITE);
+        bool lock(DWORD dwMilliseconds = INFINITE);
 
-            bool unlock();
+        bool unlock();
 
-            DWORD err_code() const;
+        DWORD err_code() const;
 
-            std::string err_string() const;
+        std::string err_string() const;
 
-            std::wstring err_wstring() const;
-        };
-    }
+        std::wstring err_wstring() const;
+    };
 }
 #endif //MUTEX_H

@@ -42,16 +42,16 @@ add_library(YanLib STATIC
         src/io/http.h
         src/io/ftp.cpp
         src/io/ftp.h
-        src/crypto/md5.cpp
-        src/crypto/md5.h
-        src/crypto/sha1.cpp
-        src/crypto/sha1.h
-        src/crypto/sha256.cpp
-        src/crypto/sha256.h
-        src/crypto/sha384.cpp
-        src/crypto/sha384.h
-        src/crypto/sha512.cpp
-        src/crypto/sha512.h
+        src/hash/md5.cpp
+        src/hash/md5.h
+        src/hash/sha1.cpp
+        src/hash/sha1.h
+        src/hash/sha256.cpp
+        src/hash/sha256.h
+        src/hash/sha384.cpp
+        src/hash/sha384.h
+        src/hash/sha512.cpp
+        src/hash/sha512.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

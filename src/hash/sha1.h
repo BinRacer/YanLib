@@ -17,6 +17,7 @@ namespace YanLib::hash {
         std::vector<unsigned char> hash_bytes;
         std::wstring file_name;
         bool isFile;
+        bool isDone = false;
         DWORD error_code;
 
         static std::string format_hex_fast(const std::vector<unsigned char> &data);

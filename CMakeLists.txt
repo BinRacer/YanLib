@@ -66,6 +66,22 @@ add_library(YanLib STATIC
         src/crypto/base85.h
         src/crypto/base91.cpp
         src/crypto/base91.h
+        src/crypto/base92.cpp
+        src/crypto/base92.h
+        src/crypto/base100.cpp
+        src/crypto/base100.h
+        src/crypto/uuencode.cpp
+        src/crypto/uuencode.h
+        src/crypto/xxencode.cpp
+        src/crypto/xxencode.h
+        src/crypto/vigenere.cpp
+        src/crypto/vigenere.h
+        src/crypto/aes.cpp
+        src/crypto/aes.h
+        src/crypto/aes192.cpp
+        src/crypto/aes192.h
+        src/crypto/aes256.cpp
+        src/crypto/aes256.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

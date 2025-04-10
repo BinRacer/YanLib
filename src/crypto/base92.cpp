@@ -1,0 +1,105 @@
+//
+// Created by forkernel on 2025/4/10.
+//
+
+#include "base92.h"
+#include <bitset>
+
+namespace YanLib::crypto {
+    std::vector<unsigned char> base92::encode(const std::vector<unsigned char> &data) {
+        // The valid character set of Base92 consists of 91 characters,
+        // of which '~' is a placeholder, not in the character set
+        constexpr unsigned char BASE92_CHARS[] =
+                "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                "abcdefghijklmnopqrstuvwxyz{|}";
+        if (data.empty()) return {};
+
+        std::string bitstr;
+        for (const auto b: data) {
+            bitstr += std::bitset<8>(b).to_string();
+        }
+
+        std::vector<unsigned char> result;
+        size_t pos = 0;
+        while (pos < bitstr.length()) {
+            std::string chunk = bitstr.substr(pos, 13);
+            pos += chunk.length();
+
+            if (chunk.length() < 13) {
+                if (chunk.length() <= 6) {
+                    chunk += std::string(6 - chunk.length(), '0');
+                    int val = static_cast<int>(std::bitset<6>(chunk).to_ulong());
+                    result.push_back(BASE92_CHARS[val]);
+                } else {
+                    chunk += std::string(13 - chunk.length(), '0');
+                    int high = static_cast<int>(std::bitset<13>(chunk).to_ulong() / 91);
+                    int low = static_cast<int>(std::bitset<13>(chunk).to_ulong() % 91);
+                    result.push_back(BASE92_CHARS[high]);
+                    result.push_back(BASE92_CHARS[low]);
+                }
+                break;
+            }
+
+            int high = static_cast<int>(std::bitset<13>(chunk).to_ulong() / 91);
+            int low = static_cast<int>(std::bitset<13>(chunk).to_ulong() % 91);
+            result.push_back(BASE92_CHARS[high]);
+            result.push_back(BASE92_CHARS[low]);
+        }
+
+        return result;
+    }
+
+    std::vector<unsigned char> base92::decode(const std::vector<unsigned char> &data) {
+        // The valid character set of Base92 consists of 91 characters,
+        // of which '~' is a placeholder, not in the character set
+        constexpr unsigned char BASE92_CHARS[] =
+                "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                "abcdefghijklmnopqrstuvwxyz{|}";
+        if (data.empty()) return {};
+
+        std::vector<int> table(256, -1);
+        for (int i = 0; i < sizeof(BASE92_CHARS) - 1; ++i) {
+            table[BASE92_CHARS[i]] = i;
+        }
+
+        std::string bitstr;
+        for (size_t i = 0; i < data.size(); ++i) {
+            if (i + 1 < data.size()) {
+                int high = table[data[i]];
+                int low = table[data[i + 1]];
+                if (high == -1 || low == -1) return {};
+
+                int combined = high * 91 + low;
+                bitstr += std::bitset<13>(combined).to_string();
+                ++i;
+            } else {
+                int val = table[data[i]];
+                if (val == -1) return {};
+                bitstr += std::bitset<6>(val).to_string().substr(0, 6);
+            }
+        }
+
+        std::vector<unsigned char> result;
+        for (size_t i = 0; i + 8 <= bitstr.length(); i += 8) {
+            std::string byte = bitstr.substr(i, 8);
+            result.push_back(static_cast<unsigned char>(
+                std::bitset<8>(byte).to_ulong()
+            ));
+        }
+        return result;
+    }
+
+    std::string base92::encode_string(const std::string &data) {
+        std::vector<unsigned char> input(data.begin(), data.end());
+        std::vector<unsigned char> encoded = encode(input);
+        std::string result(encoded.begin(), encoded.end());
+        return result;
+    }
+
+    std::string base92::decode_string(const std::string &data) {
+        std::vector<unsigned char> input(data.begin(), data.end());
+        std::vector<unsigned char> decoded = decode(input);
+        std::string result(decoded.begin(), decoded.end());
+        return result;
+    }
+}

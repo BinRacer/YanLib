@@ -18,6 +18,14 @@
 #include "src/crypto/base62.h"
 #include "src/crypto/base85.h"
 #include "src/crypto/base91.h"
+#include "src/crypto/base92.h"
+#include "src/crypto/base100.h"
+#include "src/crypto/uuencode.h"
+#include "src/crypto/xxencode.h"
+#include "src/crypto/vigenere.h"
+#include "src/crypto/aes.h"
+#include "src/crypto/aes192.h"
+#include "src/crypto/aes256.h"
 
 namespace io = YanLib::io;
 namespace hash = YanLib::hash;
@@ -133,29 +141,84 @@ int main(int argc, const char *argv[]) {
     // std::cout << std::boolalpha << encode_file << std::endl;
     // std::cout << decode_file << std::endl;
 
-    std::string encode_string = crypto::base16::encode_string("Hello World!你好");
-    std::string decode_string = crypto::base16::decode_string(encode_string);
-    std::cout << encode_string << std::endl;
-    std::cout << decode_string << std::endl;
-    encode_string = crypto::base32::encode_string("Hello World!你好");
-    decode_string = crypto::base32::decode_string(encode_string);
-    std::cout << encode_string << std::endl;
-    std::cout << decode_string << std::endl;
-    encode_string = crypto::base58::encode_string("Hello World!你好");
-    decode_string = crypto::base58::decode_string(encode_string);
-    std::cout << encode_string << std::endl;
-    std::cout << decode_string << std::endl;
-    encode_string = crypto::base62::encode_string("Hello World!你好世界");
-    decode_string = crypto::base62::decode_string(encode_string);
-    std::cout << encode_string << std::endl;
-    std::cout << decode_string << std::endl;
-    encode_string = crypto::base85::encode_string("Hello World!你好世界");
-    decode_string = crypto::base85::decode_string(encode_string);
-    std::cout << encode_string << std::endl;
-    std::cout << decode_string << std::endl;
-    encode_string = crypto::base91::encode_string("Hello World!你好世界");
-    decode_string = crypto::base91::decode_string(encode_string);
-    std::cout << encode_string << std::endl;
-    std::cout << decode_string << std::endl;
+    // std::string encode_string = crypto::base16::encode_string("Hello World!你好");
+    // std::string decode_string = crypto::base16::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base32::encode_string("Hello World!你好");
+    // decode_string = crypto::base32::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base58::encode_string("Hello World!你好");
+    // decode_string = crypto::base58::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base62::encode_string("Hello World!你好世界");
+    // decode_string = crypto::base62::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base85::encode_string("Hello World!你好世界");
+    // decode_string = crypto::base85::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base91::encode_string("Hello World!你好世界");
+    // decode_string = crypto::base91::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base92::encode_string("Hello World!你好世界");
+    // decode_string = crypto::base92::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::base100::encode_string("the quick brown fox jumped over the lazy dog");
+    // decode_string = crypto::base100::decode_string(
+    //     "👫👟👜🐗👨👬👠👚👢🐗👙👩👦👮👥🐗👝👦👯🐗👡👬👤👧👜👛🐗👦👭👜👩🐗👫👟👜🐗👣👘👱👰🐗👛👦👞🐁");
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::uuencode::encode_string("Hello World!你好世界");
+    // decode_string = crypto::uuencode::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::xxencode::encode_string("Hello World!你好世界");
+    // decode_string = crypto::xxencode::decode_string(encode_string);
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // encode_string = crypto::vigenere::encode_string("Hello World!你好世界", "Thisisakey");
+    // decode_string = crypto::vigenere::decode_string(encode_string, "Thisisakey");
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+
+    // using b16 = crypto::base16;
+    // std::string data = "Hello,这是待加密的示例数据";
+    // std::vector<unsigned char> data_vec(data.begin(), data.end());
+    // std::string key = "1234567890abcdef";
+    // std::vector<unsigned char> key_vec(key.begin(), key.end());
+    // std::string iv = "1234567890abcdef";
+    // std::vector<unsigned char> iv_vec(key.begin(), key.end());
+    // std::cout << b16::encode_string(data) << std::endl;
+
+    // crypto::aes encodeAES;
+    // auto result = encodeAES.encode_ecb(data_vec, key_vec, crypto::AES_PADDING::PKCS7_PADDING);
+    // std::cout << encodeAES.hex_string() << std::endl;
+    // result = encodeAES.encode_ecb(data_vec, key_vec, crypto::AES_PADDING::ISO10126_PADDING);
+    // std::cout << encodeAES.hex_string() << std::endl;
+    // crypto::aes decodeAES;
+    // decodeAES.decode_ecb(result, key_vec, crypto::AES_PADDING::ISO10126_PADDING);
+    // std::cout << decodeAES.hex_string() << std::endl;
+    // decodeAES.decode_ecb(result, key_vec, crypto::AES_PADDING::ISO10126_PADDING);
+    // std::cout << decodeAES.hex_string() << std::endl;
+
+    // std::cout << "----------------------------" << std::endl;
+    // result = encodeAES.encode_cbc(data_vec, key_vec, iv_vec, crypto::AES_PADDING::PKCS7_PADDING);
+    // std::cout << encodeAES.hex_string() << std::endl;
+    // encodeAES.encode_cbc(data_vec, key_vec, iv_vec, crypto::AES_PADDING::ANSI_X923_PADDING);
+    // std::cout << encodeAES.hex_string() << std::endl;
+    // decodeAES.decode_cbc(result, key_vec, iv_vec, crypto::AES_PADDING::PKCS7_PADDING);
+    // std::cout << decodeAES.hex_string() << std::endl;
+    // result = encodeAES.encode_cfb(data_vec, key_vec, iv_vec, crypto::AES_PADDING::PKCS7_PADDING);
+    // std::cout << encodeAES.hex_string() << std::endl;
+    // encodeAES.encode_cfb(data_vec, key_vec, iv_vec, crypto::AES_PADDING::ANSI_X923_PADDING);
+    // std::cout << encodeAES.hex_string() << std::endl;
+    // decodeAES.decode_cfb(result, key_vec, iv_vec, crypto::AES_PADDING::PKCS7_PADDING);
+    // std::cout << decodeAES.hex_string() << std::endl;
     return 0;
 }

@@ -184,6 +184,7 @@ namespace YanLib::hash {
             if (!post_process()) {
                 break;
             }
+            isDone = true;
             return hash_bytes;
         } while (false);
         return {};
@@ -216,6 +217,9 @@ namespace YanLib::hash {
     }
 
     std::vector<unsigned char> md5::hash() {
+        if (isDone) {
+            return hash_bytes;
+        }
         return process();
     }
 

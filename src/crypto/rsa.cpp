@@ -5,7 +5,6 @@
 #include "rsa.h"
 #include "base64.h"
 #include "../helper/convert.h"
-#pragma comment(lib, "crypt32.lib")
 
 namespace YanLib::crypto {
     void rsa::cleanup() {

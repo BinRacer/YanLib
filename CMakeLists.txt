@@ -82,6 +82,8 @@ add_library(YanLib STATIC
         src/crypto/aes192.h
         src/crypto/aes256.cpp
         src/crypto/aes256.h
+        src/crypto/rsa.cpp
+        src/crypto/rsa.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

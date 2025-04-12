@@ -5,15 +5,15 @@
 #include "base100.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base100::encode(const std::vector<unsigned char> &data) {
+    std::vector<uint8_t> base100::encode(const std::vector<uint8_t> &data) {
         if (data.empty()) return {};
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         result.reserve(data.size() * 4);
 
         for (const auto ch: data) {
             unsigned int temp = static_cast<unsigned int>(ch) + 55;
-            unsigned char byte3 = (temp >> 6) + 143;
-            unsigned char byte4 = (temp & 0x3F) + 128;
+            uint8_t byte3 = (temp >> 6) + 143;
+            uint8_t byte4 = (temp & 0x3F) + 128;
 
             result.push_back(0xF0);
             result.push_back(0x9F);
@@ -23,8 +23,8 @@ namespace YanLib::crypto {
         return result;
     }
 
-    std::vector<unsigned char> base100::decode(const std::vector<unsigned char> &data) {
-        std::vector<unsigned char> result;
+    std::vector<uint8_t> base100::decode(const std::vector<uint8_t> &data) {
+        std::vector<uint8_t> result;
 
         if (data.empty() || data.size() % 4 != 0) return {};
         result.reserve(data.size() / 4);
@@ -32,29 +32,29 @@ namespace YanLib::crypto {
         for (size_t i = 0; i < data.size(); i += 4) {
             if (data[i] != 0xF0 || data[i + 1] != 0x9F) return {};
 
-            unsigned char byte3 = data[i + 2];
-            unsigned char byte4 = data[i + 3];
+            uint8_t byte3 = data[i + 2];
+            uint8_t byte4 = data[i + 3];
 
             int decoded = ((byte3 - 143) << 6) | (byte4 - 128);
             decoded -= 55;
 
             if (decoded < 0 || decoded > 255) return {};
 
-            result.push_back(static_cast<unsigned char>(decoded));
+            result.push_back(static_cast<uint8_t>(decoded));
         }
         return result;
     }
 
     std::string base100::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base100::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

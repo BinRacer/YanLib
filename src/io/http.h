@@ -120,19 +120,19 @@ namespace YanLib::io {
                   DWORD dwNumberOfBytesToRead,
                   LPDWORD lpdwNumberOfBytesRead);
 
-        std::vector<unsigned char> read_bytes(int32_t bufferSize = 1024);
+        std::vector<uint8_t> read_bytes(int32_t bufferSize = 1024);
 
         bool write(LPCVOID lpBuffer,
                    DWORD dwNumberOfBytesToWrite,
                    LPDWORD lpdwNumberOfBytesWritten);
 
-        DWORD write_bytes(std::vector<unsigned char> &vec);
+        DWORD write_bytes(std::vector<uint8_t> &vec);
 
         static std::string read_string_to_end(const std::wstring &input_url);
 
         static std::wstring read_wstring_to_end(const std::wstring &input_url);
 
-        static std::vector<unsigned char> read_bytes_to_end(
+        static std::vector<uint8_t> read_bytes_to_end(
             const std::wstring &input_url);
 
         static DWORD download(const std::wstring &input_url,

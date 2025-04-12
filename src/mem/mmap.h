@@ -12,7 +12,7 @@ namespace YanLib::mem {
     private:
         HANDLE hFile;
         HANDLE hMapFile;
-        unsigned char *lpMemory;
+        uint8_t *lpMemory;
         DWORD error_code;
 
     public:
@@ -48,9 +48,9 @@ namespace YanLib::mem {
 
         bool unmap_file();
 
-        bool read(unsigned char *lpBuffer, int64_t size, uint64_t offset = 0) const;
+        bool read(uint8_t *lpBuffer, int64_t size, uint64_t offset = 0) const;
 
-        bool write(unsigned char *lpBuffer, int64_t size, uint64_t offset = 0) const;
+        bool write(uint8_t *lpBuffer, int64_t size, uint64_t offset = 0) const;
 
         DWORD err_code() const;
 

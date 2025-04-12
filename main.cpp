@@ -26,6 +26,7 @@
 #include "src/crypto/aes.h"
 #include "src/crypto/aes192.h"
 #include "src/crypto/aes256.h"
+#include "src/crypto/rsa.h"
 
 namespace io = YanLib::io;
 namespace hash = YanLib::hash;
@@ -110,14 +111,14 @@ int main(int argc, const char *argv[]) {
     // std::cout << sha512_string.hash_string() << std::endl;
 
     // std::string input = "Hello World!你好世界";
-    // std::vector<unsigned char> input_vec(input.begin(), input.end());
-    // std::vector<unsigned char> encode_vec = crypto::base64::encode(input_vec);
-    // std::vector<unsigned char> decode_vec = crypto::base64::decode(encode_vec);
-    // std::for_each(encode_vec.begin(), encode_vec.end(), [](unsigned char c) {
+    // std::vector<uint8_t> input_vec(input.begin(), input.end());
+    // std::vector<uint8_t> encode_vec = crypto::base64::encode(input_vec);
+    // std::vector<uint8_t> decode_vec = crypto::base64::decode(encode_vec);
+    // std::for_each(encode_vec.begin(), encode_vec.end(), [](uint8_t c) {
     //     std::cout << c;
     // });
     // std::cout << std::endl;
-    // std::for_each(decode_vec.begin(), decode_vec.end(), [](unsigned char c) {
+    // std::for_each(decode_vec.begin(), decode_vec.end(), [](uint8_t c) {
     //     std::cout << c;
     // });
     // std::cout << std::endl;
@@ -189,11 +190,11 @@ int main(int argc, const char *argv[]) {
 
     // using b16 = crypto::base16;
     // std::string data = "Hello,这是待加密的示例数据";
-    // std::vector<unsigned char> data_vec(data.begin(), data.end());
+    // std::vector<uint8_t> data_vec(data.begin(), data.end());
     // std::string key = "1234567890abcdef";
-    // std::vector<unsigned char> key_vec(key.begin(), key.end());
+    // std::vector<uint8_t> key_vec(key.begin(), key.end());
     // std::string iv = "1234567890abcdef";
-    // std::vector<unsigned char> iv_vec(key.begin(), key.end());
+    // std::vector<uint8_t> iv_vec(key.begin(), key.end());
     // std::cout << b16::encode_string(data) << std::endl;
 
     // crypto::aes encodeAES;
@@ -220,5 +221,25 @@ int main(int argc, const char *argv[]) {
     // std::cout << encodeAES.hex_string() << std::endl;
     // decodeAES.decode_cfb(result, key_vec, iv_vec, crypto::AES_PADDING::PKCS7_PADDING);
     // std::cout << decodeAES.hex_string() << std::endl;
+
+
+    // std::string data = "Hello World!你好世界";
+    // std::vector<uint8_t> data_vec(data.begin(), data.end());
+    // crypto::rsa rsa;
+    // rsa.generate_key(crypto::RSA_2048BIT_KEY);
+    // auto pub_key = rsa.pub_blob();
+    // auto priv_key = rsa.priv_blob();
+    // auto encode_data = rsa.encode_to_base64(data_vec, pub_key);
+    // auto decode_data = rsa.decode(rsa.encode(data_vec, pub_key), priv_key);
+    // // std::cout << rsa.pub_base64() << std::endl;
+    // // std::cout << rsa.priv_base64() << std::endl;
+    // std::cout << "-----------------" << std::endl;
+    // std::string encode_string(encode_data.begin(), encode_data.end());
+    // std::string decode_string(decode_data.begin(), decode_data.end());
+    // std::cout << encode_string << std::endl;
+    // std::cout << decode_string << std::endl;
+    // std::cout << rsa.pub_pem() << std::endl;
+    // std::cout << rsa.priv_pem() << std::endl;
+
     return 0;
 }

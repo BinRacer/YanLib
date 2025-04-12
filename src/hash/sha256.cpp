@@ -7,7 +7,7 @@
 #include "../io/fs.h"
 
 namespace YanLib::hash {
-    sha256::sha256(const std::vector<unsigned char> &data) {
+    sha256::sha256(const std::vector<uint8_t> &data) {
         hCryptProv = 0;
         hCryptHash = 0;
         data_bytes = data;
@@ -47,11 +47,11 @@ namespace YanLib::hash {
         }
     }
 
-    std::string sha256::format_hex_fast(const std::vector<unsigned char> &data) {
+    std::string sha256::format_hex_fast(const std::vector<uint8_t> &data) {
         static constexpr char hexTable[] = "0123456789abcdef";
         std::string hexStr;
         hexStr.reserve(data.size() * 2);
-        for (unsigned char byte: data) {
+        for (uint8_t byte: data) {
             hexStr += hexTable[byte >> 4];
             hexStr += hexTable[byte & 0x0F];
         }
@@ -89,7 +89,7 @@ namespace YanLib::hash {
                 break;
             }
             if (file.size() <= 4096) {
-                std::vector<unsigned char> data = file.read_bytes_to_end();
+                std::vector<uint8_t> data = file.read_bytes_to_end();
                 if (!CryptHashData(hCryptHash,
                                    data.data(),
                                    data.size(),
@@ -106,7 +106,7 @@ namespace YanLib::hash {
                     size_t blockSize = (totalSize - offset) > BLOCK_SIZE
                                            ? BLOCK_SIZE
                                            : totalSize - offset;
-                    std::vector<unsigned char> data = file.read_bytes(blockSize);
+                    std::vector<uint8_t> data = file.read_bytes(blockSize);
                     if (!CryptHashData(hCryptHash,
                                        data.data(),
                                        data.size(),
@@ -165,7 +165,7 @@ namespace YanLib::hash {
         return false;
     }
 
-    std::vector<unsigned char> sha256::process() {
+    std::vector<uint8_t> sha256::process() {
         do {
             if (!pre_process()) {
                 break;
@@ -196,7 +196,7 @@ namespace YanLib::hash {
             DWORD dwDataLen = sizeof(DWORD);
             if (!CryptGetHashParam(hCryptHash,
                                    HP_HASHSIZE,
-                                   reinterpret_cast<unsigned char *>(&len),
+                                   reinterpret_cast<uint8_t *>(&len),
                                    &dwDataLen,
                                    0)) {
                 error_code = GetLastError();
@@ -216,7 +216,7 @@ namespace YanLib::hash {
         return false;
     }
 
-    std::vector<unsigned char> sha256::hash() {
+    std::vector<uint8_t> sha256::hash() {
         if (isDone) {
             return hash_bytes;
         }

@@ -5,13 +5,13 @@
 #include "base91.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base91::encode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE91_CHARS[] =
+    std::vector<uint8_t> base91::encode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE91_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 "abcdefghijklmnopqrstuvwxyz"
                 "0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
         if (data.empty()) return {};
-        std::vector<unsigned char> encoded;
+        std::vector<uint8_t> encoded;
         encoded.reserve(data.size());
         unsigned int b = 0;
         int n = 0;
@@ -44,8 +44,8 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<unsigned char> base91::decode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE91_CHARS[] =
+    std::vector<uint8_t> base91::decode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE91_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 "abcdefghijklmnopqrstuvwxyz"
                 "0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
@@ -56,7 +56,7 @@ namespace YanLib::crypto {
             reverse_table[BASE91_CHARS[i]] = i;
         }
 
-        std::vector<unsigned char> decoded;
+        std::vector<uint8_t> decoded;
         decoded.reserve(data.size() * 3 / 4);
 
         uint32_t buffer = 0;
@@ -75,7 +75,7 @@ namespace YanLib::crypto {
                 bits_count += (value & 0x1FFF) > 88 ? 13 : 14;
 
                 while (bits_count >= 8) {
-                    decoded.push_back(static_cast<unsigned char>(buffer & 0xFF));
+                    decoded.push_back(static_cast<uint8_t>(buffer & 0xFF));
                     buffer >>= 8;
                     bits_count -= 8;
                 }
@@ -84,22 +84,22 @@ namespace YanLib::crypto {
         }
 
         if (value != -1) {
-            decoded.push_back(static_cast<unsigned char>(
+            decoded.push_back(static_cast<uint8_t>(
                 (buffer | (value << bits_count)) & 0xFF));
         }
         return decoded;
     }
 
     std::string base91::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base91::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

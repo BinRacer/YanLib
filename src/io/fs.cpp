@@ -230,11 +230,11 @@ namespace YanLib::io {
         return rawData;
     }
 
-    std::vector<unsigned char> fs::read_bytes(int32_t bufferSize) {
+    std::vector<uint8_t> fs::read_bytes(int32_t bufferSize) {
         if (bufferSize < 1024) {
             bufferSize = 1024;
         }
-        std::vector<unsigned char> rawData(bufferSize, '\0');
+        std::vector<uint8_t> rawData(bufferSize, '\0');
         DWORD bytesRead = 0;
         if (ReadFile(
                 hFile,
@@ -250,11 +250,11 @@ namespace YanLib::io {
         return {};
     }
 
-    std::vector<unsigned char> fs::read_bytes_to_end() {
+    std::vector<uint8_t> fs::read_bytes_to_end() {
         constexpr DWORD bufferSize = 4096;
-        unsigned char *buf = new unsigned char[bufferSize];
+        uint8_t *buf = new uint8_t[bufferSize];
         memset(buf, 0, bufferSize);
-        std::vector<unsigned char> rawData;
+        std::vector<uint8_t> rawData;
         rawData.reserve(bufferSize);
         DWORD bytesRead = 0;
         BOOL bRet = FALSE;
@@ -308,7 +308,7 @@ namespace YanLib::io {
         return numberOfBytesWritten;
     }
 
-    DWORD fs::write_bytes_to_file(const std::vector<unsigned char> &vec) {
+    DWORD fs::write_bytes_to_file(const std::vector<uint8_t> &vec) {
         if (vec.empty()) {
             return 0;
         }

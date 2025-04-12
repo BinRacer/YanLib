@@ -22,9 +22,9 @@ namespace YanLib::crypto {
 
         ~base100() = default;
 
-        static std::vector<unsigned char> encode(const std::vector<unsigned char> &data);
+        static std::vector<uint8_t> encode(const std::vector<uint8_t> &data);
 
-        static std::vector<unsigned char> decode(const std::vector<unsigned char> &data);
+        static std::vector<uint8_t> decode(const std::vector<uint8_t> &data);
 
         static std::string encode_string(const std::string &data);
 

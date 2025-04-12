@@ -5,14 +5,14 @@
 #include "base32.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base32::encode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE32_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    std::vector<uint8_t> base32::encode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE32_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         if (data.empty()) return {};
-        std::vector<unsigned char> encoded;
+        std::vector<uint8_t> encoded;
         encoded.reserve((data.size() * 8 + 4) / 5 + 1);
 
         int buffer = 0, bits_left = 0;
-        for (const unsigned char c: data) {
+        for (const uint8_t c: data) {
             buffer = (buffer << 8) | c;
             bits_left += 8;
 
@@ -34,8 +34,8 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<unsigned char> base32::decode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE32_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+    std::vector<uint8_t> base32::decode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE32_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         if (data.empty()) return {};
         std::vector<int> table(256, -1);
         for (int i = 0; i < 32; ++i) {
@@ -43,11 +43,11 @@ namespace YanLib::crypto {
             table[c] = i;
             table[tolower(c)] = i;
         }
-        std::vector<unsigned char> decoded;
+        std::vector<uint8_t> decoded;
         decoded.reserve((data.size() * 5) / 8);
 
         int buffer = 0, bits_collected = 0;
-        for (const unsigned char c: data) {
+        for (const uint8_t c: data) {
             if (c == '=') break;
 
             const int idx = table[c];
@@ -65,15 +65,15 @@ namespace YanLib::crypto {
     }
 
     std::string base32::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base32::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

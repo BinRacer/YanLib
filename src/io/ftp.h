@@ -79,7 +79,7 @@ namespace YanLib::io {
                   DWORD dwNumberOfBytesToRead,
                   LPDWORD lpdwNumberOfBytesRead);
 
-        std::vector<unsigned char> read_bytes(HINTERNET hFile,
+        std::vector<uint8_t> read_bytes(HINTERNET hFile,
                                               int32_t bufferSize = 1024);
 
         bool write(HINTERNET hFile,
@@ -87,7 +87,7 @@ namespace YanLib::io {
                    DWORD dwNumberOfBytesToWrite,
                    LPDWORD lpdwNumberOfBytesWritten);
 
-        DWORD write_bytes(HINTERNET hFile, std::vector<unsigned char> &vec);
+        DWORD write_bytes(HINTERNET hFile, std::vector<uint8_t> &vec);
 
         int64_t size(HINTERNET hFile);
 
@@ -110,7 +110,7 @@ namespace YanLib::io {
 
         bool rename(const wchar_t *lpszExisting, const wchar_t *lpszNew);
 
-        std::vector<unsigned char> command(const wchar_t *lpszCommand);
+        std::vector<uint8_t> command(const wchar_t *lpszCommand);
 
         bool download(const wchar_t *lpszRemoteFile,
                       const wchar_t *lpszNewFile,

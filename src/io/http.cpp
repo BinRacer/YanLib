@@ -517,11 +517,11 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<unsigned char> http::read_bytes(int32_t bufferSize) {
+    std::vector<uint8_t> http::read_bytes(int32_t bufferSize) {
         if (bufferSize < 1024) {
             bufferSize = 1024;
         }
-        std::vector<unsigned char> rawData(bufferSize, '\0');
+        std::vector<uint8_t> rawData(bufferSize, '\0');
         DWORD bytesRead = 0;
         if (InternetReadFile(hRequest,
                              rawData.data(),
@@ -548,7 +548,7 @@ namespace YanLib::io {
         return true;
     }
 
-    DWORD http::write_bytes(std::vector<unsigned char> &vec) {
+    DWORD http::write_bytes(std::vector<uint8_t> &vec) {
         DWORD bytesRead = 0;
         if (InternetWriteFile(hRequest,
                               vec.data(),
@@ -601,7 +601,7 @@ namespace YanLib::io {
         return helper::convert::str_to_wstr(read_string_to_end(input_url));
     }
 
-    std::vector<unsigned char> http::read_bytes_to_end(
+    std::vector<uint8_t> http::read_bytes_to_end(
         const std::wstring &input_url) {
         do {
             http client(input_url);
@@ -626,7 +626,7 @@ namespace YanLib::io {
                 break;
             }
 
-            std::vector<unsigned char> body(contentLength, '\0');
+            std::vector<uint8_t> body(contentLength, '\0');
             DWORD dwRead = 0;
             if (!client.read(body.data(), contentLength, &dwRead)) {
                 break;
@@ -669,7 +669,7 @@ namespace YanLib::io {
             }
 
             DWORD bufSize = 4096;
-            unsigned char *buf = new unsigned char[bufSize];
+            uint8_t *buf = new uint8_t[bufSize];
             memset(buf, 0, bufSize);
             DWORD dwRead = 0;
             DWORD dwWritten = 0;
@@ -725,7 +725,7 @@ namespace YanLib::io {
             }
 
             DWORD bufSize = 4096;
-            unsigned char *buf = new unsigned char[bufSize];
+            uint8_t *buf = new uint8_t[bufSize];
             memset(buf, 0, bufSize);
             DWORD dwRead = 0;
             DWORD dwWritten = 0;

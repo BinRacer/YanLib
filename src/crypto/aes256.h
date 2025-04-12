@@ -31,45 +31,45 @@ namespace YanLib::crypto {
         HCRYPTPROV hCryptProv;
         HCRYPTHASH hCryptHash;
         HCRYPTKEY hCryptKey;
-        std::vector<unsigned char> data_bytes;
+        std::vector<uint8_t> data_bytes;
         bool isDone = false;
         DWORD error_code;
 
         struct KeyBlob {
             BLOBHEADER header;
             DWORD keySize;
-            unsigned char key[32];
+            uint8_t key[32];
         };
 
         void cleanup();
 
-        static std::string format_hex_fast(const std::vector<unsigned char> &data);
+        static std::string format_hex_fast(const std::vector<uint8_t> &data);
 
-        static KeyBlob make_blob(const std::vector<unsigned char> &key);
+        static KeyBlob make_blob(const std::vector<uint8_t> &key);
 
-        static void make_pkcs7_padding(std::vector<unsigned char> &data);
+        static void make_pkcs7_padding(std::vector<uint8_t> &data);
 
-        static bool remove_pkcs7_padding(std::vector<unsigned char> &data,
+        static bool remove_pkcs7_padding(std::vector<uint8_t> &data,
                                          DWORD retLen);
 
-        static void make_iso10126_padding(std::vector<unsigned char> &data);
+        static void make_iso10126_padding(std::vector<uint8_t> &data);
 
-        static bool remove_iso10126_padding(std::vector<unsigned char> &data,
+        static bool remove_iso10126_padding(std::vector<uint8_t> &data,
                                             DWORD retLen);
 
-        static void make_ansix923_padding(std::vector<unsigned char> &data);
+        static void make_ansix923_padding(std::vector<uint8_t> &data);
 
-        static bool remove_ansix923_padding(std::vector<unsigned char> &data,
+        static bool remove_ansix923_padding(std::vector<uint8_t> &data,
                                             DWORD retLen);
 
-        bool pre_process(const std::vector<unsigned char> &key_bytes,
-                         const std::vector<unsigned char> &iv,
+        bool pre_process(const std::vector<uint8_t> &key_bytes,
+                         const std::vector<uint8_t> &iv,
                          AES_MODE mode);
 
-        bool encode_process(std::vector<unsigned char> &data_bytes,
+        bool encode_process(std::vector<uint8_t> &data_bytes,
                             AES_PADDING padding);
 
-        bool decode_process(std::vector<unsigned char> &data_bytes,
+        bool decode_process(std::vector<uint8_t> &data_bytes,
                             AES_PADDING padding);
 
     public:
@@ -85,35 +85,35 @@ namespace YanLib::crypto {
 
         ~aes256();
 
-        std::vector<unsigned char> encode_cbc(const std::vector<unsigned char> &data,
-                                              const std::vector<unsigned char> &key,
-                                              const std::vector<unsigned char> &iv,
+        std::vector<uint8_t> encode_cbc(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &key,
+                                              const std::vector<uint8_t> &iv,
                                               AES_PADDING padding = PKCS7_PADDING);
 
-        std::vector<unsigned char> decode_cbc(const std::vector<unsigned char> &data,
-                                              const std::vector<unsigned char> &key,
-                                              const std::vector<unsigned char> &iv,
+        std::vector<uint8_t> decode_cbc(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &key,
+                                              const std::vector<uint8_t> &iv,
                                               AES_PADDING padding = PKCS7_PADDING);
 
-        std::vector<unsigned char> encode_ecb(const std::vector<unsigned char> &data,
-                                              const std::vector<unsigned char> &key,
+        std::vector<uint8_t> encode_ecb(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &key,
                                               AES_PADDING padding = PKCS7_PADDING);
 
-        std::vector<unsigned char> decode_ecb(const std::vector<unsigned char> &data,
-                                              const std::vector<unsigned char> &key,
+        std::vector<uint8_t> decode_ecb(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &key,
                                               AES_PADDING padding = PKCS7_PADDING);
 
-        std::vector<unsigned char> encode_cfb(const std::vector<unsigned char> &data,
-                                              const std::vector<unsigned char> &key,
-                                              const std::vector<unsigned char> &iv,
+        std::vector<uint8_t> encode_cfb(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &key,
+                                              const std::vector<uint8_t> &iv,
                                               AES_PADDING padding = PKCS7_PADDING);
 
-        std::vector<unsigned char> decode_cfb(const std::vector<unsigned char> &data,
-                                              const std::vector<unsigned char> &key,
-                                              const std::vector<unsigned char> &iv,
+        std::vector<uint8_t> decode_cfb(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &key,
+                                              const std::vector<uint8_t> &iv,
                                               AES_PADDING padding = PKCS7_PADDING);
 
-        std::vector<unsigned char> generate_iv_bytes();
+        std::vector<uint8_t> generate_iv_bytes();
 
         std::string generate_iv_string();
 

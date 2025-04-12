@@ -13,14 +13,14 @@ namespace YanLib::hash {
     private:
         HCRYPTPROV hCryptProv;
         HCRYPTHASH hCryptHash;
-        std::vector<unsigned char> data_bytes;
-        std::vector<unsigned char> hash_bytes;
+        std::vector<uint8_t> data_bytes;
+        std::vector<uint8_t> hash_bytes;
         std::wstring file_name;
         bool isFile;
         bool isDone = false;
         DWORD error_code;
 
-        static std::string format_hex_fast(const std::vector<unsigned char> &data);
+        static std::string format_hex_fast(const std::vector<uint8_t> &data);
 
         bool pre_process();
 
@@ -28,7 +28,7 @@ namespace YanLib::hash {
 
         bool process_data();
 
-        std::vector<unsigned char> process();
+        std::vector<uint8_t> process();
 
         bool post_process();
 
@@ -43,7 +43,7 @@ namespace YanLib::hash {
 
         sha256() = delete;
 
-        explicit sha256(const std::vector<unsigned char> &data);
+        explicit sha256(const std::vector<uint8_t> &data);
 
         explicit sha256(const std::string &data);
 
@@ -51,7 +51,7 @@ namespace YanLib::hash {
 
         ~sha256();
 
-        std::vector<unsigned char> hash();
+        std::vector<uint8_t> hash();
 
         std::string hash_string();
 

@@ -177,12 +177,12 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<unsigned char> ftp::read_bytes(HINTERNET hFile,
+    std::vector<uint8_t> ftp::read_bytes(HINTERNET hFile,
                                                int32_t bufferSize) {
         if (bufferSize < 1024) {
             bufferSize = 1024;
         }
-        std::vector<unsigned char> rawData(bufferSize, '\0');
+        std::vector<uint8_t> rawData(bufferSize, '\0');
         DWORD bytesRead = 0;
         if (InternetReadFile(hFile,
                              rawData.data(),
@@ -210,7 +210,7 @@ namespace YanLib::io {
         return true;
     }
 
-    DWORD ftp::write_bytes(HINTERNET hFile, std::vector<unsigned char> &vec) {
+    DWORD ftp::write_bytes(HINTERNET hFile, std::vector<uint8_t> &vec) {
         DWORD bytesRead = 0;
         if (InternetWriteFile(hFile,
                               vec.data(),
@@ -374,7 +374,7 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<unsigned char> ftp::command(const wchar_t *lpszCommand) {
+    std::vector<uint8_t> ftp::command(const wchar_t *lpszCommand) {
         HINTERNET hCmdHandle = nullptr;
         if (!FtpCommandW(hSessionRead,
                          TRUE,
@@ -388,10 +388,10 @@ namespace YanLib::io {
             }
             return {};
         }
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         DWORD bytesRead = 0;
         constexpr DWORD bufferSize = 1024;
-        unsigned char *buffer = new unsigned char[bufferSize];
+        uint8_t *buffer = new uint8_t[bufferSize];
         while (InternetReadFile(hCmdHandle,
                                 buffer,
                                 bufferSize,
@@ -443,7 +443,7 @@ namespace YanLib::io {
             return file.err_code();
         }
         constexpr DWORD bufSize = 4096;
-        unsigned char *buf = new unsigned char[bufSize];
+        uint8_t *buf = new uint8_t[bufSize];
         memset(buf, 0, bufSize);
         DWORD dwRead = 0;
         DWORD dwWritten = 0;
@@ -470,7 +470,7 @@ namespace YanLib::io {
             return file.err_code();
         }
         constexpr DWORD bufSize = 4096;
-        unsigned char *buf = new unsigned char[bufSize];
+        uint8_t *buf = new uint8_t[bufSize];
         memset(buf, 0, bufSize);
         DWORD dwRead = 0;
         DWORD dwWritten = 0;

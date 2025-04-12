@@ -5,8 +5,8 @@
 #include "base58.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base58::encode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE58_CHARS[] =
+    std::vector<uint8_t> base58::encode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE58_CHARS[] =
                 "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
         if (data.empty()) return {};
         size_t leading_zeros = 0;
@@ -14,7 +14,7 @@ namespace YanLib::crypto {
             ++leading_zeros;
         }
         std::vector<int> digits;
-        for (const unsigned char byte: data) {
+        for (const uint8_t byte: data) {
             int carry = byte;
             for (auto &digit: digits) {
                 carry += digit * 256;
@@ -26,17 +26,17 @@ namespace YanLib::crypto {
                 carry /= 58;
             }
         }
-        std::vector<unsigned char> result(leading_zeros, '1');
+        std::vector<uint8_t> result(leading_zeros, '1');
         for (auto it = digits.rbegin(); it != digits.rend(); ++it) {
             result.push_back(BASE58_CHARS[*it]);
         }
         return result;
     }
 
-    std::vector<unsigned char> base58::decode(const std::vector<unsigned char> &data) {
+    std::vector<uint8_t> base58::decode(const std::vector<uint8_t> &data) {
         static const std::vector<int> table = []() {
             std::vector<int> t(256, -1);
-            constexpr unsigned char BASE58_CHARS[] =
+            constexpr uint8_t BASE58_CHARS[] =
                     "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
             for (int i = 0; i < 58; ++i) {
                 t[BASE58_CHARS[i]] = i;
@@ -52,11 +52,11 @@ namespace YanLib::crypto {
         }
 
         const size_t max_bytes = (data.size() - leading_ones) * 138 / 100 + 1;
-        std::vector<unsigned char> bytes;
+        std::vector<uint8_t> bytes;
         bytes.reserve(max_bytes);
 
         for (size_t i = leading_ones; i < data.size(); ++i) {
-            const unsigned char c = data[i];
+            const uint8_t c = data[i];
             const int pos = table[c];
             if (pos == -1) return {};
 
@@ -73,7 +73,7 @@ namespace YanLib::crypto {
             }
         }
 
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         result.reserve(leading_ones + bytes.size());
         result.insert(result.end(), leading_ones, 0x00);
         result.insert(result.end(), bytes.rbegin(), bytes.rend());
@@ -81,15 +81,15 @@ namespace YanLib::crypto {
     }
 
     std::string base58::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base58::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

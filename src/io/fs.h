@@ -68,15 +68,15 @@ namespace YanLib::io {
 
         std::wstring read_wstring_to_end();
 
-        std::vector<unsigned char> read_bytes(int32_t bufferSize = 1024);
+        std::vector<uint8_t> read_bytes(int32_t bufferSize = 1024);
 
-        std::vector<unsigned char> read_bytes_to_end();
+        std::vector<uint8_t> read_bytes_to_end();
 
         DWORD write_string_to_file(const std::string &str);
 
         DWORD write_wstring_to_file(const std::wstring &wstr);
 
-        DWORD write_bytes_to_file(const std::vector<unsigned char> &vec);
+        DWORD write_bytes_to_file(const std::vector<uint8_t> &vec);
 
         int64_t size();
 

@@ -93,7 +93,7 @@ namespace YanLib::mem {
                          DWORD dwFileOffsetHigh,
                          DWORD dwFileOffsetLow,
                          SIZE_T dwNumberOfBytesToMap) {
-        lpMemory = static_cast<unsigned char *>(MapViewOfFile(hMapFile,
+        lpMemory = static_cast<uint8_t *>(MapViewOfFile(hMapFile,
                                                               dwDesiredAccess,
                                                               dwFileOffsetHigh,
                                                               dwFileOffsetLow,
@@ -114,7 +114,7 @@ namespace YanLib::mem {
         return true;
     }
 
-    bool mmap::read(unsigned char *lpBuffer, int64_t size, uint64_t offset) const {
+    bool mmap::read(uint8_t *lpBuffer, int64_t size, uint64_t offset) const {
         if (!lpBuffer && !lpMemory) {
             return false;
         }
@@ -125,7 +125,7 @@ namespace YanLib::mem {
         return true;
     }
 
-    bool mmap::write(unsigned char *lpBuffer, int64_t size, uint64_t offset) const {
+    bool mmap::write(uint8_t *lpBuffer, int64_t size, uint64_t offset) const {
         if (!lpBuffer && !lpMemory) {
             return false;
         }

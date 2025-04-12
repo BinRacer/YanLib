@@ -6,10 +6,10 @@
 #include <bitset>
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base92::encode(const std::vector<unsigned char> &data) {
+    std::vector<uint8_t> base92::encode(const std::vector<uint8_t> &data) {
         // The valid character set of Base92 consists of 91 characters,
         // of which '~' is a placeholder, not in the character set
-        constexpr unsigned char BASE92_CHARS[] =
+        constexpr uint8_t BASE92_CHARS[] =
                 "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
                 "abcdefghijklmnopqrstuvwxyz{|}";
         if (data.empty()) return {};
@@ -19,7 +19,7 @@ namespace YanLib::crypto {
             bitstr += std::bitset<8>(b).to_string();
         }
 
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         size_t pos = 0;
         while (pos < bitstr.length()) {
             std::string chunk = bitstr.substr(pos, 13);
@@ -49,10 +49,10 @@ namespace YanLib::crypto {
         return result;
     }
 
-    std::vector<unsigned char> base92::decode(const std::vector<unsigned char> &data) {
+    std::vector<uint8_t> base92::decode(const std::vector<uint8_t> &data) {
         // The valid character set of Base92 consists of 91 characters,
         // of which '~' is a placeholder, not in the character set
-        constexpr unsigned char BASE92_CHARS[] =
+        constexpr uint8_t BASE92_CHARS[] =
                 "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
                 "abcdefghijklmnopqrstuvwxyz{|}";
         if (data.empty()) return {};
@@ -79,10 +79,10 @@ namespace YanLib::crypto {
             }
         }
 
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         for (size_t i = 0; i + 8 <= bitstr.length(); i += 8) {
             std::string byte = bitstr.substr(i, 8);
-            result.push_back(static_cast<unsigned char>(
+            result.push_back(static_cast<uint8_t>(
                 std::bitset<8>(byte).to_ulong()
             ));
         }
@@ -90,15 +90,15 @@ namespace YanLib::crypto {
     }
 
     std::string base92::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base92::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

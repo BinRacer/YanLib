@@ -22,11 +22,11 @@ namespace YanLib::crypto {
 
         ~vigenere() = default;
 
-        static std::vector<unsigned char> encode(const std::vector<unsigned char> &data,
-                                                 const std::vector<unsigned char> &key);
+        static std::vector<uint8_t> encode(const std::vector<uint8_t> &data,
+                                                 const std::vector<uint8_t> &key);
 
-        static std::vector<unsigned char> decode(const std::vector<unsigned char> &data,
-                                                 const std::vector<unsigned char> &key);
+        static std::vector<uint8_t> decode(const std::vector<uint8_t> &data,
+                                                 const std::vector<uint8_t> &key);
 
         static std::string encode_string(const std::string &data,
                                          const std::string &key);

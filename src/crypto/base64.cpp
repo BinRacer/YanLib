@@ -7,11 +7,11 @@
 #include "../helper/convert.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base64::encode(const unsigned char *data, size_t len) {
+    std::vector<uint8_t> base64::encode(const uint8_t *data, size_t len) {
         if (len <= 0) return {};
-        constexpr unsigned char BASE64_CHARS[] =
+        constexpr uint8_t BASE64_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        std::vector<unsigned char> encoded;
+        std::vector<uint8_t> encoded;
         encoded.reserve(4 * ((len + 2) / 3));
 
         for (size_t i = 0; i < len;) {
@@ -38,9 +38,9 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<unsigned char> base64::decode(const unsigned char *data, size_t len) {
+    std::vector<uint8_t> base64::decode(const uint8_t *data, size_t len) {
         if (len <= 0) return {};
-        constexpr unsigned char BASE64_CHARS[] =
+        constexpr uint8_t BASE64_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         std::vector<int> decode_table(256, -1);
         for (int i = 0; i < 64; ++i) {
@@ -48,14 +48,14 @@ namespace YanLib::crypto {
         }
         decode_table['='] = 0;
 
-        std::vector<unsigned char> decoded;
+        std::vector<uint8_t> decoded;
         decoded.reserve((len * 3) / 4);
 
         uint32_t buffer = 0;
         int bits_collected = 0;
 
         for (size_t i = 0; i < len; ++i) {
-            const unsigned char c = data[i];
+            const uint8_t c = data[i];
             if (decode_table[c] < 0) continue;
 
             buffer = (buffer << 6) | decode_table[c];
@@ -69,24 +69,24 @@ namespace YanLib::crypto {
         return decoded;
     }
 
-    std::vector<unsigned char> base64::encode(const std::vector<unsigned char> &data) {
+    std::vector<uint8_t> base64::encode(const std::vector<uint8_t> &data) {
         return encode(data.data(), data.size());
     }
 
-    std::vector<unsigned char> base64::decode(const std::vector<unsigned char> &data) {
+    std::vector<uint8_t> base64::decode(const std::vector<uint8_t> &data) {
         return decode(data.data(), data.size());
     }
 
     std::string base64::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base64::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }
@@ -108,7 +108,7 @@ namespace YanLib::crypto {
             return false;
         }
         const DWORD bufferSize = input.size();
-        unsigned char *buf = new unsigned char[bufferSize];
+        uint8_t *buf = new uint8_t[bufferSize];
         memset(buf, 0, bufferSize);
         DWORD bytesRead = 0;
         DWORD bytesWrite = 0;
@@ -117,7 +117,7 @@ namespace YanLib::crypto {
                 break;
             }
             if (bytesRead <= 0) break;
-            std::vector<unsigned char> encode_data = encode(buf, bytesRead);
+            std::vector<uint8_t> encode_data = encode(buf, bytesRead);
             if (!output.write(encode_data.data(),
                               encode_data.size(),
                               &bytesWrite)) {
@@ -137,7 +137,7 @@ namespace YanLib::crypto {
             return false;
         }
         const DWORD bufferSize = input.size();
-        unsigned char *buf = new unsigned char[bufferSize];
+        uint8_t *buf = new uint8_t[bufferSize];
         memset(buf, 0, bufferSize);
         DWORD bytesRead = 0;
         DWORD bytesWrite = 0;
@@ -146,7 +146,7 @@ namespace YanLib::crypto {
                 break;
             }
             if (bytesRead <= 0) break;
-            std::vector<unsigned char> encode_data = decode(buf, bytesRead);
+            std::vector<uint8_t> encode_data = decode(buf, bytesRead);
             if (!output.write(encode_data.data(),
                               encode_data.size(),
                               &bytesWrite)) {
@@ -157,13 +157,12 @@ namespace YanLib::crypto {
         return false;
     }
 
-    std::string base64::encode_url(const std::string &data) {
-        if (data.empty()) return {};
+    std::vector<uint8_t> base64::encode_url(const uint8_t *data, size_t len) {
+        if (len <= 0) return {};
         // replace '+','/' to '-','_'
-        constexpr char BASE64_CHARS[] =
+        constexpr uint8_t BASE64_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-        std::string encoded;
-        size_t len = data.size();
+        std::vector<uint8_t> encoded;
         encoded.reserve(4 * ((len + 2) / 3));
 
         for (size_t i = 0; i < len;) {
@@ -190,10 +189,10 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::string base64::decode_url(const std::string &data) {
-        if (data.empty()) return {};
+    std::vector<uint8_t> base64::decode_url(const uint8_t *data, size_t len) {
+        if (len <= 0) return {};
         // replace '+','/' to '-','_'
-        constexpr char BASE64_CHARS[] =
+        constexpr uint8_t BASE64_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
         std::vector<int> decode_table(256, -1);
         for (int i = 0; i < 64; ++i) {
@@ -201,27 +200,47 @@ namespace YanLib::crypto {
         }
         decode_table['='] = 0;
 
-        std::string decoded;
-        size_t len = data.size();
+        std::vector<uint8_t> decoded;
         decoded.reserve((len * 3) / 4);
 
         uint32_t buffer = 0;
         int bits_collected = 0;
 
         for (size_t i = 0; i < len; ++i) {
-            const char c = data[i];
+            const uint8_t c = data[i];
             if (decode_table[c] < 0) continue;
 
             buffer = (buffer << 6) | decode_table[c];
             bits_collected += 6;
 
             if (bits_collected >= 8) {
-                decoded.push_back(
-                    static_cast<char>(
-                        (buffer >> (bits_collected - 8)) & 0xFF));
+                decoded.push_back((buffer >> (bits_collected - 8)) & 0xFF);
                 bits_collected -= 8;
             }
         }
         return decoded;
+    }
+
+    std::vector<uint8_t> base64::encode_url(const std::vector<uint8_t> &data) {
+        return encode_url(data.data(), data.size());
+    }
+
+    std::vector<uint8_t> base64::decode_url(const std::vector<uint8_t> &data) {
+        return decode_url(data.data(), data.size());
+    }
+
+
+    std::string base64::encode_url(const std::string &data) {
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode_url(input);
+        std::string result(encoded.begin(), encoded.end());
+        return result;
+    }
+
+    std::string base64::decode_url(const std::string &data) {
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode_url(input);
+        std::string result(decoded.begin(), decoded.end());
+        return result;
     }
 }

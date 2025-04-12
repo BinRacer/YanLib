@@ -5,13 +5,13 @@
 #include "base62.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base62::encode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE62_CHARS[] =
+    std::vector<uint8_t> base62::encode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE62_CHARS[] =
                 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
         if (data.empty()) return {};
 
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         result.reserve(static_cast<size_t>(data.size() * 1.37) + 3);
         std::vector<uint32_t> digits(data.begin(), data.end());
 
@@ -36,7 +36,7 @@ namespace YanLib::crypto {
 
         std::reverse(result.begin(), result.end());
 
-        std::vector<unsigned char> encoded;
+        std::vector<uint8_t> encoded;
         encoded.reserve(result.size());
         for (const uint8_t num: result) {
             encoded.push_back(BASE62_CHARS[num]);
@@ -45,15 +45,15 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<unsigned char> base62::decode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE62_CHARS[] =
+    std::vector<uint8_t> base62::decode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE62_CHARS[] =
                 "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         if (data.empty()) return {};
-        std::vector<unsigned char> table(256, -1);
+        std::vector<uint8_t> table(256, -1);
         for (int i = 0; i < 62; i++) {
             table[BASE62_CHARS[i]] = i;
         }
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         for (const auto c: data) {
             size_t pos = table[c];
             if (pos == -1) {
@@ -64,7 +64,7 @@ namespace YanLib::crypto {
             unsigned int carry = num;
             for (int i = result.size() - 1; i >= 0; --i) {
                 unsigned int temp = result[i] * 62 + carry;
-                result[i] = static_cast<unsigned char>(temp % 256);
+                result[i] = static_cast<uint8_t>(temp % 256);
                 carry = temp / 256;
             }
 
@@ -82,15 +82,15 @@ namespace YanLib::crypto {
     }
 
     std::string base62::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base62::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

@@ -5,13 +5,13 @@
 #include "base85.h"
 
 namespace YanLib::crypto {
-    std::vector<unsigned char> base85::encode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE85_CHARS[] =
+    std::vector<uint8_t> base85::encode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE85_CHARS[] =
                 "!\"#$%&'()*+,-./0123456789:;<=>?@"
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstu";
         if (data.empty()) return {};
 
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         const size_t output_size = ((data.size() + 3) / 4) * 5;
         result.reserve(output_size);
 
@@ -52,19 +52,19 @@ namespace YanLib::crypto {
         return result;
     }
 
-    std::vector<unsigned char> base85::decode(const std::vector<unsigned char> &data) {
-        constexpr unsigned char BASE85_CHARS[] =
+    std::vector<uint8_t> base85::decode(const std::vector<uint8_t> &data) {
+        constexpr uint8_t BASE85_CHARS[] =
                 "!\"#$%&'()*+,-./0123456789:;<=>?@"
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstu";
         if (data.empty()) return {};
 
-        std::vector<unsigned char> table(256, 0xFF);
+        std::vector<uint8_t> table(256, 0xFF);
         for (int i = 0; i < 85; ++i) {
             table[static_cast<uint8_t>(BASE85_CHARS[i])] = i;
         }
         table['z'] = 0;
 
-        std::vector<unsigned char> result;
+        std::vector<uint8_t> result;
         result.reserve((data.size() * 4) / 5);
         if (data.empty() || data.size() % 5 != 0) return {};
         for (size_t i = 0; i < data.size();) {
@@ -102,15 +102,15 @@ namespace YanLib::crypto {
     }
 
     std::string base85::encode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> encoded = encode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base85::decode_string(const std::string &data) {
-        std::vector<unsigned char> input(data.begin(), data.end());
-        std::vector<unsigned char> decoded = decode(input);
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
     }

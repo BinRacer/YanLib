@@ -82,21 +82,21 @@ namespace YanLib::sys {
         return true;
     }
 
-    HANDLE proc::thread_handle() const {
+    HANDLE proc::child_thread_handle() const {
         if (isCreated) {
             return pi.hThread;
         }
         return nullptr;
     }
 
-    HANDLE proc::proc_handle() const {
+    HANDLE proc::child_proc_handle() const {
         if (isCreated) {
             return pi.hProcess;
         }
         return nullptr;
     }
 
-    DWORD proc::thread_id() {
+    DWORD proc::child_thread_id() {
         if (isCreated) {
             DWORD id = GetThreadId(pi.hThread);
             if (!id) {
@@ -107,7 +107,7 @@ namespace YanLib::sys {
         return 0;
     }
 
-    DWORD proc::proc_id() {
+    DWORD proc::child_proc_id() {
         if (isCreated) {
             DWORD id = GetProcessId(pi.hProcess);
             if (!id) {
@@ -118,7 +118,7 @@ namespace YanLib::sys {
         return 0;
     }
 
-    bool proc::wait(DWORD dwMilliseconds) {
+    bool proc::wait_child(DWORD dwMilliseconds) {
         if (isCreated) {
             DWORD dwRet = WaitForSingleObject(pi.hProcess, dwMilliseconds);
             if (dwRet == WAIT_OBJECT_0) {
@@ -129,7 +129,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool proc::resume() {
+    bool proc::resume_child() {
         if (isCreated) {
             if (ResumeThread(pi.hThread) == -1) {
                 error_code = GetLastError();
@@ -138,6 +138,40 @@ namespace YanLib::sys {
             return true;
         }
         return false;
+    }
+
+    HANDLE proc::curr_thread_handle() {
+        return GetCurrentThread();
+    }
+
+    HANDLE proc::curr_proc_handle() {
+        return GetCurrentProcess();
+    }
+
+    DWORD proc::curr_thread_id() {
+        return GetCurrentThreadId();
+    }
+
+    DWORD proc::curr_proc_id() {
+        return GetCurrentProcessId();
+    }
+
+    HANDLE proc::pid_to_handle(DWORD pid) {
+        HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS,
+                                      FALSE,
+                                      pid);
+        if (!hProcess) {
+            error_code = GetLastError();
+        }
+        return hProcess;
+    }
+
+    DWORD proc::handle_to_pid(HANDLE hProcess) {
+        DWORD pid = GetProcessId(hProcess);
+        if (!pid) {
+            error_code = GetLastError();
+        }
+        return pid;
     }
 
     std::vector<PROCESSENTRY32W> proc::ls_procs(DWORD pid) {
@@ -250,16 +284,6 @@ namespace YanLib::sys {
             }
         }
         return {};
-    }
-
-    HANDLE proc::pid_to_handle(DWORD pid) {
-        return OpenProcess(PROCESS_ALL_ACCESS,
-                           FALSE,
-                           pid);
-    }
-
-    DWORD proc::handle_to_pid(HANDLE hProcess) {
-        return GetProcessId(hProcess);
     }
 
     std::vector<THREADENTRY32> proc::ls_threads(DWORD pid) {
@@ -622,7 +646,6 @@ namespace YanLib::sys {
         }
         const DWORD pid = handle_to_pid(hProcess);
         if (!pid) {
-            error_code = GetLastError();
             return false;
         }
         std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
@@ -654,7 +677,6 @@ namespace YanLib::sys {
             hProc = pid_to_handle(pid);
         }
         if (!hProc) {
-            error_code = GetLastError();
             return false;
         }
         std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);

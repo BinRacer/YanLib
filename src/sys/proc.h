@@ -59,17 +59,29 @@ namespace YanLib::sys {
                                    LPVOID lpEnvironment = nullptr,
                                    const wchar_t *lpCurrentDirectory = nullptr);
 
-        HANDLE thread_handle() const;
+        HANDLE child_thread_handle() const;
 
-        HANDLE proc_handle() const;
+        HANDLE child_proc_handle() const;
 
-        DWORD thread_id();
+        DWORD child_thread_id();
 
-        DWORD proc_id();
+        DWORD child_proc_id();
 
-        bool wait(DWORD dwMilliseconds = INFINITE);
+        bool wait_child(DWORD dwMilliseconds = INFINITE);
 
-        bool resume();
+        bool resume_child();
+
+        HANDLE curr_thread_handle();
+
+        HANDLE curr_proc_handle();
+
+        DWORD curr_thread_id();
+
+        DWORD curr_proc_id();
+
+        HANDLE pid_to_handle(DWORD pid);
+
+        DWORD handle_to_pid(HANDLE hProcess);
 
         std::vector<PROCESSENTRY32W> ls_procs(DWORD pid = 0);
 
@@ -84,10 +96,6 @@ namespace YanLib::sys {
         PROCESSENTRY32W find_proc(DWORD pid);
 
         PROCESSENTRY32W find_proc(const wchar_t *lpProcessName);
-
-        HANDLE pid_to_handle(DWORD pid);
-
-        DWORD handle_to_pid(HANDLE hProcess);
 
         std::vector<THREADENTRY32> ls_threads(DWORD pid = 0);
 

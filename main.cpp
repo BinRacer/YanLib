@@ -27,10 +27,14 @@
 #include "src/crypto/aes192.h"
 #include "src/crypto/aes256.h"
 #include "src/crypto/rsa.h"
+#include "src/helper/convert.h"
+#include "src/mem/allocate.h"
+#include "src/sys/proc.h"
 
 namespace io = YanLib::io;
 namespace hash = YanLib::hash;
 namespace crypto = YanLib::crypto;
+namespace sys = YanLib::sys;
 
 int main(int argc, const char *argv[]) {
     SetConsoleOutputCP(CP_UTF8);
@@ -241,5 +245,10 @@ int main(int argc, const char *argv[]) {
     // std::cout << rsa.pub_pem() << std::endl;
     // std::cout << rsa.priv_pem() << std::endl;
 
+    // sys::proc proc;
+    // auto procs = proc.ls_procs();
+    // auto threads = proc.ls_threads();
+    // auto modules = proc.ls_modules(16980);
+    // auto heaps = proc.ls_heaps(16980);
     return 0;
 }

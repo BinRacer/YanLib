@@ -26,7 +26,7 @@ namespace YanLib::io {
         wchar_t urlpath[512] = {};
         wchar_t extra_info[256] = {};
         bool isHTTPS = false;
-        unsigned short port = 0;
+        uint16_t port = 0;
         DWORD error_code = 0;
 
     public:

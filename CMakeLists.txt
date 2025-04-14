@@ -3,6 +3,8 @@ project(YanLib)
 
 set(CMAKE_CXX_STANDARD 20)
 
+add_compile_definitions(UNICODE _UNICODE)
+
 add_library(YanLib STATIC
         src/helper/convert.cpp
         src/helper/convert.h
@@ -84,6 +86,10 @@ add_library(YanLib STATIC
         src/crypto/aes256.h
         src/crypto/rsa.cpp
         src/crypto/rsa.h
+        src/helper/string.cpp
+        src/helper/string.h
+        src/sys/proc.cpp
+        src/sys/proc.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

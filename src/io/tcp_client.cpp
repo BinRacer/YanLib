@@ -39,7 +39,7 @@ namespace YanLib::io {
         WSACleanup();
     }
 
-    bool tcp_client::connect(const char *remoteIP, unsigned short remotePort) {
+    bool tcp_client::connect(const char *remoteIP, uint16_t remotePort) {
         if (isIPV6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;

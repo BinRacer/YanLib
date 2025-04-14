@@ -1,0 +1,46 @@
+//
+// Created by forkernel on 2025/4/14.
+//
+
+#include "string.h"
+#include <algorithm>
+#include <cwctype>
+
+namespace YanLib::helper {
+    bool string::strstr_case_insen(const std::wstring &text,
+                                   const std::wstring &substr) {
+        if (substr.empty()) return false;
+        if (text.empty()) return false;
+
+        auto caseInsensitiveCompare = [](wchar_t a, wchar_t b) -> bool {
+            return std::towlower(a) == std::towlower(b);
+        };
+        const auto it = std::search(
+            text.begin(), text.end(),
+            substr.begin(), substr.end(),
+            caseInsensitiveCompare
+        );
+        return it != text.end();
+    }
+
+    bool string::strstr_case_insen(const wchar_t *text,
+                                   const wchar_t *substr) {
+        if (!text ||
+            !substr ||
+            wcslen(text) == 0
+            || wcslen(substr) == 0)
+            return false;
+
+        auto caseInsensitiveCompare = [](wchar_t a, wchar_t b) -> bool {
+            return std::towlower(a) == std::towlower(b);
+        };
+
+        const wchar_t *result = std::search(
+            text, text + wcslen(text),
+            substr, substr + wcslen(substr),
+            caseInsensitiveCompare
+        );
+
+        return *result ? true : false;
+    }
+}

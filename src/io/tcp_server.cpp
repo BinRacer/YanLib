@@ -42,7 +42,7 @@ namespace YanLib::io {
         WSACleanup();
     }
 
-    bool tcp_server::bind(const char *localIP, unsigned short localPort) {
+    bool tcp_server::bind(const char *localIP, uint16_t localPort) {
         if (isIPV6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;

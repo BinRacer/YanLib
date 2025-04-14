@@ -41,30 +41,30 @@ namespace YanLib::io {
                   const sockaddr *to, int tolen);
 
         int read(char *buf, int len,
-                 std::string &remoteIP, unsigned short &remotePort);
+                 std::string &remoteIP, uint16_t &remotePort);
 
         int write(char *buf, int len,
-                  std::string &remoteIP, unsigned short &remotePort);
+                  std::string &remoteIP, uint16_t &remotePort);
 
         std::string read_string(std::string &remoteIP,
-                                unsigned short &remotePort,
+                                uint16_t &remotePort,
                                 int32_t bufferSize = 1024);
 
         std::wstring read_wstring(std::string &remoteIP,
-                                  unsigned short &remotePort,
+                                  uint16_t &remotePort,
                                   int32_t bufferSize = 512);
 
         std::string read_string_to_end(std::string &remoteIP,
-                                       unsigned short &remotePort);
+                                       uint16_t &remotePort);
 
         std::wstring read_wstring_to_end(std::string &remoteIP,
-                                         unsigned short &remotePort);
+                                         uint16_t &remotePort);
 
         int write_string(std::string &str,
-                         std::string &remoteIP, unsigned short &remotePort);
+                         std::string &remoteIP, uint16_t &remotePort);
 
         int write_wstring(std::wstring &wstr,
-                          std::string &remoteIP, unsigned short &remotePort);
+                          std::string &remoteIP, uint16_t &remotePort);
 
         int err_code() const;
 

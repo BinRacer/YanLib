@@ -25,7 +25,7 @@ namespace YanLib::io {
         wchar_t _password[32] = {};
         wchar_t urlpath[512] = {};
         wchar_t extra_info[256] = {};
-        unsigned short _port = 0;
+        uint16_t _port = 0;
         DWORD error_code = 0;
 
     public:
@@ -42,7 +42,7 @@ namespace YanLib::io {
         explicit ftp(const std::wstring &input_url);
 
         explicit ftp(const std::wstring &ip,
-                     const unsigned short &port,
+                     const uint16_t &port,
                      const std::wstring &username = nullptr,
                      const std::wstring &password = nullptr);
 
@@ -80,7 +80,7 @@ namespace YanLib::io {
                   LPDWORD lpdwNumberOfBytesRead);
 
         std::vector<uint8_t> read_bytes(HINTERNET hFile,
-                                              int32_t bufferSize = 1024);
+                                        int32_t bufferSize = 1024);
 
         bool write(HINTERNET hFile,
                    LPCVOID lpBuffer,

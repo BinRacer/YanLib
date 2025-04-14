@@ -40,7 +40,7 @@ namespace YanLib::io {
     }
 
     bool udp_server::bind(const char *localIP,
-                          unsigned short localPort) {
+                          uint16_t localPort) {
         if (isIPV6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;
@@ -102,7 +102,7 @@ namespace YanLib::io {
 
     int udp_server::read(char *buf, int len,
                          std::string &clientIP,
-                         unsigned short &clientPort) {
+                         uint16_t &clientPort) {
         if (isIPV6) {
             sockaddr_in6 client_addr{};
             int client_size = sizeof (client_addr);
@@ -146,7 +146,7 @@ namespace YanLib::io {
 
     int udp_server::write(char *buf, int len,
                           std::string &clientIP,
-                          unsigned short &clientPort) {
+                          uint16_t &clientPort) {
         if (isIPV6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;
@@ -185,7 +185,7 @@ namespace YanLib::io {
     }
 
     std::string udp_server::read_string(std::string &clientIP,
-                                        unsigned short &clientPort,
+                                        uint16_t &clientPort,
                                         int32_t bufferSize) {
         if (bufferSize < 1024) {
             bufferSize = 1024;
@@ -205,7 +205,7 @@ namespace YanLib::io {
     }
 
     std::wstring udp_server::read_wstring(std::string &clientIP,
-                                          unsigned short &clientPort,
+                                          uint16_t &clientPort,
                                           int32_t bufferSize) {
         if (bufferSize < 512) {
             bufferSize = 512;
@@ -216,7 +216,7 @@ namespace YanLib::io {
     }
 
     std::string udp_server::read_string_to_end(std::string &clientIP,
-                                               unsigned short &clientPort) {
+                                               uint16_t &clientPort) {
         constexpr DWORD bufferSize = 4096;
         char *buf = new char[bufferSize];
         memset(buf, 0, bufferSize);
@@ -242,14 +242,14 @@ namespace YanLib::io {
     }
 
     std::wstring udp_server::read_wstring_to_end(std::string &clientIP,
-                                                 unsigned short &clientPort) {
+                                                 uint16_t &clientPort) {
         return helper::convert::str_to_wstr(
             read_string_to_end(clientIP, clientPort));
     }
 
     int udp_server::write_string(std::string &str,
                                  std::string &clientIP,
-                                 unsigned short &clientPort) {
+                                 uint16_t &clientPort) {
         if (str.empty()) {
             return 0;
         }
@@ -258,7 +258,7 @@ namespace YanLib::io {
 
     int udp_server::write_wstring(std::wstring &wstr,
                                   std::string &clientIP,
-                                  unsigned short &clientPort) {
+                                  uint16_t &clientPort) {
         if (wstr.empty()) {
             return 0;
         }

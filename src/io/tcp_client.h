@@ -33,7 +33,7 @@ namespace YanLib::io {
         ~tcp_client();
 
         bool connect(const char *remoteIP = "127.0.0.1",
-                     unsigned short remotePort = 8080);
+                     uint16_t remotePort = 8080);
 
         int read(char *buf, int len, int flags = 0);
 

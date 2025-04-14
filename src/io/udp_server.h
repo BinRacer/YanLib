@@ -32,7 +32,7 @@ namespace YanLib::io {
         ~udp_server();
 
         bool bind(const char *localIP = "0.0.0.0",
-                  unsigned short localPort = 8080);
+                  uint16_t localPort = 8080);
 
         int read(char *buf, int len,
                  int flags,
@@ -43,30 +43,30 @@ namespace YanLib::io {
                   const sockaddr *to, int tolen);
 
         int read(char *buf, int len,
-                 std::string &clientIP, unsigned short &clientPort);
+                 std::string &clientIP, uint16_t &clientPort);
 
         int write(char *buf, int len,
-                  std::string &clientIP, unsigned short &clientPort);
+                  std::string &clientIP, uint16_t &clientPort);
 
         std::string read_string(std::string &clientIP,
-                                unsigned short &clientPort,
+                                uint16_t &clientPort,
                                 int32_t bufferSize = 1024);
 
         std::wstring read_wstring(std::string &clientIP,
-                                  unsigned short &clientPort,
+                                  uint16_t &clientPort,
                                   int32_t bufferSize = 512);
 
         std::string read_string_to_end(std::string &clientIP,
-                                       unsigned short &clientPort);
+                                       uint16_t &clientPort);
 
         std::wstring read_wstring_to_end(std::string &clientIP,
-                                         unsigned short &clientPort);
+                                         uint16_t &clientPort);
 
         int write_string(std::string &str, std::string &clientIP,
-                         unsigned short &clientPort);
+                         uint16_t &clientPort);
 
         int write_wstring(std::wstring &wstr, std::string &clientIP,
-                          unsigned short &clientPort);
+                          uint16_t &clientPort);
 
         int err_code() const;
 

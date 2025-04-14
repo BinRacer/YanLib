@@ -25,7 +25,7 @@ namespace YanLib::io {
     }
 
     ftp::ftp(const std::wstring &ip,
-             const unsigned short &port,
+             const uint16_t &port,
              const std::wstring &username,
              const std::wstring &password) {
         uc.dwStructSize = sizeof(uc);

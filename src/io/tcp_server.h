@@ -36,7 +36,7 @@ namespace YanLib::io {
         ~tcp_server();
 
         bool bind(const char *localIP = "0.0.0.0",
-                  unsigned short localPort = 8080);
+                  uint16_t localPort = 8080);
 
         bool listen(int backlog = SOMAXCONN);
 

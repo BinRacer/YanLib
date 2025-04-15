@@ -8,6 +8,10 @@ add_compile_definitions(UNICODE _UNICODE)
 add_library(YanLib STATIC
         src/helper/convert.cpp
         src/helper/convert.h
+        src/helper/string.cpp
+        src/helper/string.h
+        src/helper/autoclean.cpp
+        src/helper/autoclean.h
         src/sync/mutex.cpp
         src/sync/mutex.h
         src/sync/fence.cpp
@@ -86,10 +90,10 @@ add_library(YanLib STATIC
         src/crypto/aes256.h
         src/crypto/rsa.cpp
         src/crypto/rsa.h
-        src/helper/string.cpp
-        src/helper/string.h
         src/sys/proc.cpp
         src/sys/proc.h
+        src/sys/security.cpp
+        src/sys/security.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

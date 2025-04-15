@@ -4,6 +4,9 @@
 
 #include "proc.h"
 #include "../helper/string.h"
+#include "../helper/convert.h"
+#include <winternl.h>
+#pragma comment(lib, "ntdll.lib")
 
 namespace YanLib::sys {
     proc::proc() {
@@ -585,7 +588,7 @@ namespace YanLib::sys {
     }
 
     std::vector<HEAPENTRY32>
-    proc::find_heap_blocks(HEAPLIST32 heaplist32) {
+    proc::find_heap_blocks(HEAPLIST32 &heaplist32) {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
@@ -700,109 +703,166 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool proc::enable_privilege(HANDLE ProcessHandle,
-                                const wchar_t *szPrivilege) {
+    std::string proc::get_proc_name(HANDLE hProcess) {
+        HANDLE hProc = hProcess ? hProcess : GetCurrentProcess();
+        std::string name(MAX_PATH, '\0');
+        DWORD dwSize = 0;
+        if (!QueryFullProcessImageNameA(hProc,
+                                        0,
+                                        name.data(),
+                                        &dwSize)) {
+            error_code = GetLastError();
+            return {};
+        }
+        name.resize(dwSize);
+        return name;
+    }
+
+    std::wstring proc::get_proc_name_wide(HANDLE hProcess) {
+        HANDLE hProc = hProcess ? hProcess : GetCurrentProcess();
+        std::wstring name(MAX_PATH, L'\0');
+        DWORD dwSize = 0;
+        if (!QueryFullProcessImageNameW(hProc,
+                                        0,
+                                        name.data(),
+                                        &dwSize)) {
+            error_code = GetLastError();
+            return {};
+        }
+        name.resize(dwSize);
+        return name;
+    }
+
+    bool proc::runas_elevated_proc(const wchar_t *appName,
+                                   const wchar_t *cmdline) {
+        SHELLEXECUTEINFOW sei = {sizeof(SHELLEXECUTEINFO)};
+        sei.lpVerb = L"runas";
+        sei.lpFile = appName;
+        sei.lpParameters = cmdline;
+        sei.nShow = SW_SHOWNORMAL;
+        if (!ShellExecuteExW(&sei)) {
+            error_code = GetLastError();
+        }
+        return true;
+    }
+
+    void proc::kill_curr_proc(UINT ExitCode) {
+        ExitProcess(ExitCode);
+    }
+
+    void *proc::get_module_image_base(MODULEENTRY32W &mEntry) {
+        IMAGE_DOS_HEADER dos_header{};
+        IMAGE_NT_HEADERS64 nt_headers64{};
+        IMAGE_NT_HEADERS32 nt_headers32{};
         do {
-            HANDLE hToken;
-            if (!OpenProcessToken(ProcessHandle,
-                                  TOKEN_ADJUST_PRIVILEGES,
-                                  &hToken)) {
+            if (!Toolhelp32ReadProcessMemory(mEntry.th32ProcessID,
+                                             mEntry.modBaseAddr,
+                                             &dos_header,
+                                             sizeof(dos_header),
+                                             nullptr)) {
                 break;
             }
-            TOKEN_PRIVILEGES tp;
-            tp.PrivilegeCount = 1;
-            if (!LookupPrivilegeValueW(nullptr,
-                                       szPrivilege,
-                                       &tp.Privileges[0].Luid)) {
+            if (dos_header.e_magic != IMAGE_DOS_SIGNATURE) {
                 break;
             }
-            tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-            if (!AdjustTokenPrivileges(hToken,
-                                       FALSE,
-                                       &tp,
-                                       sizeof(tp),
-                                       nullptr,
-                                       nullptr)) {
+            if (!Toolhelp32ReadProcessMemory(mEntry.th32ProcessID,
+                                             mEntry.modBaseAddr + dos_header.e_lfanew,
+                                             &nt_headers64,
+                                             sizeof(nt_headers64),
+                                             nullptr)) {
                 break;
             }
-            bool is_ok = (GetLastError() == ERROR_SUCCESS);
-            CloseHandle(hToken);
-            return is_ok;
+            if (nt_headers64.Signature != IMAGE_NT_SIGNATURE) {
+                break;
+            }
+
+            if (nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ||
+                nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_ARM64) {
+                return reinterpret_cast<void *>(nt_headers64.OptionalHeader.ImageBase);
+            } else {
+                if (!Toolhelp32ReadProcessMemory(mEntry.th32ProcessID,
+                                                 mEntry.modBaseAddr + dos_header.e_lfanew,
+                                                 &nt_headers32,
+                                                 sizeof(nt_headers32),
+                                                 nullptr)) {
+                    break;
+                }
+                if (nt_headers32.Signature != IMAGE_NT_SIGNATURE) {
+                    break;
+                }
+                return reinterpret_cast<void *>(
+                    static_cast<int64_t>(
+                        nt_headers32.OptionalHeader.ImageBase));
+            }
         } while (false);
-        return false;
+        return nullptr;
     }
 
-    bool proc::disable_privilege(HANDLE ProcessHandle,
-                                 const wchar_t *szPrivilege) {
+    void *proc::get_curr_proc_image_base() {
+        IMAGE_DOS_HEADER dos_header{};
+        IMAGE_NT_HEADERS64 nt_headers64{};
+        IMAGE_NT_HEADERS32 nt_headers32{};
         do {
-            HANDLE hToken;
-            if (!OpenProcessToken(ProcessHandle,
-                                  TOKEN_ADJUST_PRIVILEGES,
-                                  &hToken)) {
+            HMODULE hmodule = GetModuleHandleW(nullptr);
+            if (!hmodule) {
+                error_code = GetLastError();
                 break;
             }
-            TOKEN_PRIVILEGES tp;
-            tp.PrivilegeCount = 1;
-            if (!LookupPrivilegeValueW(nullptr,
-                                       szPrivilege,
-                                       &tp.Privileges[0].Luid)) {
+            auto *base = reinterpret_cast<uint8_t *>(hmodule);
+            memcpy(&dos_header, base, sizeof(dos_header));
+            if (dos_header.e_magic != IMAGE_DOS_SIGNATURE) {
                 break;
             }
-            tp.Privileges[0].Attributes = 0;
-            if (!AdjustTokenPrivileges(hToken,
-                                       FALSE,
-                                       &tp,
-                                       sizeof(tp),
-                                       nullptr,
-                                       nullptr)) {
+            memcpy(&nt_headers64,
+                   base + dos_header.e_lfanew,
+                   sizeof(nt_headers64));
+            if (nt_headers64.Signature != IMAGE_NT_SIGNATURE) {
                 break;
             }
-            bool is_ok = (GetLastError() == ERROR_SUCCESS);
-            CloseHandle(hToken);
-            return is_ok;
+            if (nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ||
+                nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_ARM64) {
+                return reinterpret_cast<void *>(nt_headers64.OptionalHeader.ImageBase);
+            } else {
+                memcpy(&nt_headers32,
+                       base + dos_header.e_lfanew,
+                       sizeof(nt_headers32));
+                if (nt_headers32.Signature != IMAGE_NT_SIGNATURE) {
+                    break;
+                }
+                return reinterpret_cast<void *>(
+                    static_cast<int64_t>(
+                        nt_headers32.OptionalHeader.ImageBase));
+            }
         } while (false);
-        return false;
+        return nullptr;
     }
 
-    bool proc::enable_privilege(DWORD ProcessID, const wchar_t *szPrivilege) {
-        do {
-            HANDLE ProcessHandle = OpenProcess(PROCESS_ALL_ACCESS,
-                                               FALSE,
-                                               ProcessID);
-            if (!ProcessHandle) {
-                break;
-            }
-            return enable_privilege(ProcessHandle, szPrivilege);
-        } while (false);
-        return false;
+    void *proc::get_proc_image_base(HANDLE hProcess) {
+        PROCESS_BASIC_INFORMATION pbi;
+        NtQueryInformationProcess(hProcess,
+                                  ProcessBasicInformation,
+                                  &pbi,
+                                  sizeof(pbi),
+                                  nullptr);
+        void *baseAddr = pbi.PebBaseAddress->Reserved3[1];
+        return baseAddr;
     }
 
-    bool proc::disable_privilege(DWORD ProcessID, const wchar_t *szPrivilege) {
-        do {
-            HANDLE ProcessHandle = OpenProcess(PROCESS_ALL_ACCESS,
-                                               FALSE,
-                                               ProcessID);
-            if (!ProcessHandle) {
-                break;
-            }
-            return enable_privilege(ProcessHandle, szPrivilege);
-        } while (false);
-        return false;
+    void *proc::get_proc_image_base(DWORD pid) {
+        return get_proc_image_base(pid_to_handle(pid));
     }
 
-    bool proc::enable_debug(HANDLE ProcessHandle) {
-        return enable_privilege(ProcessHandle, L"SeDebugPrivilege");
+    DWORD proc::err_code() const {
+        return error_code;
     }
 
-    bool proc::disable_debug(HANDLE ProcessHandle) {
-        return disable_privilege(ProcessHandle, L"SeDebugPrivilege");
+    std::string proc::err_string() const {
+        std::string result = helper::convert::err_string(error_code);
+        return result;
     }
 
-    bool proc::enable_sacl(HANDLE ProcessHandle) {
-        return enable_privilege(ProcessHandle, L"SeSecurityPrivilege");
-    }
-
-    bool proc::disable_sacl(HANDLE ProcessHandle) {
-        return disable_privilege(ProcessHandle, L"SeSecurityPrivilege");
+    std::wstring proc::err_wstring() const {
+        std::wstring result = helper::convert::err_wstring(error_code);
+        return result;
     }
 }

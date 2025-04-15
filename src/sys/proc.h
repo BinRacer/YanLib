@@ -8,6 +8,7 @@
 #include <tlhelp32.h>
 #include <vector>
 #include <set>
+#include <string>
 
 namespace YanLib::sys {
     class proc {
@@ -131,7 +132,7 @@ namespace YanLib::sys {
 
         std::vector<HEAPLIST32> find_heaps(DWORD pid);
 
-        std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 heaplist32);
+        std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heaplist32);
 
         std::vector<HEAPENTRY32> find_heap_blocks(ULONG_PTR heapid);
 
@@ -141,33 +142,28 @@ namespace YanLib::sys {
 
         bool is_heap(DWORD pid, void *address);
 
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        static bool enable_privilege(HANDLE ProcessHandle,
-                                     const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        std::string get_proc_name(HANDLE hProcess = nullptr);
 
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        static bool disable_privilege(HANDLE ProcessHandle,
-                                      const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        std::wstring get_proc_name_wide(HANDLE hProcess = nullptr);
 
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        static bool enable_privilege(DWORD ProcessID,
-                                     const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        bool runas_elevated_proc(const wchar_t *appName,
+                                 const wchar_t *cmdline = nullptr);
 
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        static bool disable_privilege(DWORD ProcessID,
-                                      const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        void kill_curr_proc(UINT ExitCode);
 
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        static bool enable_debug(HANDLE ProcessHandle);
+        void *get_module_image_base(MODULEENTRY32W &mEntry);
 
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        static bool disable_debug(HANDLE ProcessHandle);
+        void *get_curr_proc_image_base();
 
-        // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        static bool enable_sacl(HANDLE ProcessHandle);
+        void *get_proc_image_base(HANDLE hProcess);
 
-        // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        static bool disable_sacl(HANDLE ProcessHandle);
+        void *get_proc_image_base(DWORD pid);
+
+        DWORD err_code() const;
+
+        std::string err_string() const;
+
+        std::wstring err_wstring() const;
     };
 }
 #endif //PROC_H

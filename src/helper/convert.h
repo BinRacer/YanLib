@@ -2,8 +2,8 @@
 // Created by forkernel on 2025/4/5.
 //
 
-#ifndef STRING_H
-#define STRING_H
+#ifndef CONVERT_H
+#define CONVERT_H
 #include <Windows.h>
 #include <string>
 
@@ -33,4 +33,4 @@ namespace YanLib::helper {
         static std::wstring err_wstring(DWORD error_code);
     };
 }
-#endif //STRING_H
+#endif //CONVERT_H

@@ -3,6 +3,8 @@
 //
 
 #include <iostream>
+#include <process.h>
+
 #include "src/io/http.h"
 #include "src/io/ftp.h"
 #include "src/hash/md5.h"
@@ -30,6 +32,7 @@
 #include "src/helper/convert.h"
 #include "src/mem/allocate.h"
 #include "src/sys/proc.h"
+#include "src/sys/security.h"
 
 namespace io = YanLib::io;
 namespace hash = YanLib::hash;
@@ -250,5 +253,11 @@ int main(int argc, const char *argv[]) {
     // auto threads = proc.ls_threads();
     // auto modules = proc.ls_modules(16980);
     // auto heaps = proc.ls_heaps(16980);
+    // auto base = proc.get_curr_proc_image_base();
+    // auto base2 = proc.get_proc_image_base(proc.curr_proc_handle());
+
+    // sys::security security;
+    // auto result1 = security.check_proc_elevation();
+    // auto result2 = security.check_proc_integrity_level();
     return 0;
 }

@@ -3,7 +3,7 @@
 //
 
 #include "semaphore.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::sync {
     semaphore::semaphore(): semaphore_handle(nullptr), error_code(0) {
@@ -12,6 +12,7 @@ namespace YanLib::sync {
     semaphore::~semaphore() {
         if (semaphore_handle) {
             CloseHandle(semaphore_handle);
+            semaphore_handle = nullptr;
         }
     }
 

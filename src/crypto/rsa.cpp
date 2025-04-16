@@ -4,7 +4,7 @@
 
 #include "rsa.h"
 #include "base64.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::crypto {
     void rsa::cleanup() {

@@ -4,13 +4,14 @@
 
 #ifndef AUTOCLEAN_H
 #define AUTOCLEAN_H
-#include "crypto/aes.h"
 
 namespace YanLib::helper {
-    template<class T>
+    template<typename T, bool is_file = false>
     class autoclean {
     private:
         T _value;
+
+        void cleanup();
 
     public:
         autoclean(const autoclean &other) = delete;
@@ -21,11 +22,23 @@ namespace YanLib::helper {
 
         autoclean &operator=(autoclean &&other) = delete;
 
+        autoclean() = delete;
+
         explicit autoclean(T value);
+
+        explicit autoclean(T &value);
 
         ~autoclean();
 
-        T &get() const;
+        operator T &();
+
+        operator T *();
+
+        T &operator=(const T &other);
+
+        T &operator=(T &&other);
+
+        bool is_ok() const;
     };
 }
 #endif //AUTOCLEAN_H

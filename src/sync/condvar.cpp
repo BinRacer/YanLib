@@ -3,7 +3,7 @@
 //
 
 #include "condvar.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::sync {
     condVarCS::condVarCS() {

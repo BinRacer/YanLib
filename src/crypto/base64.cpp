@@ -4,7 +4,7 @@
 
 #include "base64.h"
 #include "../io/fs.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::crypto {
     std::vector<uint8_t> base64::encode(const uint8_t *data, size_t len) {

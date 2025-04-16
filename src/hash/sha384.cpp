@@ -3,7 +3,7 @@
 //
 
 #include "sha384.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 #include "../io/fs.h"
 
 namespace YanLib::hash {

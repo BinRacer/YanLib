@@ -3,10 +3,17 @@
 //
 
 #include "proc.h"
-#include "../helper/string.h"
-#include "../helper/convert.h"
-#include <winternl.h>
-#pragma comment(lib, "ntdll.lib")
+
+#include <algorithm>
+#include <memory>
+
+#include "security.h"
+#include "helper/string.h"
+#include "helper/convert.h"
+#include "helper/autoclean.h"
+#include <UserEnv.h>
+
+#pragma comment(lib, "UserEnv.lib")
 
 namespace YanLib::sys {
     proc::proc() {
@@ -18,15 +25,52 @@ namespace YanLib::sys {
     proc::~proc() {
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         if (isCreated) {
             if (pi.hThread) {
                 CloseHandle(pi.hThread);
+                pi.hThread = nullptr;
             }
             if (pi.hProcess) {
                 CloseHandle(pi.hProcess);
+                pi.hProcess = nullptr;
             }
         }
+    }
+
+    NTSTATUS proc::nt_query_info_proc(HANDLE ProcessHandle,
+                                      PROCESSINFOCLASS ProcessInformationClass,
+                                      PVOID ProcessInformation,
+                                      ULONG ProcessInformationLength,
+                                      PULONG ReturnLength) {
+        typedef NTSTATUS (CALLBACK *pfn)(HANDLE ProcessHandle,
+                                         PROCESSINFOCLASS ProcessInformationClass,
+                                         PVOID ProcessInformation,
+                                         ULONG ProcessInformationLength,
+                                         PULONG ReturnLength OPTIONAL);
+        NTSTATUS Status = -1;
+        HMODULE hNTDLL = nullptr;
+        do {
+            hNTDLL = LoadLibraryW(L"ntdll.dll");
+            if (!hNTDLL) {
+                break;
+            }
+            pfn query_info_proc = reinterpret_cast<pfn>(
+                GetProcAddress(hNTDLL, "NtQueryInformationProcess"));
+            if (!query_info_proc) {
+                break;
+            }
+            Status = query_info_proc(ProcessHandle,
+                                     ProcessInformationClass,
+                                     ProcessInformation,
+                                     ProcessInformationLength,
+                                     ReturnLength);
+        } while (false);
+        if (hNTDLL) {
+            FreeLibrary(hNTDLL);
+        }
+        return Status;
     }
 
     bool proc::create(const wchar_t *lpApplicationName,
@@ -83,6 +127,120 @@ namespace YanLib::sys {
         }
         isCreated = true;
         return true;
+    }
+
+    bool proc::create_as_user(HANDLE hToken,
+                              const wchar_t *lpApplicationName,
+                              wchar_t *lpCommandLine,
+                              LPSECURITY_ATTRIBUTES lpProcessAttributes,
+                              LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                              BOOL bInheritHandles,
+                              DWORD dwCreationFlags,
+                              LPVOID lpEnvironment,
+                              const wchar_t *lpCurrentDirectory) {
+        if (!CreateProcessAsUserW(hToken,
+                                  lpApplicationName,
+                                  lpCommandLine,
+                                  lpProcessAttributes,
+                                  lpThreadAttributes,
+                                  bInheritHandles,
+                                  dwCreationFlags,
+                                  lpEnvironment,
+                                  lpCurrentDirectory,
+                                  &si,
+                                  &pi)) {
+            error_code = GetLastError();
+            return false;
+        }
+        isCreated = true;
+        return true;
+    }
+
+    bool proc::create_session_zero(const wchar_t *lpApplicationName,
+                                   wchar_t *lpCommandLine,
+                                   LPSECURITY_ATTRIBUTES lpProcessAttributes,
+                                   LPSECURITY_ATTRIBUTES lpThreadAttributes,
+                                   BOOL bInheritHandles,
+                                   DWORD dwCreationFlags,
+                                   LPVOID lpEnvironment,
+                                   const wchar_t *lpCurrentDirectory) {
+        security security;
+        helper::autoclean<HANDLE> hToken(nullptr);
+        hToken = security.copy_token();
+        if (!hToken.is_ok()) {
+            error_code = security.err_code();
+            return false;
+        }
+        void *env = nullptr;
+        if (lpEnvironment) {
+            env = lpEnvironment;
+        } else {
+            env = security.create_env_block(hToken);
+            if (!env) {
+                error_code = security.err_code();
+                return false;
+            }
+        }
+        if (!CreateProcessAsUserW(hToken,
+                                  lpApplicationName,
+                                  lpCommandLine,
+                                  lpProcessAttributes,
+                                  lpThreadAttributes,
+                                  bInheritHandles,
+                                  dwCreationFlags,
+                                  env,
+                                  lpCurrentDirectory,
+                                  &si,
+                                  &pi)) {
+            error_code = GetLastError();
+            if (!security.clear_env_block(env)) {
+                error_code = security.err_code();
+            }
+            return false;
+        }
+        isCreated = true;
+        if (!security.clear_env_block(env)) {
+            error_code = security.err_code();
+        }
+        return true;
+    }
+
+    bool proc::win_exec(const char *lpCmdLine, UINT uCmdShow) {
+        UINT uiRet = WinExec(lpCmdLine, uCmdShow);
+        if (uiRet <= 31 && uiRet > 0) {
+            error_code = uiRet;
+        } else if (uiRet == 0) {
+            error_code = ERROR_NOT_ENOUGH_SERVER_MEMORY;
+        }
+        if (uiRet > 31) {
+            return true;
+        }
+        return false;
+    }
+
+    bool proc::shell_exec(const wchar_t *lpFile,
+                          const wchar_t *lpParameters,
+                          const wchar_t *lpDirectory,
+                          INT nShowCmd,
+                          HWND hwnd,
+                          const wchar_t *lpOperation) {
+        HINSTANCE hInstance = ShellExecuteW(hwnd,
+                                            lpOperation,
+                                            lpFile,
+                                            lpParameters,
+                                            lpDirectory,
+                                            nShowCmd);
+        auto uiRet = reinterpret_cast<uintptr_t>(hInstance);
+        uiRet = uiRet & 0x00000000FFFFFFFF;
+        if (uiRet <= 32 && uiRet > 0) {
+            error_code = uiRet;
+        } else if (uiRet == 0) {
+            error_code = ERROR_NOT_ENOUGH_SERVER_MEMORY;
+        }
+        if (uiRet > 32) {
+            return true;
+        }
+        return false;
     }
 
     HANDLE proc::child_thread_handle() const {
@@ -183,6 +341,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         PROCESSENTRY32W pe = {sizeof(PROCESSENTRY32W)};
         do {
@@ -204,7 +363,7 @@ namespace YanLib::sys {
         return procs;
     }
 
-    std::set<DWORD> proc::ls_pids(DWORD pid) {
+    std::unordered_set<DWORD> proc::ls_pids(DWORD pid) {
         if (!pids.empty()) {
             return pids;
         }
@@ -216,6 +375,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         PROCESSENTRY32W pe = {sizeof(PROCESSENTRY32W)};
         do {
@@ -246,7 +406,7 @@ namespace YanLib::sys {
         if (pids.empty()) {
             ls_pids();
         }
-        return pids.contains(pid);
+        return pids.find(pid) != pids.end();
     }
 
     DWORD proc::get_ppid(DWORD pid) {
@@ -295,6 +455,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         THREADENTRY32 te = {sizeof(THREADENTRY32)};
         do {
@@ -316,7 +477,7 @@ namespace YanLib::sys {
         return threads;
     }
 
-    std::set<DWORD> proc::ls_tids(DWORD pid) {
+    std::unordered_set<DWORD> proc::ls_tids(DWORD pid) {
         if (!tids.empty()) {
             return tids;
         }
@@ -328,6 +489,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         THREADENTRY32 te = {sizeof(THREADENTRY32)};
         do {
@@ -358,7 +520,7 @@ namespace YanLib::sys {
         if (tids.empty()) {
             ls_tids();
         }
-        return tids.contains(tid);
+        return tids.find(tid) != tids.end();
     }
 
     DWORD proc::get_pid(DWORD tid) {
@@ -405,6 +567,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
         do {
@@ -426,7 +589,7 @@ namespace YanLib::sys {
         return modules;
     }
 
-    std::set<HMODULE> proc::ls_hmodules(DWORD pid) {
+    std::unordered_set<HMODULE> proc::ls_hmodules(DWORD pid) {
         if (!hmodules.empty()) {
             return hmodules;
         }
@@ -438,6 +601,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
         do {
@@ -503,6 +667,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         HEAPLIST32 he = {sizeof(HEAPLIST32)};
         do {
@@ -524,7 +689,7 @@ namespace YanLib::sys {
         return heaps;
     }
 
-    std::set<ULONG_PTR> proc::ls_heapids(DWORD pid) {
+    std::unordered_set<ULONG_PTR> proc::ls_heapids(DWORD pid) {
         if (!heapids.empty()) {
             return heapids;
         }
@@ -536,6 +701,7 @@ namespace YanLib::sys {
         }
         if (hSnapshot != INVALID_HANDLE_VALUE) {
             CloseHandle(hSnapshot);
+            hSnapshot = INVALID_HANDLE_VALUE;
         }
         HEAPLIST32 he = {sizeof(HEAPLIST32)};
         do {
@@ -838,18 +1004,161 @@ namespace YanLib::sys {
     }
 
     void *proc::get_proc_image_base(HANDLE hProcess) {
+        HANDLE hProc = hProcess ? hProcess : GetCurrentProcess();
         PROCESS_BASIC_INFORMATION pbi;
-        NtQueryInformationProcess(hProcess,
-                                  ProcessBasicInformation,
-                                  &pbi,
-                                  sizeof(pbi),
-                                  nullptr);
+        NTSTATUS status = nt_query_info_proc(hProc,
+                                             ProcessBasicInformation,
+                                             &pbi,
+                                             sizeof(PROCESS_BASIC_INFORMATION),
+                                             nullptr);
+        if (!NT_SUCCESS(status)) {
+            return nullptr;
+        }
         void *baseAddr = pbi.PebBaseAddress->Reserved3[1];
         return baseAddr;
     }
 
     void *proc::get_proc_image_base(DWORD pid) {
         return get_proc_image_base(pid_to_handle(pid));
+    }
+
+    std::string proc::get_proc_cmdline(HANDLE hProcess) {
+        std::wstring result = get_proc_cmdline_wide(hProcess);
+        return helper::convert::wstr_to_str(result);
+    }
+
+    std::wstring proc::get_proc_cmdline_wide(HANDLE hProcess) {
+        HANDLE hProc = hProcess ? hProcess : GetCurrentProcess();
+        DWORD dwSize = 0;
+        PROCESS_BASIC_INFORMATION pbi{};
+        do {
+            NTSTATUS status = nt_query_info_proc(hProc,
+                                                 ProcessBasicInformation,
+                                                 &pbi,
+                                                 sizeof(pbi),
+                                                 &dwSize);
+            if (!NT_SUCCESS(status)) {
+                break;
+            }
+            auto peb = std::make_unique<_peb>();
+            size_t size = dwSize;
+            if (!ReadProcessMemory(hProc,
+                                   pbi.PebBaseAddress,
+                                   peb.get(),
+                                   sizeof(_peb),
+                                   &size)) {
+                error_code = GetLastError();
+                break;
+            }
+            auto block = std::make_unique<_infoBlock>();
+            if (!ReadProcessMemory(hProc,
+                                   peb->InfoBlockAddress,
+                                   block.get(),
+                                   sizeof(_infoBlock),
+                                   &size)) {
+                error_code = GetLastError();
+                break;
+            }
+            std::vector<wchar_t> cmdline(MAX_PATH + 1, L'\0');
+            if (!ReadProcessMemory(hProc,
+                                   block->wszCmdLineAddress,
+                                   cmdline.data(),
+                                   cmdline.size(),
+                                   &size)) {
+                error_code = GetLastError();
+                break;
+            }
+            cmdline.resize(size);
+            cmdline.shrink_to_fit();
+            return cmdline.data();
+        } while (false);
+        return {};
+    }
+
+    std::string proc::get_proc_cmdline(DWORD pid) {
+        return get_proc_cmdline(pid_to_handle(pid));
+    }
+
+    std::wstring proc::get_proc_cmdline_wide(DWORD pid) {
+        return get_proc_cmdline_wide(pid_to_handle(pid));
+    }
+
+    std::string proc::get_proc_owner(HANDLE hProcess) {
+        std::wstring result = get_proc_owner_wide(hProcess);
+        return helper::convert::wstr_to_str(result);
+    }
+
+    std::wstring proc::get_proc_owner_wide(HANDLE hProcess) {
+        HANDLE hProc = hProcess ? hProcess : GetCurrentProcess();
+        helper::autoclean<HANDLE> hToken(nullptr);
+        std::wstring result;
+        security security;
+        do {
+            if (security.enable_privilege(GetCurrentProcess(),
+                                          L"SeTcbPrivilege")) {
+                break;
+            }
+            if (!OpenProcessToken(hProc,
+                                  TOKEN_QUERY,
+                                  hToken)) {
+                error_code = GetLastError();
+                break;
+            }
+            DWORD dwSize = 0;
+            GetTokenInformation(hToken,
+                                TokenUser,
+                                nullptr,
+                                0,
+                                &dwSize);
+            error_code = GetLastError();
+            if (error_code != ERROR_INSUFFICIENT_BUFFER) {
+                break;
+            }
+            std::vector<uint8_t> token_user(dwSize, 0);
+            if (!GetTokenInformation(hToken,
+                                     TokenUser,
+                                     token_user.data(),
+                                     token_user.size(),
+                                     &dwSize)) {
+                error_code = GetLastError();
+                break;
+            }
+            SID_NAME_USE snu;
+            TCHAR szUser[MAX_PATH];
+            DWORD chUser = MAX_PATH;
+            PDWORD pcchUser = &chUser;
+            TCHAR szDomain[MAX_PATH];
+            DWORD chDomain = MAX_PATH;
+            PDWORD pcchDomain = &chDomain;
+            if (!LookupAccountSidW(nullptr,
+                                   reinterpret_cast<PTOKEN_USER>(
+                                       token_user.data())->User.Sid,
+                                   szUser,
+                                   pcchUser,
+                                   szDomain,
+                                   pcchDomain,
+                                   &snu)) {
+                error_code = GetLastError();
+                break;
+            }
+            result.assign(L"\\\\");
+            result.append(szDomain);
+            result.append(L"\\");
+            result.append(szUser);
+            if (security.disable_privilege(GetCurrentProcess(),
+                                           L"SeTcbPrivilege")) {
+                break;
+            }
+        } while (false);
+        return result;
+    }
+
+    std::string proc::get_proc_owner(DWORD pid) {
+        return get_proc_owner(pid_to_handle(pid));
+    }
+
+    std::wstring proc::get_proc_owner_wide(DWORD pid) {
+        return get_proc_owner_wide(pid_to_handle(pid));
     }
 
     DWORD proc::err_code() const {

@@ -3,7 +3,7 @@
 //
 
 #include "mmap.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::mem {
     mmap::mmap()
@@ -16,12 +16,15 @@ namespace YanLib::mem {
     mmap::~mmap() {
         if (lpMemory) {
             UnmapViewOfFile(lpMemory);
+            lpMemory = nullptr;
         }
         if (hMapFile) {
             CloseHandle(hMapFile);
+            hMapFile = nullptr;
         }
         if (hFile != INVALID_HANDLE_VALUE) {
             CloseHandle(hFile);
+            hFile = INVALID_HANDLE_VALUE;
         }
     }
 
@@ -94,10 +97,10 @@ namespace YanLib::mem {
                          DWORD dwFileOffsetLow,
                          SIZE_T dwNumberOfBytesToMap) {
         lpMemory = static_cast<uint8_t *>(MapViewOfFile(hMapFile,
-                                                              dwDesiredAccess,
-                                                              dwFileOffsetHigh,
-                                                              dwFileOffsetLow,
-                                                              dwNumberOfBytesToMap));
+                                                        dwDesiredAccess,
+                                                        dwFileOffsetHigh,
+                                                        dwFileOffsetLow,
+                                                        dwNumberOfBytesToMap));
         if (!lpMemory) {
             error_code = GetLastError();
             return false;

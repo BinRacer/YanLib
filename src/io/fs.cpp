@@ -3,7 +3,7 @@
 //
 
 #include "fs.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::io {
     void fs::remove_tail_slash(std::wstring &path) {
@@ -32,6 +32,7 @@ namespace YanLib::io {
     fs::~fs() {
         if (hFile != INVALID_HANDLE_VALUE) {
             CloseHandle(hFile);
+            hFile = INVALID_HANDLE_VALUE;
         }
     }
 

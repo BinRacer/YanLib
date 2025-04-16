@@ -3,7 +3,7 @@
 //
 
 #include "md5.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 #include "../io/fs.h"
 
 namespace YanLib::hash {

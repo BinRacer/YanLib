@@ -4,7 +4,7 @@
 
 #include "tcp_server.h"
 #include <ws2tcpip.h>
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::io {
     tcp_server::tcp_server(bool activeIpV6) {

@@ -3,7 +3,7 @@
 //
 
 #include "barrier.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::sync {
     barrier::barrier(LONG lTotalThreads, LONG lSpinCount) {

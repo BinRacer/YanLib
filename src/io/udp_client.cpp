@@ -4,7 +4,7 @@
 
 #include "udp_client.h"
 #include <ws2tcpip.h>
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::io {
     udp_client::udp_client(bool activeIpV6) {

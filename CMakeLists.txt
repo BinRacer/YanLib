@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 project(YanLib)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 add_compile_definitions(UNICODE _UNICODE)
 
@@ -109,7 +109,7 @@ target_include_directories(YanLib
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/Lib)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 add_executable(app main.cpp)
 

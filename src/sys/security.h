@@ -22,9 +22,24 @@ namespace YanLib::sys {
 
         security &operator=(security &&other) = delete;
 
-        security();
+        security() = default;
 
-        ~security();
+        ~security() = default;
+
+        DWORD curr_session_id() const;
+
+        HANDLE curr_session_token(ULONG SessionId = 0);
+
+        HANDLE copy_token(HANDLE hExistingToken = nullptr,
+                          DWORD dwDesiredAccess = MAXIMUM_ALLOWED,
+                          LPSECURITY_ATTRIBUTES lpTokenAttributes = nullptr,
+                          SECURITY_IMPERSONATION_LEVEL ImpersonationLevel = SecurityIdentification,
+                          TOKEN_TYPE TokenType = TokenPrimary);
+
+        void *create_env_block(HANDLE hToken,
+                               BOOL bInherit = FALSE);
+
+        bool clear_env_block(void *lpEnvironment);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool enable_privilege(HANDLE ProcessHandle,

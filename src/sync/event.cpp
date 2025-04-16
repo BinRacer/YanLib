@@ -3,7 +3,7 @@
 //
 
 #include "event.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::sync {
     event::event(): event_handle(nullptr), error_code(0) {
@@ -12,6 +12,7 @@ namespace YanLib::sync {
     event::~event() {
         if (event_handle) {
             CloseHandle(event_handle);
+            event_handle = nullptr;
         }
     }
 

@@ -3,7 +3,7 @@
 //
 
 #include "timer.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::sync {
     timer::timer(): timer_handle(nullptr), error_code(0) {
@@ -12,6 +12,7 @@ namespace YanLib::sync {
     timer::~timer() {
         if (timer_handle) {
             CloseHandle(timer_handle);
+            timer_handle = nullptr;
         }
     }
 

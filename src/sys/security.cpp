@@ -3,26 +3,94 @@
 //
 
 #include "security.h"
-#include "../helper/convert.h"
-#include "../helper/autoclean.h"
+#include "helper/convert.h"
+#include "helper/autoclean.h"
 #include <shlobj.h>
 #include <aclapi.h>
+#include <memory>
 #include <vector>
+#include <WtsApi32.h>
+#include <UserEnv.h>
+#pragma comment(lib, "WtsApi32.lib")
+#pragma comment(lib, "UserEnv.lib")
 
 namespace YanLib::sys {
-    security::security() {
+    DWORD security::curr_session_id() const {
+        return WTSGetActiveConsoleSessionId();
     }
 
-    security::~security() {
+    HANDLE security::curr_session_token(ULONG SessionId) {
+        ULONG id = (SessionId == 0) ? curr_session_id() : SessionId;
+        HANDLE hToken;
+        if (!WTSQueryUserToken(id, &hToken)) {
+            error_code = GetLastError();
+            return nullptr;
+        }
+        return hToken;
+    }
+
+    HANDLE security::copy_token(HANDLE hExistingToken,
+                                DWORD dwDesiredAccess,
+                                LPSECURITY_ATTRIBUTES lpTokenAttributes,
+                                SECURITY_IMPERSONATION_LEVEL ImpersonationLevel,
+                                TOKEN_TYPE TokenType) {
+        HANDLE hToken = nullptr;
+        bool is_curr = false;
+        if (hExistingToken) {
+            hToken = hExistingToken;
+        } else {
+            hToken = curr_session_token();
+            is_curr = true;
+        }
+        if (!hToken) {
+            is_curr = false;
+            return nullptr;
+        }
+        HANDLE retToken = nullptr;
+        if (!DuplicateTokenEx(hToken,
+                              dwDesiredAccess,
+                              lpTokenAttributes,
+                              ImpersonationLevel,
+                              TokenType,
+                              &retToken)) {
+            error_code = GetLastError();
+            if (is_curr) {
+                CloseHandle(hToken);
+            }
+            return nullptr;
+        }
+        if (is_curr) {
+            CloseHandle(hToken);
+        }
+        return retToken;
+    }
+
+    void *security::create_env_block(HANDLE hToken, BOOL bInherit) {
+        void *lpEnvironment = nullptr;
+        if (!CreateEnvironmentBlock(&lpEnvironment,
+                                    hToken,
+                                    bInherit)) {
+            error_code = GetLastError();
+            return nullptr;
+        }
+        return lpEnvironment;
+    }
+
+    bool security::clear_env_block(void *lpEnvironment) {
+        if (!DestroyEnvironmentBlock(lpEnvironment)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool security::enable_privilege(HANDLE ProcessHandle,
                                     const wchar_t *szPrivilege) {
-        helper::autoclean<HANDLE> hToken({});
+        helper::autoclean<HANDLE> hToken(nullptr);
         do {
             if (!OpenProcessToken(ProcessHandle,
                                   TOKEN_ADJUST_PRIVILEGES,
-                                  &(hToken.get()))) {
+                                  hToken)) {
                 error_code = GetLastError();
                 break;
             }
@@ -35,7 +103,7 @@ namespace YanLib::sys {
                 break;
             }
             tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-            if (!AdjustTokenPrivileges(hToken.get(),
+            if (!AdjustTokenPrivileges(hToken,
                                        FALSE,
                                        &tp,
                                        sizeof(tp),
@@ -51,11 +119,11 @@ namespace YanLib::sys {
 
     bool security::disable_privilege(HANDLE ProcessHandle,
                                      const wchar_t *szPrivilege) {
-        helper::autoclean<HANDLE> hToken({});
+        helper::autoclean<HANDLE> hToken(nullptr);
         do {
             if (!OpenProcessToken(ProcessHandle,
                                   TOKEN_ADJUST_PRIVILEGES,
-                                  &(hToken.get()))) {
+                                  hToken)) {
                 error_code = GetLastError();
                 break;
             }
@@ -68,7 +136,7 @@ namespace YanLib::sys {
                 break;
             }
             tp.Privileges[0].Attributes = 0;
-            if (!AdjustTokenPrivileges(hToken.get(),
+            if (!AdjustTokenPrivileges(hToken,
                                        FALSE,
                                        &tp,
                                        sizeof(tp),
@@ -84,30 +152,30 @@ namespace YanLib::sys {
 
     bool security::enable_privilege(DWORD ProcessID, const wchar_t *szPrivilege) {
         do {
-            helper::autoclean<HANDLE> ProcessHandle({});
-            ProcessHandle.get() = OpenProcess(PROCESS_ALL_ACCESS,
-                                              FALSE,
-                                              ProcessID);
-            if (!ProcessHandle.get()) {
+            helper::autoclean<HANDLE> ProcessHandle(nullptr);
+            ProcessHandle = OpenProcess(PROCESS_ALL_ACCESS,
+                                        FALSE,
+                                        ProcessID);
+            if (!ProcessHandle.is_ok()) {
                 error_code = GetLastError();
                 break;
             }
-            return enable_privilege(ProcessHandle.get(), szPrivilege);
+            return enable_privilege(ProcessHandle, szPrivilege);
         } while (false);
         return false;
     }
 
     bool security::disable_privilege(DWORD ProcessID, const wchar_t *szPrivilege) {
         do {
-            helper::autoclean<HANDLE> ProcessHandle({});
-            ProcessHandle.get() = OpenProcess(PROCESS_ALL_ACCESS,
-                                              FALSE,
-                                              ProcessID);
-            if (!ProcessHandle.get()) {
+            helper::autoclean<HANDLE> ProcessHandle(nullptr);
+            ProcessHandle = OpenProcess(PROCESS_ALL_ACCESS,
+                                        FALSE,
+                                        ProcessID);
+            if (!ProcessHandle.is_ok()) {
                 error_code = GetLastError();
                 break;
             }
-            return enable_privilege(ProcessHandle.get(), szPrivilege);
+            return enable_privilege(ProcessHandle, szPrivilege);
         } while (false);
         return false;
     }
@@ -147,19 +215,19 @@ namespace YanLib::sys {
     std::pair<TOKEN_ELEVATION_TYPE, bool>
     security::check_proc_elevation(HANDLE ProcessHandle) {
         HANDLE hProc = ProcessHandle ? ProcessHandle : GetCurrentProcess();
-        helper::autoclean<HANDLE> hToken({});
-        helper::autoclean<HANDLE> hFilterToken({});
+        helper::autoclean<HANDLE> hToken(nullptr);
+        helper::autoclean<HANDLE> hFilterToken(nullptr);
         TOKEN_ELEVATION_TYPE token_type = TokenElevationTypeDefault;
         BOOL is_admin = FALSE;
         DWORD dwSize = 0;
         do {
             if (!OpenProcessToken(hProc,
                                   TOKEN_QUERY,
-                                  &(hToken.get()))) {
+                                  hToken)) {
                 error_code = GetLastError();
                 break;
             }
-            if (!GetTokenInformation(hToken.get(),
+            if (!GetTokenInformation(hToken,
                                      TokenElevationType,
                                      &token_type,
                                      sizeof(TOKEN_ELEVATION_TYPE),
@@ -180,15 +248,15 @@ namespace YanLib::sys {
                 is_admin = IsUserAnAdmin();
                 break;
             }
-            if (!GetTokenInformation(hToken.get(),
+            if (!GetTokenInformation(hToken,
                                      TokenLinkedToken,
-                                     &(hFilterToken.get()),
+                                     &hFilterToken,
                                      sizeof(HANDLE),
                                      &dwSize)) {
                 error_code = GetLastError();
                 break;
             }
-            if (!CheckTokenMembership(hFilterToken.get(), &adminSID, &is_admin)) {
+            if (!CheckTokenMembership(hFilterToken, &adminSID, &is_admin)) {
                 error_code = GetLastError();
                 break;
             }
@@ -202,7 +270,7 @@ namespace YanLib::sys {
         security::SystemPolicy>
     security::check_proc_integrity_level(HANDLE ProcessHandle) {
         HANDLE hProc = ProcessHandle ? ProcessHandle : GetCurrentProcess();
-        helper::autoclean<HANDLE> hToken({});
+        helper::autoclean<HANDLE> hToken(nullptr);
         SecurityLevel securityLevel = SECURITY_UNKNOWN;
         TokenPolicy tokenPolicy = TOKEN_UNKNOWN;
         ResourceLevel resourceLevel = RESOURCE_UNKNOWN;
@@ -210,12 +278,12 @@ namespace YanLib::sys {
         do {
             if (!OpenProcessToken(hProc,
                                   TOKEN_READ,
-                                  &(hToken.get()))) {
+                                  hToken)) {
                 error_code = GetLastError();
                 break;
             }
             DWORD dwSize = 0;
-            if (!GetTokenInformation(hToken.get(),
+            if (!GetTokenInformation(hToken,
                                      TokenIntegrityLevel,
                                      nullptr,
                                      0,
@@ -227,7 +295,7 @@ namespace YanLib::sys {
             }
             std::vector<uint8_t> buf(dwSize, '\0');
             PTOKEN_MANDATORY_LABEL tokenInfo = reinterpret_cast<PTOKEN_MANDATORY_LABEL>(buf.data());
-            if (!GetTokenInformation(hToken.get(),
+            if (!GetTokenInformation(hToken,
                                      TokenIntegrityLevel,
                                      tokenInfo,
                                      dwSize,
@@ -274,7 +342,7 @@ namespace YanLib::sys {
 
             dwSize = sizeof(DWORD);
             DWORD policy = TOKEN_MANDATORY_POLICY_OFF;
-            if (!GetTokenInformation(hToken.get(),
+            if (!GetTokenInformation(hToken,
                                      TokenMandatoryPolicy,
                                      &policy,
                                      dwSize, &dwSize)) {

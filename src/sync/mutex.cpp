@@ -3,7 +3,7 @@
 //
 
 #include "mutex.h"
-#include "../helper/convert.h"
+#include "helper/convert.h"
 
 namespace YanLib::sync {
     mutex::mutex(): mutex_handle(nullptr), error_code(0) {
@@ -12,6 +12,7 @@ namespace YanLib::sync {
     mutex::~mutex() {
         if (mutex_handle) {
             CloseHandle(mutex_handle);
+            mutex_handle = nullptr;
         }
     }
 

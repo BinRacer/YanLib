@@ -151,6 +151,54 @@ namespace YanLib::sys {
                         HWND hwnd = nullptr,
                         const wchar_t *lpOperation = nullptr);
 
+        void *malloc(HANDLE hProcess,
+                     size_t dwSize,
+                     void *lpAddress = nullptr,
+                     DWORD flAllocationType = MEM_COMMIT | MEM_RESERVE,
+                     DWORD flProtect = PAGE_READWRITE);
+
+        bool free(HANDLE hProcess,
+                  void *lpAddress,
+                  size_t dwSize = 0,
+                  DWORD dwFreeType = MEM_RELEASE);
+
+        void *malloc_reserve(HANDLE hProcess,
+                             size_t dwSize,
+                             void *lpAddress = nullptr,
+                             DWORD flAllocationType = MEM_RESERVE,
+                             DWORD flProtect = PAGE_READWRITE);
+
+        bool free_reserve(HANDLE hProcess,
+                          void *lpAddress,
+                          size_t dwSize,
+                          DWORD dwFreeType = MEM_DECOMMIT);
+
+        bool mem_guard_attr(HANDLE hProcess,
+                            void *lpAddress,
+                            size_t dwSize,
+                            DWORD flNewProtect,
+                            PDWORD lpflOldProtect);
+
+        bool read(HANDLE hProcess,
+                  const void *lpBaseAddress,
+                  void *lpBuffer,
+                  size_t nSize,
+                  size_t *lpNumberOfBytesRead);
+
+        bool write(HANDLE hProcess,
+                   void *lpBaseAddress,
+                   const void *lpBuffer,
+                   size_t nSize,
+                   size_t *lpNumberOfBytesWritten);
+
+        std::vector<uint8_t> read(HANDLE hProcess,
+                                  const void *lpBaseAddress,
+                                  size_t nSize);
+
+        bool write(HANDLE hProcess,
+                   void *lpBaseAddress,
+                   std::vector<uint8_t> &buf);
+
         HANDLE child_thread_handle() const;
 
         HANDLE child_proc_handle() const;
@@ -265,6 +313,10 @@ namespace YanLib::sys {
         std::string get_proc_owner(DWORD pid);
 
         std::wstring get_proc_owner_wide(DWORD pid);
+
+        bool fake_proc(HANDLE hProcess,
+                       const wchar_t *appName,
+                       const wchar_t *cmdline);
 
         DWORD err_code() const;
 

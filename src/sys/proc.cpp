@@ -243,6 +243,156 @@ namespace YanLib::sys {
         return false;
     }
 
+    void *proc::malloc(HANDLE hProcess,
+                       size_t dwSize,
+                       void *lpAddress,
+                       DWORD flAllocationType,
+                       DWORD flProtect) {
+        void *addr = VirtualAllocEx(hProcess,
+                                    lpAddress,
+                                    dwSize,
+                                    flAllocationType,
+                                    flProtect);
+        if (!addr) {
+            error_code = GetLastError();
+        }
+        return addr;
+    }
+
+    bool proc::free(HANDLE hProcess,
+                    void *lpAddress,
+                    size_t dwSize,
+                    DWORD dwFreeType) {
+        if (dwFreeType & MEM_RELEASE) {
+            dwSize = 0;
+        }
+        if (!VirtualFreeEx(hProcess,
+                           lpAddress,
+                           dwSize,
+                           dwFreeType)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void *proc::malloc_reserve(HANDLE hProcess,
+                               size_t dwSize,
+                               void *lpAddress,
+                               DWORD flAllocationType,
+                               DWORD flProtect) {
+        void *addr = VirtualAllocEx(hProcess,
+                                    lpAddress,
+                                    dwSize,
+                                    flAllocationType,
+                                    flProtect);
+        if (!addr) {
+            error_code = GetLastError();
+        }
+        return addr;
+    }
+
+    bool proc::free_reserve(HANDLE hProcess,
+                            void *lpAddress,
+                            size_t dwSize,
+                            DWORD dwFreeType) {
+        if (!VirtualFreeEx(hProcess,
+                           lpAddress,
+                           dwSize,
+                           dwFreeType)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::mem_guard_attr(HANDLE hProcess,
+                              void *lpAddress,
+                              size_t dwSize,
+                              DWORD flNewProtect,
+                              PDWORD lpflOldProtect) {
+        if (!VirtualProtectEx(hProcess,
+                              lpAddress,
+                              dwSize,
+                              flNewProtect,
+                              lpflOldProtect)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::read(HANDLE hProcess,
+                    const void *lpBaseAddress,
+                    void *lpBuffer,
+                    size_t nSize,
+                    size_t *lpNumberOfBytesRead) {
+        if (!ReadProcessMemory(hProcess,
+                               lpBaseAddress,
+                               lpBuffer,
+                               nSize,
+                               lpNumberOfBytesRead)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::write(HANDLE hProcess,
+                     void *lpBaseAddress,
+                     const void *lpBuffer,
+                     size_t nSize,
+                     size_t *lpNumberOfBytesWritten) {
+        if (!WriteProcessMemory(hProcess,
+                                lpBaseAddress,
+                                lpBuffer,
+                                nSize,
+                                lpNumberOfBytesWritten)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<uint8_t> proc::read(HANDLE hProcess,
+                                    const void *lpBaseAddress,
+                                    size_t nSize) {
+        std::vector<uint8_t> buffer(nSize, 0);
+        size_t bytesRead = 0;
+        if (!ReadProcessMemory(hProcess,
+                               lpBaseAddress,
+                               buffer.data(),
+                               buffer.size(),
+                               &bytesRead)) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(bytesRead);
+        buffer.shrink_to_fit();
+        return buffer;
+    }
+
+    bool proc::write(HANDLE hProcess,
+                     void *lpBaseAddress,
+                     std::vector<uint8_t> &buf) {
+        if (buf.empty()) {
+            return false;
+        }
+        size_t bytesWrite = 0;
+        if (!WriteProcessMemory(hProcess,
+                                lpBaseAddress,
+                                buf.data(),
+                                buf.size(),
+                                &bytesWrite)) {
+            error_code = GetLastError();
+            return false;
+        }
+        if (bytesWrite != buf.size()) {
+            return false;
+        }
+        return true;
+    }
+
     HANDLE proc::child_thread_handle() const {
         if (isCreated) {
             return pi.hThread;
@@ -1159,6 +1309,78 @@ namespace YanLib::sys {
 
     std::wstring proc::get_proc_owner_wide(DWORD pid) {
         return get_proc_owner_wide(pid_to_handle(pid));
+    }
+
+    bool proc::fake_proc(HANDLE hProcess,
+                         const wchar_t *appName,
+                         const wchar_t *cmdline) {
+        DWORD dwSize = 0;
+        PROCESS_BASIC_INFORMATION pbi{};
+        do {
+            NTSTATUS status = nt_query_info_proc(hProcess,
+                                                 ProcessBasicInformation,
+                                                 &pbi,
+                                                 sizeof(pbi),
+                                                 &dwSize);
+            if (!NT_SUCCESS(status)) {
+                break;
+            }
+            auto peb = std::make_unique<PEB>();
+            size_t size = dwSize;
+            if (!ReadProcessMemory(hProcess,
+                                   pbi.PebBaseAddress,
+                                   peb.get(),
+                                   sizeof(PEB),
+                                   &size)) {
+                error_code = GetLastError();
+                break;
+            }
+            auto params = std::make_unique<RTL_USER_PROCESS_PARAMETERS>();
+            if (!ReadProcessMemory(hProcess,
+                                   peb->ProcessParameters,
+                                   params.get(),
+                                   sizeof(RTL_USER_PROCESS_PARAMETERS),
+                                   &size)) {
+                error_code = GetLastError();
+                break;
+            }
+            USHORT len = (wcslen(cmdline) + 1) * sizeof(wchar_t);
+            if (!WriteProcessMemory(hProcess,
+                                    params->CommandLine.Buffer,
+                                    cmdline,
+                                    len,
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!WriteProcessMemory(hProcess,
+                                    &params->CommandLine.Length,
+                                    &len,
+                                    sizeof(len),
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            len = (wcslen(appName) + 1) * sizeof(wchar_t);
+            if (!WriteProcessMemory(hProcess,
+                                    params->ImagePathName.Buffer,
+                                    appName,
+                                    len,
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!WriteProcessMemory(hProcess,
+                                    &params->ImagePathName.Length,
+                                    &len,
+                                    sizeof(len),
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            return true;
+        } while (false);
+        return false;
     }
 
     DWORD proc::err_code() const {

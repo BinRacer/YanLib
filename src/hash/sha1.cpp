@@ -101,12 +101,12 @@ namespace YanLib::hash {
                 }
             } else {
                 bool is_error = false;
-                constexpr size_t BLOCK_SIZE = 4096;
+                constexpr size_t BLOCKSIZE = 4096;
                 size_t total_size = file.size();
                 size_t offset = 0;
                 while (offset < total_size) {
-                    size_t block_size = (total_size - offset) > BLOCK_SIZE
-                                           ? BLOCK_SIZE
+                    size_t block_size = (total_size - offset) > BLOCKSIZE
+                                           ? BLOCKSIZE
                                            : total_size - offset;
                     std::vector<uint8_t> data = file.read_bytes(block_size);
                     if (!CryptHashData(crypt_hash_handle,
@@ -140,12 +140,12 @@ namespace YanLib::hash {
                 }
             } else {
                 bool is_error = false;
-                constexpr size_t BLOCK_SIZE = 4096;
+                constexpr size_t BLOCKSIZE = 4096;
                 size_t total_size = data_bytes.size();
                 size_t offset = 0;
                 while (offset < total_size) {
-                    size_t block_size = (total_size - offset) > BLOCK_SIZE
-                                           ? BLOCK_SIZE
+                    size_t block_size = (total_size - offset) > BLOCKSIZE
+                                           ? BLOCKSIZE
                                            : total_size - offset;
                     BYTE *block_ptr = data_bytes.data() + offset;
                     if (!CryptHashData(crypt_hash_handle,

@@ -118,7 +118,7 @@ namespace YanLib::mem {
     }
 
     bool mmap::read(uint8_t *buf, int64_t size, uint64_t offset) const {
-        if (!buf && !address) {
+        if (!buf || !address) {
             return false;
         }
         memcpy_s(buf,
@@ -129,7 +129,7 @@ namespace YanLib::mem {
     }
 
     bool mmap::write(uint8_t *buf, int64_t size, uint64_t offset) const {
-        if (!buf && !address) {
+        if (!buf || !address) {
             return false;
         }
         memcpy_s(address + offset,

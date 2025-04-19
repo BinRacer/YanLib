@@ -106,7 +106,7 @@ namespace YanLib::sys {
                     LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
                     BOOL is_inherit_handles = FALSE,
                     DWORD create_flag = 0,
-                    LPVOID env = nullptr,
+                    void* env = nullptr,
                     const wchar_t *curr_dir = nullptr);
 
         bool create_with_suspended(const wchar_t *app_name,
@@ -116,7 +116,7 @@ namespace YanLib::sys {
                                    BOOL is_inherit_handles = FALSE,
                                    DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                        CREATE_SUSPENDED,
-                                   LPVOID env = nullptr,
+                                   void* env = nullptr,
                                    const wchar_t *curr_dir = nullptr);
 
         bool create_as_user(HANDLE token_handle,
@@ -127,7 +127,7 @@ namespace YanLib::sys {
                             BOOL is_inherit_handles = FALSE,
                             DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                 CREATE_UNICODE_ENVIRONMENT,
-                            LPVOID env = nullptr,
+                            void* env = nullptr,
                             const wchar_t *curr_dir = nullptr);
 
 
@@ -139,7 +139,7 @@ namespace YanLib::sys {
                                  DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                      CREATE_UNICODE_ENVIRONMENT |
                                                      CREATE_NEW_CONSOLE,
-                                 LPVOID env = nullptr,
+                                 void* env = nullptr,
                                  const wchar_t *curr_dir = nullptr);
 
         bool create_with_logon(const wchar_t *username,
@@ -161,7 +161,7 @@ namespace YanLib::sys {
                                DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                    CREATE_NEW_CONSOLE |
                                                    CREATE_UNICODE_ENVIRONMENT,
-                               LPVOID env = nullptr,
+                               void* env = nullptr,
                                LPCWSTR curr_dir = nullptr);
 
         bool win_exec(const char *cmdline, UINT show_flag = SW_SHOWDEFAULT);

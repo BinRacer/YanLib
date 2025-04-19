@@ -70,11 +70,11 @@ namespace YanLib::io {
         std::vector<std::wstring> get_headers_vec_wide() const;
 
         bool query_option(DWORD option,
-                          LPVOID buffer,
+                          void* buffer,
                           LPDWORD buffer_length);
 
         bool set_option(DWORD option,
-                        LPVOID buffer,
+                        void* buffer,
                         DWORD buffer_length);
 
         bool open(const wchar_t *agent_name = L"MiniCurl/0.1",
@@ -104,7 +104,7 @@ namespace YanLib::io {
 
         bool send_request(const wchar_t *headers = nullptr,
                           DWORD headers_length = 0,
-                          LPVOID optional = nullptr,
+                          void* optional = nullptr,
                           DWORD optional_length = 0);
 
         bool send_request_ex(LPINTERNET_BUFFERSW buffers_in,
@@ -116,7 +116,7 @@ namespace YanLib::io {
                             DWORD flag = 0,
                             DWORD_PTR context = 0);
 
-        bool read(LPVOID buf,
+        bool read(void* buf,
                   DWORD size,
                   LPDWORD ret_size);
 

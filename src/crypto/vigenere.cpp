@@ -15,17 +15,17 @@ namespace YanLib::crypto {
                 return {};
         }
 
-        size_t keyIndex = 0;
+        size_t key_index = 0;
         for (auto c: data) {
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 const uint8_t base = (c >= 'a') ? 'a' : 'A';
-                const int offset = (key[keyIndex % key.size()] >= 'A' &&
-                                    key[keyIndex % key.size()] <= 'Z')
-                                       ? (key[keyIndex % key.size()] - 'A')
-                                       : (key[keyIndex % key.size()] - 'a');
+                const int offset = (key[key_index % key.size()] >= 'A' &&
+                                    key[key_index % key.size()] <= 'Z')
+                                       ? (key[key_index % key.size()] - 'A')
+                                       : (key[key_index % key.size()] - 'a');
                 const int shifted = (c - base + offset) % 26;
                 result.push_back(static_cast<uint8_t>(base + shifted));
-                keyIndex++;
+                key_index++;
             } else {
                 result.push_back(c);
             }
@@ -44,17 +44,17 @@ namespace YanLib::crypto {
                 return {};
         }
 
-        size_t keyIndex = 0;
+        size_t key_index = 0;
         for (auto c: data) {
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 const uint8_t base = (c >= 'a') ? 'a' : 'A';
-                const int offset = (key[keyIndex % key.size()] >= 'A' &&
-                                    key[keyIndex % key.size()] <= 'Z')
-                                       ? (key[keyIndex % key.size()] - 'A')
-                                       : (key[keyIndex % key.size()] - 'a');
+                const int offset = (key[key_index % key.size()] >= 'A' &&
+                                    key[key_index % key.size()] <= 'Z')
+                                       ? (key[key_index % key.size()] - 'A')
+                                       : (key[key_index % key.size()] - 'a');
                 const int shifted = (c - base - offset + 26) % 26;
                 result.push_back(static_cast<uint8_t>(base + shifted));
-                keyIndex++;
+                key_index++;
             } else {
                 result.push_back(c);
             }

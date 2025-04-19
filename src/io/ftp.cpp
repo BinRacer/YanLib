@@ -166,7 +166,7 @@ namespace YanLib::io {
     }
 
     bool ftp::read(HINTERNET file_handle,
-                   LPVOID buf,
+                   void* buf,
                    DWORD size,
                    LPDWORD ret_size) {
         if (!InternetReadFile(file_handle,

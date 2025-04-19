@@ -105,7 +105,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::read(LPVOID buf,
+    bool fs::read(void* buf,
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped) {

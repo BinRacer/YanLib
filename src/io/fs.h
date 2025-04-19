@@ -50,7 +50,7 @@ namespace YanLib::io {
 
         bool touch(const wchar_t *file_name);
 
-        bool read(LPVOID buf,
+        bool read(void* buf,
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped = nullptr);

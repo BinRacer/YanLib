@@ -82,7 +82,7 @@ namespace YanLib::sys {
                       LPSECURITY_ATTRIBUTES thread_attrs,
                       BOOL is_inherit_handles,
                       DWORD create_flag,
-                      LPVOID env,
+                      void *env,
                       const wchar_t *curr_dir) {
         if (proc_is_created) {
             return false;
@@ -110,7 +110,7 @@ namespace YanLib::sys {
                                      LPSECURITY_ATTRIBUTES thread_attrs,
                                      BOOL is_inherit_handles,
                                      DWORD create_flag,
-                                     LPVOID env,
+                                     void *env,
                                      const wchar_t *curr_dir) {
         if (proc_is_created) {
             return false;
@@ -139,7 +139,7 @@ namespace YanLib::sys {
                               LPSECURITY_ATTRIBUTES thread_attrs,
                               BOOL is_inherit_handles,
                               DWORD create_flag,
-                              LPVOID env,
+                              void *env,
                               const wchar_t *curr_dir) {
         if (proc_is_created) {
             return false;
@@ -187,7 +187,7 @@ namespace YanLib::sys {
                                    LPSECURITY_ATTRIBUTES thread_attrs,
                                    BOOL is_inherit_handles,
                                    DWORD create_flag,
-                                   LPVOID env,
+                                   void *env,
                                    const wchar_t *curr_dir) {
         if (proc_is_created) {
             return false;
@@ -295,7 +295,7 @@ namespace YanLib::sys {
                                  LPWSTR cmdline,
                                  DWORD logon_flag,
                                  DWORD create_flag,
-                                 LPVOID env,
+                                 void *env,
                                  LPCWSTR curr_dir) {
         if (proc_is_created) {
             return false;

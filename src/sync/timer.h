@@ -37,7 +37,7 @@ namespace YanLib::sync {
         bool set_timer(const LARGE_INTEGER *due_time,
                        LONG period = 1000, /* 1s */
                        PTIMERAPCROUTINE pfn_completion_routine = nullptr,
-                       LPVOID arg_to_completion_routine = nullptr,
+                       void* arg_to_completion_routine = nullptr,
                        BOOL is_resume = FALSE);
 
         bool cancel_timer();

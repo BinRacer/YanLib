@@ -39,7 +39,7 @@ namespace YanLib::sync {
     bool timer::set_timer(const LARGE_INTEGER *due_time,
                           LONG period,
                           PTIMERAPCROUTINE pfn_completion_routine,
-                          LPVOID arg_to_completion_routine,
+                          void* arg_to_completion_routine,
                           BOOL is_resume) {
         // SYSTEMTIME st = {0};
         // FILETIME ftLocal, ftUTC;

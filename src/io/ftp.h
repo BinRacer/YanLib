@@ -75,7 +75,7 @@ namespace YanLib::io {
                               DWORD_PTR context = 0);
 
         bool read(HINTERNET file_handle,
-                  LPVOID buf,
+                  void* buf,
                   DWORD size,
                   LPDWORD ret_size);
 

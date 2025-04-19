@@ -29,8 +29,9 @@ namespace YanLib::sys {
         std::unordered_set<HMODULE> module_handles{};
         std::vector<HEAPLIST32> heaps{};
         std::unordered_set<ULONG_PTR> heap_ids{};
-        volatile bool proc_is_created = false;
         DWORD error_code = 0;
+
+        void cleanup();
 
         // 0: kd> dt nt!_PEB
         // +0x000 InheritedAddressSpace : UChar
@@ -106,7 +107,7 @@ namespace YanLib::sys {
                     LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
                     BOOL is_inherit_handles = FALSE,
                     DWORD create_flag = 0,
-                    void* env = nullptr,
+                    void *env = nullptr,
                     const wchar_t *curr_dir = nullptr);
 
         bool create_with_suspended(const wchar_t *app_name,
@@ -116,7 +117,7 @@ namespace YanLib::sys {
                                    BOOL is_inherit_handles = FALSE,
                                    DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                        CREATE_SUSPENDED,
-                                   void* env = nullptr,
+                                   void *env = nullptr,
                                    const wchar_t *curr_dir = nullptr);
 
         bool create_as_user(HANDLE token_handle,
@@ -127,7 +128,7 @@ namespace YanLib::sys {
                             BOOL is_inherit_handles = FALSE,
                             DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                 CREATE_UNICODE_ENVIRONMENT,
-                            void* env = nullptr,
+                            void *env = nullptr,
                             const wchar_t *curr_dir = nullptr);
 
 
@@ -139,7 +140,7 @@ namespace YanLib::sys {
                                  DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                      CREATE_UNICODE_ENVIRONMENT |
                                                      CREATE_NEW_CONSOLE,
-                                 void* env = nullptr,
+                                 void *env = nullptr,
                                  const wchar_t *curr_dir = nullptr);
 
         bool create_with_logon(const wchar_t *username,
@@ -155,14 +156,14 @@ namespace YanLib::sys {
                                const wchar_t *curr_dir = nullptr);
 
         bool create_with_token(HANDLE token_handle,
-                               LPCWSTR app_name,
-                               LPWSTR cmdline = nullptr,
+                               const wchar_t *app_name,
+                               wchar_t *cmdline = nullptr,
                                DWORD logon_flag = LOGON_WITH_PROFILE,
                                DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                    CREATE_NEW_CONSOLE |
                                                    CREATE_UNICODE_ENVIRONMENT,
-                               void* env = nullptr,
-                               LPCWSTR curr_dir = nullptr);
+                               void *env = nullptr,
+                               const wchar_t *curr_dir = nullptr);
 
         bool win_exec(const char *cmdline, UINT show_flag = SW_SHOWDEFAULT);
 
@@ -299,9 +300,9 @@ namespace YanLib::sys {
 
         DWORD handle_to_pid(HANDLE proc_handle);
 
-        HANDLE child_thread_handle() const;
+        [[nodiscard]] HANDLE child_thread_handle() const;
 
-        HANDLE child_proc_handle() const;
+        [[nodiscard]] HANDLE child_proc_handle() const;
 
         DWORD child_thread_id();
 
@@ -369,11 +370,11 @@ namespace YanLib::sys {
 
         bool is_heap(DWORD pid, void *address);
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //PROC_H

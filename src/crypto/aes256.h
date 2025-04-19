@@ -117,15 +117,15 @@ namespace YanLib::crypto {
 
         std::string generate_iv_string();
 
-        std::string hex_string() const;
+        [[nodiscard]] std::string hex_string() const;
 
-        std::wstring hex_wstring() const;
+        [[nodiscard]] std::wstring hex_wstring() const;
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //AES256_H

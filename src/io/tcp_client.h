@@ -51,11 +51,11 @@ namespace YanLib::io {
 
         int write_wstring(std::wstring &wstr);
 
-        int err_code() const;
+        [[nodiscard]] int err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //TCP_CLIENT_H

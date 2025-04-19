@@ -10,8 +10,9 @@ namespace YanLib::mem {
     }
 
     heap::~heap() {
-        if (!heap_handle) {
+        if (heap_handle) {
             HeapDestroy(heap_handle);
+            heap_handle = nullptr;
         }
     }
 
@@ -23,8 +24,8 @@ namespace YanLib::mem {
             return false;
         }
         heap_handle = HeapCreate(options,
-                           initial_size,
-                           maximum_size);
+                                 initial_size,
+                                 maximum_size);
         if (!heap_handle) {
             error_code = GetLastError();
             return false;

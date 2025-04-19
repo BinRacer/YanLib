@@ -11,7 +11,10 @@
 namespace YanLib::sys {
     class security {
     private:
+        void *env = nullptr;
         DWORD error_code = 0;
+
+        void cleanup();
 
     public:
         security(const security &other) = delete;
@@ -24,9 +27,9 @@ namespace YanLib::sys {
 
         security() = default;
 
-        ~security() = default;
+        ~security();
 
-        DWORD curr_session_id() const;
+        [[nodiscard]] DWORD curr_session_id() const;
 
         HANDLE curr_session_token(ULONG session_id = 0);
 
@@ -38,8 +41,6 @@ namespace YanLib::sys {
 
         void *create_env_block(HANDLE token_handle,
                                BOOL is_inherit = FALSE);
-
-        bool clear_env_block(void *env);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool enable_privilege(HANDLE proc_handle,
@@ -127,11 +128,11 @@ namespace YanLib::sys {
             SystemPolicy>
         check_proc_integrity_level(HANDLE proc_handle = nullptr);
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 

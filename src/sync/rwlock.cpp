@@ -9,9 +9,6 @@ namespace YanLib::sync {
         InitializeSRWLock(&rw_lock);
     }
 
-    rwlock::~rwlock() {
-    }
-
     void rwlock::read_lock() {
         AcquireSRWLockShared(&rw_lock);
     }

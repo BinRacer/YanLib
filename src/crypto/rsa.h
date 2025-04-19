@@ -64,27 +64,27 @@ namespace YanLib::crypto {
         std::string decode_to_base64(const std::vector<uint8_t> &data,
                                      const std::vector<uint8_t> &priv_blob);
 
-        std::vector<uint8_t> pub_blob() const;
+        [[nodiscard]] std::vector<uint8_t> pub_blob() const;
 
-        std::vector<uint8_t> priv_blob() const;
+        [[nodiscard]] std::vector<uint8_t> priv_blob() const;
 
-        std::string pub_hex() const;
+        [[nodiscard]] std::string pub_hex() const;
 
-        std::string priv_hex() const;
+        [[nodiscard]] std::string priv_hex() const;
 
-        std::string pub_base64() const;
+        [[nodiscard]] std::string pub_base64() const;
 
-        std::string priv_base64() const;
+        [[nodiscard]] std::string priv_base64() const;
 
-        std::string pub_pem() const;
+        [[nodiscard]] std::string pub_pem() const;
 
-        std::string priv_pem() const;
+        [[nodiscard]] std::string priv_pem() const;
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //RSA_H

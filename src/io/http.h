@@ -49,7 +49,7 @@ namespace YanLib::io {
         bool add_header(const wchar_t *headers,
                         DWORD headers_length = -1);
 
-        bool add_header(std::string headers);
+        bool add_header(const std::string& headers);
 
         bool add_header(std::wstring headers);
 
@@ -61,13 +61,13 @@ namespace YanLib::io {
 
         bool add_headers(std::vector<std::wstring> &vec);
 
-        std::unordered_map<std::string, std::string> get_headers() const;
+        [[nodiscard]] std::unordered_map<std::string, std::string> get_headers() const;
 
-        std::unordered_map<std::wstring, std::wstring> get_headers_wide() const;
+        [[nodiscard]] std::unordered_map<std::wstring, std::wstring> get_headers_wide() const;
 
-        std::vector<std::string> get_headers_vec() const;
+        [[nodiscard]] std::vector<std::string> get_headers_vec() const;
 
-        std::vector<std::wstring> get_headers_vec_wide() const;
+        [[nodiscard]] std::vector<std::wstring> get_headers_vec_wide() const;
 
         bool query_option(DWORD option,
                           void* buffer,
@@ -141,11 +141,11 @@ namespace YanLib::io {
         static DWORD upload(const std::wstring &input_url,
                             const wchar_t *file_name);
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //HTTP_H

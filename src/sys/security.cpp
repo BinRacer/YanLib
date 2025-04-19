@@ -15,6 +15,17 @@
 #pragma comment(lib, "UserEnv.lib")
 
 namespace YanLib::sys {
+    security::~security() {
+        cleanup();
+    }
+
+    void security::cleanup() {
+        if (env) {
+            DestroyEnvironmentBlock(env);
+            env = nullptr;
+        }
+    }
+
     DWORD security::curr_session_id() const {
         return WTSGetActiveConsoleSessionId();
     }
@@ -66,22 +77,16 @@ namespace YanLib::sys {
     }
 
     void *security::create_env_block(HANDLE token_handle, BOOL is_inherit) {
-        void *environment = nullptr;
-        if (!CreateEnvironmentBlock(&environment,
+        if (env) {
+            cleanup();
+        }
+        if (!CreateEnvironmentBlock(&env,
                                     token_handle,
                                     is_inherit)) {
             error_code = GetLastError();
             return nullptr;
         }
-        return environment;
-    }
-
-    bool security::clear_env_block(void *env) {
-        if (!DestroyEnvironmentBlock(env)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
+        return env;
     }
 
     bool security::enable_privilege(HANDLE proc_handle,
@@ -294,7 +299,7 @@ namespace YanLib::sys {
                 }
             }
             std::vector<uint8_t> buf(size, '\0');
-            PTOKEN_MANDATORY_LABEL token_info = reinterpret_cast<PTOKEN_MANDATORY_LABEL>(buf.data());
+            auto token_info = reinterpret_cast<PTOKEN_MANDATORY_LABEL>(buf.data());
             if (!GetTokenInformation(token_handle,
                                      TokenIntegrityLevel,
                                      token_info,

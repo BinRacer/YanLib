@@ -221,7 +221,7 @@ namespace YanLib::io {
             if (ret && bytes_read > 0) {
                 raw_data.insert(raw_data.end(),
                                 buf,
-                                buf + bytes_read / sizeof(wchar_t));
+                                buf + (bytes_read / sizeof(wchar_t)));
             } else {
                 error_code = GetLastError();
             }
@@ -445,7 +445,7 @@ namespace YanLib::io {
         do {
             if (wcscmp(find_data.cFileName, L".") != 0 &&
                 wcscmp(find_data.cFileName, L"..") != 0) {
-                result.push_back(find_data.cFileName);
+                result.emplace_back(find_data.cFileName);
             }
         } while (FindNextFileW(find_handle, &find_data));
         FindClose(find_handle);

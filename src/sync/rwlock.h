@@ -22,7 +22,7 @@ namespace YanLib::sync {
 
         rwlock();
 
-        ~rwlock();
+        ~rwlock() = default;
 
         void read_lock();
 

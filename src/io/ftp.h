@@ -43,8 +43,8 @@ namespace YanLib::io {
 
         explicit ftp(const std::wstring &ip,
                      const uint16_t &port,
-                     const std::wstring &username = nullptr,
-                     const std::wstring &password = nullptr);
+                     const std::wstring &username = {},
+                     const std::wstring &password = {});
 
         ~ftp();
 
@@ -134,11 +134,11 @@ namespace YanLib::io {
         DWORD upload2(HINTERNET remote_file,
                       const wchar_t *local_file);
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //FTP_H

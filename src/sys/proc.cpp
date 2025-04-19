@@ -30,16 +30,21 @@ namespace YanLib::sys {
             CloseHandle(snapshot_handle);
             snapshot_handle = INVALID_HANDLE_VALUE;
         }
-        if (proc_is_created) {
-            if (pi.hThread) {
-                CloseHandle(pi.hThread);
-                pi.hThread = nullptr;
-            }
-            if (pi.hProcess) {
-                CloseHandle(pi.hProcess);
-                pi.hProcess = nullptr;
-            }
+        cleanup();
+    }
+
+    void proc::cleanup() {
+        if (pi.hThread) {
+            CloseHandle(pi.hThread);
+            pi.hThread = nullptr;
         }
+        if (pi.hProcess) {
+            CloseHandle(pi.hProcess);
+            pi.hProcess = nullptr;
+        }
+        memset(&si, 0, sizeof(si));
+        si.cb = sizeof(si);
+        memset(&pi, 0, sizeof(pi));
     }
 
     NTSTATUS proc::nt_query_info_proc(HANDLE proc_handle,
@@ -84,9 +89,7 @@ namespace YanLib::sys {
                       DWORD create_flag,
                       void *env,
                       const wchar_t *curr_dir) {
-        if (proc_is_created) {
-            return false;
-        }
+        cleanup();
         if (!CreateProcessW(app_name,
                             cmdline,
                             proc_attrs,
@@ -100,7 +103,6 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return false;
         }
-        proc_is_created = true;
         return true;
     }
 
@@ -112,9 +114,7 @@ namespace YanLib::sys {
                                      DWORD create_flag,
                                      void *env,
                                      const wchar_t *curr_dir) {
-        if (proc_is_created) {
-            return false;
-        }
+        cleanup();
         if (!CreateProcessW(app_name,
                             cmdline,
                             proc_attrs,
@@ -128,7 +128,6 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return false;
         }
-        proc_is_created = true;
         return true;
     }
 
@@ -141,17 +140,13 @@ namespace YanLib::sys {
                               DWORD create_flag,
                               void *env,
                               const wchar_t *curr_dir) {
-        if (proc_is_created) {
-            return false;
-        }
+        cleanup();
         security security;
         void *environment = nullptr;
-        bool is_create_env = false;
         if (env) {
             environment = env;
         } else {
             environment = security.create_env_block(token_handle);
-            is_create_env = true;
             if (!environment) {
                 error_code = security.err_code();
                 return false;
@@ -169,14 +164,7 @@ namespace YanLib::sys {
                                   &si,
                                   &pi)) {
             error_code = GetLastError();
-            if (is_create_env && !security.clear_env_block(environment)) {
-                error_code = security.err_code();
-            }
             return false;
-        }
-        proc_is_created = true;
-        if (is_create_env && !security.clear_env_block(environment)) {
-            error_code = security.err_code();
         }
         return true;
     }
@@ -189,9 +177,7 @@ namespace YanLib::sys {
                                    DWORD create_flag,
                                    void *env,
                                    const wchar_t *curr_dir) {
-        if (proc_is_created) {
-            return false;
-        }
+        cleanup();
         security security;
         helper::autoclean<HANDLE> token_handle(nullptr);
         token_handle = security.copy_token();
@@ -200,12 +186,10 @@ namespace YanLib::sys {
             return false;
         }
         void *environment = nullptr;
-        bool is_create_env = false;
         if (env) {
             environment = env;
         } else {
             environment = security.create_env_block(token_handle);
-            is_create_env = true;
             if (!environment) {
                 error_code = security.err_code();
                 return false;
@@ -223,14 +207,7 @@ namespace YanLib::sys {
                                   &si,
                                   &pi)) {
             error_code = GetLastError();
-            if (is_create_env && !security.clear_env_block(environment)) {
-                error_code = security.err_code();
-            }
             return false;
-        }
-        proc_is_created = true;
-        if (is_create_env && !security.clear_env_block(environment)) {
-            error_code = security.err_code();
         }
         return true;
     }
@@ -244,9 +221,7 @@ namespace YanLib::sys {
                                  DWORD create_flag,
                                  void *env,
                                  const wchar_t *curr_dir) {
-        if (proc_is_created) {
-            return false;
-        }
+        cleanup();
         security security;
         helper::autoclean<HANDLE> token_handle(nullptr);
         token_handle = security.copy_token();
@@ -255,12 +230,10 @@ namespace YanLib::sys {
             return false;
         }
         void *environment = nullptr;
-        bool is_create_env = false;
         if (env) {
             environment = env;
         } else {
             environment = security.create_env_block(token_handle);
-            is_create_env = true;
             if (!environment) {
                 error_code = security.err_code();
                 return false;
@@ -278,36 +251,25 @@ namespace YanLib::sys {
                                      &si,
                                      &pi)) {
             error_code = GetLastError();
-            if (is_create_env && !security.clear_env_block(environment)) {
-                error_code = security.err_code();
-            }
             return false;
-        }
-        proc_is_created = true;
-        if (is_create_env && !security.clear_env_block(environment)) {
-            error_code = security.err_code();
         }
         return true;
     }
 
     bool proc::create_with_token(HANDLE token_handle,
-                                 LPCWSTR app_name,
-                                 LPWSTR cmdline,
+                                 const wchar_t *app_name,
+                                 wchar_t *cmdline,
                                  DWORD logon_flag,
                                  DWORD create_flag,
                                  void *env,
-                                 LPCWSTR curr_dir) {
-        if (proc_is_created) {
-            return false;
-        }
+                                 const wchar_t *curr_dir) {
+        cleanup();
         security security;
         void *environment = nullptr;
-        bool is_create_env = false;
         if (env) {
             environment = env;
         } else {
             environment = security.create_env_block(token_handle);
-            is_create_env = true;
             if (!environment) {
                 error_code = security.err_code();
                 return false;
@@ -323,14 +285,7 @@ namespace YanLib::sys {
                                      &si,
                                      &pi)) {
             error_code = GetLastError();
-            if (is_create_env && !security.clear_env_block(environment)) {
-                error_code = security.err_code();
-            }
             return false;
-        }
-        proc_is_created = true;
-        if (is_create_env && !security.clear_env_block(environment)) {
-            error_code = security.err_code();
         }
         return true;
     }
@@ -1092,21 +1047,15 @@ namespace YanLib::sys {
     }
 
     HANDLE proc::child_thread_handle() const {
-        if (proc_is_created) {
-            return pi.hThread;
-        }
-        return nullptr;
+        return pi.hThread;
     }
 
     HANDLE proc::child_proc_handle() const {
-        if (proc_is_created) {
-            return pi.hProcess;
-        }
-        return nullptr;
+        return pi.hProcess;
     }
 
     DWORD proc::child_thread_id() {
-        if (proc_is_created) {
+        if (pi.hThread) {
             DWORD id = GetThreadId(pi.hThread);
             if (!id) {
                 error_code = GetLastError();
@@ -1117,7 +1066,7 @@ namespace YanLib::sys {
     }
 
     DWORD proc::child_proc_id() {
-        if (proc_is_created) {
+        if (pi.hProcess) {
             DWORD id = GetProcessId(pi.hProcess);
             if (!id) {
                 error_code = GetLastError();
@@ -1128,7 +1077,7 @@ namespace YanLib::sys {
     }
 
     bool proc::wait_child(DWORD milli_seconds) {
-        if (proc_is_created) {
+        if (pi.hProcess) {
             DWORD ret = WaitForSingleObject(pi.hProcess, milli_seconds);
             if (ret == WAIT_OBJECT_0) {
                 return true;
@@ -1139,7 +1088,7 @@ namespace YanLib::sys {
     }
 
     bool proc::resume_child() {
-        if (proc_is_created) {
+        if (pi.hThread) {
             if (ResumeThread(pi.hThread) == -1) {
                 error_code = GetLastError();
                 return false;

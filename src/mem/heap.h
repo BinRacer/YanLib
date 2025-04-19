@@ -31,7 +31,7 @@ namespace YanLib::mem {
 
         bool open_proc_heap();
 
-        void *malloc(size_t size) const;
+        [[nodiscard]] void *malloc(size_t size) const;
 
         void *realloc(void *addr,
                       size_t new_size) const;
@@ -46,11 +46,11 @@ namespace YanLib::mem {
 
         bool unlock();
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //HEAP_H

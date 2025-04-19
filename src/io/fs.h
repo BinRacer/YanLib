@@ -120,11 +120,11 @@ namespace YanLib::io {
         static bool replace(const wchar_t *existing_file_name,
                             const wchar_t *new_file_name);
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //DIRECTORY_H

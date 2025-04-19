@@ -285,9 +285,9 @@ namespace YanLib::io {
             if (wcscmp(file_data.cFileName, L".") != 0 &&
                 wcscmp(file_data.cFileName, L"..") != 0) {
                 if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    dirs.push_back(file_data.cFileName);
+                    dirs.emplace_back(file_data.cFileName);
                 } else {
-                    files.push_back(file_data.cFileName);
+                    files.emplace_back(file_data.cFileName);
                 }
             }
         } while (InternetFindNextFileW(find_handle, &file_data));

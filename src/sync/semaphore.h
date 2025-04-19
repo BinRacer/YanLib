@@ -39,11 +39,11 @@ namespace YanLib::sync {
 
         bool signal(LONG release_count = 1, LPLONG previous_count = nullptr);
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //SEMAPHORE_H

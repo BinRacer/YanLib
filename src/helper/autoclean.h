@@ -38,7 +38,7 @@ namespace YanLib::helper {
 
         T &operator=(T &&other);
 
-        bool is_ok() const;
+        [[nodiscard]] bool is_ok() const;
     };
 }
 #endif //AUTOCLEAN_H

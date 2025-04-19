@@ -65,7 +65,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::add_header(std::string headers) {
+    bool http::add_header(const std::string& headers) {
         std::wstring line = helper::convert::str_to_wstr(headers);
         if (!HttpAddRequestHeadersW(request_handle,
                                     line.data(),

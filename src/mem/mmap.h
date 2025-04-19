@@ -52,11 +52,11 @@ namespace YanLib::mem {
 
         bool write(uint8_t *buf, int64_t size, uint64_t offset = 0) const;
 
-        DWORD err_code() const;
+        [[nodiscard]] DWORD err_code() const;
 
-        std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-        std::wstring err_wstring() const;
+        [[nodiscard]] std::wstring err_wstring() const;
     };
 }
 #endif //MMAP_H

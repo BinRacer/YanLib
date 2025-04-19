@@ -16,357 +16,357 @@ namespace YanLib::io {
         }
     }
 
-    bool fs::is_protect_dirs(const wchar_t *lpPathName) {
-        if (wcsstr(lpPathName, L"C:\\Program Files") ||
-            wcsstr(lpPathName, L"C:\\Program Files (x86)") ||
-            wcsstr(lpPathName, L"C:\\Windows") ||
-            wcsstr(lpPathName, L"C:\\ProgramData")) {
+    bool fs::is_protect_dirs(const wchar_t *path_name) {
+        if (wcsstr(path_name, L"C:\\Program Files") ||
+            wcsstr(path_name, L"C:\\Program Files (x86)") ||
+            wcsstr(path_name, L"C:\\Windows") ||
+            wcsstr(path_name, L"C:\\ProgramData")) {
             return true;
         }
         return false;
     }
 
-    fs::fs() : hFile(INVALID_HANDLE_VALUE), error_code(0) {
+    fs::fs() : file_handle(INVALID_HANDLE_VALUE), error_code(0) {
     }
 
     fs::~fs() {
-        if (hFile != INVALID_HANDLE_VALUE) {
-            CloseHandle(hFile);
-            hFile = INVALID_HANDLE_VALUE;
+        if (file_handle != INVALID_HANDLE_VALUE) {
+            CloseHandle(file_handle);
+            file_handle = INVALID_HANDLE_VALUE;
         }
     }
 
-    bool fs::open(const wchar_t *lpFileName,
-                  DWORD dwDesiredAccess,
-                  DWORD dwShareMode,
-                  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-                  DWORD dwCreationDisposition,
-                  DWORD dwFlagsAndAttributes,
-                  HANDLE hTemplateFile) {
+    bool fs::open(const wchar_t *file_name,
+                  DWORD desired_access,
+                  DWORD share_mode,
+                  LPSECURITY_ATTRIBUTES security_attrs,
+                  DWORD creation_disposition,
+                  DWORD flags_and_attrs,
+                  HANDLE template_file) {
         // avoid open file twice
-        if (hFile != INVALID_HANDLE_VALUE) {
+        if (file_handle != INVALID_HANDLE_VALUE) {
             return false;
         }
-        hFile = CreateFileW(lpFileName,
-                            dwDesiredAccess,
-                            dwShareMode,
-                            lpSecurityAttributes,
-                            dwCreationDisposition,
-                            dwFlagsAndAttributes,
-                            hTemplateFile);
-        if (hFile == INVALID_HANDLE_VALUE) {
+        file_handle = CreateFileW(file_name,
+                                  desired_access,
+                                  share_mode,
+                                  security_attrs,
+                                  creation_disposition,
+                                  flags_and_attrs,
+                                  template_file);
+        if (file_handle == INVALID_HANDLE_VALUE) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool fs::create(const wchar_t *lpFileName,
-                    DWORD dwDesiredAccess,
-                    DWORD dwShareMode,
-                    LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-                    DWORD dwCreationDisposition,
-                    DWORD dwFlagsAndAttributes,
-                    HANDLE hTemplateFile) {
+    bool fs::create(const wchar_t *file_name,
+                    DWORD desired_access,
+                    DWORD share_mode,
+                    LPSECURITY_ATTRIBUTES security_attrs,
+                    DWORD creation_disposition,
+                    DWORD flags_and_attrs,
+                    HANDLE template_file) {
         // avoid create file twice
-        if (hFile != INVALID_HANDLE_VALUE) {
+        if (file_handle != INVALID_HANDLE_VALUE) {
             return false;
         }
-        hFile = CreateFileW(lpFileName,
-                            dwDesiredAccess,
-                            dwShareMode,
-                            lpSecurityAttributes,
-                            dwCreationDisposition,
-                            dwFlagsAndAttributes,
-                            hTemplateFile);
-        if (hFile == INVALID_HANDLE_VALUE) {
+        file_handle = CreateFileW(file_name,
+                                  desired_access,
+                                  share_mode,
+                                  security_attrs,
+                                  creation_disposition,
+                                  flags_and_attrs,
+                                  template_file);
+        if (file_handle == INVALID_HANDLE_VALUE) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool fs::touch(const wchar_t *lpFileName) {
+    bool fs::touch(const wchar_t *file_name) {
         // avoid touch file twice
-        if (hFile != INVALID_HANDLE_VALUE) {
+        if (file_handle != INVALID_HANDLE_VALUE) {
             return false;
         }
-        hFile = CreateFileW(lpFileName,
-                            GENERIC_READ | GENERIC_WRITE,
-                            FILE_SHARE_READ | FILE_SHARE_WRITE,
-                            nullptr,
-                            CREATE_NEW,
-                            FILE_ATTRIBUTE_NORMAL,
-                            nullptr);
-        if (hFile == INVALID_HANDLE_VALUE) {
+        file_handle = CreateFileW(file_name,
+                                  GENERIC_READ | GENERIC_WRITE,
+                                  FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                  nullptr,
+                                  CREATE_NEW,
+                                  FILE_ATTRIBUTE_NORMAL,
+                                  nullptr);
+        if (file_handle == INVALID_HANDLE_VALUE) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool fs::read(LPVOID lpBuffer,
-                  DWORD nNumberOfBytesToRead,
-                  LPDWORD lpNumberOfBytesRead,
-                  LPOVERLAPPED lpOverlapped) {
-        if (ReadFile(hFile,
-                     lpBuffer,
-                     nNumberOfBytesToRead,
-                     lpNumberOfBytesRead,
-                     lpOverlapped)) {
+    bool fs::read(LPVOID buf,
+                  DWORD size,
+                  LPDWORD ret_size,
+                  LPOVERLAPPED overlapped) {
+        if (ReadFile(file_handle,
+                     buf,
+                     size,
+                     ret_size,
+                     overlapped)) {
             return true;
         }
         error_code = GetLastError();
         return false;
     }
 
-    bool fs::write(LPCVOID lpBuffer,
-                   DWORD nNumberOfBytesToWrite,
-                   LPDWORD lpNumberOfBytesWritten,
-                   LPOVERLAPPED lpOverlapped) {
-        if (WriteFile(hFile,
-                      lpBuffer,
-                      nNumberOfBytesToWrite,
-                      lpNumberOfBytesWritten,
-                      lpOverlapped)) {
+    bool fs::write(LPCVOID buf,
+                   DWORD size,
+                   LPDWORD ret_size,
+                   LPOVERLAPPED overlapped) {
+        if (WriteFile(file_handle,
+                      buf,
+                      size,
+                      ret_size,
+                      overlapped)) {
             return true;
         }
         error_code = GetLastError();
         return false;
     }
 
-    std::string fs::read_string(int32_t bufferSize) {
-        if (bufferSize <= 1024) {
-            bufferSize = 1024;
+    std::string fs::read_string(int32_t buffer_size) {
+        if (buffer_size <= 1024) {
+            buffer_size = 1024;
         }
-        std::string rawData(bufferSize, '\0');
-        DWORD bytesRead = 0;
+        std::string raw_data(buffer_size, '\0');
+        DWORD bytes_read = 0;
         if (ReadFile(
-                hFile,
-                rawData.data(),
-                bufferSize,
-                &bytesRead,
-                nullptr) && bytesRead > 0) {
-            rawData.resize(bytesRead);
-            rawData.shrink_to_fit();
-            return rawData;
+                file_handle,
+                raw_data.data(),
+                buffer_size,
+                &bytes_read,
+                nullptr) && bytes_read > 0) {
+            raw_data.resize(bytes_read);
+            raw_data.shrink_to_fit();
+            return raw_data;
         }
         error_code = GetLastError();
         return {};
     }
 
-    std::wstring fs::read_wstring(int32_t bufferSize) {
-        if (bufferSize < 512) {
-            bufferSize = 512;
+    std::wstring fs::read_wstring(int32_t buffer_size) {
+        if (buffer_size < 512) {
+            buffer_size = 512;
         }
-        std::wstring rawData(bufferSize, L'\0');
-        DWORD bytesRead = 0;
+        std::wstring raw_data(buffer_size, L'\0');
+        DWORD bytes_read = 0;
         if (ReadFile(
-                hFile,
-                rawData.data(),
-                bufferSize * sizeof(wchar_t),
-                &bytesRead,
-                nullptr) && bytesRead > 0) {
-            rawData.resize(bytesRead);
-            rawData.shrink_to_fit();
-            return rawData;
+                file_handle,
+                raw_data.data(),
+                buffer_size * sizeof(wchar_t),
+                &bytes_read,
+                nullptr) && bytes_read > 0) {
+            raw_data.resize(bytes_read);
+            raw_data.shrink_to_fit();
+            return raw_data;
         }
         error_code = GetLastError();
         return {};
     }
 
     std::string fs::read_string_to_end() {
-        constexpr DWORD bufferSize = 4096;
-        char *buf = new char[bufferSize];
-        memset(buf, 0, bufferSize);
-        std::string rawData;
-        rawData.reserve(bufferSize);
-        DWORD bytesRead = 0;
-        BOOL bRet = FALSE;
+        constexpr DWORD buffer_size = 4096;
+        char *buf = new char[buffer_size];
+        memset(buf, 0, buffer_size);
+        std::string raw_data;
+        raw_data.reserve(buffer_size);
+        DWORD bytes_read = 0;
+        BOOL ret = FALSE;
         do {
-            bRet = ReadFile(
-                hFile,
+            ret = ReadFile(
+                file_handle,
                 buf,
-                bufferSize,
-                &bytesRead,
+                buffer_size,
+                &bytes_read,
                 nullptr);
-            if (bRet && bytesRead > 0) {
-                rawData.insert(rawData.end(),
-                               buf,
-                               buf + bytesRead);
+            if (ret && bytes_read > 0) {
+                raw_data.insert(raw_data.end(),
+                                buf,
+                                buf + bytes_read);
             } else {
                 error_code = GetLastError();
             }
-        } while (bRet && bytesRead > 0);
+        } while (ret && bytes_read > 0);
         delete[] buf;
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
     std::wstring fs::read_wstring_to_end() {
-        constexpr DWORD bufferSize = 2048;
-        wchar_t *buf = new wchar_t[bufferSize];
-        memset(buf, 0, bufferSize * sizeof(wchar_t));
-        std::wstring rawData;
-        rawData.reserve(bufferSize);
-        DWORD bytesRead = 0;
-        BOOL bRet = FALSE;
+        constexpr DWORD buffer_size = 2048;
+        wchar_t *buf = new wchar_t[buffer_size];
+        memset(buf, 0, buffer_size * sizeof(wchar_t));
+        std::wstring raw_data;
+        raw_data.reserve(buffer_size);
+        DWORD bytes_read = 0;
+        BOOL ret = FALSE;
         do {
-            bRet = ReadFile(
-                hFile,
+            ret = ReadFile(
+                file_handle,
                 buf,
-                bufferSize * sizeof(wchar_t),
-                &bytesRead,
+                buffer_size * sizeof(wchar_t),
+                &bytes_read,
                 nullptr);
-            if (bRet && bytesRead > 0) {
-                rawData.insert(rawData.end(),
-                               buf,
-                               buf + bytesRead / sizeof(wchar_t));
+            if (ret && bytes_read > 0) {
+                raw_data.insert(raw_data.end(),
+                                buf,
+                                buf + bytes_read / sizeof(wchar_t));
             } else {
                 error_code = GetLastError();
             }
-        } while (bRet && bytesRead > 0);
+        } while (ret && bytes_read > 0);
         delete[] buf;
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
-    std::vector<uint8_t> fs::read_bytes(int32_t bufferSize) {
-        if (bufferSize < 1024) {
-            bufferSize = 1024;
+    std::vector<uint8_t> fs::read_bytes(int32_t buffer_size) {
+        if (buffer_size < 1024) {
+            buffer_size = 1024;
         }
-        std::vector<uint8_t> rawData(bufferSize, '\0');
-        DWORD bytesRead = 0;
+        std::vector<uint8_t> raw_data(buffer_size, '\0');
+        DWORD bytes_read = 0;
         if (ReadFile(
-                hFile,
-                rawData.data(),
-                bufferSize,
-                &bytesRead,
-                nullptr) && bytesRead > 0) {
-            rawData.resize(bytesRead);
-            rawData.shrink_to_fit();
-            return rawData;
+                file_handle,
+                raw_data.data(),
+                buffer_size,
+                &bytes_read,
+                nullptr) && bytes_read > 0) {
+            raw_data.resize(bytes_read);
+            raw_data.shrink_to_fit();
+            return raw_data;
         }
         error_code = GetLastError();
         return {};
     }
 
     std::vector<uint8_t> fs::read_bytes_to_end() {
-        constexpr DWORD bufferSize = 4096;
-        uint8_t *buf = new uint8_t[bufferSize];
-        memset(buf, 0, bufferSize);
-        std::vector<uint8_t> rawData;
-        rawData.reserve(bufferSize);
-        DWORD bytesRead = 0;
-        BOOL bRet = FALSE;
+        constexpr DWORD buffer_size = 4096;
+        uint8_t *buf = new uint8_t[buffer_size];
+        memset(buf, 0, buffer_size);
+        std::vector<uint8_t> raw_data;
+        raw_data.reserve(buffer_size);
+        DWORD bytes_read = 0;
+        BOOL ret = FALSE;
         do {
-            bRet = ReadFile(
-                hFile,
+            ret = ReadFile(
+                file_handle,
                 buf,
-                bufferSize,
-                &bytesRead,
+                buffer_size,
+                &bytes_read,
                 nullptr);
-            if (bRet && bytesRead > 0) {
-                rawData.insert(rawData.end(),
-                               buf,
-                               buf + bytesRead);
+            if (ret && bytes_read > 0) {
+                raw_data.insert(raw_data.end(),
+                                buf,
+                                buf + bytes_read);
             } else {
                 error_code = GetLastError();
             }
-        } while (bRet && bytesRead > 0);
+        } while (ret && bytes_read > 0);
         delete[] buf;
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
     DWORD fs::write_string_to_file(const std::string &str) {
         if (str.empty()) {
             return 0;
         }
-        DWORD numberOfBytesWritten = 0;
-        if (!WriteFile(hFile,
+        DWORD bytes_written = 0;
+        if (!WriteFile(file_handle,
                        str.data(),
                        str.size(),
-                       &numberOfBytesWritten,
+                       &bytes_written,
                        nullptr)) {
             error_code = GetLastError();
         }
-        return numberOfBytesWritten;
+        return bytes_written;
     }
 
     DWORD fs::write_wstring_to_file(const std::wstring &wstr) {
         if (wstr.empty()) {
             return 0;
         }
-        DWORD numberOfBytesWritten = 0;
-        if (!WriteFile(hFile,
+        DWORD bytes_written = 0;
+        if (!WriteFile(file_handle,
                        wstr.data(),
                        wstr.size() * sizeof(wchar_t),
-                       &numberOfBytesWritten,
+                       &bytes_written,
                        nullptr)) {
             error_code = GetLastError();
         }
-        return numberOfBytesWritten;
+        return bytes_written;
     }
 
     DWORD fs::write_bytes_to_file(const std::vector<uint8_t> &vec) {
         if (vec.empty()) {
             return 0;
         }
-        DWORD numberOfBytesWritten = 0;
-        if (!WriteFile(hFile,
+        DWORD bytes_written = 0;
+        if (!WriteFile(file_handle,
                        vec.data(),
                        vec.size(),
-                       &numberOfBytesWritten,
+                       &bytes_written,
                        nullptr)) {
             error_code = GetLastError();
         }
-        return numberOfBytesWritten;
+        return bytes_written;
     }
 
     int64_t fs::size() {
-        LARGE_INTEGER lpFileSize{};
-        if (!GetFileSizeEx(hFile, &lpFileSize)) {
+        LARGE_INTEGER file_size{};
+        if (!GetFileSizeEx(file_handle, &file_size)) {
             error_code = GetLastError();
         }
-        return lpFileSize.QuadPart;
+        return file_size.QuadPart;
     }
 
-    bool fs::rm_file(const wchar_t *lpFileName) {
-        return (!is_protect_dirs(lpFileName)) &&
-               DeleteFileW(lpFileName);
+    bool fs::rm_file(const wchar_t *file_name) {
+        return (!is_protect_dirs(file_name)) &&
+               DeleteFileW(file_name);
     }
 
-    bool fs::is_file(const wchar_t *lpFileName) {
-        const DWORD attr = GetFileAttributesW(lpFileName);
+    bool fs::is_file(const wchar_t *file_name) {
+        const DWORD attr = GetFileAttributesW(file_name);
         return (attr != INVALID_FILE_ATTRIBUTES) &&
                (!(attr & FILE_ATTRIBUTE_DIRECTORY));
     }
 
-    bool fs::is_dir(const wchar_t *lpPathName) {
-        const DWORD attr = GetFileAttributesW(lpPathName);
+    bool fs::is_dir(const wchar_t *path_name) {
+        const DWORD attr = GetFileAttributesW(path_name);
         return (attr != INVALID_FILE_ATTRIBUTES) &&
                (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
-    DWORD fs::attr(const wchar_t *lpPathName) {
-        return GetFileAttributesW(lpPathName);
+    DWORD fs::attr(const wchar_t *path_name) {
+        return GetFileAttributesW(path_name);
     }
 
 
-    bool fs::mkdir(const wchar_t *lpPathName,
+    bool fs::mkdir(const wchar_t *path_name,
                    LPSECURITY_ATTRIBUTES
-                   lpSecurityAttributes) {
-        return CreateDirectoryW(lpPathName, lpSecurityAttributes);
+                   security_attrs) {
+        return CreateDirectoryW(path_name, security_attrs);
     }
 
-    bool fs::mkdir_all(const wchar_t *lpPathName,
-                       LPSECURITY_ATTRIBUTES lpSecurityAttributes) {
-        std::wstring pathName(lpPathName);
+    bool fs::mkdir_all(const wchar_t *path_name,
+                       LPSECURITY_ATTRIBUTES security_attrs) {
+        std::wstring path(path_name);
         std::vector<std::wstring> dirs;
         std::wstring currentDir;
 
-        for (const wchar_t ch: pathName) {
+        for (const wchar_t ch: path) {
             if (ch == L'\\' || ch == L'/') {
                 dirs.push_back(currentDir);
             }
@@ -377,7 +377,7 @@ namespace YanLib::io {
         for (const std::wstring &dir: dirs) {
             if (!is_dir(dir.data())) {
                 if (!CreateDirectoryW(dir.data(),
-                                      lpSecurityAttributes)) {
+                                      security_attrs)) {
                     if (GetLastError() != ERROR_ALREADY_EXISTS) {
                         return false;
                     }
@@ -387,13 +387,13 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::rm_dir(const wchar_t *lpPathName) {
-        return (!is_protect_dirs(lpPathName)) &&
-               RemoveDirectoryW(lpPathName);
+    bool fs::rm_dir(const wchar_t *path_name) {
+        return (!is_protect_dirs(path_name)) &&
+               RemoveDirectoryW(path_name);
     }
 
-    bool fs::rm_dir_all(const wchar_t *lpPathName) {
-        if (is_protect_dirs(lpPathName)) {
+    bool fs::rm_dir_all(const wchar_t *path_name) {
+        if (is_protect_dirs(path_name)) {
             return false;
         }
 
@@ -401,8 +401,8 @@ namespace YanLib::io {
         memset(&op, 0, sizeof(op));
 
         wchar_t szPath[MAX_PATH + 2] = {0};
-        wcscpy_s(szPath, MAX_PATH, lpPathName);
-        szPath[wcslen(lpPathName) + 1] = L'\0';
+        wcscpy_s(szPath, MAX_PATH, path_name);
+        szPath[wcslen(path_name) + 1] = L'\0';
 
         op.wFunc = FO_DELETE;
         op.pFrom = szPath;
@@ -412,12 +412,12 @@ namespace YanLib::io {
         return (result == 0) && !op.fAnyOperationsAborted;
     }
 
-    void fs::rm_dir_all_slow(const wchar_t *lpPathName) {
-        if (is_protect_dirs(lpPathName)) {
+    void fs::rm_dir_all_slow(const wchar_t *path_name) {
+        if (is_protect_dirs(path_name)) {
             return;
         }
-        std::vector<std::wstring> dirs = ls_all_dirs(lpPathName);
-        std::vector<std::wstring> files = ls_all_files(lpPathName);
+        std::vector<std::wstring> dirs = ls_all_dirs(path_name);
+        std::vector<std::wstring> files = ls_all_files(path_name);
 
         std::for_each(files.rbegin(), files.rend(),
                       [](const std::wstring &file) {
@@ -429,172 +429,172 @@ namespace YanLib::io {
                       });
     }
 
-    std::vector<std::wstring> fs::ls(const wchar_t *lpPathName) {
+    std::vector<std::wstring> fs::ls(const wchar_t *path_name) {
         std::vector<std::wstring> result;
-        std::wstring pathName(lpPathName);
-        WIN32_FIND_DATAW findData;
+        std::wstring path(path_name);
+        WIN32_FIND_DATAW find_data;
 
-        remove_tail_slash(pathName);
+        remove_tail_slash(path);
 
-        std::wstring basePath = pathName;
-        pathName.append(L"\\*.*");
+        std::wstring base_path = path;
+        path.append(L"\\*.*");
 
-        HANDLE hFind = FindFirstFileW(pathName.data(), &findData);
-        if (hFind == INVALID_HANDLE_VALUE) {
+        HANDLE find_handle = FindFirstFileW(path.data(), &find_data);
+        if (find_handle == INVALID_HANDLE_VALUE) {
             return result;
         }
         do {
-            if (wcscmp(findData.cFileName, L".") != 0 &&
-                wcscmp(findData.cFileName, L"..") != 0) {
-                result.push_back(findData.cFileName);
+            if (wcscmp(find_data.cFileName, L".") != 0 &&
+                wcscmp(find_data.cFileName, L"..") != 0) {
+                result.push_back(find_data.cFileName);
             }
-        } while (FindNextFileW(hFind, &findData));
-        FindClose(hFind);
+        } while (FindNextFileW(find_handle, &find_data));
+        FindClose(find_handle);
         return result;
     }
 
-    std::vector<std::wstring> fs::ls_full_path(const wchar_t *lpPathName) {
+    std::vector<std::wstring> fs::ls_full_path(const wchar_t *path_name) {
         std::vector<std::wstring> result;
-        std::wstring pathName(lpPathName);
-        WIN32_FIND_DATAW findData;
+        std::wstring path(path_name);
+        WIN32_FIND_DATAW find_data;
 
-        remove_tail_slash(pathName);
+        remove_tail_slash(path);
 
-        std::wstring basePath = pathName;
-        pathName.append(L"\\*.*");
+        std::wstring base_path = path;
+        path.append(L"\\*.*");
 
-        HANDLE hFind = FindFirstFileW(pathName.data(), &findData);
-        if (hFind == INVALID_HANDLE_VALUE) {
+        HANDLE find_handle = FindFirstFileW(path.data(), &find_data);
+        if (find_handle == INVALID_HANDLE_VALUE) {
             return result;
         }
         do {
-            if (wcscmp(findData.cFileName, L".") != 0 &&
-                wcscmp(findData.cFileName, L"..") != 0) {
-                result.push_back(basePath + L"\\" + findData.cFileName);
+            if (wcscmp(find_data.cFileName, L".") != 0 &&
+                wcscmp(find_data.cFileName, L"..") != 0) {
+                result.push_back(base_path + L"\\" + find_data.cFileName);
             }
-        } while (FindNextFileW(hFind, &findData));
-        FindClose(hFind);
+        } while (FindNextFileW(find_handle, &find_data));
+        FindClose(find_handle);
         return result;
     }
 
-    std::vector<std::wstring> fs::ls_all_files(const wchar_t *lpPathName) {
+    std::vector<std::wstring> fs::ls_all_files(const wchar_t *path_name) {
         std::vector<std::wstring> result;
         result.reserve(64);
 
-        std::wstring pathName(lpPathName);
-        WIN32_FIND_DATAW findData;
+        std::wstring path(path_name);
+        WIN32_FIND_DATAW find_data;
 
-        remove_tail_slash(pathName);
+        remove_tail_slash(path);
 
         std::vector<std::wstring> stack;
         stack.reserve(64);
-        stack.push_back(pathName + L"\\*.*");
+        stack.push_back(path + L"\\*.*");
 
         while (!stack.empty()) {
-            std::wstring searchPath = stack.back();
+            std::wstring search_path = stack.back();
             stack.pop_back();
 
-            HANDLE hFind = FindFirstFileW(searchPath.data(), &findData);
-            if (hFind != INVALID_HANDLE_VALUE) {
+            HANDLE find_handle = FindFirstFileW(search_path.data(), &find_data);
+            if (find_handle != INVALID_HANDLE_VALUE) {
                 do {
-                    if (wcscmp(findData.cFileName, L".") == 0 ||
-                        wcscmp(findData.cFileName, L"..") == 0)
+                    if (wcscmp(find_data.cFileName, L".") == 0 ||
+                        wcscmp(find_data.cFileName, L"..") == 0)
                         continue;
-                    std::wstring fullPath = searchPath.substr(
-                                                0,
-                                                searchPath.size() - 3)
-                                            + findData.cFileName;
-                    if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                        stack.push_back(fullPath + L"\\*.*");
+                    std::wstring full_path = search_path.substr(
+                                                 0,
+                                                 search_path.size() - 3)
+                                             + find_data.cFileName;
+                    if (find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                        stack.push_back(full_path + L"\\*.*");
                     } else {
-                        result.push_back(fullPath);
+                        result.push_back(full_path);
                     }
-                } while (FindNextFileW(hFind, &findData));
-                FindClose(hFind);
+                } while (FindNextFileW(find_handle, &find_data));
+                FindClose(find_handle);
             }
         }
         return result;
     }
 
-    std::vector<std::wstring> fs::ls_all_dirs(const wchar_t *lpPathName) {
+    std::vector<std::wstring> fs::ls_all_dirs(const wchar_t *path_name) {
         std::vector<std::wstring> result;
         result.reserve(64);
 
-        std::wstring pathName(lpPathName);
-        WIN32_FIND_DATAW findData;
+        std::wstring path(path_name);
+        WIN32_FIND_DATAW find_data;
 
-        remove_tail_slash(pathName);
+        remove_tail_slash(path);
 
-        result.push_back(pathName);
+        result.push_back(path);
         std::vector<std::wstring> stack;
         stack.reserve(64);
 
-        stack.push_back(pathName + L"\\*.*");
+        stack.push_back(path + L"\\*.*");
         while (!stack.empty()) {
-            std::wstring searchPath = stack.back();
+            std::wstring search_path = stack.back();
             stack.pop_back();
 
-            HANDLE hFind = FindFirstFileW(searchPath.data(), &findData);
-            if (hFind != INVALID_HANDLE_VALUE) {
+            HANDLE find_handle = FindFirstFileW(search_path.data(), &find_data);
+            if (find_handle != INVALID_HANDLE_VALUE) {
                 do {
-                    if (wcscmp(findData.cFileName, L".") == 0 ||
-                        wcscmp(findData.cFileName, L"..") == 0)
+                    if (wcscmp(find_data.cFileName, L".") == 0 ||
+                        wcscmp(find_data.cFileName, L"..") == 0)
                         continue;
-                    std::wstring fullPath = searchPath.substr(
-                                                0,
-                                                searchPath.size() - 3)
-                                            + findData.cFileName;
-                    if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                        stack.push_back(fullPath + L"\\*.*");
-                        result.push_back(fullPath);
+                    std::wstring full_path = search_path.substr(
+                                                 0,
+                                                 search_path.size() - 3)
+                                             + find_data.cFileName;
+                    if (find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                        stack.push_back(full_path + L"\\*.*");
+                        result.push_back(full_path);
                     }
-                } while (FindNextFileW(hFind, &findData));
-                FindClose(hFind);
+                } while (FindNextFileW(find_handle, &find_data));
+                FindClose(find_handle);
             }
         }
         return result;
     }
 
-    bool fs::copy(const wchar_t *lpExistingFileName,
-                  const wchar_t *lpNewFileName) {
-        return CopyFileW(lpExistingFileName,
-                         lpNewFileName,
+    bool fs::copy(const wchar_t *existing_file_name,
+                  const wchar_t *new_file_name) {
+        return CopyFileW(existing_file_name,
+                         new_file_name,
                          false);
     }
 
-    bool fs::copy_all(const wchar_t *lpExistingPathName,
-                      const wchar_t *lpNewPathName) {
-        SHFILEOPSTRUCTW FileOp;
-        memset(&FileOp, 0, sizeof(FileOp));
+    bool fs::copy_all(const wchar_t *existing_path_name,
+                      const wchar_t *new_path_name) {
+        SHFILEOPSTRUCTW file_op;
+        memset(&file_op, 0, sizeof(file_op));
 
-        WCHAR szFrom[MAX_PATH + 2] = {0};
-        WCHAR szTo[MAX_PATH + 2] = {0};
+        WCHAR from[MAX_PATH + 2] = {0};
+        WCHAR to[MAX_PATH + 2] = {0};
 
-        wcscpy_s(szFrom, MAX_PATH, lpExistingPathName);
-        wcscpy_s(szTo, MAX_PATH, lpNewPathName);
+        wcscpy_s(from, MAX_PATH, existing_path_name);
+        wcscpy_s(to, MAX_PATH, new_path_name);
 
-        szFrom[wcslen(lpExistingPathName) + 1] = L'\0';
-        szTo[wcslen(lpNewPathName) + 1] = L'\0';
+        from[wcslen(existing_path_name) + 1] = L'\0';
+        to[wcslen(new_path_name) + 1] = L'\0';
 
-        FileOp.wFunc = FO_COPY;
-        FileOp.pFrom = szFrom;
-        FileOp.pTo = szTo;
-        FileOp.fFlags = FOF_NOCONFIRMMKDIR | FOF_NOCONFIRMATION | FOF_NO_UI;
-        int result = SHFileOperationW(&FileOp);
-        return (result == 0) && !FileOp.fAnyOperationsAborted;
+        file_op.wFunc = FO_COPY;
+        file_op.pFrom = from;
+        file_op.pTo = to;
+        file_op.fFlags = FOF_NOCONFIRMMKDIR | FOF_NOCONFIRMATION | FOF_NO_UI;
+        int result = SHFileOperationW(&file_op);
+        return (result == 0) && !file_op.fAnyOperationsAborted;
     }
 
-    bool fs::rename(const wchar_t *lpExistingFileName,
-                    const wchar_t *lpNewFileName) {
-        return MoveFileExW(lpExistingFileName,
-                           lpNewFileName,
+    bool fs::rename(const wchar_t *existing_file_name,
+                    const wchar_t *new_file_name) {
+        return MoveFileExW(existing_file_name,
+                           new_file_name,
                            MOVEFILE_COPY_ALLOWED);
     }
 
-    bool fs::replace(const wchar_t *lpExistingFileName,
-                     const wchar_t *lpNewFileName) {
-        return MoveFileExW(lpExistingFileName,
-                           lpNewFileName,
+    bool fs::replace(const wchar_t *existing_file_name,
+                     const wchar_t *new_file_name) {
+        return MoveFileExW(existing_file_name,
+                           new_file_name,
                            MOVEFILE_REPLACE_EXISTING);
     }
 

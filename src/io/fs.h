@@ -12,12 +12,12 @@
 namespace YanLib::io {
     class fs {
     private:
-        HANDLE hFile;
+        HANDLE file_handle;
         DWORD error_code;
 
         static inline void remove_tail_slash(std::wstring &path);
 
-        static inline bool is_protect_dirs(const wchar_t *lpPathName);
+        static inline bool is_protect_dirs(const wchar_t *path_name);
 
     public:
         fs(const fs &other) = delete;
@@ -32,43 +32,43 @@ namespace YanLib::io {
 
         ~fs();
 
-        bool open(const wchar_t *lpFileName,
-                  DWORD dwDesiredAccess = GENERIC_READ | GENERIC_WRITE,
-                  DWORD dwShareMode = FILE_SHARE_READ | FILE_SHARE_WRITE,
-                  LPSECURITY_ATTRIBUTES lpSecurityAttributes = nullptr,
-                  DWORD dwCreationDisposition = OPEN_EXISTING,
-                  DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL,
-                  HANDLE hTemplateFile = nullptr);
+        bool open(const wchar_t *file_name,
+                  DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
+                  DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
+                  LPSECURITY_ATTRIBUTES security_attrs = nullptr,
+                  DWORD creation_disposition = OPEN_EXISTING,
+                  DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
+                  HANDLE template_file = nullptr);
 
-        bool create(const wchar_t *lpFileName,
-                    DWORD dwDesiredAccess = GENERIC_READ | GENERIC_WRITE,
-                    DWORD dwShareMode = FILE_SHARE_READ | FILE_SHARE_WRITE,
-                    LPSECURITY_ATTRIBUTES lpSecurityAttributes = nullptr,
-                    DWORD dwCreationDisposition = CREATE_ALWAYS,
-                    DWORD dwFlagsAndAttributes = FILE_ATTRIBUTE_NORMAL,
-                    HANDLE hTemplateFile = nullptr);
+        bool create(const wchar_t *file_name,
+                    DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
+                    DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    LPSECURITY_ATTRIBUTES security_attrs = nullptr,
+                    DWORD creation_disposition = CREATE_ALWAYS,
+                    DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
+                    HANDLE template_file = nullptr);
 
-        bool touch(const wchar_t *lpFileName);
+        bool touch(const wchar_t *file_name);
 
-        bool read(LPVOID lpBuffer,
-                  DWORD nNumberOfBytesToRead,
-                  LPDWORD lpNumberOfBytesRead,
-                  LPOVERLAPPED lpOverlapped = nullptr);
+        bool read(LPVOID buf,
+                  DWORD size,
+                  LPDWORD ret_size,
+                  LPOVERLAPPED overlapped = nullptr);
 
-        bool write(LPCVOID lpBuffer,
-                   DWORD nNumberOfBytesToWrite,
-                   LPDWORD lpNumberOfBytesWritten,
-                   LPOVERLAPPED lpOverlapped = nullptr);
+        bool write(LPCVOID buf,
+                   DWORD size,
+                   LPDWORD ret_size,
+                   LPOVERLAPPED overlapped = nullptr);
 
-        std::string read_string(int32_t bufferSize = 1024);
+        std::string read_string(int32_t buffer_size = 1024);
 
-        std::wstring read_wstring(int32_t bufferSize = 512);
+        std::wstring read_wstring(int32_t buffer_size = 512);
 
         std::string read_string_to_end();
 
         std::wstring read_wstring_to_end();
 
-        std::vector<uint8_t> read_bytes(int32_t bufferSize = 1024);
+        std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
         std::vector<uint8_t> read_bytes_to_end();
 
@@ -80,45 +80,45 @@ namespace YanLib::io {
 
         int64_t size();
 
-        static bool rm_file(const wchar_t *lpFileName);
+        static bool rm_file(const wchar_t *file_name);
 
-        static bool is_file(const wchar_t *lpFileName);
+        static bool is_file(const wchar_t *file_name);
 
-        static bool is_dir(const wchar_t *lpPathName);
+        static bool is_dir(const wchar_t *path_name);
 
-        static DWORD attr(const wchar_t *lpPathName);
+        static DWORD attr(const wchar_t *path_name);
 
-        static bool mkdir(const wchar_t *lpPathName,
-                          LPSECURITY_ATTRIBUTES lpSecurityAttributes = nullptr);
+        static bool mkdir(const wchar_t *path_name,
+                          LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        static bool mkdir_all(const wchar_t *lpPathName,
-                              LPSECURITY_ATTRIBUTES lpSecurityAttributes = nullptr);
+        static bool mkdir_all(const wchar_t *path_name,
+                              LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        static bool rm_dir(const wchar_t *lpPathName);
+        static bool rm_dir(const wchar_t *path_name);
 
-        static bool rm_dir_all(const wchar_t *lpPathName);
+        static bool rm_dir_all(const wchar_t *path_name);
 
-        static void rm_dir_all_slow(const wchar_t *lpPathName);
+        static void rm_dir_all_slow(const wchar_t *path_name);
 
-        static std::vector<std::wstring> ls(const wchar_t *lpPathName);
+        static std::vector<std::wstring> ls(const wchar_t *path_name);
 
-        static std::vector<std::wstring> ls_full_path(const wchar_t *lpPathName);
+        static std::vector<std::wstring> ls_full_path(const wchar_t *path_name);
 
-        static std::vector<std::wstring> ls_all_files(const wchar_t *lpPathName);
+        static std::vector<std::wstring> ls_all_files(const wchar_t *path_name);
 
-        static std::vector<std::wstring> ls_all_dirs(const wchar_t *lpPathName);
+        static std::vector<std::wstring> ls_all_dirs(const wchar_t *path_name);
 
-        static bool copy(const wchar_t *lpExistingFileName,
-                         const wchar_t *lpNewFileName);
+        static bool copy(const wchar_t *existing_file_name,
+                         const wchar_t *new_file_name);
 
-        static bool copy_all(const wchar_t *lpExistingPathName,
-                             const wchar_t *lpNewPathName);
+        static bool copy_all(const wchar_t *existing_path_name,
+                             const wchar_t *new_path_name);
 
-        static bool rename(const wchar_t *lpExistingFileName,
-                           const wchar_t *lpNewFileName);
+        static bool rename(const wchar_t *existing_file_name,
+                           const wchar_t *new_file_name);
 
-        static bool replace(const wchar_t *lpExistingFileName,
-                            const wchar_t *lpNewFileName);
+        static bool replace(const wchar_t *existing_file_name,
+                            const wchar_t *new_file_name);
 
         DWORD err_code() const;
 

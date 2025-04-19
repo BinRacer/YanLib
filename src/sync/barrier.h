@@ -24,16 +24,16 @@ namespace YanLib::sync {
 
         barrier() = delete;
 
-        explicit barrier(LONG lTotalThreads, LONG lSpinCount = -1);
+        explicit barrier(LONG total_threads, LONG spin_count = -1);
 
         ~barrier();
 
-        bool enter(DWORD dwFlags = SYNCHRONIZATION_BARRIER_FLAGS_BLOCK_ONLY);
+        bool enter(DWORD flag = SYNCHRONIZATION_BARRIER_FLAGS_BLOCK_ONLY);
 
-        bool wait(DWORD nCount,
-                  const HANDLE *lpHandles,
-                  BOOL bWaitAll = TRUE,
-                  DWORD dwMilliseconds = INFINITE);
+        bool wait(DWORD count,
+                  const HANDLE *handles,
+                  BOOL wait_all = TRUE,
+                  DWORD milli_seconds = INFINITE);
 
         DWORD err_code() const;
 

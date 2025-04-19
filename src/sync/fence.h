@@ -26,9 +26,9 @@ namespace YanLib::sync {
 
         void init();
 
-        void init_with_spin(DWORD dwSpinCount = 4000);
+        void init_with_spin(DWORD spin_count = 4000);
 
-        DWORD set_spin_count(DWORD dwSpinCount);
+        DWORD set_spin_count(DWORD spin_count);
 
         void lock();
 

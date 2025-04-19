@@ -10,9 +10,9 @@
 namespace YanLib::mem {
     class mmap {
     private:
-        HANDLE hFile;
-        HANDLE hMapFile;
-        uint8_t *lpMemory;
+        HANDLE file_handle;
+        HANDLE map_file_handle;
+        uint8_t *address;
         DWORD error_code;
 
     public:
@@ -28,29 +28,29 @@ namespace YanLib::mem {
 
         ~mmap();
 
-        bool create(const wchar_t *lpFileName,
-                    const wchar_t *lpName = nullptr,
-                    LPSECURITY_ATTRIBUTES lpFileMappingAttributes = nullptr,
-                    DWORD flProtect = PAGE_READWRITE,
-                    DWORD dwMaximumSizeHigh = 0,
-                    DWORD dwMaximumSizeLow = 0);
+        bool create(const wchar_t *file_name,
+                    const wchar_t *mmap_name = nullptr,
+                    LPSECURITY_ATTRIBUTES file_mapping_attrs = nullptr,
+                    DWORD protect_flag = PAGE_READWRITE,
+                    DWORD max_high = 0,
+                    DWORD max_low = 0);
 
-        bool open(const wchar_t *lpName,
-                  DWORD dwDesiredAccess = FILE_MAP_READ | FILE_MAP_WRITE,
-                  BOOL bInheritHandle = FALSE);
+        bool open(const wchar_t *mmap_name,
+                  DWORD desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
+                  BOOL is_inherit_handle = FALSE);
 
         int64_t size();
 
-        bool mmap_file(DWORD dwDesiredAccess = FILE_MAP_READ | FILE_MAP_WRITE,
-                       DWORD dwFileOffsetHigh = 0,
-                       DWORD dwFileOffsetLow = 0,
-                       SIZE_T dwNumberOfBytesToMap = 0);
+        bool mmap_file(DWORD desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
+                       DWORD file_offset_high = 0,
+                       DWORD file_offset_low = 0,
+                       SIZE_T size = 0);
 
         bool unmap_file();
 
-        bool read(uint8_t *lpBuffer, int64_t size, uint64_t offset = 0) const;
+        bool read(uint8_t *buf, int64_t size, uint64_t offset = 0) const;
 
-        bool write(uint8_t *lpBuffer, int64_t size, uint64_t offset = 0) const;
+        bool write(uint8_t *buf, int64_t size, uint64_t offset = 0) const;
 
         DWORD err_code() const;
 

@@ -90,10 +90,12 @@ add_library(YanLib STATIC
         src/crypto/aes256.h
         src/crypto/rsa.cpp
         src/crypto/rsa.h
-        src/sys/proc.cpp
-        src/sys/proc.h
         src/sys/security.cpp
         src/sys/security.h
+        src/sys/proc.cpp
+        src/sys/proc.h
+        src/sys/thread.cpp
+        src/sys/thread.h
 )
 
 # 公共头文件目录（仅暴露给外部使用者）

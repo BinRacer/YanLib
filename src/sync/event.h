@@ -26,20 +26,20 @@ namespace YanLib::sync {
 
         ~event();
 
-        bool create(LPSECURITY_ATTRIBUTES lpEventAttributes = nullptr,
-                    BOOL bManualReset = FALSE,
-                    BOOL bInitialState = FALSE,
-                    const wchar_t *lpName = nullptr);
+        bool create(LPSECURITY_ATTRIBUTES event_attrs = nullptr,
+                    BOOL is_manual_reset = FALSE,
+                    BOOL is_initial_state = FALSE,
+                    const wchar_t *name = nullptr);
 
-        bool open(const wchar_t *lpName,
-                  DWORD dwDesiredAccess = EVENT_ALL_ACCESS,
-                  BOOL bInheritHandle = FALSE);
+        bool open(const wchar_t *name,
+                  DWORD desired_access = EVENT_ALL_ACCESS,
+                  BOOL is_inherit_handle = FALSE);
 
         bool on();
 
         bool off();
 
-        bool wait(DWORD dwMilliseconds = INFINITE);
+        bool wait(DWORD milli_seconds = INFINITE);
 
         DWORD err_code() const;
 

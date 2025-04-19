@@ -16,29 +16,29 @@ namespace YanLib::sync {
         }
     }
 
-    bool semaphore::create(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-                           LONG lInitialCount,
-                           LONG lMaximumCount,
-                           const wchar_t *lpName) {
-        semaphore_handle = CreateSemaphoreW(lpSemaphoreAttributes,
-                                            lInitialCount,
-                                            lMaximumCount,
-                                            lpName);
+    bool semaphore::create(LPSECURITY_ATTRIBUTES semaphore_attrs,
+                           LONG initial_count,
+                           LONG maximum_count,
+                           const wchar_t *name) {
+        semaphore_handle = CreateSemaphoreW(semaphore_attrs,
+                                            initial_count,
+                                            maximum_count,
+                                            name);
         error_code = GetLastError();
         return semaphore_handle != nullptr;
     }
 
-    bool semaphore::open(const wchar_t *lpName,
-                         DWORD dwDesiredAccess,
-                         BOOL bInheritHandle) {
-        semaphore_handle = OpenSemaphoreW(dwDesiredAccess, bInheritHandle, lpName);
+    bool semaphore::open(const wchar_t *name,
+                         DWORD desired_access,
+                         BOOL inherit_handle) {
+        semaphore_handle = OpenSemaphoreW(desired_access, inherit_handle, name);
         error_code = GetLastError();
         return semaphore_handle != nullptr;
     }
 
-    bool semaphore::wait(DWORD dwMilliseconds) {
+    bool semaphore::wait(DWORD milli_seconds) {
         if (semaphore_handle) {
-            DWORD ret = WaitForSingleObject(semaphore_handle, dwMilliseconds);
+            DWORD ret = WaitForSingleObject(semaphore_handle, milli_seconds);
             if (ret == WAIT_FAILED) {
                 error_code = GetLastError();
             } else {
@@ -48,9 +48,9 @@ namespace YanLib::sync {
         return error_code == WAIT_OBJECT_0;
     }
 
-    bool semaphore::signal(LONG lReleaseCount, LPLONG lpPreviousCount) {
+    bool semaphore::signal(LONG release_count, LPLONG previous_count) {
         if (semaphore_handle &&
-            ReleaseSemaphore(semaphore_handle, lReleaseCount, lpPreviousCount)) {
+            ReleaseSemaphore(semaphore_handle, release_count, previous_count)) {
             return true;
         }
         error_code = GetLastError();

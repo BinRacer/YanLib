@@ -6,10 +6,10 @@
 #include "helper/convert.h"
 
 namespace YanLib::sync {
-    barrier::barrier(LONG lTotalThreads, LONG lSpinCount) {
+    barrier::barrier(LONG total_threads, LONG spin_count) {
         if (InitializeSynchronizationBarrier(&synchronization_barrier,
-                                             lTotalThreads,
-                                             lSpinCount)) {
+                                             total_threads,
+                                             spin_count)) {
             error_code = 0;
         }
         error_code = GetLastError();
@@ -19,18 +19,18 @@ namespace YanLib::sync {
         DeleteSynchronizationBarrier(&synchronization_barrier);
     }
 
-    bool barrier::enter(DWORD dwFlags) {
-        const BOOL ret = EnterSynchronizationBarrier(&synchronization_barrier, dwFlags);
+    bool barrier::enter(DWORD flag) {
+        const BOOL ret = EnterSynchronizationBarrier(&synchronization_barrier, flag);
         return ret == TRUE;
     }
 
-    bool barrier::wait(DWORD nCount,
-                       const HANDLE *lpHandles,
-                       BOOL bWaitAll,
+    bool barrier::wait(DWORD count,
+                       const HANDLE *handles,
+                       BOOL wait_all,
                        DWORD dwMilliseconds) {
-        DWORD ret = WaitForMultipleObjects(nCount,
-                                           lpHandles,
-                                           bWaitAll,
+        DWORD ret = WaitForMultipleObjects(count,
+                                           handles,
+                                           wait_all,
                                            dwMilliseconds);
         if (ret == WAIT_FAILED) {
             error_code = GetLastError();

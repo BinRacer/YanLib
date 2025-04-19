@@ -16,24 +16,24 @@ namespace YanLib::sync {
         }
     }
 
-    bool event::create(LPSECURITY_ATTRIBUTES lpEventAttributes,
-                       BOOL bManualReset,
-                       BOOL bInitialState,
-                       const wchar_t *lpName) {
-        event_handle = CreateEventW(lpEventAttributes,
-                                    bManualReset,
-                                    bInitialState,
-                                    lpName);
+    bool event::create(LPSECURITY_ATTRIBUTES event_attrs,
+                       BOOL is_manual_reset,
+                       BOOL is_initial_state,
+                       const wchar_t *name) {
+        event_handle = CreateEventW(event_attrs,
+                                    is_manual_reset,
+                                    is_initial_state,
+                                    name);
         error_code = GetLastError();
         return event_handle != nullptr;
     }
 
-    bool event::open(const wchar_t *lpName,
-                     DWORD dwDesiredAccess,
-                     BOOL bInheritHandle) {
-        event_handle = OpenEventW(dwDesiredAccess,
-                                  bInheritHandle,
-                                  lpName);
+    bool event::open(const wchar_t *name,
+                     DWORD desired_access,
+                     BOOL is_inherit_handle) {
+        event_handle = OpenEventW(desired_access,
+                                  is_inherit_handle,
+                                  name);
         error_code = GetLastError();
         return event_handle != nullptr;
     }
@@ -54,9 +54,9 @@ namespace YanLib::sync {
         return false;
     }
 
-    bool event::wait(DWORD dwMilliseconds) {
+    bool event::wait(DWORD milli_seconds) {
         if (event_handle) {
-            DWORD ret = WaitForSingleObject(event_handle, dwMilliseconds);
+            DWORD ret = WaitForSingleObject(event_handle, milli_seconds);
             if (ret == WAIT_FAILED) {
                 error_code = GetLastError();
             } else {

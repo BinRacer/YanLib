@@ -31,7 +31,7 @@ namespace YanLib::sync {
 
         void unlock();
 
-        bool sleep(DWORD dwMilliseconds = INFINITE);
+        bool sleep(DWORD milli_seconds = INFINITE);
 
         void wake();
 
@@ -72,8 +72,8 @@ namespace sync {
 
         void write_unlock();
 
-        bool sleep(DWORD dwMilliseconds = INFINITE,
-                   ULONG Flags = CONDITION_VARIABLE_LOCKMODE_SHARED);
+        bool sleep(DWORD milli_seconds = INFINITE,
+                   ULONG flag = CONDITION_VARIABLE_LOCKMODE_SHARED);
 
         void wake();
 

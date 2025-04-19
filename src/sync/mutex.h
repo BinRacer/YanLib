@@ -26,15 +26,15 @@ namespace YanLib::sync {
 
         ~mutex();
 
-        bool create(LPSECURITY_ATTRIBUTES lpMutexAttributes = nullptr,
-                    BOOL bInitialOwner = FALSE,
-                    const wchar_t *lpName = nullptr);
+        bool create(LPSECURITY_ATTRIBUTES mutex_attrs = nullptr,
+                    BOOL is_initial_owner = FALSE,
+                    const wchar_t *name = nullptr);
 
-        bool open(const wchar_t *lpName,
-                  DWORD dwDesiredAccess = MUTEX_ALL_ACCESS,
-                  BOOL bInheritHandle = FALSE);
+        bool open(const wchar_t *name,
+                  DWORD desired_access = MUTEX_ALL_ACCESS,
+                  BOOL is_inherit_handle = FALSE);
 
-        bool lock(DWORD dwMilliseconds = INFINITE);
+        bool lock(DWORD milli_seconds = INFINITE);
 
         bool unlock();
 

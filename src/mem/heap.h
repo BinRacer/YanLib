@@ -9,7 +9,7 @@
 
 namespace YanLib::mem {
     class heap {
-        HANDLE hHeap;
+        HANDLE heap_handle;
         DWORD error_code;
 
     public:
@@ -25,22 +25,22 @@ namespace YanLib::mem {
 
         ~heap();
 
-        bool create(DWORD flOptions = 0,
-                    size_t dwInitialSize = 0,
-                    size_t dwMaximumSize = 0);
+        bool create(DWORD options = 0,
+                    size_t initial_size = 0,
+                    size_t maximum_size = 0);
 
         bool open_proc_heap();
 
-        void *malloc(size_t dwBytes) const;
+        void *malloc(size_t size) const;
 
-        void *realloc(void *lpMem,
-                      size_t dwNewBytes) const;
+        void *realloc(void *addr,
+                      size_t new_size) const;
 
-        bool free(void *lpMem);
+        bool free(void *addr);
 
-        size_t size(void *lpMem) const;
+        size_t size(void *addr) const;
 
-        bool is_ok(void *lpMem) const;
+        bool is_ok(void *addr) const;
 
         bool lock();
 

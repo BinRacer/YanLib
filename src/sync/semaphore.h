@@ -26,18 +26,18 @@ namespace YanLib::sync {
 
         ~semaphore();
 
-        bool create(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes = nullptr,
-                    LONG lInitialCount = 1,
-                    LONG lMaximumCount = 1,
-                    const wchar_t *lpName = nullptr);
+        bool create(LPSECURITY_ATTRIBUTES semaphore_attrs = nullptr,
+                    LONG initial_count = 1,
+                    LONG maximum_count = 1,
+                    const wchar_t *name = nullptr);
 
-        bool open(const wchar_t *lpName,
-                  DWORD dwDesiredAccess = SEMAPHORE_ALL_ACCESS,
-                  BOOL bInheritHandle = FALSE);
+        bool open(const wchar_t *name,
+                  DWORD desired_access = SEMAPHORE_ALL_ACCESS,
+                  BOOL inherit_handle = FALSE);
 
-        bool wait(DWORD dwMilliseconds = INFINITE);
+        bool wait(DWORD milli_seconds = INFINITE);
 
-        bool signal(LONG lReleaseCount = 1, LPLONG lpPreviousCount = nullptr);
+        bool signal(LONG release_count = 1, LPLONG previous_count = nullptr);
 
         DWORD err_code() const;
 

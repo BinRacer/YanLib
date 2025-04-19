@@ -12,7 +12,7 @@
 namespace YanLib::mem {
     class allocate {
     private:
-        std::list<void *> lpMemory;
+        std::list<void *> memory_ptr_list;
         DWORD error_code;
         sync::rwlock rwlock;
 
@@ -29,15 +29,15 @@ namespace YanLib::mem {
 
         ~allocate();
 
-        void *malloc(size_t dwSize);
+        void *malloc(size_t size);
 
-        bool free(void *lpAddr);
+        bool free(void *addr);
 
-        void *malloc_reserve(size_t dwSize);
+        void *malloc_reserve(size_t size);
 
-        bool free_reserve(void *lpAddr, size_t dwSize = 0);
+        bool free_reserve(void *addr, size_t size = 0);
 
-        void *realloc(void *lpOldAddr, size_t dwNewSize);
+        void *realloc(void *old_addr, size_t new_size);
 
         DWORD err_code() const;
 

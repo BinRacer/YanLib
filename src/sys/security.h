@@ -28,61 +28,61 @@ namespace YanLib::sys {
 
         DWORD curr_session_id() const;
 
-        HANDLE curr_session_token(ULONG SessionId = 0);
+        HANDLE curr_session_token(ULONG session_id = 0);
 
-        HANDLE copy_token(HANDLE hExistingToken = nullptr,
-                          DWORD dwDesiredAccess = MAXIMUM_ALLOWED,
-                          LPSECURITY_ATTRIBUTES lpTokenAttributes = nullptr,
-                          SECURITY_IMPERSONATION_LEVEL ImpersonationLevel = SecurityIdentification,
-                          TOKEN_TYPE TokenType = TokenPrimary);
+        HANDLE copy_token(HANDLE existing_token_handle = nullptr,
+                          DWORD desired_access = MAXIMUM_ALLOWED,
+                          LPSECURITY_ATTRIBUTES token_attrs = nullptr,
+                          SECURITY_IMPERSONATION_LEVEL impersonation_level = SecurityIdentification,
+                          TOKEN_TYPE token_type = TokenPrimary);
 
-        void *create_env_block(HANDLE hToken,
-                               BOOL bInherit = FALSE);
+        void *create_env_block(HANDLE token_handle,
+                               BOOL is_inherit = FALSE);
 
-        bool clear_env_block(void *lpEnvironment);
-
-        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool enable_privilege(HANDLE ProcessHandle,
-                              const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        bool clear_env_block(void *env);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool disable_privilege(HANDLE ProcessHandle,
-                               const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        bool enable_privilege(HANDLE proc_handle,
+                              const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool enable_privilege(DWORD ProcessID,
-                              const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        bool disable_privilege(HANDLE proc_handle,
+                               const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool disable_privilege(DWORD ProcessID,
-                               const wchar_t *szPrivilege = L"SeDebugPrivilege");
+        bool enable_privilege(DWORD pid,
+                              const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool enable_debug(HANDLE ProcessHandle);
+        bool disable_privilege(DWORD pid,
+                               const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool disable_debug(HANDLE ProcessHandle);
+        bool enable_debug(HANDLE proc_handle);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool enable_debug(DWORD ProcessID);
+        bool disable_debug(HANDLE proc_handle);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool disable_debug(DWORD ProcessID);
+        bool enable_debug(DWORD pid);
+
+        // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
+        bool disable_debug(DWORD pid);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        bool enable_sacl(HANDLE ProcessHandle);
+        bool enable_sacl(HANDLE proc_handle);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        bool disable_sacl(HANDLE ProcessHandle);
+        bool disable_sacl(HANDLE proc_handle);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        bool enable_sacl(DWORD ProcessID);
+        bool enable_sacl(DWORD pid);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        bool disable_sacl(DWORD ProcessID);
+        bool disable_sacl(DWORD pid);
 
         std::pair<TOKEN_ELEVATION_TYPE, bool>
-        check_proc_elevation(HANDLE ProcessHandle = nullptr);
+        check_proc_elevation(HANDLE proc_handle = nullptr);
 
         enum SecurityLevel {
             SECURITY_UNTRUSTED,
@@ -125,7 +125,7 @@ namespace YanLib::sys {
             TokenPolicy,
             ResourceLevel,
             SystemPolicy>
-        check_proc_integrity_level(HANDLE ProcessHandle = nullptr);
+        check_proc_integrity_level(HANDLE proc_handle = nullptr);
 
         DWORD err_code() const;
 

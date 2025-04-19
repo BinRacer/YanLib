@@ -19,16 +19,17 @@ namespace YanLib::sys {
     private:
         STARTUPINFOW si{};
         PROCESS_INFORMATION pi{};
+        wchar_t *curr_proc_env = nullptr;
+        HANDLE snapshot_handle = INVALID_HANDLE_VALUE;
         std::vector<PROCESSENTRY32W> procs{};
         std::unordered_set<DWORD> pids{};
         std::vector<THREADENTRY32> threads{};
-        std::unordered_set<DWORD> tids{};
+        std::unordered_set<DWORD> thread_ids{};
         std::vector<MODULEENTRY32W> modules{};
-        std::unordered_set<HMODULE> hmodules{};
+        std::unordered_set<HMODULE> module_handles{};
         std::vector<HEAPLIST32> heaps{};
-        std::unordered_set<ULONG_PTR> heapids{};
-        HANDLE hSnapshot = INVALID_HANDLE_VALUE;
-        bool isCreated = false;
+        std::unordered_set<ULONG_PTR> heap_ids{};
+        volatile bool proc_is_created = false;
         DWORD error_code = 0;
 
         // 0: kd> dt nt!_PEB
@@ -50,8 +51,8 @@ namespace YanLib::sys {
         // +0x018 Ldr              : Ptr64 _PEB_LDR_DATA
         // +0x020 ProcessParameters : Ptr64 _RTL_USER_PROCESS_PARAMETERS
         struct _peb {
-            uint8_t Filler[0x20];
-            void *InfoBlockAddress;
+            uint8_t fill[0x20];
+            void *process_parameters;
         };
 
         // 0: kd> dt nt!_RTL_USER_PROCESS_PARAMETERS
@@ -75,16 +76,16 @@ namespace YanLib::sys {
         // +0x000 Length           : Uint2B
         // +0x002 MaximumLength    : Uint2B
         // +0x008 Buffer           : Ptr64 Wchar
-        struct _infoBlock {
-            uint8_t Filler[0x70 + 0x8];
-            void *wszCmdLineAddress;
+        struct _process_parameters {
+            uint8_t fill[0x70 + 0x8];
+            void *cmdline;
         };
 
-        static NTSTATUS nt_query_info_proc(HANDLE ProcessHandle,
-                                           PROCESSINFOCLASS ProcessInformationClass,
-                                           PVOID ProcessInformation,
-                                           ULONG ProcessInformationLength,
-                                           PULONG ReturnLength);
+        static NTSTATUS nt_query_info_proc(HANDLE proc_handle,
+                                           PROCESSINFOCLASS proc_info_class,
+                                           PVOID proc_info,
+                                           ULONG proc_info_len,
+                                           PULONG ret_len);
 
     public:
         proc(const proc &other) = delete;
@@ -99,105 +100,204 @@ namespace YanLib::sys {
 
         ~proc();
 
-        bool create(const wchar_t *lpApplicationName,
-                    wchar_t *lpCommandLine = nullptr,
-                    LPSECURITY_ATTRIBUTES lpProcessAttributes = nullptr,
-                    LPSECURITY_ATTRIBUTES lpThreadAttributes = nullptr,
-                    BOOL bInheritHandles = FALSE,
-                    DWORD dwCreationFlags = 0,
-                    LPVOID lpEnvironment = nullptr,
-                    const wchar_t *lpCurrentDirectory = nullptr);
+        bool create(const wchar_t *app_name,
+                    wchar_t *cmdline = nullptr,
+                    LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+                    LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+                    BOOL is_inherit_handles = FALSE,
+                    DWORD create_flag = 0,
+                    LPVOID env = nullptr,
+                    const wchar_t *curr_dir = nullptr);
 
-        bool create_with_suspended(const wchar_t *lpApplicationName,
-                                   wchar_t *lpCommandLine = nullptr,
-                                   LPSECURITY_ATTRIBUTES lpProcessAttributes = nullptr,
-                                   LPSECURITY_ATTRIBUTES lpThreadAttributes = nullptr,
-                                   BOOL bInheritHandles = FALSE,
-                                   DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS |
-                                                           CREATE_UNICODE_ENVIRONMENT |
-                                                           CREATE_SUSPENDED,
-                                   LPVOID lpEnvironment = nullptr,
-                                   const wchar_t *lpCurrentDirectory = nullptr);
+        bool create_with_suspended(const wchar_t *app_name,
+                                   wchar_t *cmdline = nullptr,
+                                   LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+                                   LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+                                   BOOL is_inherit_handles = FALSE,
+                                   DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                                       CREATE_SUSPENDED,
+                                   LPVOID env = nullptr,
+                                   const wchar_t *curr_dir = nullptr);
 
-        bool create_as_user(HANDLE hToken,
-                            const wchar_t *lpApplicationName,
-                            wchar_t *lpCommandLine = nullptr,
-                            LPSECURITY_ATTRIBUTES lpProcessAttributes = nullptr,
-                            LPSECURITY_ATTRIBUTES lpThreadAttributes = nullptr,
-                            BOOL bInheritHandles = FALSE,
-                            DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS |
-                                                    CREATE_UNICODE_ENVIRONMENT,
-                            LPVOID lpEnvironment = nullptr,
-                            const wchar_t *lpCurrentDirectory = nullptr);
+        bool create_as_user(HANDLE token_handle,
+                            const wchar_t *app_name,
+                            wchar_t *cmdline = nullptr,
+                            LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+                            LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+                            BOOL is_inherit_handles = FALSE,
+                            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                                CREATE_UNICODE_ENVIRONMENT,
+                            LPVOID env = nullptr,
+                            const wchar_t *curr_dir = nullptr);
 
 
-        bool create_session_zero(const wchar_t *lpApplicationName,
-                                 wchar_t *lpCommandLine = nullptr,
-                                 LPSECURITY_ATTRIBUTES lpProcessAttributes = nullptr,
-                                 LPSECURITY_ATTRIBUTES lpThreadAttributes = nullptr,
-                                 BOOL bInheritHandles = FALSE,
-                                 DWORD dwCreationFlags = NORMAL_PRIORITY_CLASS |
-                                                         CREATE_NEW_CONSOLE |
-                                                         CREATE_UNICODE_ENVIRONMENT,
-                                 LPVOID lpEnvironment = nullptr,
-                                 const wchar_t *lpCurrentDirectory = nullptr);
+        bool create_session_zero(const wchar_t *app_name,
+                                 wchar_t *cmdline = nullptr,
+                                 LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+                                 LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+                                 BOOL is_inherit_handles = FALSE,
+                                 DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                                     CREATE_UNICODE_ENVIRONMENT |
+                                                     CREATE_NEW_CONSOLE,
+                                 LPVOID env = nullptr,
+                                 const wchar_t *curr_dir = nullptr);
 
-        bool win_exec(const char *lpCmdLine, UINT uCmdShow = SW_SHOWDEFAULT);
+        bool create_with_logon(const wchar_t *username,
+                               const wchar_t *domain,
+                               const wchar_t *password,
+                               const wchar_t *app_name,
+                               wchar_t *cmdline = nullptr,
+                               DWORD logon_flag = LOGON_WITH_PROFILE,
+                               DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                                   CREATE_NEW_CONSOLE |
+                                                   CREATE_UNICODE_ENVIRONMENT,
+                               void *env = nullptr,
+                               const wchar_t *curr_dir = nullptr);
 
-        bool shell_exec(const wchar_t *lpFile,
-                        const wchar_t *lpParameters = nullptr,
-                        const wchar_t *lpDirectory = nullptr,
-                        INT nShowCmd = SW_SHOWDEFAULT,
+        bool create_with_token(HANDLE token_handle,
+                               LPCWSTR app_name,
+                               LPWSTR cmdline = nullptr,
+                               DWORD logon_flag = LOGON_WITH_PROFILE,
+                               DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                                   CREATE_NEW_CONSOLE |
+                                                   CREATE_UNICODE_ENVIRONMENT,
+                               LPVOID env = nullptr,
+                               LPCWSTR curr_dir = nullptr);
+
+        bool win_exec(const char *cmdline, UINT show_flag = SW_SHOWDEFAULT);
+
+        bool shell_exec(const wchar_t *file_name,
+                        const wchar_t *params = nullptr,
+                        const wchar_t *dir = nullptr,
+                        INT show_flag = SW_SHOWDEFAULT,
                         HWND hwnd = nullptr,
-                        const wchar_t *lpOperation = nullptr);
+                        const wchar_t *operation = nullptr);
 
-        void *malloc(HANDLE hProcess,
-                     size_t dwSize,
-                     void *lpAddress = nullptr,
-                     DWORD flAllocationType = MEM_COMMIT | MEM_RESERVE,
-                     DWORD flProtect = PAGE_READWRITE);
+        bool runas_elevated(const wchar_t *app_name,
+                            const wchar_t *cmdline = nullptr);
 
-        bool free(HANDLE hProcess,
-                  void *lpAddress,
-                  size_t dwSize = 0,
-                  DWORD dwFreeType = MEM_RELEASE);
+        void *malloc(HANDLE proc_handle,
+                     size_t size,
+                     void *addr = nullptr,
+                     DWORD allocate_flag = MEM_COMMIT | MEM_RESERVE,
+                     DWORD protect_flag = PAGE_READWRITE);
 
-        void *malloc_reserve(HANDLE hProcess,
-                             size_t dwSize,
-                             void *lpAddress = nullptr,
-                             DWORD flAllocationType = MEM_RESERVE,
-                             DWORD flProtect = PAGE_READWRITE);
+        bool free(HANDLE proc_handle,
+                  void *addr,
+                  size_t size = 0,
+                  DWORD free_type = MEM_RELEASE);
 
-        bool free_reserve(HANDLE hProcess,
-                          void *lpAddress,
-                          size_t dwSize,
-                          DWORD dwFreeType = MEM_DECOMMIT);
+        void *malloc_reserve(HANDLE proc_handle,
+                             size_t size,
+                             void *addr = nullptr,
+                             DWORD allocate_type = MEM_RESERVE,
+                             DWORD protect_flag = PAGE_READWRITE);
 
-        bool mem_guard_attr(HANDLE hProcess,
-                            void *lpAddress,
-                            size_t dwSize,
-                            DWORD flNewProtect,
-                            PDWORD lpflOldProtect);
+        bool free_reserve(HANDLE proc_handle,
+                          void *addr,
+                          size_t size,
+                          DWORD free_type = MEM_DECOMMIT);
 
-        bool read(HANDLE hProcess,
-                  const void *lpBaseAddress,
-                  void *lpBuffer,
-                  size_t nSize,
-                  size_t *lpNumberOfBytesRead);
+        bool mem_guard_attr(HANDLE proc_handle,
+                            void *addr,
+                            size_t size,
+                            DWORD new_protect_flag,
+                            PDWORD old_protect_flag);
 
-        bool write(HANDLE hProcess,
-                   void *lpBaseAddress,
-                   const void *lpBuffer,
-                   size_t nSize,
-                   size_t *lpNumberOfBytesWritten);
+        bool read(HANDLE proc_handle,
+                  const void *base_addr,
+                  void *buf,
+                  size_t size,
+                  size_t *bytes_read);
 
-        std::vector<uint8_t> read(HANDLE hProcess,
-                                  const void *lpBaseAddress,
-                                  size_t nSize);
+        bool write(HANDLE proc_handle,
+                   void *base_addr,
+                   const void *buf,
+                   size_t size,
+                   size_t *bytes_written);
 
-        bool write(HANDLE hProcess,
-                   void *lpBaseAddress,
+        std::vector<uint8_t> read(HANDLE proc_handle,
+                                  const void *base_addr,
+                                  size_t size);
+
+        bool write(HANDLE proc_handle,
+                   void *base_addr,
                    std::vector<uint8_t> &buf);
+
+        void flush_write_buffer();
+
+        std::wstring env_strings();
+
+        std::wstring get_env_var(std::wstring var_name);
+
+        bool set_env_var(std::wstring var_name, std::wstring var_value);
+
+        std::wstring cmdline();
+
+        std::string cmdline(HANDLE proc_handle);
+
+        std::wstring cmdline_wide(HANDLE proc_handle);
+
+        std::string cmdline(DWORD pid);
+
+        std::wstring cmdline_wide(DWORD pid);
+
+        std::string owner(HANDLE proc_handle);
+
+        std::wstring owner_wide(HANDLE proc_handle);
+
+        std::string owner(DWORD pid);
+
+        std::wstring owner_wide(DWORD pid);
+
+        std::string image_name(HANDLE proc_handle = nullptr);
+
+        std::wstring image_name_wide(HANDLE proc_handle = nullptr);
+
+        void *module_image_base(MODULEENTRY32W &module_entry);
+
+        void *image_base();
+
+        void *image_base(HANDLE proc_handle);
+
+        void *image_base(DWORD pid);
+
+        DWORD get_priority(HANDLE proc_handle);
+
+        bool set_priority(HANDLE proc_handle, DWORD priority);
+
+        int get_thread_priority(HANDLE thread_handle);
+
+        bool set_thread_priority(HANDLE thread_handle, int priority);
+
+        DWORD handle_count(HANDLE proc_handle);
+
+        DWORD gui_handle_count(HANDLE proc_handle,
+                               DWORD flag = GR_GDIOBJECTS);
+
+        DWORD processor_num();
+
+        DWORD exit_status(HANDLE proc_handle);
+
+        void kill(UINT exit_code);
+
+        bool fake_proc(HANDLE proc_handle,
+                       const wchar_t *app_name,
+                       const wchar_t *cmdline);
+
+        HANDLE thread_handle();
+
+        HANDLE proc_handle();
+
+        DWORD thread_id();
+
+        DWORD proc_id();
+
+        HANDLE pid_to_handle(DWORD pid,
+                             DWORD desired_access = PROCESS_ALL_ACCESS,
+                             BOOL is_inherit_handle = FALSE);
+
+        DWORD handle_to_pid(HANDLE proc_handle);
 
         HANDLE child_thread_handle() const;
 
@@ -207,21 +307,9 @@ namespace YanLib::sys {
 
         DWORD child_proc_id();
 
-        bool wait_child(DWORD dwMilliseconds = INFINITE);
+        bool wait_child(DWORD milli_seconds = INFINITE);
 
         bool resume_child();
-
-        HANDLE curr_thread_handle();
-
-        HANDLE curr_proc_handle();
-
-        DWORD curr_thread_id();
-
-        DWORD curr_proc_id();
-
-        HANDLE pid_to_handle(DWORD pid);
-
-        DWORD handle_to_pid(HANDLE hProcess);
 
         std::vector<PROCESSENTRY32W> ls_procs(DWORD pid = 0);
 
@@ -235,17 +323,17 @@ namespace YanLib::sys {
 
         PROCESSENTRY32W find_proc(DWORD pid);
 
-        PROCESSENTRY32W find_proc(const wchar_t *lpProcessName);
+        PROCESSENTRY32W find_proc(const wchar_t *proc_name);
 
         std::vector<THREADENTRY32> ls_threads(DWORD pid = 0);
 
-        std::unordered_set<DWORD> ls_tids(DWORD pid = 0);
+        std::unordered_set<DWORD> ls_thread_ids(DWORD pid = 0);
 
         void refresh_threads();
 
         bool tid_exists(DWORD tid);
 
-        DWORD get_pid(DWORD tid);
+        DWORD tid_to_pid(DWORD tid);
 
         THREADENTRY32 find_thread(DWORD tid);
 
@@ -253,70 +341,33 @@ namespace YanLib::sys {
 
         std::vector<MODULEENTRY32W> ls_modules(DWORD pid = 0);
 
-        std::unordered_set<HMODULE> ls_hmodules(DWORD pid = 0);
+        std::unordered_set<HMODULE> ls_module_handles(DWORD pid = 0);
 
         void refresh_modules();
 
-        MODULEENTRY32W find_module(const wchar_t *lpProcessName);
+        MODULEENTRY32W find_module(const wchar_t *proc_name);
 
         MODULEENTRY32W find_module(const void *address);
 
         std::vector<HEAPLIST32> ls_heaps(DWORD pid = 0);
 
-        std::unordered_set<ULONG_PTR> ls_heapids(DWORD pid = 0);
+        std::unordered_set<ULONG_PTR> ls_heap_ids(DWORD pid = 0);
 
         void refresh_heaps();
 
-        HEAPLIST32 find_heap(ULONG_PTR heapid);
+        HEAPLIST32 find_heap(ULONG_PTR heap_id);
 
         std::vector<HEAPLIST32> find_heaps(DWORD pid);
 
-        std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heaplist32);
+        std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heap_list);
 
-        std::vector<HEAPENTRY32> find_heap_blocks(ULONG_PTR heapid);
+        std::vector<HEAPENTRY32> find_heap_blocks(ULONG_PTR heap_id);
 
         std::vector<HEAPENTRY32> find_heap_blocks(DWORD pid);
 
-        bool is_heap(HANDLE hProcess, void *address);
+        bool is_heap(HANDLE proc_handle, void *address);
 
         bool is_heap(DWORD pid, void *address);
-
-        std::string get_proc_name(HANDLE hProcess = nullptr);
-
-        std::wstring get_proc_name_wide(HANDLE hProcess = nullptr);
-
-        bool runas_elevated_proc(const wchar_t *appName,
-                                 const wchar_t *cmdline = nullptr);
-
-        void kill_curr_proc(UINT ExitCode);
-
-        void *get_module_image_base(MODULEENTRY32W &mEntry);
-
-        void *get_curr_proc_image_base();
-
-        void *get_proc_image_base(HANDLE hProcess);
-
-        void *get_proc_image_base(DWORD pid);
-
-        std::string get_proc_cmdline(HANDLE hProcess);
-
-        std::wstring get_proc_cmdline_wide(HANDLE hProcess);
-
-        std::string get_proc_cmdline(DWORD pid);
-
-        std::wstring get_proc_cmdline_wide(DWORD pid);
-
-        std::string get_proc_owner(HANDLE hProcess);
-
-        std::wstring get_proc_owner_wide(HANDLE hProcess);
-
-        std::string get_proc_owner(DWORD pid);
-
-        std::wstring get_proc_owner_wide(DWORD pid);
-
-        bool fake_proc(HANDLE hProcess,
-                       const wchar_t *appName,
-                       const wchar_t *cmdline);
 
         DWORD err_code() const;
 

@@ -16,31 +16,31 @@ namespace YanLib::sync {
         }
     }
 
-    bool timer::create(LPSECURITY_ATTRIBUTES lpTimerAttributes,
-                       BOOL bManualReset,
-                       const wchar_t *lpTimerName) {
-        timer_handle = CreateWaitableTimerW(lpTimerAttributes,
-                                            bManualReset,
-                                            lpTimerName);
+    bool timer::create(LPSECURITY_ATTRIBUTES timer_attrs,
+                       BOOL is_manual_reset,
+                       const wchar_t *timer_name) {
+        timer_handle = CreateWaitableTimerW(timer_attrs,
+                                            is_manual_reset,
+                                            timer_name);
         error_code = GetLastError();
         return timer_handle != nullptr;
     }
 
-    bool timer::open(const wchar_t *lpTimerName,
-                     DWORD dwDesiredAccess,
-                     BOOL bInheritHandle) {
-        timer_handle = OpenWaitableTimerW(dwDesiredAccess,
-                                          bInheritHandle,
-                                          lpTimerName);
+    bool timer::open(const wchar_t *timer_name,
+                     DWORD desired_access,
+                     BOOL is_inherit_handle) {
+        timer_handle = OpenWaitableTimerW(desired_access,
+                                          is_inherit_handle,
+                                          timer_name);
         error_code = GetLastError();
         return timer_handle != nullptr;
     }
 
-    bool timer::set_timer(const LARGE_INTEGER *lpDueTime,
-                          LONG lPeriod,
-                          PTIMERAPCROUTINE pfnCompletionRoutine,
-                          LPVOID lpArgToCompletionRoutine,
-                          BOOL fResume) {
+    bool timer::set_timer(const LARGE_INTEGER *due_time,
+                          LONG period,
+                          PTIMERAPCROUTINE pfn_completion_routine,
+                          LPVOID arg_to_completion_routine,
+                          BOOL is_resume) {
         // SYSTEMTIME st = {0};
         // FILETIME ftLocal, ftUTC;
         // LARGE_INTEGER li;
@@ -63,11 +63,11 @@ namespace YanLib::sync {
         //                  FALSE);
 
         if (timer_handle && SetWaitableTimer(timer_handle,
-                                             lpDueTime,
-                                             lPeriod,
-                                             pfnCompletionRoutine,
-                                             lpArgToCompletionRoutine,
-                                             fResume)) {
+                                             due_time,
+                                             period,
+                                             pfn_completion_routine,
+                                             arg_to_completion_routine,
+                                             is_resume)) {
             return true;
         }
         error_code = GetLastError();
@@ -82,9 +82,9 @@ namespace YanLib::sync {
         return false;
     }
 
-    bool timer::wait(DWORD dwMilliseconds) {
+    bool timer::wait(DWORD milli_seconds) {
         if (timer_handle) {
-            DWORD ret = WaitForSingleObject(timer_handle, dwMilliseconds);
+            DWORD ret = WaitForSingleObject(timer_handle, milli_seconds);
             if (ret == WAIT_FAILED) {
                 error_code = GetLastError();
             } else {

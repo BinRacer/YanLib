@@ -28,16 +28,16 @@ namespace YanLib::crypto {
 #endif
     class aes256 {
     private:
-        HCRYPTPROV hCryptProv;
-        HCRYPTHASH hCryptHash;
-        HCRYPTKEY hCryptKey;
+        HCRYPTPROV crypt_prov_handle;
+        HCRYPTHASH crypt_hash_handle;
+        HCRYPTKEY crypt_key_handle;
         std::vector<uint8_t> data_bytes;
-        bool isDone = false;
+        bool is_done = false;
         DWORD error_code;
 
         struct KeyBlob {
             BLOBHEADER header;
-            DWORD keySize;
+            DWORD key_size;
             uint8_t key[32];
         };
 
@@ -50,17 +50,17 @@ namespace YanLib::crypto {
         static void make_pkcs7_padding(std::vector<uint8_t> &data);
 
         static bool remove_pkcs7_padding(std::vector<uint8_t> &data,
-                                         DWORD retLen);
+                                         DWORD ret_len);
 
         static void make_iso10126_padding(std::vector<uint8_t> &data);
 
         static bool remove_iso10126_padding(std::vector<uint8_t> &data,
-                                            DWORD retLen);
+                                            DWORD ret_len);
 
         static void make_ansix923_padding(std::vector<uint8_t> &data);
 
         static bool remove_ansix923_padding(std::vector<uint8_t> &data,
-                                            DWORD retLen);
+                                            DWORD ret_len);
 
         bool pre_process(const std::vector<uint8_t> &key_bytes,
                          const std::vector<uint8_t> &iv,

@@ -13,8 +13,8 @@
 namespace YanLib::io {
     class tcp_server {
     private:
-        WSADATA wsaData{};
-        volatile bool isIPV6 = false;
+        WSADATA wsa_data{};
+        volatile bool is_ipv6 = false;
         SOCKET server_socket{};
         int error_code{};
         sync::rwlock rwlock{};
@@ -31,12 +31,12 @@ namespace YanLib::io {
 
         tcp_server &operator=(tcp_server &&other) = delete;
 
-        explicit tcp_server(bool activeIpV6 = false);
+        explicit tcp_server(bool active_ipv6 = false);
 
         ~tcp_server();
 
-        bool bind(const char *localIP = "0.0.0.0",
-                  uint16_t localPort = 8080);
+        bool bind(const char *local_ip = "0.0.0.0",
+                  uint16_t local_port = 8080);
 
         bool listen(int backlog = SOMAXCONN);
 
@@ -48,9 +48,9 @@ namespace YanLib::io {
         int write(SOCKET client_socket, const char *buf,
                   int len, int flags = 0);
 
-        std::string read_string(SOCKET client_socket, int32_t bufferSize = 1024);
+        std::string read_string(SOCKET client_socket, int32_t buffer_size = 1024);
 
-        std::wstring read_wstring(SOCKET client_socket, int32_t bufferSize = 512);
+        std::wstring read_wstring(SOCKET client_socket, int32_t buffer_size = 512);
 
         std::string read_string_to_end(SOCKET client_socket);
 

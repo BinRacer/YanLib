@@ -7,18 +7,18 @@
 #include "helper/convert.h"
 
 namespace YanLib::io {
-    tcp_server::tcp_server(bool activeIpV6) {
+    tcp_server::tcp_server(bool active_ipv6) {
         do {
-            isIPV6 = activeIpV6;
-            error_code = WSAStartup(MAKEWORD(2, 2), &wsaData);
+            is_ipv6 = active_ipv6;
+            error_code = WSAStartup(MAKEWORD(2, 2), &wsa_data);
             if (error_code != 0) {
                 break;
             }
-            if (LOBYTE(wsaData.wVersion) != 2 ||
-                HIBYTE(wsaData.wVersion) != 2) {
+            if (LOBYTE(wsa_data.wVersion) != 2 ||
+                HIBYTE(wsa_data.wVersion) != 2) {
                 break;
             }
-            if (activeIpV6) {
+            if (active_ipv6) {
                 server_socket = socket(AF_INET6,
                                        SOCK_STREAM,
                                        IPPROTO_TCP);
@@ -42,12 +42,12 @@ namespace YanLib::io {
         WSACleanup();
     }
 
-    bool tcp_server::bind(const char *localIP, uint16_t localPort) {
-        if (isIPV6) {
+    bool tcp_server::bind(const char *local_ip, uint16_t local_port) {
+        if (is_ipv6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;
-            addr.sin6_port = htons(localPort);
-            if (inet_pton(AF_INET6, localIP, &addr.sin6_addr) != 1) {
+            addr.sin6_port = htons(local_port);
+            if (inet_pton(AF_INET6, local_ip, &addr.sin6_addr) != 1) {
                 error_code = WSAGetLastError();
                 return false;
             }
@@ -61,8 +61,8 @@ namespace YanLib::io {
         } else {
             sockaddr_in addr{};
             addr.sin_family = AF_INET;
-            addr.sin_port = htons(localPort);
-            if (inet_pton(AF_INET, localIP, &addr.sin_addr) != 1) {
+            addr.sin_port = htons(local_port);
+            if (inet_pton(AF_INET, local_ip, &addr.sin_addr) != 1) {
                 error_code = WSAGetLastError();
                 return false;
             }
@@ -98,64 +98,64 @@ namespace YanLib::io {
 
     int tcp_server::read(SOCKET client_socket, char *buf,
                          int len, int flags) {
-        int numberOfBytes = recv(client_socket, buf, len, flags);
-        if (numberOfBytes == SOCKET_ERROR) {
+        int number_of_bytes = recv(client_socket, buf, len, flags);
+        if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
-        return numberOfBytes;
+        return number_of_bytes;
     }
 
     int tcp_server::write(SOCKET client_socket, const char *buf,
                           int len, int flags) {
-        int numberOfBytes = send(client_socket, buf, len, flags);
-        if (numberOfBytes == SOCKET_ERROR) {
+        int number_of_bytes = send(client_socket, buf, len, flags);
+        if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
-        return numberOfBytes;
+        return number_of_bytes;
     }
 
-    std::string tcp_server::read_string(SOCKET client_socket, int32_t bufferSize) {
-        if (bufferSize < 1024) {
-            bufferSize = 1024;
+    std::string tcp_server::read_string(SOCKET client_socket, int32_t buffer_size) {
+        if (buffer_size < 1024) {
+            buffer_size = 1024;
         }
-        std::string rawData(bufferSize, '\0');
-        int bytesRead = read(client_socket, rawData.data(), bufferSize);
-        if (bytesRead == SOCKET_ERROR) {
+        std::string raw_data(buffer_size, '\0');
+        int bytes_read = read(client_socket, raw_data.data(), buffer_size);
+        if (bytes_read == SOCKET_ERROR) {
             error_code = WSAGetLastError();
             return {};
         }
-        rawData.resize(bytesRead);
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.resize(bytes_read);
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
-    std::wstring tcp_server::read_wstring(SOCKET client_socket, int32_t bufferSize) {
-        if (bufferSize < 512) {
-            bufferSize = 512;
+    std::wstring tcp_server::read_wstring(SOCKET client_socket, int32_t buffer_size) {
+        if (buffer_size < 512) {
+            buffer_size = 512;
         }
         return helper::convert::str_to_wstr(
             read_string(client_socket,
-                        static_cast<int32_t>(bufferSize * sizeof(wchar_t))));
+                        static_cast<int32_t>(buffer_size * sizeof(wchar_t))));
     }
 
     std::string tcp_server::read_string_to_end(SOCKET client_socket) {
-        constexpr DWORD bufferSize = 4096;
-        char *buf = new char[bufferSize];
-        memset(buf, 0, bufferSize);
-        std::string rawData;
-        rawData.reserve(bufferSize);
-        int bytesRead = 0;
+        constexpr DWORD buffer_size = 4096;
+        char *buf = new char[buffer_size];
+        memset(buf, 0, buffer_size);
+        std::string raw_data;
+        raw_data.reserve(buffer_size);
+        int bytes_read = 0;
         do {
-            bytesRead = read(client_socket, buf, bufferSize);
-            if (bytesRead == SOCKET_ERROR) {
+            bytes_read = read(client_socket, buf, buffer_size);
+            if (bytes_read == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
                 break;
             }
-            rawData.insert(rawData.end(), buf, buf + bytesRead);
-        } while (bytesRead > 0);
+            raw_data.insert(raw_data.end(), buf, buf + bytes_read);
+        } while (bytes_read > 0);
         delete[] buf;
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
     std::wstring tcp_server::read_wstring_to_end(SOCKET client_socket) {

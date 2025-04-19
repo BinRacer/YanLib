@@ -56,40 +56,40 @@ namespace YanLib::helper {
     std::wstring convert::err_wstring(DWORD error_code) {
         std::wstring result;
         HLOCAL hlocal = nullptr;
-        DWORD systemLocale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
-        DWORD fOk = FormatMessageW(
+        DWORD system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
+        DWORD is_ok = FormatMessageW(
             FORMAT_MESSAGE_FROM_SYSTEM |
             FORMAT_MESSAGE_IGNORE_INSERTS |
             FORMAT_MESSAGE_ALLOCATE_BUFFER,
             nullptr,
             error_code,
-            systemLocale,
+            system_locale,
             reinterpret_cast<wchar_t *>(&hlocal),
             0,
             nullptr);
-        if (!fOk) {
+        if (!is_ok) {
             // Is it a network-related error?
-            const HMODULE hDll = LoadLibraryExW(
+            const HMODULE module_handle = LoadLibraryExW(
                 L"netmsg.dll",
                 nullptr,
                 DONT_RESOLVE_DLL_REFERENCES);
 
-            if (hDll != nullptr) {
-                fOk = FormatMessageW(
+            if (module_handle != nullptr) {
+                is_ok = FormatMessageW(
                     FORMAT_MESSAGE_FROM_HMODULE |
                     FORMAT_MESSAGE_IGNORE_INSERTS |
                     FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                    hDll,
+                    module_handle,
                     error_code,
-                    systemLocale,
+                    system_locale,
                     reinterpret_cast<wchar_t *>(&hlocal),
                     0,
                     nullptr);
-                FreeLibrary(hDll);
+                FreeLibrary(module_handle);
             }
         }
 
-        if (fOk && (hlocal != nullptr)) {
+        if (is_ok && (hlocal != nullptr)) {
             result = static_cast<wchar_t *>(LocalLock(hlocal));
             LocalFree(hlocal);
         }

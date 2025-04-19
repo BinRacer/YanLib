@@ -12,8 +12,8 @@
 namespace YanLib::io {
     class udp_client {
     private:
-        WSADATA wsaData{};
-        volatile bool isIPV6 = false;
+        WSADATA wsa_data{};
+        volatile bool is_ipv6 = false;
         SOCKET client_socket{};
         int error_code{};
 
@@ -28,7 +28,7 @@ namespace YanLib::io {
 
         udp_client &operator=(udp_client &&other) = delete;
 
-        explicit udp_client(bool activeIpV6 = false);
+        explicit udp_client(bool active_ipv6 = false);
 
         ~udp_client();
 
@@ -41,30 +41,30 @@ namespace YanLib::io {
                   const sockaddr *to, int tolen);
 
         int read(char *buf, int len,
-                 std::string &remoteIP, uint16_t &remotePort);
+                 std::string &remote_ip, uint16_t &remote_port);
 
         int write(char *buf, int len,
-                  std::string &remoteIP, uint16_t &remotePort);
+                  std::string &remote_ip, uint16_t &remote_port);
 
-        std::string read_string(std::string &remoteIP,
-                                uint16_t &remotePort,
-                                int32_t bufferSize = 1024);
+        std::string read_string(std::string &remote_ip,
+                                uint16_t &remote_port,
+                                int32_t buffer_size = 1024);
 
-        std::wstring read_wstring(std::string &remoteIP,
-                                  uint16_t &remotePort,
-                                  int32_t bufferSize = 512);
+        std::wstring read_wstring(std::string &remote_ip,
+                                  uint16_t &remote_port,
+                                  int32_t buffer_size = 512);
 
-        std::string read_string_to_end(std::string &remoteIP,
-                                       uint16_t &remotePort);
+        std::string read_string_to_end(std::string &remote_ip,
+                                       uint16_t &remote_port);
 
-        std::wstring read_wstring_to_end(std::string &remoteIP,
-                                         uint16_t &remotePort);
+        std::wstring read_wstring_to_end(std::string &remote_ip,
+                                         uint16_t &remote_port);
 
         int write_string(std::string &str,
-                         std::string &remoteIP, uint16_t &remotePort);
+                         std::string &remote_ip, uint16_t &remote_port);
 
         int write_wstring(std::wstring &wstr,
-                          std::string &remoteIP, uint16_t &remotePort);
+                          std::string &remote_ip, uint16_t &remote_port);
 
         int err_code() const;
 

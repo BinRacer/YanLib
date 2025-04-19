@@ -11,13 +11,13 @@
 namespace YanLib::hash {
     class sha384 {
     private:
-        HCRYPTPROV hCryptProv;
-        HCRYPTHASH hCryptHash;
+        HCRYPTPROV crypt_prov_handle;
+        HCRYPTHASH crypt_hash_handle;
         std::vector<uint8_t> data_bytes;
         std::vector<uint8_t> hash_bytes;
         std::wstring file_name;
-        bool isFile;
-        bool isDone = false;
+        bool is_file;
+        bool is_done = false;
         DWORD error_code;
 
         static std::string format_hex_fast(const std::vector<uint8_t> &data);

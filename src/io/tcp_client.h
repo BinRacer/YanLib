@@ -12,8 +12,8 @@
 namespace YanLib::io {
     class tcp_client {
     private:
-        WSADATA wsaData{};
-        volatile bool isIPV6 = false;
+        WSADATA wsa_data{};
+        volatile bool is_ipv6 = false;
         SOCKET client_socket{};
         int error_code{};
 
@@ -28,20 +28,20 @@ namespace YanLib::io {
 
         tcp_client &operator=(tcp_client &&other) = delete;
 
-        explicit tcp_client(bool activeIpV6 = false);
+        explicit tcp_client(bool active_ipv6 = false);
 
         ~tcp_client();
 
-        bool connect(const char *remoteIP = "127.0.0.1",
-                     uint16_t remotePort = 8080);
+        bool connect(const char *remote_ip = "127.0.0.1",
+                     uint16_t remote_port = 8080);
 
         int read(char *buf, int len, int flags = 0);
 
         int write(const char *buf, int len, int flags = 0);
 
-        std::string read_string(int32_t bufferSize = 1024);
+        std::string read_string(int32_t buffer_size = 1024);
 
-        std::wstring read_wstring(int32_t bufferSize = 512);
+        std::wstring read_wstring(int32_t buffer_size = 512);
 
         std::string read_string_to_end();
 

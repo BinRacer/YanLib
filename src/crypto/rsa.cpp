@@ -8,13 +8,13 @@
 
 namespace YanLib::crypto {
     void rsa::cleanup() {
-        if (hCryptKey) {
-            CryptDestroyKey(hCryptKey);
-            hCryptKey = 0;
+        if (crypt_key_handle) {
+            CryptDestroyKey(crypt_key_handle);
+            crypt_key_handle = 0;
         }
-        if (hCryptProv) {
-            CryptReleaseContext(hCryptProv, 0);
-            hCryptProv = 0;
+        if (crypt_prov_handle) {
+            CryptReleaseContext(crypt_prov_handle, 0);
+            crypt_prov_handle = 0;
         }
     }
 
@@ -23,21 +23,21 @@ namespace YanLib::crypto {
     }
 
     std::string rsa::format_hex_fast(const std::vector<uint8_t> &data) {
-        static constexpr char hexTable[] = "0123456789abcdef";
-        std::string hexStr;
-        hexStr.reserve(data.size() * 2);
+        static constexpr char hex_table[] = "0123456789abcdef";
+        std::string hex_str;
+        hex_str.reserve(data.size() * 2);
         for (uint8_t byte: data) {
-            hexStr += hexTable[byte >> 4];
-            hexStr += hexTable[byte & 0x0F];
+            hex_str += hex_table[byte >> 4];
+            hex_str += hex_table[byte & 0x0F];
         }
-        return hexStr;
+        return hex_str;
     }
 
     bool rsa::generate_key(RSA_KEY_LENGTH key_length) {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
-            if (!CryptAcquireContextW(&hCryptProv,
+            if (!CryptAcquireContextW(&crypt_prov_handle,
                                       nullptr,
                                       provider,
                                       PROV_RSA_AES,
@@ -45,15 +45,15 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            if (!CryptGenKey(hCryptProv,
+            if (!CryptGenKey(crypt_prov_handle,
                              AT_KEYEXCHANGE,
                              CRYPT_EXPORTABLE | key_length,
-                             &hCryptKey)) {
+                             &crypt_key_handle)) {
                 error_code = GetLastError();
                 break;
             }
             DWORD publen = 0;
-            if (!CryptExportKey(hCryptKey,
+            if (!CryptExportKey(crypt_key_handle,
                                 0,
                                 PUBLICKEYBLOB,
                                 0,
@@ -63,7 +63,7 @@ namespace YanLib::crypto {
                 break;
             }
             pub_key.resize(publen);
-            if (!CryptExportKey(hCryptKey,
+            if (!CryptExportKey(crypt_key_handle,
                                 0,
                                 PUBLICKEYBLOB,
                                 0,
@@ -73,7 +73,7 @@ namespace YanLib::crypto {
                 break;
             }
             DWORD privlen = 0;
-            if (!CryptExportKey(hCryptKey,
+            if (!CryptExportKey(crypt_key_handle,
                                 0,
                                 PRIVATEKEYBLOB,
                                 0,
@@ -83,7 +83,7 @@ namespace YanLib::crypto {
                 break;
             }
             priv_key.resize(privlen);
-            if (!CryptExportKey(hCryptKey,
+            if (!CryptExportKey(crypt_key_handle,
                                 0,
                                 PRIVATEKEYBLOB,
                                 0,
@@ -105,7 +105,7 @@ namespace YanLib::crypto {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
-            if (!CryptAcquireContextW(&hCryptProv,
+            if (!CryptAcquireContextW(&crypt_prov_handle,
                                       nullptr,
                                       provider,
                                       PROV_RSA_AES,
@@ -113,33 +113,33 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            if (!CryptImportKey(hCryptProv, pub_blob.data(),
+            if (!CryptImportKey(crypt_prov_handle, pub_blob.data(),
                                 pub_blob.size(),
                                 0,
                                 0,
-                                &hCryptKey)) {
+                                &crypt_key_handle)) {
                 error_code = GetLastError();
                 break;
             }
             std::vector<uint8_t> encode_data(data.begin(), data.end());
-            DWORD dataSize = data.size();
-            DWORD rawSize = data.size();
-            if (!CryptEncrypt(hCryptKey,
+            DWORD data_size = data.size();
+            DWORD raw_size = data.size();
+            if (!CryptEncrypt(crypt_key_handle,
                               0,
                               TRUE,
                               0,
                               encode_data.data(),
-                              &dataSize,
+                              &data_size,
                               0)) {
                 error_code = GetLastError();
                 if (error_code == ERROR_MORE_DATA) {
-                    encode_data.resize(dataSize);
-                    if (!CryptEncrypt(hCryptKey,
+                    encode_data.resize(data_size);
+                    if (!CryptEncrypt(crypt_key_handle,
                                       0,
                                       TRUE,
                                       0,
                                       encode_data.data(),
-                                      &rawSize,
+                                      &raw_size,
                                       encode_data.size())) {
                         error_code = GetLastError();
                         break;
@@ -160,7 +160,7 @@ namespace YanLib::crypto {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
-            if (!CryptAcquireContextW(&hCryptProv,
+            if (!CryptAcquireContextW(&crypt_prov_handle,
                                       nullptr,
                                       provider,
                                       PROV_RSA_AES,
@@ -168,26 +168,26 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            if (!CryptImportKey(hCryptProv, priv_blob.data(),
+            if (!CryptImportKey(crypt_prov_handle, priv_blob.data(),
                                 priv_blob.size(),
                                 0,
                                 0,
-                                &hCryptKey)) {
+                                &crypt_key_handle)) {
                 error_code = GetLastError();
                 break;
             }
             std::vector<uint8_t> decode_data(data.begin(), data.end());
-            DWORD dataSize = data.size();
-            if (!CryptDecrypt(hCryptKey,
+            DWORD data_size = data.size();
+            if (!CryptDecrypt(crypt_key_handle,
                               0,
                               TRUE,
                               0,
                               decode_data.data(),
-                              &dataSize)) {
+                              &data_size)) {
                 error_code = GetLastError();
                 break;
             }
-            decode_data.resize(dataSize);
+            decode_data.resize(data_size);
             cleanup();
             return decode_data;
         } while (false);

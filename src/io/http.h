@@ -14,9 +14,9 @@
 namespace YanLib::io {
     class http {
     private:
-        HINTERNET hInternet = nullptr;
-        HINTERNET hConnect = nullptr;
-        HINTERNET hRequest = nullptr;
+        HINTERNET internet_handle = nullptr;
+        HINTERNET connect_handle = nullptr;
+        HINTERNET request_handle = nullptr;
         std::wstring url;
         URL_COMPONENTSW uc = {};
         wchar_t scheme[16] = {};
@@ -25,7 +25,7 @@ namespace YanLib::io {
         wchar_t password[32] = {};
         wchar_t urlpath[512] = {};
         wchar_t extra_info[256] = {};
-        bool isHTTPS = false;
+        bool is_https = false;
         uint16_t port = 0;
         DWORD error_code = 0;
 
@@ -44,14 +44,14 @@ namespace YanLib::io {
 
         ~http();
 
-        bool url_crack(DWORD dwFlags = ICU_DECODE | ICU_ESCAPE);
+        bool url_crack(DWORD flag = ICU_DECODE | ICU_ESCAPE);
 
-        bool add_header(const wchar_t *lpszHeaders,
-                        DWORD dwHeadersLength = -1);
+        bool add_header(const wchar_t *headers,
+                        DWORD headers_length = -1);
 
-        bool add_header(std::string lpszHeaders);
+        bool add_header(std::string headers);
 
-        bool add_header(std::wstring lpszHeaders);
+        bool add_header(std::wstring headers);
 
         bool add_headers(std::unordered_map<std::string, std::string> &map);
 
@@ -69,62 +69,62 @@ namespace YanLib::io {
 
         std::vector<std::wstring> get_headers_vec_wide() const;
 
-        bool query_option(DWORD dwOption,
-                          LPVOID lpBuffer,
-                          LPDWORD lpdwBufferLength);
+        bool query_option(DWORD option,
+                          LPVOID buffer,
+                          LPDWORD buffer_length);
 
-        bool set_option(DWORD dwOption,
-                        LPVOID lpBuffer,
-                        DWORD dwBufferLength);
+        bool set_option(DWORD option,
+                        LPVOID buffer,
+                        DWORD buffer_length);
 
-        bool open(const wchar_t *lpszAgent = L"MiniCurl/0.1",
-                  DWORD dwAccessType = INTERNET_OPEN_TYPE_PRECONFIG,
-                  const wchar_t *lpszProxy = nullptr,
-                  const wchar_t *lpszProxyBypass = nullptr,
-                  DWORD dwFlags = 0);
+        bool open(const wchar_t *agent_name = L"MiniCurl/0.1",
+                  DWORD access_type = INTERNET_OPEN_TYPE_PRECONFIG,
+                  const wchar_t *proxy = nullptr,
+                  const wchar_t *proxy_bypass = nullptr,
+                  DWORD flag = 0);
 
-        bool connect(DWORD dwService = INTERNET_SERVICE_HTTP,
-                     DWORD dwFlags = 0,
-                     DWORD_PTR dwContext = 0);
+        bool connect(DWORD service = INTERNET_SERVICE_HTTP,
+                     DWORD flag = 0,
+                     DWORD_PTR context = 0);
 
-        bool open_request(const wchar_t *lpszVerb = L"GET",
-                          const wchar_t *lpszVersion = L"HTTP/1.1",
-                          const wchar_t *lpszReferrer = nullptr,
-                          const wchar_t **lplpszAcceptTypes = nullptr,
-                          DWORD dwFlags = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
-                                          INTERNET_FLAG_KEEP_CONNECTION |
-                                          INTERNET_FLAG_NO_AUTH |
-                                          INTERNET_FLAG_NO_COOKIES |
-                                          INTERNET_FLAG_NO_UI |
-                                          INTERNET_FLAG_RELOAD,
-                          DWORD_PTR dwContext = 0);
+        bool open_request(const wchar_t *verb = L"GET",
+                          const wchar_t *version = L"HTTP/1.1",
+                          const wchar_t *referrer = nullptr,
+                          const wchar_t **accept_types = nullptr,
+                          DWORD flag = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
+                                       INTERNET_FLAG_KEEP_CONNECTION |
+                                       INTERNET_FLAG_NO_AUTH |
+                                       INTERNET_FLAG_NO_COOKIES |
+                                       INTERNET_FLAG_NO_UI |
+                                       INTERNET_FLAG_RELOAD,
+                          DWORD_PTR context = 0);
 
 
         DWORD get_content_length();
 
-        bool send_request(const wchar_t *lpszHeaders = nullptr,
-                          DWORD dwHeadersLength = 0,
-                          LPVOID lpOptional = nullptr,
-                          DWORD dwOptionalLength = 0);
+        bool send_request(const wchar_t *headers = nullptr,
+                          DWORD headers_length = 0,
+                          LPVOID optional = nullptr,
+                          DWORD optional_length = 0);
 
-        bool send_request_ex(LPINTERNET_BUFFERSW lpBuffersIn,
-                             LPINTERNET_BUFFERSW lpBuffersOut = nullptr,
-                             DWORD dwFlags = 0,
-                             DWORD_PTR dwContext = 0);
+        bool send_request_ex(LPINTERNET_BUFFERSW buffers_in,
+                             LPINTERNET_BUFFERSW buffers_out = nullptr,
+                             DWORD flag = 0,
+                             DWORD_PTR context = 0);
 
-        bool end_request_ex(LPINTERNET_BUFFERSW lpBuffersOut = nullptr,
-                            DWORD dwFlags = 0,
-                            DWORD_PTR dwContext = 0);
+        bool end_request_ex(LPINTERNET_BUFFERSW buffers_out = nullptr,
+                            DWORD flag = 0,
+                            DWORD_PTR context = 0);
 
-        bool read(LPVOID lpBuffer,
-                  DWORD dwNumberOfBytesToRead,
-                  LPDWORD lpdwNumberOfBytesRead);
+        bool read(LPVOID buf,
+                  DWORD size,
+                  LPDWORD ret_size);
 
-        std::vector<uint8_t> read_bytes(int32_t bufferSize = 1024);
+        std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
-        bool write(LPCVOID lpBuffer,
-                   DWORD dwNumberOfBytesToWrite,
-                   LPDWORD lpdwNumberOfBytesWritten);
+        bool write(LPCVOID buf,
+                   DWORD size,
+                   LPDWORD ret_size);
 
         DWORD write_bytes(std::vector<uint8_t> &vec);
 

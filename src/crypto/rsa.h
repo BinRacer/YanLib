@@ -27,8 +27,8 @@ namespace YanLib::crypto {
 #endif
     class rsa {
     private:
-        HCRYPTPROV hCryptProv = 0;
-        HCRYPTKEY hCryptKey = 0;
+        HCRYPTPROV crypt_prov_handle = 0;
+        HCRYPTKEY crypt_key_handle = 0;
         std::vector<uint8_t> pub_key{};
         std::vector<uint8_t> priv_key{};
         DWORD error_code = 0;

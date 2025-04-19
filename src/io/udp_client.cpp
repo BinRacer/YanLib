@@ -7,18 +7,18 @@
 #include "helper/convert.h"
 
 namespace YanLib::io {
-    udp_client::udp_client(bool activeIpV6) {
+    udp_client::udp_client(bool active_ipv6) {
         do {
-            isIPV6 = activeIpV6;
-            error_code = WSAStartup(MAKEWORD(2, 2), &wsaData);
+            is_ipv6 = active_ipv6;
+            error_code = WSAStartup(MAKEWORD(2, 2), &wsa_data);
             if (error_code != 0) {
                 break;
             }
-            if (LOBYTE(wsaData.wVersion) != 2 ||
-                HIBYTE(wsaData.wVersion) != 2) {
+            if (LOBYTE(wsa_data.wVersion) != 2 ||
+                HIBYTE(wsa_data.wVersion) != 2) {
                 break;
             }
-            if (activeIpV6) {
+            if (active_ipv6) {
                 client_socket = socket(AF_INET6,
                                        SOCK_DGRAM,
                                        IPPROTO_UDP);
@@ -42,185 +42,185 @@ namespace YanLib::io {
     int udp_client::read(char *buf, int len,
                          int flags,
                          sockaddr *from, int *fromlen) {
-        int numberOfBytes = recvfrom(client_socket,
-                                     buf, len,
-                                     flags,
-                                     from, fromlen);
-        if (numberOfBytes == SOCKET_ERROR) {
+        int number_of_bytes = recvfrom(client_socket,
+                                       buf, len,
+                                       flags,
+                                       from, fromlen);
+        if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
-        return numberOfBytes;
+        return number_of_bytes;
     }
 
     int udp_client::write(const char *buf, int len,
                           int flags,
                           const sockaddr *to, int tolen) {
-        int numberOfBytes = sendto(client_socket,
-                                   buf, len,
-                                   flags,
-                                   to, tolen);
-        if (numberOfBytes == SOCKET_ERROR) {
+        int number_of_bytes = sendto(client_socket,
+                                     buf, len,
+                                     flags,
+                                     to, tolen);
+        if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
-        return numberOfBytes;
+        return number_of_bytes;
     }
 
     int udp_client::read(char *buf, int len,
-                         std::string &remoteIP, uint16_t &remotePort) {
-        if (isIPV6) {
+                         std::string &remote_ip, uint16_t &remote_port) {
+        if (is_ipv6) {
             sockaddr_in6 client_addr{};
             int client_size = sizeof (client_addr);
-            int numberOfBytes = recvfrom(client_socket,
-                                         buf, len,
-                                         0,
-                                         reinterpret_cast<sockaddr *>(&client_addr),
-                                         &client_size);
-            if (numberOfBytes == SOCKET_ERROR) {
+            int number_of_bytes = recvfrom(client_socket,
+                                           buf, len,
+                                           0,
+                                           reinterpret_cast<sockaddr *>(&client_addr),
+                                           &client_size);
+            if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             } else {
                 if (!inet_ntop(AF_INET6,
                                &client_addr.sin6_addr,
-                               remoteIP.data(),
+                               remote_ip.data(),
                                INET6_ADDRSTRLEN)) {
                     error_code = WSAGetLastError();
                 }
-                remotePort = ntohs(client_addr.sin6_port);
+                remote_port = ntohs(client_addr.sin6_port);
             }
-            return numberOfBytes;
+            return number_of_bytes;
         } else {
             sockaddr_in client_addr{};
             int client_size = sizeof (client_addr);
-            int numberOfBytes = recvfrom(client_socket,
-                                         buf, len,
-                                         0,
-                                         reinterpret_cast<sockaddr *>(&client_addr),
-                                         &client_size);
-            if (numberOfBytes == SOCKET_ERROR) {
+            int number_of_bytes = recvfrom(client_socket,
+                                           buf, len,
+                                           0,
+                                           reinterpret_cast<sockaddr *>(&client_addr),
+                                           &client_size);
+            if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             } else {
                 if (!inet_ntop(AF_INET,
                                &client_addr.sin_addr,
-                               remoteIP.data(),
+                               remote_ip.data(),
                                INET_ADDRSTRLEN)) {
                     error_code = WSAGetLastError();
                 }
-                remotePort = ntohs(client_addr.sin_port);
+                remote_port = ntohs(client_addr.sin_port);
             }
-            return numberOfBytes;
+            return number_of_bytes;
         }
     }
 
     int udp_client::write(char *buf, int len,
-                          std::string &remoteIP, uint16_t &remotePort) {
-        if (isIPV6) {
+                          std::string &remote_ip, uint16_t &remote_port) {
+        if (is_ipv6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;
-            addr.sin6_port = htons(remotePort);
+            addr.sin6_port = htons(remote_port);
             if (inet_pton(AF_INET6,
-                          remoteIP.data(),
+                          remote_ip.data(),
                           &addr.sin6_addr) != 1) {
                 error_code = WSAGetLastError();
             }
-            int numberOfBytes = sendto(client_socket,
-                                       buf, len,
-                                       0,
-                                       reinterpret_cast<sockaddr *>(&addr),
-                                       sizeof(addr));
-            if (numberOfBytes == SOCKET_ERROR) {
+            int number_of_bytes = sendto(client_socket,
+                                         buf, len,
+                                         0,
+                                         reinterpret_cast<sockaddr *>(&addr),
+                                         sizeof(addr));
+            if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             }
-            return numberOfBytes;
+            return number_of_bytes;
         } else {
             sockaddr_in addr{};
             addr.sin_family = AF_INET;
-            addr.sin_port = htons(remotePort);
+            addr.sin_port = htons(remote_port);
             if (inet_pton(AF_INET,
-                          remoteIP.data(),
+                          remote_ip.data(),
                           &addr.sin_addr) != 1) {
                 error_code = WSAGetLastError();
             }
-            int numberOfBytes = sendto(client_socket,
-                                       buf, len,
-                                       0,
-                                       reinterpret_cast<sockaddr *>(&addr),
-                                       sizeof(addr));
-            if (numberOfBytes == SOCKET_ERROR) {
+            int number_of_bytes = sendto(client_socket,
+                                         buf, len,
+                                         0,
+                                         reinterpret_cast<sockaddr *>(&addr),
+                                         sizeof(addr));
+            if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             }
-            return numberOfBytes;
+            return number_of_bytes;
         }
     }
 
-    std::string udp_client::read_string(std::string &remoteIP,
-                                        uint16_t &remotePort,
-                                        int32_t bufferSize) {
-        if (bufferSize < 1024) {
-            bufferSize = 1024;
+    std::string udp_client::read_string(std::string &remote_ip,
+                                        uint16_t &remote_port,
+                                        int32_t buffer_size) {
+        if (buffer_size < 1024) {
+            buffer_size = 1024;
         }
-        std::string rawData(bufferSize, '\0');
-        int bytesRead = read(rawData.data(), bufferSize, remoteIP, remotePort);
-        if (bytesRead == SOCKET_ERROR) {
+        std::string raw_data(buffer_size, '\0');
+        int bytes_read = read(raw_data.data(), buffer_size, remote_ip, remote_port);
+        if (bytes_read == SOCKET_ERROR) {
             error_code = WSAGetLastError();
             return {};
         }
-        rawData.resize(bytesRead);
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.resize(bytes_read);
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
-    std::wstring udp_client::read_wstring(std::string &remoteIP,
-                                          uint16_t &remotePort,
-                                          int32_t bufferSize) {
-        if (bufferSize < 512) {
-            bufferSize = 512;
+    std::wstring udp_client::read_wstring(std::string &remote_ip,
+                                          uint16_t &remote_port,
+                                          int32_t buffer_size) {
+        if (buffer_size < 512) {
+            buffer_size = 512;
         }
         return helper::convert::str_to_wstr(
-            read_string(remoteIP, remotePort,
-                        static_cast<int32_t>(bufferSize * sizeof(wchar_t))));
+            read_string(remote_ip, remote_port,
+                        static_cast<int32_t>(buffer_size * sizeof(wchar_t))));
     }
 
-    std::string udp_client::read_string_to_end(std::string &remoteIP,
-                                               uint16_t &remotePort) {
-        constexpr DWORD bufferSize = 4096;
-        char *buf = new char[bufferSize];
-        memset(buf, 0, bufferSize);
-        std::string rawData;
-        rawData.reserve(bufferSize);
-        int bytesRead = 0;
+    std::string udp_client::read_string_to_end(std::string &remote_ip,
+                                               uint16_t &remote_port) {
+        constexpr DWORD buffer_size = 4096;
+        char *buf = new char[buffer_size];
+        memset(buf, 0, buffer_size);
+        std::string raw_data;
+        raw_data.reserve(buffer_size);
+        int bytes_read = 0;
         do {
-            bytesRead = read(buf, bufferSize, remoteIP, remotePort);
-            if (bytesRead == SOCKET_ERROR) {
+            bytes_read = read(buf, buffer_size, remote_ip, remote_port);
+            if (bytes_read == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
                 break;
             }
-            rawData.insert(rawData.end(), buf, buf + bytesRead);
-        } while (bytesRead > 0);
+            raw_data.insert(raw_data.end(), buf, buf + bytes_read);
+        } while (bytes_read > 0);
         delete[] buf;
-        rawData.shrink_to_fit();
-        return rawData;
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
-    std::wstring udp_client::read_wstring_to_end(std::string &remoteIP,
-                                                 uint16_t &remotePort) {
+    std::wstring udp_client::read_wstring_to_end(std::string &remote_ip,
+                                                 uint16_t &remote_port) {
         return helper::convert::str_to_wstr(
-            read_string_to_end(remoteIP, remotePort));
+            read_string_to_end(remote_ip, remote_port));
     }
 
     int udp_client::write_string(std::string &str,
-                                 std::string &remoteIP, uint16_t &remotePort) {
+                                 std::string &remote_ip, uint16_t &remote_port) {
         if (str.empty()) {
             return 0;
         }
-        return write(str.data(), str.size(), remoteIP, remotePort);
+        return write(str.data(), str.size(), remote_ip, remote_port);
     }
 
     int udp_client::write_wstring(std::wstring &wstr,
-                                  std::string &remoteIP, uint16_t &remotePort) {
+                                  std::string &remote_ip, uint16_t &remote_port) {
         if (wstr.empty()) {
             return 0;
         }
-        std::string rawData = helper::convert::wstr_to_str(wstr);
-        return write_string(rawData, remoteIP, remotePort);
+        std::string raw_data = helper::convert::wstr_to_str(wstr);
+        return write_string(raw_data, remote_ip, remote_port);
     }
 
     int udp_client::err_code() const {

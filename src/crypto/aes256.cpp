@@ -8,9 +8,9 @@
 
 namespace YanLib::crypto {
     aes256::aes256() {
-        hCryptProv = 0;
-        hCryptHash = 0;
-        hCryptKey = 0;
+        crypt_prov_handle = 0;
+        crypt_hash_handle = 0;
+        crypt_key_handle = 0;
         data_bytes = {};
         error_code = 0;
     }
@@ -20,29 +20,29 @@ namespace YanLib::crypto {
     }
 
     void aes256::cleanup() {
-        if (hCryptKey) {
-            CryptDestroyKey(hCryptKey);
-            hCryptKey = 0;
+        if (crypt_key_handle) {
+            CryptDestroyKey(crypt_key_handle);
+            crypt_key_handle = 0;
         }
-        if (hCryptHash) {
-            CryptDestroyHash(hCryptHash);
-            hCryptHash = 0;
+        if (crypt_hash_handle) {
+            CryptDestroyHash(crypt_hash_handle);
+            crypt_hash_handle = 0;
         }
-        if (hCryptProv) {
-            CryptReleaseContext(hCryptProv, 0);
-            hCryptProv = 0;
+        if (crypt_prov_handle) {
+            CryptReleaseContext(crypt_prov_handle, 0);
+            crypt_prov_handle = 0;
         }
     }
 
     std::string aes256::format_hex_fast(const std::vector<uint8_t> &data) {
-        static constexpr char hexTable[] = "0123456789abcdef";
-        std::string hexStr;
-        hexStr.reserve(data.size() * 2);
+        static constexpr char hex_table[] = "0123456789abcdef";
+        std::string hex_str;
+        hex_str.reserve(data.size() * 2);
         for (uint8_t byte: data) {
-            hexStr += hexTable[byte >> 4];
-            hexStr += hexTable[byte & 0x0F];
+            hex_str += hex_table[byte >> 4];
+            hex_str += hex_table[byte & 0x0F];
         }
-        return hexStr;
+        return hex_str;
     }
 
     aes256::KeyBlob aes256::make_blob(const std::vector<uint8_t> &key) {
@@ -53,96 +53,96 @@ namespace YanLib::crypto {
             0,
             CALG_AES_256
         };
-        blob.keySize = 32;
+        blob.key_size = 32;
         memcpy(blob.key, key.data(), key.size());
         return blob;
     }
 
     void aes256::make_pkcs7_padding(std::vector<uint8_t> &data) {
-        const size_t rawSize = data.size();
-        const size_t padLen = 16 - (rawSize % 16);
-        if (padLen == 0) {
+        const size_t raw_size = data.size();
+        const size_t pad_len = 16 - (raw_size % 16);
+        if (pad_len == 0) {
             return;
         }
-        data.insert(data.end(), padLen, static_cast<uint8_t>(padLen));
+        data.insert(data.end(), pad_len, static_cast<uint8_t>(pad_len));
     }
 
     bool aes256::remove_pkcs7_padding(std::vector<uint8_t> &data,
-                                      DWORD retLen) {
+                                      DWORD ret_len) {
         do {
-            if (data.empty() || retLen < 1 || retLen > data.size()) {
+            if (data.empty() || ret_len < 1 || ret_len > data.size()) {
                 break;
             }
-            uint8_t pad_len = data[retLen - 1];
+            uint8_t pad_len = data[ret_len - 1];
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
-            for (DWORD i = retLen - pad_len; i < retLen; i++) {
+            for (DWORD i = ret_len - pad_len; i < ret_len; i++) {
                 if (data[i] != pad_len) {
                     return false;
                 }
             }
-            data.resize(retLen - pad_len);
+            data.resize(ret_len - pad_len);
             return true;
         } while (false);
         return false;
     }
 
     void aes256::make_iso10126_padding(std::vector<uint8_t> &data) {
-        const size_t rawSize = data.size();
-        const size_t padLen = 16 - (rawSize % 16);
-        if (padLen == 0) {
+        const size_t raw_size = data.size();
+        const size_t pad_len = 16 - (raw_size % 16);
+        if (pad_len == 0) {
             return;
         }
         std::random_device rd;
-        for (int i = 0; i < padLen - 1; i++) {
+        for (int i = 0; i < pad_len - 1; i++) {
             data.push_back(static_cast<uint8_t>(rd()));
         }
-        data.push_back(static_cast<uint8_t>(padLen));
+        data.push_back(static_cast<uint8_t>(pad_len));
     }
 
     bool aes256::remove_iso10126_padding(std::vector<uint8_t> &data,
-                                         DWORD retLen) {
+                                         DWORD ret_len) {
         do {
-            if (data.empty() || retLen < 1 || retLen > data.size()) {
+            if (data.empty() || ret_len < 1 || ret_len > data.size()) {
                 break;
             }
-            uint8_t pad_len = data[retLen - 1];
+            uint8_t pad_len = data[ret_len - 1];
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
-            data.resize(retLen - pad_len);
+            data.resize(ret_len - pad_len);
             return true;
         } while (false);
         return false;
     }
 
     void aes256::make_ansix923_padding(std::vector<uint8_t> &data) {
-        const size_t rawSize = data.size();
-        const size_t padLen = 16 - (rawSize % 16);
-        if (padLen == 0) {
+        const size_t raw_size = data.size();
+        const size_t pad_len = 16 - (raw_size % 16);
+        if (pad_len == 0) {
             return;
         }
-        data.insert(data.end(), padLen - 1, 0);
-        data.push_back(static_cast<uint8_t>(padLen));
+        data.insert(data.end(), pad_len - 1, 0);
+        data.push_back(static_cast<uint8_t>(pad_len));
     }
 
     bool aes256::remove_ansix923_padding(std::vector<uint8_t> &data,
-                                         DWORD retLen) {
+                                         DWORD ret_len) {
         do {
-            if (data.empty() || retLen < 1 || retLen > data.size()) {
+            if (data.empty() || ret_len < 1 || ret_len > data.size()) {
                 break;
             }
-            uint8_t pad_len = data[retLen - 1];
+            uint8_t pad_len = data[ret_len - 1];
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
-            for (DWORD i = retLen - pad_len; i < retLen - 1; i++) {
+            for (DWORD i = ret_len - pad_len; i < ret_len - 1; i++) {
                 if (data[i] != 0) {
                     return false;
                 }
             }
-            data.resize(retLen - pad_len);
+            data.resize(ret_len - pad_len);
             return true;
         } while (false);
         return false;
@@ -154,7 +154,7 @@ namespace YanLib::crypto {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
-            if (!CryptAcquireContextW(&hCryptProv,
+            if (!CryptAcquireContextW(&crypt_prov_handle,
                                       nullptr,
                                       provider,
                                       PROV_RSA_AES,
@@ -164,12 +164,12 @@ namespace YanLib::crypto {
             }
 
             KeyBlob blob = make_blob(key_bytes);
-            if (!CryptImportKey(hCryptProv,
+            if (!CryptImportKey(crypt_prov_handle,
                                 reinterpret_cast<uint8_t *>(&blob),
                                 sizeof(blob),
                                 0,
                                 0,
-                                &hCryptKey)) {
+                                &crypt_key_handle)) {
                 error_code = GetLastError();
                 break;
             }
@@ -194,7 +194,7 @@ namespace YanLib::crypto {
                     aes_mode = CRYPT_MODE_CBC;
             }
 
-            if (!CryptSetKeyParam(hCryptKey,
+            if (!CryptSetKeyParam(crypt_key_handle,
                                   KP_MODE,
                                   reinterpret_cast<uint8_t *>(&aes_mode),
                                   0)) {
@@ -202,11 +202,11 @@ namespace YanLib::crypto {
                 break;
             }
             if (mode != MODE_ECB) {
-                uint8_t localIV[16];
-                memcpy(localIV, iv.data(), 16);
-                if (!CryptSetKeyParam(hCryptKey,
+                uint8_t local_iv[16];
+                memcpy(local_iv, iv.data(), 16);
+                if (!CryptSetKeyParam(crypt_key_handle,
                                       KP_IV,
-                                      localIV,
+                                      local_iv,
                                       0)) {
                     error_code = GetLastError();
                     break;
@@ -233,24 +233,24 @@ namespace YanLib::crypto {
                 default:
                     make_pkcs7_padding(data_bytes);
             }
-            DWORD dataSize = data_bytes.size();
-            DWORD rawSize = data_bytes.size();
-            if (!CryptEncrypt(hCryptKey,
+            DWORD data_size = data_bytes.size();
+            DWORD raw_size = data_bytes.size();
+            if (!CryptEncrypt(crypt_key_handle,
                               0,
                               FALSE,
                               0,
                               data_bytes.data(),
-                              &dataSize,
+                              &data_size,
                               0)) {
                 error_code = GetLastError();
                 if (error_code == ERROR_MORE_DATA) {
-                    data_bytes.resize(dataSize);
-                    if (!CryptEncrypt(hCryptKey,
+                    data_bytes.resize(data_size);
+                    if (!CryptEncrypt(crypt_key_handle,
                                       0,
                                       FALSE,
                                       0,
                                       data_bytes.data(),
-                                      &rawSize,
+                                      &raw_size,
                                       data_bytes.size())) {
                         error_code = GetLastError();
                         break;
@@ -269,39 +269,39 @@ namespace YanLib::crypto {
     bool aes256::decode_process(std::vector<uint8_t> &data_bytes,
                                 AES_PADDING padding) {
         do {
-            DWORD dataSize = data_bytes.size();
-            if (!CryptDecrypt(hCryptKey,
+            DWORD data_size = data_bytes.size();
+            if (!CryptDecrypt(crypt_key_handle,
                               0,
                               FALSE,
                               0,
                               data_bytes.data(),
-                              &dataSize)) {
+                              &data_size)) {
                 error_code = GetLastError();
                 break;
             }
-            bool isFalse = false;
+            bool is_false = false;
             switch (padding) {
                 case PKCS7_PADDING:
-                    if (!remove_pkcs7_padding(data_bytes, dataSize)) {
-                        isFalse = true;
+                    if (!remove_pkcs7_padding(data_bytes, data_size)) {
+                        is_false = true;
                     }
                     break;
                 case ISO10126_PADDING:
-                    if (!remove_iso10126_padding(data_bytes, dataSize)) {
-                        isFalse = true;
+                    if (!remove_iso10126_padding(data_bytes, data_size)) {
+                        is_false = true;
                     }
                     break;
                 case ANSI_X923_PADDING:
-                    if (!remove_ansix923_padding(data_bytes, dataSize)) {
-                        isFalse = true;
+                    if (!remove_ansix923_padding(data_bytes, data_size)) {
+                        is_false = true;
                     }
                     break;
                 default:
-                    if (!remove_pkcs7_padding(data_bytes, dataSize)) {
-                        isFalse = true;
+                    if (!remove_pkcs7_padding(data_bytes, data_size)) {
+                        is_false = true;
                     }
             }
-            if (isFalse) {
+            if (is_false) {
                 break;
             }
             cleanup();
@@ -326,14 +326,14 @@ namespace YanLib::crypto {
             data_bytes.resize(data.size());
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> localIV(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, localIV, MODE_CBC)) {
+            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
+            if (!pre_process(key_bytes, local_iv, MODE_CBC)) {
                 break;
             }
             if (!encode_process(data_bytes, padding)) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return data_bytes;
         } while (false);
         return {};
@@ -354,14 +354,14 @@ namespace YanLib::crypto {
             data_bytes.resize(data.size());
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> localIV(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, localIV, MODE_CBC)) {
+            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
+            if (!pre_process(key_bytes, local_iv, MODE_CBC)) {
                 break;
             }
             if (!decode_process(data_bytes, padding)) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return data_bytes;
         } while (false);
         return {};
@@ -386,7 +386,7 @@ namespace YanLib::crypto {
             if (!encode_process(data_bytes, padding)) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return data_bytes;
         } while (false);
         return {};
@@ -411,7 +411,7 @@ namespace YanLib::crypto {
             if (!decode_process(data_bytes, padding)) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return data_bytes;
         } while (false);
         return {};
@@ -432,14 +432,14 @@ namespace YanLib::crypto {
             data_bytes.resize(data.size());
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> localIV(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, localIV, MODE_CFB)) {
+            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
+            if (!pre_process(key_bytes, local_iv, MODE_CFB)) {
                 break;
             }
             if (!encode_process(data_bytes, padding)) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return data_bytes;
         } while (false);
         return {};
@@ -460,14 +460,14 @@ namespace YanLib::crypto {
             data_bytes.resize(data.size());
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> localIV(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, localIV, MODE_CFB)) {
+            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
+            if (!pre_process(key_bytes, local_iv, MODE_CFB)) {
                 break;
             }
             if (!decode_process(data_bytes, padding)) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return data_bytes;
         } while (false);
         return {};
@@ -477,7 +477,7 @@ namespace YanLib::crypto {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
-            if (!CryptAcquireContextW(&hCryptProv,
+            if (!CryptAcquireContextW(&crypt_prov_handle,
                                       nullptr,
                                       provider,
                                       PROV_RSA_AES,
@@ -486,12 +486,12 @@ namespace YanLib::crypto {
                 break;
             }
             std::vector<uint8_t> iv(16, 0);
-            if (!CryptGenRandom(hCryptProv, iv.size(), iv.data())) {
+            if (!CryptGenRandom(crypt_prov_handle, iv.size(), iv.data())) {
                 break;
             }
-            if (hCryptProv) {
-                CryptReleaseContext(hCryptProv, 0);
-                hCryptProv = 0;
+            if (crypt_prov_handle) {
+                CryptReleaseContext(crypt_prov_handle, 0);
+                crypt_prov_handle = 0;
             }
             return iv;
         } while (false);
@@ -505,7 +505,7 @@ namespace YanLib::crypto {
     }
 
     std::string aes256::hex_string() const {
-        if (isDone) {
+        if (is_done) {
             return format_hex_fast(data_bytes);
         }
         return {};

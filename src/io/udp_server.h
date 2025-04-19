@@ -11,8 +11,8 @@
 namespace YanLib::io {
     class udp_server {
     private:
-        WSADATA wsaData{};
-        volatile bool isIPV6 = false;
+        WSADATA wsa_data{};
+        volatile bool is_ipv6 = false;
         SOCKET server_socket{};
         int error_code{};
 
@@ -27,12 +27,12 @@ namespace YanLib::io {
 
         udp_server &operator=(udp_server &&other) = delete;
 
-        explicit udp_server(bool activeIpV6 = false);
+        explicit udp_server(bool active_ipv6 = false);
 
         ~udp_server();
 
-        bool bind(const char *localIP = "0.0.0.0",
-                  uint16_t localPort = 8080);
+        bool bind(const char *local_ip = "0.0.0.0",
+                  uint16_t local_port = 8080);
 
         int read(char *buf, int len,
                  int flags,
@@ -43,30 +43,30 @@ namespace YanLib::io {
                   const sockaddr *to, int tolen);
 
         int read(char *buf, int len,
-                 std::string &clientIP, uint16_t &clientPort);
+                 std::string &client_ip, uint16_t &client_port);
 
         int write(char *buf, int len,
-                  std::string &clientIP, uint16_t &clientPort);
+                  std::string &client_ip, uint16_t &client_port);
 
-        std::string read_string(std::string &clientIP,
-                                uint16_t &clientPort,
-                                int32_t bufferSize = 1024);
+        std::string read_string(std::string &client_ip,
+                                uint16_t &client_port,
+                                int32_t buffer_size = 1024);
 
-        std::wstring read_wstring(std::string &clientIP,
-                                  uint16_t &clientPort,
-                                  int32_t bufferSize = 512);
+        std::wstring read_wstring(std::string &client_ip,
+                                  uint16_t &client_port,
+                                  int32_t buffer_size = 512);
 
-        std::string read_string_to_end(std::string &clientIP,
-                                       uint16_t &clientPort);
+        std::string read_string_to_end(std::string &client_ip,
+                                       uint16_t &client_port);
 
-        std::wstring read_wstring_to_end(std::string &clientIP,
-                                         uint16_t &clientPort);
+        std::wstring read_wstring_to_end(std::string &client_ip,
+                                         uint16_t &client_port);
 
-        int write_string(std::string &str, std::string &clientIP,
-                         uint16_t &clientPort);
+        int write_string(std::string &str, std::string &client_ip,
+                         uint16_t &client_port);
 
-        int write_wstring(std::wstring &wstr, std::string &clientIP,
-                          uint16_t &clientPort);
+        int write_wstring(std::wstring &wstr, std::string &client_ip,
+                          uint16_t &client_port);
 
         int err_code() const;
 

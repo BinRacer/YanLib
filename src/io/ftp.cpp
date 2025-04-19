@@ -59,25 +59,25 @@ namespace YanLib::io {
                           file = nullptr;
                       });
         files.clear();
-        if (hSessionRead) {
-            InternetCloseHandle(hSessionRead);
-            hSessionRead = nullptr;
+        if (session_read_handle) {
+            InternetCloseHandle(session_read_handle);
+            session_read_handle = nullptr;
         }
-        if (hSessionUpload) {
-            InternetCloseHandle(hSessionUpload);
-            hSessionUpload = nullptr;
+        if (session_upload_handle) {
+            InternetCloseHandle(session_upload_handle);
+            session_upload_handle = nullptr;
         }
-        if (hInternet) {
-            InternetCloseHandle(hInternet);
-            hInternet = nullptr;
+        if (internet_handle) {
+            InternetCloseHandle(internet_handle);
+            internet_handle = nullptr;
         }
     }
 
-    bool ftp::url_crack(DWORD dwFlags) {
+    bool ftp::url_crack(DWORD flag) {
         if (!InternetCrackUrlW(
             url.data(),
             url.size(),
-            dwFlags,
+            flag,
             &uc)) {
             error_code = GetLastError();
             return false;
@@ -86,166 +86,166 @@ namespace YanLib::io {
         return true;
     }
 
-    bool ftp::open(const wchar_t *lpszAgent,
-                   DWORD dwAccessType,
-                   const wchar_t *lpszProxy,
-                   const wchar_t *lpszProxyBypass,
-                   DWORD dwFlags) {
-        hInternet = InternetOpenW(lpszAgent,
-                                  dwAccessType,
-                                  lpszProxy,
-                                  lpszProxyBypass,
-                                  dwFlags);
-        if (!hInternet) {
+    bool ftp::open(const wchar_t *agent_name,
+                   DWORD access_type,
+                   const wchar_t *proxy,
+                   const wchar_t *proxy_bypass,
+                   DWORD flag) {
+        internet_handle = InternetOpenW(agent_name,
+                                        access_type,
+                                        proxy,
+                                        proxy_bypass,
+                                        flag);
+        if (!internet_handle) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool ftp::connect(DWORD dwService,
-                      DWORD dwFlags,
-                      DWORD_PTR dwContext) {
-        hSessionRead = InternetConnectW(hInternet,
-                                        _hostname,
-                                        _port,
-                                        wcslen(_username) == 0 ? nullptr : _username,
-                                        wcslen(_password) == 0 ? nullptr : _password,
-                                        dwService,
-                                        dwFlags,
-                                        dwContext);
-        if (!hSessionRead) {
+    bool ftp::connect(DWORD service,
+                      DWORD flag,
+                      DWORD_PTR context) {
+        session_read_handle = InternetConnectW(internet_handle,
+                                               _hostname,
+                                               _port,
+                                               wcslen(_username) == 0 ? nullptr : _username,
+                                               wcslen(_password) == 0 ? nullptr : _password,
+                                               service,
+                                               flag,
+                                               context);
+        if (!session_read_handle) {
             error_code = GetLastError();
             return false;
         }
-        hSessionUpload = InternetConnectW(hInternet,
-                                          _hostname,
-                                          _port,
-                                          wcslen(_username) == 0 ? nullptr : _username,
-                                          wcslen(_password) == 0 ? nullptr : _password,
-                                          dwService,
-                                          dwFlags,
-                                          dwContext);
-        if (!hSessionUpload) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    HINTERNET ftp::open_file(const wchar_t *lpszFileName,
-                             DWORD dwAccess,
-                             DWORD dwFlags,
-                             DWORD_PTR dwContext) {
-        HINTERNET hFile = FtpOpenFileW(hSessionRead,
-                                       lpszFileName,
-                                       dwAccess,
-                                       dwFlags,
-                                       dwContext);
-        if (!hFile) {
-            error_code = GetLastError();
-        }
-        return hFile;
-    }
-
-    HINTERNET ftp::create_file(const wchar_t *lpszFileName,
-                               DWORD dwAccess,
-                               DWORD dwFlags,
-                               DWORD_PTR dwContext) {
-        HINTERNET hFile = FtpOpenFileW(hSessionUpload,
-                                       lpszFileName,
-                                       dwAccess,
-                                       dwFlags,
-                                       dwContext);
-        if (!hFile) {
-            error_code = GetLastError();
-        }
-        return hFile;
-    }
-
-    bool ftp::read(HINTERNET hFile,
-                   LPVOID lpBuffer,
-                   DWORD dwNumberOfBytesToRead,
-                   LPDWORD lpdwNumberOfBytesRead) {
-        if (!InternetReadFile(hFile,
-                              lpBuffer,
-                              dwNumberOfBytesToRead,
-                              lpdwNumberOfBytesRead)) {
+        session_upload_handle = InternetConnectW(internet_handle,
+                                                 _hostname,
+                                                 _port,
+                                                 wcslen(_username) == 0 ? nullptr : _username,
+                                                 wcslen(_password) == 0 ? nullptr : _password,
+                                                 service,
+                                                 flag,
+                                                 context);
+        if (!session_upload_handle) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    std::vector<uint8_t> ftp::read_bytes(HINTERNET hFile,
-                                               int32_t bufferSize) {
-        if (bufferSize < 1024) {
-            bufferSize = 1024;
+    HINTERNET ftp::open_file(const wchar_t *file_name,
+                             DWORD access,
+                             DWORD flag,
+                             DWORD_PTR context) {
+        HINTERNET file_handle = FtpOpenFileW(session_read_handle,
+                                             file_name,
+                                             access,
+                                             flag,
+                                             context);
+        if (!file_handle) {
+            error_code = GetLastError();
         }
-        std::vector<uint8_t> rawData(bufferSize, '\0');
-        DWORD bytesRead = 0;
-        if (InternetReadFile(hFile,
-                             rawData.data(),
-                             bufferSize,
-                             &bytesRead) && bytesRead > 0) {
-            rawData.resize(bytesRead);
-            rawData.shrink_to_fit();
-            return rawData;
+        return file_handle;
+    }
+
+    HINTERNET ftp::create_file(const wchar_t *file_name,
+                               DWORD access,
+                               DWORD flag,
+                               DWORD_PTR context) {
+        HINTERNET file_handle = FtpOpenFileW(session_upload_handle,
+                                             file_name,
+                                             access,
+                                             flag,
+                                             context);
+        if (!file_handle) {
+            error_code = GetLastError();
+        }
+        return file_handle;
+    }
+
+    bool ftp::read(HINTERNET file_handle,
+                   LPVOID buf,
+                   DWORD size,
+                   LPDWORD ret_size) {
+        if (!InternetReadFile(file_handle,
+                              buf,
+                              size,
+                              ret_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<uint8_t> ftp::read_bytes(HINTERNET file_handle,
+                                         int32_t buffer_size) {
+        if (buffer_size < 1024) {
+            buffer_size = 1024;
+        }
+        std::vector<uint8_t> raw_data(buffer_size, '\0');
+        DWORD bytes_read = 0;
+        if (InternetReadFile(file_handle,
+                             raw_data.data(),
+                             buffer_size,
+                             &bytes_read) && bytes_read > 0) {
+            raw_data.resize(bytes_read);
+            raw_data.shrink_to_fit();
+            return raw_data;
         }
         error_code = GetLastError();
         return {};
     }
 
-    bool ftp::write(HINTERNET hFile,
-                    LPCVOID lpBuffer,
-                    DWORD dwNumberOfBytesToWrite,
-                    LPDWORD lpdwNumberOfBytesWritten) {
-        if (!InternetWriteFile(hFile,
-                               lpBuffer,
-                               dwNumberOfBytesToWrite,
-                               lpdwNumberOfBytesWritten)) {
+    bool ftp::write(HINTERNET file_handle,
+                    LPCVOID buf,
+                    DWORD size,
+                    LPDWORD ret_size) {
+        if (!InternetWriteFile(file_handle,
+                               buf,
+                               size,
+                               ret_size)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    DWORD ftp::write_bytes(HINTERNET hFile, std::vector<uint8_t> &vec) {
-        DWORD bytesRead = 0;
-        if (InternetWriteFile(hFile,
+    DWORD ftp::write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec) {
+        DWORD bytes_read = 0;
+        if (InternetWriteFile(file_handle,
                               vec.data(),
                               vec.size(),
-                              &bytesRead) && bytesRead > 0) {
-            return bytesRead;
+                              &bytes_read) && bytes_read > 0) {
+            return bytes_read;
         }
         error_code = GetLastError();
         return 0;
     }
 
-    int64_t ftp::size(HINTERNET hFile) {
-        DWORD dwLow = 0;
-        DWORD dwHigh = 0;
+    int64_t ftp::size(HINTERNET file_handle) {
+        DWORD low = 0;
+        DWORD high = 0;
 
-        dwLow = FtpGetFileSize(hFile, &dwHigh);
-        if (dwLow == INVALID_FILE_SIZE) {
+        low = FtpGetFileSize(file_handle, &high);
+        if (low == INVALID_FILE_SIZE) {
             error_code = GetLastError();
             return 0;
         }
-        return (static_cast<int64_t>(dwHigh) << 32) | dwLow;
+        return (static_cast<int64_t>(high) << 32) | low;
     }
 
     std::wstring ftp::pwd() {
-        wchar_t szCurrentDir[MAX_PATH];
-        DWORD dwBufferSize = MAX_PATH;
-        if (!FtpGetCurrentDirectoryW(hSessionRead, szCurrentDir, &dwBufferSize)) {
+        wchar_t current_dir[MAX_PATH];
+        DWORD buffer_size = MAX_PATH;
+        if (!FtpGetCurrentDirectoryW(session_read_handle, current_dir, &buffer_size)) {
             error_code = GetLastError();
             return {};
         }
-        return szCurrentDir;
+        return current_dir;
     }
 
-    bool ftp::cd(const wchar_t *lpszDirectory) {
-        if (!FtpSetCurrentDirectoryW(hSessionRead, lpszDirectory)) {
+    bool ftp::cd(const wchar_t *dir) {
+        if (!FtpSetCurrentDirectoryW(session_read_handle, dir)) {
             error_code = GetLastError();
             return false;
         }
@@ -254,181 +254,181 @@ namespace YanLib::io {
 
     bool ftp::ls(std::vector<std::wstring> &files,
                  std::vector<std::wstring> &dirs) {
-        std::wstring currentDir = pwd();
-        if (currentDir.empty()) {
+        std::wstring current_dir = pwd();
+        if (current_dir.empty()) {
             return false;
         }
-        if (currentDir.back() == L'/' || currentDir.back() == L'\\') {
-            currentDir.append(L"*.*");
+        if (current_dir.back() == L'/' || current_dir.back() == L'\\') {
+            current_dir.append(L"*.*");
         } else {
-            if (currentDir.find(L'\\') != std::wstring::npos) {
-                currentDir.append(L"\\*.*");
+            if (current_dir.find(L'\\') != std::wstring::npos) {
+                current_dir.append(L"\\*.*");
             } else {
-                currentDir.append(L"/*.*");
+                current_dir.append(L"/*.*");
             }
         }
-        WIN32_FIND_DATAW findFileData;
-        HINTERNET hFind = FtpFindFirstFileW(
-            hSessionRead,
-            currentDir.data(),
-            &findFileData,
+        WIN32_FIND_DATAW file_data;
+        HINTERNET find_handle = FtpFindFirstFileW(
+            session_read_handle,
+            current_dir.data(),
+            &file_data,
             INTERNET_FLAG_RELOAD,
             0
         );
-        if (!hFind) {
+        if (!find_handle) {
             error_code = GetLastError();
             return false;
         }
         do {
-            if (wcscmp(findFileData.cFileName, L".") != 0 &&
-                wcscmp(findFileData.cFileName, L"..") != 0) {
-                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    dirs.push_back(findFileData.cFileName);
+            if (wcscmp(file_data.cFileName, L".") != 0 &&
+                wcscmp(file_data.cFileName, L"..") != 0) {
+                if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    dirs.push_back(file_data.cFileName);
                 } else {
-                    files.push_back(findFileData.cFileName);
+                    files.push_back(file_data.cFileName);
                 }
             }
-        } while (InternetFindNextFileW(hFind, &findFileData));
-        InternetCloseHandle(hFind);
+        } while (InternetFindNextFileW(find_handle, &file_data));
+        InternetCloseHandle(find_handle);
         return true;
     }
 
     bool ftp::ls_full_path(std::vector<std::wstring> &files,
                            std::vector<std::wstring> &dirs) {
-        std::wstring currentDir = pwd();
-        std::wstring basePath = currentDir;
+        std::wstring current_dir = pwd();
+        std::wstring base_path = current_dir;
         std::wstring slash;
-        if (currentDir.empty()) {
+        if (current_dir.empty()) {
             return false;
         }
-        if (currentDir.back() == L'/') {
-            currentDir.append(L"*.*");
+        if (current_dir.back() == L'/') {
+            current_dir.append(L"*.*");
             slash = L"";
-        } else if (currentDir.back() == L'\\') {
-            currentDir.append(L"*.*");
+        } else if (current_dir.back() == L'\\') {
+            current_dir.append(L"*.*");
             slash = L"";
         } else {
-            if (currentDir.find(L'\\') != std::wstring::npos) {
-                currentDir.append(L"\\*.*");
+            if (current_dir.find(L'\\') != std::wstring::npos) {
+                current_dir.append(L"\\*.*");
                 slash = L"\\";
             } else {
-                currentDir.append(L"/*.*");
+                current_dir.append(L"/*.*");
                 slash = L"/";
             }
         }
-        WIN32_FIND_DATAW findFileData;
-        HINTERNET hFind = FtpFindFirstFileW(
-            hSessionRead,
-            currentDir.data(),
-            &findFileData,
+        WIN32_FIND_DATAW find_file_data;
+        HINTERNET find_handle = FtpFindFirstFileW(
+            session_read_handle,
+            current_dir.data(),
+            &find_file_data,
             INTERNET_FLAG_RELOAD,
             0
         );
-        if (!hFind) {
+        if (!find_handle) {
             error_code = GetLastError();
             return false;
         }
         do {
-            if (wcscmp(findFileData.cFileName, L".") != 0 &&
-                wcscmp(findFileData.cFileName, L"..") != 0) {
-                if (findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    dirs.push_back(basePath + slash + findFileData.cFileName);
+            if (wcscmp(find_file_data.cFileName, L".") != 0 &&
+                wcscmp(find_file_data.cFileName, L"..") != 0) {
+                if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    dirs.push_back(base_path + slash + find_file_data.cFileName);
                 } else {
-                    files.push_back(basePath + slash + findFileData.cFileName);
+                    files.push_back(base_path + slash + find_file_data.cFileName);
                 }
             }
-        } while (InternetFindNextFileW(hFind, &findFileData));
-        InternetCloseHandle(hFind);
+        } while (InternetFindNextFileW(find_handle, &find_file_data));
+        InternetCloseHandle(find_handle);
         return true;
     }
 
-    bool ftp::mkdir(const wchar_t *lpszDirectory) {
-        if (!FtpCreateDirectoryW(hSessionRead, lpszDirectory)) {
+    bool ftp::mkdir(const wchar_t *dir) {
+        if (!FtpCreateDirectoryW(session_read_handle, dir)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool ftp::rmdir(const wchar_t *lpszDirectory) {
-        if (!FtpRemoveDirectoryW(hSessionRead, lpszDirectory)) {
+    bool ftp::rmdir(const wchar_t *dir) {
+        if (!FtpRemoveDirectoryW(session_read_handle, dir)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool ftp::rm(const wchar_t *lpszFileName) {
-        if (!FtpDeleteFileW(hSessionRead, lpszFileName)) {
+    bool ftp::rm(const wchar_t *file_name) {
+        if (!FtpDeleteFileW(session_read_handle, file_name)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool ftp::rename(const wchar_t *lpszExisting, const wchar_t *lpszNew) {
-        if (!FtpRenameFileW(hSessionRead, lpszExisting, lpszNew)) {
+    bool ftp::rename(const wchar_t *existing_name, const wchar_t *new_name) {
+        if (!FtpRenameFileW(session_read_handle, existing_name, new_name)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    std::vector<uint8_t> ftp::command(const wchar_t *lpszCommand) {
-        HINTERNET hCmdHandle = nullptr;
-        if (!FtpCommandW(hSessionRead,
+    std::vector<uint8_t> ftp::command(const wchar_t *command) {
+        HINTERNET cmd_handle = nullptr;
+        if (!FtpCommandW(session_read_handle,
                          TRUE,
                          FTP_TRANSFER_TYPE_BINARY,
-                         lpszCommand,
+                         command,
                          0,
-                         &hCmdHandle)) {
+                         &cmd_handle)) {
             error_code = GetLastError();
-            if (hCmdHandle) {
-                InternetCloseHandle(hCmdHandle);
+            if (cmd_handle) {
+                InternetCloseHandle(cmd_handle);
             }
             return {};
         }
         std::vector<uint8_t> result;
-        DWORD bytesRead = 0;
-        constexpr DWORD bufferSize = 1024;
-        uint8_t *buffer = new uint8_t[bufferSize];
-        while (InternetReadFile(hCmdHandle,
+        DWORD bytes_read = 0;
+        constexpr DWORD buffer_size = 1024;
+        uint8_t *buffer = new uint8_t[buffer_size];
+        while (InternetReadFile(cmd_handle,
                                 buffer,
-                                bufferSize,
-                                &bytesRead) && bytesRead > 0) {
-            result.insert(result.end(), buffer, buffer + bytesRead);
+                                buffer_size,
+                                &bytes_read) && bytes_read > 0) {
+            result.insert(result.end(), buffer, buffer + bytes_read);
         }
         delete[] buffer;
         result.shrink_to_fit();
         return result;
     }
 
-    bool ftp::download(const wchar_t *lpszRemoteFile,
-                       const wchar_t *lpszNewFile,
-                       BOOL fFailIfExists,
-                       DWORD dwFlagsAndAttributes,
-                       DWORD dwFlags,
-                       DWORD_PTR dwContext) {
-        if (!FtpGetFileW(hSessionRead,
-                         lpszRemoteFile,
-                         lpszNewFile,
-                         fFailIfExists,
-                         dwFlagsAndAttributes,
-                         dwFlags, dwContext)) {
+    bool ftp::download(const wchar_t *remote_file,
+                       const wchar_t *new_file,
+                       BOOL is_fail_if_exists,
+                       DWORD flags_and_attrs,
+                       DWORD flag,
+                       DWORD_PTR context) {
+        if (!FtpGetFileW(session_read_handle,
+                         remote_file,
+                         new_file,
+                         is_fail_if_exists,
+                         flags_and_attrs,
+                         flag, context)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool ftp::upload(const wchar_t *lpszLocalFile,
-                     const wchar_t *lpszNewRemoteFile,
-                     DWORD dwFlags,
-                     DWORD_PTR dwContext) {
-        if (!FtpPutFileW(hSessionUpload,
-                         lpszLocalFile,
-                         lpszNewRemoteFile,
-                         dwFlags, dwContext)) {
+    bool ftp::upload(const wchar_t *local_file,
+                     const wchar_t *new_remote_file,
+                     DWORD flag,
+                     DWORD_PTR context) {
+        if (!FtpPutFileW(session_upload_handle,
+                         local_file,
+                         new_remote_file,
+                         flag, context)) {
             error_code = GetLastError();
             return false;
         }
@@ -437,56 +437,56 @@ namespace YanLib::io {
 
     DWORD ftp::download2(HINTERNET remote_file,
                          const wchar_t *local_file) {
-        DWORD dwError = 0;
+        DWORD error = 0;
         fs file;
         if (!file.create(local_file)) {
             return file.err_code();
         }
-        constexpr DWORD bufSize = 4096;
-        uint8_t *buf = new uint8_t[bufSize];
-        memset(buf, 0, bufSize);
-        DWORD dwRead = 0;
-        DWORD dwWritten = 0;
+        constexpr DWORD buf_size = 4096;
+        uint8_t *buf = new uint8_t[buf_size];
+        memset(buf, 0, buf_size);
+        DWORD bytes_read = 0;
+        DWORD bytes_written = 0;
         do {
-            if (!read(remote_file, buf, bufSize, &dwRead)) {
-                dwError = err_code();
+            if (!read(remote_file, buf, buf_size, &bytes_read)) {
+                error = err_code();
                 break;
             }
-            if (dwRead <= 0) break;
-            if (!file.write(buf, dwRead, &dwWritten)) {
-                dwError = file.err_code();
+            if (bytes_read <= 0) break;
+            if (!file.write(buf, bytes_read, &bytes_written)) {
+                error = file.err_code();
                 break;
             }
-        } while (dwRead > 0 && dwWritten > 0);
+        } while (bytes_read > 0 && bytes_written > 0);
         delete[] buf;
-        return dwError;
+        return error;
     }
 
     DWORD ftp::upload2(HINTERNET remote_file,
                        const wchar_t *local_file) {
-        DWORD dwError = 0;
+        DWORD error = 0;
         fs file;
         if (!file.open(local_file)) {
             return file.err_code();
         }
-        constexpr DWORD bufSize = 4096;
-        uint8_t *buf = new uint8_t[bufSize];
-        memset(buf, 0, bufSize);
-        DWORD dwRead = 0;
-        DWORD dwWritten = 0;
+        constexpr DWORD buf_size = 4096;
+        uint8_t *buf = new uint8_t[buf_size];
+        memset(buf, 0, buf_size);
+        DWORD bytes_read = 0;
+        DWORD bytes_written = 0;
         do {
-            if (!file.read(buf, bufSize, &dwRead)) {
-                dwError = file.err_code();
+            if (!file.read(buf, buf_size, &bytes_read)) {
+                error = file.err_code();
                 break;
             }
-            if (dwRead <= 0) break;
-            if (!write(remote_file, buf, dwRead, &dwWritten)) {
-                dwError = err_code();
+            if (bytes_read <= 0) break;
+            if (!write(remote_file, buf, bytes_read, &bytes_written)) {
+                error = err_code();
                 break;
             }
-        } while (dwRead > 0 && dwWritten > 0);
+        } while (bytes_read > 0 && bytes_written > 0);
         delete[] buf;
-        return dwError;
+        return error;
     }
 
     DWORD ftp::err_code() const {

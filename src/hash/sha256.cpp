@@ -8,59 +8,61 @@
 
 namespace YanLib::hash {
     sha256::sha256(const std::vector<uint8_t> &data) {
-        hCryptProv = 0;
-        hCryptHash = 0;
+        crypt_prov_handle = 0;
+        crypt_hash_handle = 0;
         data_bytes = data;
         hash_bytes = {};
         file_name = {};
-        isFile = false;
+        is_file = false;
         error_code = 0;
     }
 
     sha256::sha256(const std::string &data) {
-        hCryptProv = 0;
-        hCryptHash = 0;
+        crypt_prov_handle = 0;
+        crypt_hash_handle = 0;
         data_bytes.resize(data.size());
         memcpy(data_bytes.data(), data.data(), data.size());
         hash_bytes = {};
         file_name = {};
-        isFile = false;
+        is_file = false;
         error_code = 0;
     }
 
     sha256::sha256(const std::wstring &filename) {
-        hCryptProv = 0;
-        hCryptHash = 0;
+        crypt_prov_handle = 0;
+        crypt_hash_handle = 0;
         data_bytes = {};
         hash_bytes = {};
         file_name = filename;
-        isFile = true;
+        is_file = true;
         error_code = 0;
     }
 
     sha256::~sha256() {
-        if (hCryptHash) {
-            CryptDestroyHash(hCryptHash);
+        if (crypt_hash_handle) {
+            CryptDestroyHash(crypt_hash_handle);
+            crypt_hash_handle = 0;
         }
-        if (hCryptProv) {
-            CryptReleaseContext(hCryptProv, 0);
+        if (crypt_prov_handle) {
+            CryptReleaseContext(crypt_prov_handle, 0);
+            crypt_prov_handle = 0;
         }
     }
 
     std::string sha256::format_hex_fast(const std::vector<uint8_t> &data) {
-        static constexpr char hexTable[] = "0123456789abcdef";
-        std::string hexStr;
-        hexStr.reserve(data.size() * 2);
+        static constexpr char hex_table[] = "0123456789abcdef";
+        std::string hex_str;
+        hex_str.reserve(data.size() * 2);
         for (uint8_t byte: data) {
-            hexStr += hexTable[byte >> 4];
-            hexStr += hexTable[byte & 0x0F];
+            hex_str += hex_table[byte >> 4];
+            hex_str += hex_table[byte & 0x0F];
         }
-        return hexStr;
+        return hex_str;
     }
 
     bool sha256::pre_process() {
         do {
-            if (!CryptAcquireContextW(&hCryptProv,
+            if (!CryptAcquireContextW(&crypt_prov_handle,
                                       nullptr,
                                       nullptr,
                                       PROV_RSA_AES,
@@ -68,11 +70,11 @@ namespace YanLib::hash {
                 error_code = GetLastError();
                 break;
             }
-            if (!CryptCreateHash(hCryptProv,
+            if (!CryptCreateHash(crypt_prov_handle,
                                  CALG_SHA_256,
                                  0,
                                  0,
-                                 &hCryptHash)) {
+                                 &crypt_hash_handle)) {
                 error_code = GetLastError();
                 break;
             }
@@ -90,7 +92,7 @@ namespace YanLib::hash {
             }
             if (file.size() <= 4096) {
                 std::vector<uint8_t> data = file.read_bytes_to_end();
-                if (!CryptHashData(hCryptHash,
+                if (!CryptHashData(crypt_hash_handle,
                                    data.data(),
                                    data.size(),
                                    0)) {
@@ -98,26 +100,26 @@ namespace YanLib::hash {
                     break;
                 }
             } else {
-                bool isError = false;
+                bool is_error = false;
                 constexpr size_t BLOCK_SIZE = 4096;
-                size_t totalSize = file.size();
+                size_t total_size = file.size();
                 size_t offset = 0;
-                while (offset < totalSize) {
-                    size_t blockSize = (totalSize - offset) > BLOCK_SIZE
+                while (offset < total_size) {
+                    size_t blockSize = (total_size - offset) > BLOCK_SIZE
                                            ? BLOCK_SIZE
-                                           : totalSize - offset;
+                                           : total_size - offset;
                     std::vector<uint8_t> data = file.read_bytes(blockSize);
-                    if (!CryptHashData(hCryptHash,
+                    if (!CryptHashData(crypt_hash_handle,
                                        data.data(),
                                        data.size(),
                                        0)) {
                         error_code = GetLastError();
-                        isError = true;
+                        is_error = true;
                         break;
                     }
                     offset += blockSize;
                 }
-                if (isError) {
+                if (is_error) {
                     break;
                 }
             }
@@ -129,7 +131,7 @@ namespace YanLib::hash {
     bool sha256::process_data() {
         do {
             if (data_bytes.size() <= 4096) {
-                if (!CryptHashData(hCryptHash,
+                if (!CryptHashData(crypt_hash_handle,
                                    data_bytes.data(),
                                    data_bytes.size(),
                                    0)) {
@@ -137,26 +139,26 @@ namespace YanLib::hash {
                     break;
                 }
             } else {
-                bool isError = false;
+                bool is_error = false;
                 constexpr size_t BLOCK_SIZE = 4096;
-                size_t totalSize = data_bytes.size();
+                size_t total_size = data_bytes.size();
                 size_t offset = 0;
-                while (offset < totalSize) {
-                    size_t blockSize = (totalSize - offset) > BLOCK_SIZE
+                while (offset < total_size) {
+                    size_t block_size = (total_size - offset) > BLOCK_SIZE
                                            ? BLOCK_SIZE
-                                           : totalSize - offset;
-                    BYTE *blockPtr = data_bytes.data() + offset;
-                    if (!CryptHashData(hCryptHash,
-                                       blockPtr,
-                                       static_cast<DWORD>(blockSize),
+                                           : total_size - offset;
+                    BYTE *block_ptr = data_bytes.data() + offset;
+                    if (!CryptHashData(crypt_hash_handle,
+                                       block_ptr,
+                                       static_cast<DWORD>(block_size),
                                        0)) {
                         error_code = GetLastError();
-                        isError = true;
+                        is_error = true;
                         break;
                     }
-                    offset += blockSize;
+                    offset += block_size;
                 }
-                if (isError) {
+                if (is_error) {
                     break;
                 }
             }
@@ -171,7 +173,7 @@ namespace YanLib::hash {
                 break;
             }
 
-            if (isFile) {
+            if (is_file) {
                 if (!process_file()) {
                     break;
                 }
@@ -184,7 +186,7 @@ namespace YanLib::hash {
             if (!post_process()) {
                 break;
             }
-            isDone = true;
+            is_done = true;
             return hash_bytes;
         } while (false);
         return {};
@@ -193,17 +195,17 @@ namespace YanLib::hash {
     bool sha256::post_process() {
         do {
             DWORD len = 0;
-            DWORD dwDataLen = sizeof(DWORD);
-            if (!CryptGetHashParam(hCryptHash,
+            DWORD data_len = sizeof(DWORD);
+            if (!CryptGetHashParam(crypt_hash_handle,
                                    HP_HASHSIZE,
                                    reinterpret_cast<uint8_t *>(&len),
-                                   &dwDataLen,
+                                   &data_len,
                                    0)) {
                 error_code = GetLastError();
                 break;
             }
             hash_bytes.resize(len);
-            if (!CryptGetHashParam(hCryptHash,
+            if (!CryptGetHashParam(crypt_hash_handle,
                                    HP_HASHVAL,
                                    hash_bytes.data(),
                                    &len,
@@ -217,7 +219,7 @@ namespace YanLib::hash {
     }
 
     std::vector<uint8_t> sha256::hash() {
-        if (isDone) {
+        if (is_done) {
             return hash_bytes;
         }
         return process();
@@ -225,7 +227,7 @@ namespace YanLib::hash {
 
     std::string sha256::hash_string() {
         std::string result;
-        if (error_code == 0 && hash_bytes.size() == 0) {
+        if (error_code == 0 && hash_bytes.empty()) {
             hash_bytes = process();
             return format_hex_fast(hash_bytes);
         }

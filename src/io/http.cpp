@@ -25,39 +25,39 @@ namespace YanLib::io {
     }
 
     http::~http() {
-        if (hRequest) {
-            InternetCloseHandle(hRequest);
-            hRequest = nullptr;
+        if (request_handle) {
+            InternetCloseHandle(request_handle);
+            request_handle = nullptr;
         }
-        if (hConnect) {
-            InternetCloseHandle(hConnect);
-            hConnect = nullptr;
+        if (connect_handle) {
+            InternetCloseHandle(connect_handle);
+            connect_handle = nullptr;
         }
-        if (hInternet) {
-            InternetCloseHandle(hInternet);
-            hInternet = nullptr;
+        if (internet_handle) {
+            InternetCloseHandle(internet_handle);
+            internet_handle = nullptr;
         }
     }
 
-    bool http::url_crack(DWORD dwFlags) {
+    bool http::url_crack(DWORD flag) {
         if (!InternetCrackUrlW(
             url.data(),
             url.size(),
-            dwFlags,
+            flag,
             &uc)) {
             error_code = GetLastError();
             return false;
         }
         port = uc.nPort;
-        isHTTPS = _wcsicmp(scheme, L"https") == 0;
+        is_https = _wcsicmp(scheme, L"https") == 0;
         return true;
     }
 
-    bool http::add_header(const wchar_t *lpszHeaders,
-                          DWORD dwHeadersLength) {
-        if (!HttpAddRequestHeadersW(hRequest,
-                                    lpszHeaders,
-                                    dwHeadersLength,
+    bool http::add_header(const wchar_t *headers,
+                          DWORD headers_length) {
+        if (!HttpAddRequestHeadersW(request_handle,
+                                    headers,
+                                    headers_length,
                                     HTTP_ADDREQ_FLAG_ADD)) {
             error_code = GetLastError();
             return false;
@@ -65,9 +65,9 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::add_header(std::string lpszHeaders) {
-        std::wstring line = helper::convert::str_to_wstr(lpszHeaders);
-        if (!HttpAddRequestHeadersW(hRequest,
+    bool http::add_header(std::string headers) {
+        std::wstring line = helper::convert::str_to_wstr(headers);
+        if (!HttpAddRequestHeadersW(request_handle,
                                     line.data(),
                                     line.size(),
                                     HTTP_ADDREQ_FLAG_ADD)) {
@@ -77,10 +77,10 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::add_header(std::wstring lpszHeaders) {
-        if (!HttpAddRequestHeadersW(hRequest,
-                                    lpszHeaders.data(),
-                                    lpszHeaders.size(),
+    bool http::add_header(std::wstring headers) {
+        if (!HttpAddRequestHeadersW(request_handle,
+                                    headers.data(),
+                                    headers.size(),
                                     HTTP_ADDREQ_FLAG_ADD)) {
             error_code = GetLastError();
             return false;
@@ -89,14 +89,14 @@ namespace YanLib::io {
     }
 
     bool http::add_headers(std::unordered_map<std::string, std::string> &map) {
-        if (map.size() == 0) {
+        if (map.empty()) {
             return false;
         }
         for (const auto &pair: map) {
             std::wstring key = helper::convert::str_to_wstr(pair.first);
             std::wstring value = helper::convert::str_to_wstr(pair.second);
             std::wstring line = key + L": " + value;
-            if (!HttpAddRequestHeadersW(hRequest,
+            if (!HttpAddRequestHeadersW(request_handle,
                                         line.data(),
                                         line.size(),
                                         HTTP_ADDREQ_FLAG_ADD)) {
@@ -108,14 +108,14 @@ namespace YanLib::io {
     }
 
     bool http::add_headers(std::unordered_map<std::wstring, std::wstring> &map) {
-        if (map.size() == 0) {
+        if (map.empty()) {
             return false;
         }
         for (const auto &pair: map) {
             std::wstring key = pair.first;
             std::wstring value = pair.second;
             std::wstring line = key + L": " + value;
-            if (!HttpAddRequestHeadersW(hRequest,
+            if (!HttpAddRequestHeadersW(request_handle,
                                         line.data(),
                                         line.size(),
                                         HTTP_ADDREQ_FLAG_ADD)) {
@@ -127,12 +127,12 @@ namespace YanLib::io {
     }
 
     bool http::add_headers(std::vector<std::string> &vec) {
-        if (vec.size() == 0) {
+        if (vec.empty()) {
             return false;
         }
         for (const auto &ele: vec) {
             std::wstring line = helper::convert::str_to_wstr(ele);
-            if (!HttpAddRequestHeadersW(hRequest,
+            if (!HttpAddRequestHeadersW(request_handle,
                                         line.data(),
                                         line.size(),
                                         HTTP_ADDREQ_FLAG_ADD)) {
@@ -144,11 +144,11 @@ namespace YanLib::io {
     }
 
     bool http::add_headers(std::vector<std::wstring> &vec) {
-        if (vec.size() == 0) {
+        if (vec.empty()) {
             return false;
         }
         for (const auto &line: vec) {
-            if (!HttpAddRequestHeadersW(hRequest,
+            if (!HttpAddRequestHeadersW(request_handle,
                                         line.data(),
                                         line.size(),
                                         HTTP_ADDREQ_FLAG_ADD)) {
@@ -162,22 +162,22 @@ namespace YanLib::io {
 
     std::unordered_map<std::string, std::string> http::get_headers() const {
         std::unordered_map<std::string, std::string> headers;
-        DWORD dwSize = 0;
+        DWORD size = 0;
 
         // first call to fetch the buffer size
-        HttpQueryInfoW(hRequest,
+        HttpQueryInfoW(request_handle,
                        HTTP_QUERY_RAW_HEADERS_CRLF,
                        nullptr,
-                       &dwSize,
+                       &size,
                        nullptr);
         if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) return headers;
 
         // allocate wide char buffer
-        std::vector<wchar_t> buffer(dwSize / sizeof(wchar_t) + 1);
-        if (!HttpQueryInfoW(hRequest,
+        std::vector<wchar_t> buffer(size / sizeof(wchar_t) + 1);
+        if (!HttpQueryInfoW(request_handle,
                             HTTP_QUERY_RAW_HEADERS_CRLF,
                             buffer.data(),
-                            &dwSize,
+                            &size,
                             nullptr)) {
             return headers;
         }
@@ -191,23 +191,23 @@ namespace YanLib::io {
                                       0,
                                       nullptr,
                                       nullptr);
-        std::string utf8Str(len, 0);
+        std::string utf8_str(len, 0);
         WideCharToMultiByte(CP_UTF8,
                             0,
                             buffer.data(),
                             -1,
-                            utf8Str.data(),
+                            utf8_str.data(),
                             len,
                             nullptr,
                             nullptr);
 
         // split lines by CRLF
         size_t pos = 0;
-        while (pos < utf8Str.size()) {
-            size_t end = utf8Str.find("\r\n", pos);
+        while (pos < utf8_str.size()) {
+            size_t end = utf8_str.find("\r\n", pos);
             if (end == std::string::npos) break;
 
-            std::string line = utf8Str.substr(pos, end - pos);
+            std::string line = utf8_str.substr(pos, end - pos);
             pos = end + 2;
 
             size_t colon = line.find(':');
@@ -232,37 +232,37 @@ namespace YanLib::io {
     }
 
     std::unordered_map<std::wstring, std::wstring> http::get_headers_wide() const {
-        std::unordered_map<std::string, std::string> srcMap = get_headers();
-        if (srcMap.size() == 0) {
+        std::unordered_map<std::string, std::string> src_map = get_headers();
+        if (src_map.empty()) {
             return {};
         }
-        std::unordered_map<std::wstring, std::wstring> dstMap;
-        for (const auto &pair: srcMap) {
+        std::unordered_map<std::wstring, std::wstring> dst_map;
+        for (const auto &pair: src_map) {
             std::wstring key = helper::convert::str_to_wstr(pair.first);
             std::wstring value = helper::convert::str_to_wstr(pair.second);
-            dstMap.emplace(std::move(key), std::move(value));
+            dst_map.emplace(std::move(key), std::move(value));
         }
-        return dstMap;
+        return dst_map;
     }
 
     std::vector<std::string> http::get_headers_vec() const {
         std::vector<std::string> headers;
-        DWORD dwSize = 0;
+        DWORD size = 0;
 
         // first call to fetch the buffer size
-        HttpQueryInfoW(hRequest,
+        HttpQueryInfoW(request_handle,
                        HTTP_QUERY_RAW_HEADERS_CRLF,
                        nullptr,
-                       &dwSize,
+                       &size,
                        nullptr);
         if (GetLastError() != ERROR_INSUFFICIENT_BUFFER) return headers;
 
         // allocate wide char buffer
-        std::vector<wchar_t> buffer(dwSize / sizeof(wchar_t) + 1);
-        if (!HttpQueryInfoW(hRequest,
+        std::vector<wchar_t> buffer(size / sizeof(wchar_t) + 1);
+        if (!HttpQueryInfoW(request_handle,
                             HTTP_QUERY_RAW_HEADERS_CRLF,
                             buffer.data(),
-                            &dwSize,
+                            &size,
                             nullptr)) {
             return headers;
         }
@@ -276,23 +276,23 @@ namespace YanLib::io {
                                       0,
                                       nullptr,
                                       nullptr);
-        std::string utf8Str(len, 0);
+        std::string utf8_str(len, 0);
         WideCharToMultiByte(CP_UTF8,
                             0,
                             buffer.data(),
                             -1,
-                            utf8Str.data(),
+                            utf8_str.data(),
                             len,
                             nullptr,
                             nullptr);
 
         // split lines by CRLF
         size_t pos = 0;
-        while (pos < utf8Str.size()) {
-            size_t end = utf8Str.find("\r\n", pos);
+        while (pos < utf8_str.size()) {
+            size_t end = utf8_str.find("\r\n", pos);
             if (end == std::string::npos) break;
 
-            std::string line = utf8Str.substr(pos, end - pos);
+            std::string line = utf8_str.substr(pos, end - pos);
             pos = end + 2;
             headers.push_back(line);
         }
@@ -301,7 +301,7 @@ namespace YanLib::io {
 
     std::vector<std::wstring> http::get_headers_vec_wide() const {
         std::vector<std::string> src = get_headers_vec();
-        if (src.size() == 0) {
+        if (src.empty()) {
             return {};
         }
         std::vector<std::wstring> dst;
@@ -311,89 +311,89 @@ namespace YanLib::io {
         return dst;
     }
 
-    bool http::query_option(DWORD dwOption,
-                            LPVOID lpBuffer,
-                            LPDWORD lpdwBufferLength) {
-        if (!InternetQueryOptionW(hRequest,
-                                  dwOption,
-                                  lpBuffer,
-                                  lpdwBufferLength)) {
+    bool http::query_option(DWORD option,
+                            LPVOID buffer,
+                            LPDWORD buffer_length) {
+        if (!InternetQueryOptionW(request_handle,
+                                  option,
+                                  buffer,
+                                  buffer_length)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool http::set_option(DWORD dwOption,
-                          LPVOID lpBuffer,
-                          DWORD dwBufferLength) {
-        if (!InternetSetOptionW(hRequest, dwOption, lpBuffer, dwBufferLength)) {
+    bool http::set_option(DWORD option,
+                          LPVOID buffer,
+                          DWORD buffer_length) {
+        if (!InternetSetOptionW(request_handle, option, buffer, buffer_length)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool http::open(const wchar_t *lpszAgent,
-                    DWORD dwAccessType,
-                    const wchar_t *lpszProxy,
-                    const wchar_t *lpszProxyBypass,
-                    DWORD dwFlags) {
-        hInternet = InternetOpenW(lpszAgent,
-                                  dwAccessType,
-                                  lpszProxy,
-                                  lpszProxyBypass,
-                                  dwFlags);
-        if (!hInternet) {
+    bool http::open(const wchar_t *agent_name,
+                    DWORD access_type,
+                    const wchar_t *proxy,
+                    const wchar_t *proxy_bypass,
+                    DWORD flag) {
+        internet_handle = InternetOpenW(agent_name,
+                                        access_type,
+                                        proxy,
+                                        proxy_bypass,
+                                        flag);
+        if (!internet_handle) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool http::connect(DWORD dwService,
-                       DWORD dwFlags,
-                       DWORD_PTR dwContext) {
-        hConnect = InternetConnectW(hInternet,
-                                    hostname,
-                                    port,
-                                    wcslen(username) == 0 ? nullptr : username,
-                                    wcslen(password) == 0 ? nullptr : password,
-                                    dwService,
-                                    dwFlags,
-                                    dwContext);
-        if (!hConnect) {
+    bool http::connect(DWORD service,
+                       DWORD flag,
+                       DWORD_PTR context) {
+        connect_handle = InternetConnectW(internet_handle,
+                                          hostname,
+                                          port,
+                                          wcslen(username) == 0 ? nullptr : username,
+                                          wcslen(password) == 0 ? nullptr : password,
+                                          service,
+                                          flag,
+                                          context);
+        if (!connect_handle) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool http::open_request(const wchar_t *lpszVerb,
-                            const wchar_t *lpszVersion,
-                            const wchar_t *lpszReferrer,
-                            const wchar_t **lplpszAcceptTypes,
-                            DWORD dwFlags,
-                            DWORD_PTR dwContext) {
+    bool http::open_request(const wchar_t *verb,
+                            const wchar_t *version,
+                            const wchar_t *referrer,
+                            const wchar_t **accept_types,
+                            DWORD flag,
+                            DWORD_PTR context) {
         if (wcslen(extra_info) > 0) {
             wcscat_s(urlpath, _countof(urlpath) - 1, extra_info);
         }
 
-        if (isHTTPS) {
-            dwFlags = dwFlags |
-                      INTERNET_FLAG_SECURE |
-                      INTERNET_FLAG_IGNORE_CERT_CN_INVALID;
+        if (is_https) {
+            flag = flag |
+                   INTERNET_FLAG_SECURE |
+                   INTERNET_FLAG_IGNORE_CERT_CN_INVALID;
         }
 
-        hRequest = HttpOpenRequestW(hConnect,
-                                    lpszVerb,
-                                    urlpath,
-                                    lpszVersion,
-                                    lpszReferrer,
-                                    lplpszAcceptTypes,
-                                    dwFlags,
-                                    dwContext);
-        if (!hRequest) {
+        request_handle = HttpOpenRequestW(connect_handle,
+                                          verb,
+                                          urlpath,
+                                          version,
+                                          referrer,
+                                          accept_types,
+                                          flag,
+                                          context);
+        if (!request_handle) {
             error_code = GetLastError();
             return false;
         }
@@ -401,40 +401,40 @@ namespace YanLib::io {
     }
 
     DWORD http::get_content_length() {
-        DWORD contentLength = 0;
-        DWORD bufferSize = sizeof(contentLength);
-        DWORD dwFlags = HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER;
+        DWORD content_length = 0;
+        DWORD buffer_size = sizeof(content_length);
+        DWORD flags = HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER;
 
-        if (!HttpQueryInfoW(hRequest,
-                            dwFlags,
-                            &contentLength,
-                            &bufferSize,
+        if (!HttpQueryInfoW(request_handle,
+                            flags,
+                            &content_length,
+                            &buffer_size,
                             nullptr)) {
             error_code = GetLastError();
             return 0;
         }
-        return contentLength;
+        return content_length;
     }
 
     // support http and https
-    bool http::send_request(const wchar_t *lpszHeaders,
-                            DWORD dwHeadersLength,
-                            LPVOID lpOptional,
-                            DWORD dwOptionalLength) {
-        if (isHTTPS) {
+    bool http::send_request(const wchar_t *headers,
+                            DWORD headers_length,
+                            LPVOID optional,
+                            DWORD optional_length) {
+        if (is_https) {
             do {
-                DWORD dwFlags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-                                SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+                DWORD flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
+                              SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
                 if (!set_option(INTERNET_OPTION_SECURITY_FLAGS,
-                                &dwFlags,
-                                sizeof(dwFlags))) {
+                                &flags,
+                                sizeof(flags))) {
                     break;
                 }
-                if (!HttpSendRequestW(hRequest,
-                                      lpszHeaders,
-                                      dwHeadersLength,
-                                      lpOptional,
-                                      dwOptionalLength)) {
+                if (!HttpSendRequestW(request_handle,
+                                      headers,
+                                      headers_length,
+                                      optional,
+                                      optional_length)) {
                     error_code = GetLastError();
                     break;
                 }
@@ -442,11 +442,11 @@ namespace YanLib::io {
             } while (false);
             return false;
         } else {
-            if (!HttpSendRequestW(hRequest,
-                                  lpszHeaders,
-                                  dwHeadersLength,
-                                  lpOptional,
-                                  dwOptionalLength)) {
+            if (!HttpSendRequestW(request_handle,
+                                  headers,
+                                  headers_length,
+                                  optional,
+                                  optional_length)) {
                 error_code = GetLastError();
                 return false;
             }
@@ -456,24 +456,24 @@ namespace YanLib::io {
 
     // support http and https
     // call send_request_ex(), next must call end_request_ex()
-    bool http::send_request_ex(LPINTERNET_BUFFERSW lpBuffersIn,
-                               LPINTERNET_BUFFERSW lpBuffersOut,
-                               DWORD dwFlags,
-                               DWORD_PTR dwContext) {
-        if (isHTTPS) {
+    bool http::send_request_ex(LPINTERNET_BUFFERSW buffers_in,
+                               LPINTERNET_BUFFERSW buffers_out,
+                               DWORD flag,
+                               DWORD_PTR context) {
+        if (is_https) {
             do {
-                DWORD flag = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-                             SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+                DWORD flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
+                              SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
                 if (!set_option(INTERNET_OPTION_SECURITY_FLAGS,
-                                &flag,
-                                sizeof(flag))) {
+                                &flags,
+                                sizeof(flags))) {
                     break;
                 }
-                if (!HttpSendRequestExW(hRequest,
-                                        lpBuffersIn,
-                                        lpBuffersOut,
-                                        dwFlags,
-                                        dwContext)) {
+                if (!HttpSendRequestExW(request_handle,
+                                        buffers_in,
+                                        buffers_out,
+                                        flag,
+                                        context)) {
                     error_code = GetLastError();
                     break;
                 }
@@ -481,11 +481,11 @@ namespace YanLib::io {
             } while (false);
             return false;
         } else {
-            if (!HttpSendRequestExW(hRequest,
-                                    lpBuffersIn,
-                                    lpBuffersOut,
-                                    dwFlags,
-                                    dwContext)) {
+            if (!HttpSendRequestExW(request_handle,
+                                    buffers_in,
+                                    buffers_out,
+                                    flag,
+                                    context)) {
                 error_code = GetLastError();
                 return false;
             }
@@ -494,54 +494,54 @@ namespace YanLib::io {
     }
 
     // call send_request_ex(), next must call end_request_ex()
-    bool http::end_request_ex(LPINTERNET_BUFFERSW lpBuffersOut,
-                              DWORD dwFlags,
-                              DWORD_PTR dwContext) {
-        if (!HttpEndRequestW(hRequest, lpBuffersOut, dwFlags, dwContext)) {
+    bool http::end_request_ex(LPINTERNET_BUFFERSW buffers_out,
+                              DWORD flag,
+                              DWORD_PTR context) {
+        if (!HttpEndRequestW(request_handle, buffers_out, flag, context)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool http::read(LPVOID lpBuffer,
-                    DWORD dwNumberOfBytesToRead,
-                    LPDWORD lpdwNumberOfBytesRead) {
-        if (!InternetReadFile(hRequest,
-                              lpBuffer,
-                              dwNumberOfBytesToRead,
-                              lpdwNumberOfBytesRead)) {
+    bool http::read(LPVOID buf,
+                    DWORD size,
+                    LPDWORD ret_size) {
+        if (!InternetReadFile(request_handle,
+                              buf,
+                              size,
+                              ret_size)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    std::vector<uint8_t> http::read_bytes(int32_t bufferSize) {
-        if (bufferSize < 1024) {
-            bufferSize = 1024;
+    std::vector<uint8_t> http::read_bytes(int32_t buffer_size) {
+        if (buffer_size < 1024) {
+            buffer_size = 1024;
         }
-        std::vector<uint8_t> rawData(bufferSize, '\0');
-        DWORD bytesRead = 0;
-        if (InternetReadFile(hRequest,
-                             rawData.data(),
-                             bufferSize,
-                             &bytesRead) && bytesRead > 0) {
-            rawData.resize(bytesRead);
-            rawData.shrink_to_fit();
-            return rawData;
+        std::vector<uint8_t> raw_data(buffer_size, '\0');
+        DWORD bytes_read = 0;
+        if (InternetReadFile(request_handle,
+                             raw_data.data(),
+                             buffer_size,
+                             &bytes_read) && bytes_read > 0) {
+            raw_data.resize(bytes_read);
+            raw_data.shrink_to_fit();
+            return raw_data;
         }
         error_code = GetLastError();
         return {};
     }
 
-    bool http::write(LPCVOID lpBuffer,
-                     DWORD dwNumberOfBytesToWrite,
-                     LPDWORD lpdwNumberOfBytesWritten) {
-        if (!InternetWriteFile(hRequest,
-                               lpBuffer,
-                               dwNumberOfBytesToWrite,
-                               lpdwNumberOfBytesWritten)) {
+    bool http::write(LPCVOID buf,
+                     DWORD size,
+                     LPDWORD ret_size) {
+        if (!InternetWriteFile(request_handle,
+                               buf,
+                               size,
+                               ret_size)) {
             error_code = GetLastError();
             return false;
         }
@@ -549,12 +549,12 @@ namespace YanLib::io {
     }
 
     DWORD http::write_bytes(std::vector<uint8_t> &vec) {
-        DWORD bytesRead = 0;
-        if (InternetWriteFile(hRequest,
+        DWORD bytes_read = 0;
+        if (InternetWriteFile(request_handle,
                               vec.data(),
                               vec.size(),
-                              &bytesRead) && bytesRead > 0) {
-            return bytesRead;
+                              &bytes_read) && bytes_read > 0) {
+            return bytes_read;
         }
         error_code = GetLastError();
         return 0;
@@ -564,7 +564,7 @@ namespace YanLib::io {
     std::string http::read_string_to_end(const std::wstring &input_url) {
         do {
             http client(input_url);
-            DWORD contentLength = 0;
+            DWORD content_length = 0;
             if (!client.url_crack()) {
                 break;
             }
@@ -581,14 +581,14 @@ namespace YanLib::io {
                 break;
             }
 
-            contentLength = client.get_content_length();
-            if (contentLength <= 0 || contentLength >= 5 * 1024 * 1024) {
+            content_length = client.get_content_length();
+            if (content_length <= 0 || content_length >= 5 * 1024 * 1024) {
                 break;
             }
 
-            std::string body(contentLength, '\0');
-            DWORD dwRead = 0;
-            if (!client.read(body.data(), contentLength, &dwRead)) {
+            std::string body(content_length, '\0');
+            DWORD bytes_read = 0;
+            if (!client.read(body.data(), content_length, &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
@@ -605,7 +605,7 @@ namespace YanLib::io {
         const std::wstring &input_url) {
         do {
             http client(input_url);
-            DWORD contentLength = 0;
+            DWORD content_length = 0;
             if (!client.url_crack()) {
                 break;
             }
@@ -621,14 +621,14 @@ namespace YanLib::io {
             if (!client.send_request()) {
                 break;
             }
-            contentLength = client.get_content_length();
-            if (contentLength <= 0 || contentLength >= 5 * 1024 * 1024) {
+            content_length = client.get_content_length();
+            if (content_length <= 0 || content_length >= 5 * 1024 * 1024) {
                 break;
             }
 
-            std::vector<uint8_t> body(contentLength, '\0');
-            DWORD dwRead = 0;
-            if (!client.read(body.data(), contentLength, &dwRead)) {
+            std::vector<uint8_t> body(content_length, '\0');
+            DWORD bytes_read = 0;
+            if (!client.read(body.data(), content_length, &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
@@ -640,9 +640,9 @@ namespace YanLib::io {
     // support http and https
     DWORD http::download(const std::wstring &input_url,
                          const wchar_t *file_name) {
-        DWORD dwError = 0;
+        DWORD error = 0;
         http client(input_url);
-        DWORD contentLength = 0;
+        DWORD content_length = 0;
         fs file;
         if (!file.create(file_name)) {
             return file.err_code();
@@ -663,29 +663,29 @@ namespace YanLib::io {
             if (!client.send_request()) {
                 break;
             }
-            contentLength = client.get_content_length();
-            if (contentLength <= 0) {
+            content_length = client.get_content_length();
+            if (content_length <= 0) {
                 break;
             }
 
-            DWORD bufSize = 4096;
-            uint8_t *buf = new uint8_t[bufSize];
-            memset(buf, 0, bufSize);
-            DWORD dwRead = 0;
-            DWORD dwWritten = 0;
+            DWORD buf_size = 4096;
+            uint8_t *buf = new uint8_t[buf_size];
+            memset(buf, 0, buf_size);
+            DWORD bytes_read = 0;
+            DWORD bytes_written = 0;
             do {
-                if (!client.read(buf, bufSize, &dwRead)) {
-                    dwError = client.err_code();
+                if (!client.read(buf, buf_size, &bytes_read)) {
+                    error = client.err_code();
                     break;
                 }
-                if (dwRead <= 0) break;
-                if (!file.write(buf, dwRead, &dwWritten)) {
-                    dwError = file.err_code();
+                if (bytes_read <= 0) break;
+                if (!file.write(buf, bytes_read, &bytes_written)) {
+                    error = file.err_code();
                     break;
                 }
-            } while (dwRead > 0 && dwWritten > 0);
+            } while (bytes_read > 0 && bytes_written > 0);
             delete[] buf;
-            return dwError;
+            return error;
         } while (false);
         return client.err_code();
     }
@@ -693,7 +693,7 @@ namespace YanLib::io {
     // support http and https
     DWORD http::upload(const std::wstring &input_url,
                        const wchar_t *file_name) {
-        DWORD dwError = 0;
+        DWORD error = 0;
         http client(input_url);
         fs file;
         if (!file.open(file_name)) {
@@ -717,34 +717,34 @@ namespace YanLib::io {
                 break;
             }
 
-            INTERNET_BUFFERSW buffersIn = {};
-            buffersIn.dwStructSize = sizeof(INTERNET_BUFFERSW);
-            buffersIn.dwBufferTotal = file.size();
-            if (!client.send_request_ex(&buffersIn, nullptr, 0, 0)) {
+            INTERNET_BUFFERSW buffers_in = {};
+            buffers_in.dwStructSize = sizeof(INTERNET_BUFFERSW);
+            buffers_in.dwBufferTotal = file.size();
+            if (!client.send_request_ex(&buffers_in, nullptr, 0, 0)) {
                 break;
             }
 
-            DWORD bufSize = 4096;
-            uint8_t *buf = new uint8_t[bufSize];
-            memset(buf, 0, bufSize);
-            DWORD dwRead = 0;
-            DWORD dwWritten = 0;
+            DWORD buf_size = 4096;
+            uint8_t *buf = new uint8_t[buf_size];
+            memset(buf, 0, buf_size);
+            DWORD bytes_read = 0;
+            DWORD bytes_written = 0;
             do {
-                if (!file.read(buf, dwRead, &dwRead)) {
-                    dwError = file.err_code();
+                if (!file.read(buf, bytes_read, &bytes_read)) {
+                    error = file.err_code();
                     break;
                 }
-                if (dwRead <= 0) break;
-                if (!client.write(buf, dwRead, &dwWritten)) {
-                    dwError = client.err_code();
+                if (bytes_read <= 0) break;
+                if (!client.write(buf, bytes_read, &bytes_written)) {
+                    error = client.err_code();
                     break;
                 }
-            } while (dwRead > 0 && dwWritten > 0);
+            } while (bytes_read > 0 && bytes_written > 0);
             delete[] buf;
             if (!client.end_request_ex()) {
                 break;
             }
-            return dwError;
+            return error;
         } while (false);
         return client.err_code();
     }

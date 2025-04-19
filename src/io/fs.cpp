@@ -397,10 +397,9 @@ namespace YanLib::io {
             return false;
         }
 
-        SHFILEOPSTRUCTW op;
-        memset(&op, 0, sizeof(op));
+        SHFILEOPSTRUCTW op = {};
 
-        wchar_t szPath[MAX_PATH + 2] = {0};
+        wchar_t szPath[MAX_PATH + 2] = {};
         wcscpy_s(szPath, MAX_PATH, path_name);
         szPath[wcslen(path_name) + 1] = L'\0';
 
@@ -564,11 +563,10 @@ namespace YanLib::io {
 
     bool fs::copy_all(const wchar_t *existing_path_name,
                       const wchar_t *new_path_name) {
-        SHFILEOPSTRUCTW file_op;
-        memset(&file_op, 0, sizeof(file_op));
+        SHFILEOPSTRUCTW file_op = {};
 
-        WCHAR from[MAX_PATH + 2] = {0};
-        WCHAR to[MAX_PATH + 2] = {0};
+        WCHAR from[MAX_PATH + 2] = {};
+        WCHAR to[MAX_PATH + 2] = {};
 
         wcscpy_s(from, MAX_PATH, existing_path_name);
         wcscpy_s(to, MAX_PATH, new_path_name);

@@ -36,8 +36,6 @@ namespace YanLib::sync {
         void wake();
 
         void wake_all();
-
-        DWORD err_code() const;
     };
 }
 

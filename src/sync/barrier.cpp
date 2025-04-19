@@ -27,11 +27,11 @@ namespace YanLib::sync {
     bool barrier::wait(DWORD count,
                        const HANDLE *handles,
                        BOOL wait_all,
-                       DWORD dwMilliseconds) {
+                       DWORD milli_seconds) {
         DWORD ret = WaitForMultipleObjects(count,
                                            handles,
                                            wait_all,
-                                           dwMilliseconds);
+                                           milli_seconds);
         if (ret == WAIT_FAILED) {
             error_code = GetLastError();
         } else {

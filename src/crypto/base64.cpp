@@ -107,20 +107,20 @@ namespace YanLib::crypto {
             !output.create(output_file.data())) {
             return false;
         }
-        const DWORD bufferSize = input.size();
-        uint8_t *buf = new uint8_t[bufferSize];
-        memset(buf, 0, bufferSize);
-        DWORD bytesRead = 0;
-        DWORD bytesWrite = 0;
+        const DWORD buffer_size = input.size();
+        uint8_t *buf = new uint8_t[buffer_size];
+        memset(buf, 0, buffer_size);
+        DWORD bytes_read = 0;
+        DWORD bytes_written = 0;
         do {
-            if (!input.read(buf, bufferSize, &bytesRead)) {
+            if (!input.read(buf, buffer_size, &bytes_read)) {
                 break;
             }
-            if (bytesRead <= 0) break;
-            std::vector<uint8_t> encode_data = encode(buf, bytesRead);
+            if (bytes_read <= 0) break;
+            std::vector<uint8_t> encode_data = encode(buf, bytes_read);
             if (!output.write(encode_data.data(),
                               encode_data.size(),
-                              &bytesWrite)) {
+                              &bytes_written)) {
                 break;
             }
             return true;
@@ -136,20 +136,20 @@ namespace YanLib::crypto {
             !output.create(output_file.data())) {
             return false;
         }
-        const DWORD bufferSize = input.size();
-        uint8_t *buf = new uint8_t[bufferSize];
-        memset(buf, 0, bufferSize);
-        DWORD bytesRead = 0;
-        DWORD bytesWrite = 0;
+        const DWORD buffer_size = input.size();
+        uint8_t *buf = new uint8_t[buffer_size];
+        memset(buf, 0, buffer_size);
+        DWORD bytes_read = 0;
+        DWORD bytes_written = 0;
         do {
-            if (!input.read(buf, bufferSize, &bytesRead)) {
+            if (!input.read(buf, buffer_size, &bytes_read)) {
                 break;
             }
-            if (bytesRead <= 0) break;
-            std::vector<uint8_t> encode_data = decode(buf, bytesRead);
+            if (bytes_read <= 0) break;
+            std::vector<uint8_t> encode_data = decode(buf, bytes_read);
             if (!output.write(encode_data.data(),
                               encode_data.size(),
-                              &bytesWrite)) {
+                              &bytes_written)) {
                 break;
             }
             return true;

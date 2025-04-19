@@ -48,6 +48,8 @@ namespace YanLib::io {
         _url.append(password);
         _url.append(L"@");
         _url.append(ip);
+        _url.append(L":");
+        _url.append(std::to_wstring(port));
         _url.append(L"/");
         url = _url;
     }

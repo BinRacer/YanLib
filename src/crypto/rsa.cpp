@@ -195,22 +195,14 @@ namespace YanLib::crypto {
         return {};
     }
 
-    std::string rsa::encode_to_base64(const std::vector<uint8_t> &data,
-                                      const std::vector<uint8_t> &pub_blob) {
-        std::vector<uint8_t> encoded = encode(data, pub_blob);
-        std::vector<uint8_t> base64_encoded = base64::encode(encoded.data(),
-                                                             encoded.size());
-        std::string result(base64_encoded.begin(), base64_encoded.end());
-        return result;
+    std::vector<uint8_t> rsa::encode_to_base64(const std::vector<uint8_t> &data,
+                                               const std::vector<uint8_t> &pub_blob) {
+        return base64::encode(encode(data, pub_blob));
     }
 
-    std::string rsa::decode_to_base64(const std::vector<uint8_t> &data,
-                                      const std::vector<uint8_t> &priv_blob) {
-        std::vector<uint8_t> decoded = encode(data, priv_blob);
-        std::vector<uint8_t> base64_encoded = base64::decode(decoded.data(),
-                                                             decoded.size());
-        std::string result(base64_encoded.begin(), base64_encoded.end());
-        return result;
+    std::vector<uint8_t> rsa::decode_from_base64(const std::vector<uint8_t> &data,
+                                                 const std::vector<uint8_t> &priv_blob) {
+        return decode(base64::decode(data), priv_blob);
     }
 
     std::vector<uint8_t> rsa::pub_blob() const {

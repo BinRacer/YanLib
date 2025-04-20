@@ -98,14 +98,12 @@ add_library(YanLib STATIC
         src/sys/thread.h
 )
 
-# 公共头文件目录（仅暴露给外部使用者）
 target_include_directories(YanLib
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
 )
 
-# 私有头文件目录（仅内部使用）
 target_include_directories(YanLib
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -113,6 +111,16 @@ target_include_directories(YanLib
 
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-add_executable(app main.cpp)
+include(FetchContent)
 
-target_link_libraries(app PRIVATE YanLib)
+FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY git@github.com:google/googletest.git
+        GIT_TAG v1.16.0
+)
+
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_subdirectory(test)

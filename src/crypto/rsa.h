@@ -58,11 +58,11 @@ namespace YanLib::crypto {
         std::vector<uint8_t> decode(const std::vector<uint8_t> &data,
                                     const std::vector<uint8_t> &priv_blob);
 
-        std::string encode_to_base64(const std::vector<uint8_t> &data,
-                                     const std::vector<uint8_t> &pub_blob);
+        std::vector<uint8_t> encode_to_base64(const std::vector<uint8_t> &data,
+                                              const std::vector<uint8_t> &pub_blob);
 
-        std::string decode_to_base64(const std::vector<uint8_t> &data,
-                                     const std::vector<uint8_t> &priv_blob);
+        std::vector<uint8_t> decode_from_base64(const std::vector<uint8_t> &data,
+                                                const std::vector<uint8_t> &priv_blob);
 
         [[nodiscard]] std::vector<uint8_t> pub_blob() const;
 

@@ -8,97 +8,89 @@ namespace YanLib::crypto {
     std::vector<uint8_t> base85::encode(const std::vector<uint8_t> &data) {
         constexpr uint8_t BASE85_CHARS[] =
                 "!\"#$%&'()*+,-./0123456789:;<=>?@"
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstu";
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
+                "abcdefghijklmnopqrstu";
         if (data.empty()) return {};
+        std::vector<uint8_t> encoded;
+        const size_t padding = (4 - (data.size() % 4)) % 4;
+        std::vector<uint8_t> padded(data);
+        padded.insert(padded.end(), padding, 0);
 
-        std::vector<uint8_t> result;
-        const size_t output_size = ((data.size() + 3) / 4) * 5;
-        result.reserve(output_size);
-
-        const uint8_t *ptr = data.data();
-        const uint8_t *end = ptr + data.size();
-
-        while (ptr < end) {
-            uint32_t value = 0;
-            const int valid_bytes = std::min(4,
-                                             static_cast<int>(end - ptr));
-
-            for (int j = 0; j < valid_bytes; ++j) {
-                value = (value << 8) | ptr[j];
-            }
-            ptr += valid_bytes;
-
-            if (valid_bytes < 4) {
-                value <<= (8 * (4 - valid_bytes));
-            }
-
-            if (value == 0 && valid_bytes == 4) {
-                result.push_back('z');
+        for (size_t i = 0; i < padded.size(); i += 4) {
+            uint32_t chunk = (padded[i] << 24) | (padded[i + 1] << 16) |
+                             (padded[i + 2] << 8) | padded[i + 3];
+            if (chunk == 0) {
+                encoded.push_back('z');
                 continue;
             }
 
-            std::vector<uint32_t> digits(5, 0);
+            uint8_t buf[5];
             for (int j = 4; j >= 0; --j) {
-                digits[j] = value % 85;
-                value /= 85;
+                buf[j] = BASE85_CHARS[chunk % 85];
+                chunk /= 85;
             }
-
-            const int encode_chars = valid_bytes + 1;
-            for (int j = 0; j < encode_chars; ++j) {
-                result.push_back(BASE85_CHARS[digits[j]]);
-            }
+            encoded.insert(encoded.end(), buf, buf + 5);
         }
-
-        return result;
+        if (padding) encoded.resize(encoded.size() - padding);
+        return encoded;
     }
 
     std::vector<uint8_t> base85::decode(const std::vector<uint8_t> &data) {
         constexpr uint8_t BASE85_CHARS[] =
                 "!\"#$%&'()*+,-./0123456789:;<=>?@"
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstu";
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
+                "abcdefghijklmnopqrstu";
         if (data.empty()) return {};
-
-        std::vector<uint8_t> table(256, 0xFF);
+        std::vector<int> table(256, -1);
         for (int i = 0; i < 85; ++i) {
-            table[static_cast<uint8_t>(BASE85_CHARS[i])] = i;
+            table[BASE85_CHARS[i]] = i;
         }
-        table['z'] = 0;
+        std::vector<uint8_t> decoded;
+        std::vector<uint8_t> buffer;
 
-        std::vector<uint8_t> result;
-        result.reserve((data.size() * 4) / 5);
-        if (data.empty() || data.size() % 5 != 0) return {};
-        for (size_t i = 0; i < data.size();) {
-            if (data[i] == 'z') {
-                result.insert(result.end(), 4, 0x00);
-                ++i;
+        for (auto c: data) {
+            if (std::isspace(c)) continue;
+            if (c == 'z') {
+                if (!buffer.empty()) return {};
+                decoded.insert(decoded.end(), 4, 0x00);
                 continue;
             }
 
-            uint32_t value = 0;
+            buffer.push_back(c);
+            if (buffer.size() == 5) {
+                uint32_t chunk = 0;
+                for (int j = 0; j < 5; ++j) {
+                    auto pos = table[buffer[j]];
+                    if (pos == -1) return {};
+                    chunk = chunk * 85 + pos;
+                }
+
+                decoded.push_back((chunk >> 24) & 0xFF);
+                decoded.push_back((chunk >> 16) & 0xFF);
+                decoded.push_back((chunk >> 8) & 0xFF);
+                decoded.push_back(chunk & 0xFF);
+                buffer.clear();
+            }
+        }
+
+        if (!buffer.empty()) {
+            const size_t padding = 5 - buffer.size();
+            for (size_t i = 0; i < padding; ++i)
+                buffer.push_back('u');
+
+            uint32_t chunk = 0;
             for (int j = 0; j < 5; ++j) {
-                const uint8_t c = data[i + j];
-                const uint8_t digit = table[c];
-
-                if (digit == 0xFF && c != 'z') return {};
-
-                value = value * 85 + digit;
+                auto pos = table[buffer[j]];
+                if (pos == -1) return {};
+                chunk = chunk * 85 + pos;
             }
 
-            result.push_back(static_cast<uint8_t>(value >> 24));
-            result.push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
-            result.push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
-            result.push_back(static_cast<uint8_t>(value & 0xFF));
-            i += 5;
+            const size_t valid_bytes = 4 - padding;
+            for (size_t j = 0; j < valid_bytes; ++j) {
+                decoded.push_back((chunk >> (24 - j * 8)) & 0xFF);
+            }
         }
-
-        if (!data.empty() && data.back() == '=') {
-            const auto padding = std::count(data.end() - 5,
-                                            data.end(),
-                                            '=');
-            result.resize(result.size() - (4 - padding));
-        }
-
-        return result;
+        return decoded;
     }
 
     std::string base85::encode_string(const std::string &data) {

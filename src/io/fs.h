@@ -17,8 +17,6 @@ namespace YanLib::io {
 
         static inline void remove_tail_slash(std::wstring &path);
 
-        static inline bool is_protect_dirs(const wchar_t *path_name);
-
     public:
         fs(const fs &other) = delete;
 
@@ -50,7 +48,7 @@ namespace YanLib::io {
 
         bool touch(const wchar_t *file_name);
 
-        bool read(void* buf,
+        bool read(void *buf,
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped = nullptr);

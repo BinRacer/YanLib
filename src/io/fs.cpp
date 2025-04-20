@@ -10,20 +10,10 @@ namespace YanLib::io {
         std::transform(path.begin(),
                        path.end(),
                        path.begin(),
-                       [](wchar_t c) { return (c == L'/') ? L'\\' : c; });
+                       [](const wchar_t ch) { return (ch == L'/') ? L'\\' : ch; });
         if (path.back() == L'\\') {
             path.pop_back();
         }
-    }
-
-    bool fs::is_protect_dirs(const wchar_t *path_name) {
-        if (wcsstr(path_name, L"C:\\Program Files") ||
-            wcsstr(path_name, L"C:\\Program Files (x86)") ||
-            wcsstr(path_name, L"C:\\Windows") ||
-            wcsstr(path_name, L"C:\\ProgramData")) {
-            return true;
-        }
-        return false;
     }
 
     fs::fs() : file_handle(INVALID_HANDLE_VALUE), error_code(0) {
@@ -105,7 +95,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::read(void* buf,
+    bool fs::read(void *buf,
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped) {
@@ -333,8 +323,7 @@ namespace YanLib::io {
     }
 
     bool fs::rm_file(const wchar_t *file_name) {
-        return (!is_protect_dirs(file_name)) &&
-               DeleteFileW(file_name);
+        return DeleteFileW(file_name);
     }
 
     bool fs::is_file(const wchar_t *file_name) {
@@ -388,15 +377,10 @@ namespace YanLib::io {
     }
 
     bool fs::rm_dir(const wchar_t *path_name) {
-        return (!is_protect_dirs(path_name)) &&
-               RemoveDirectoryW(path_name);
+        return RemoveDirectoryW(path_name);
     }
 
     bool fs::rm_dir_all(const wchar_t *path_name) {
-        if (is_protect_dirs(path_name)) {
-            return false;
-        }
-
         SHFILEOPSTRUCTW op = {};
 
         wchar_t szPath[MAX_PATH + 2] = {};
@@ -412,9 +396,6 @@ namespace YanLib::io {
     }
 
     void fs::rm_dir_all_slow(const wchar_t *path_name) {
-        if (is_protect_dirs(path_name)) {
-            return;
-        }
         std::vector<std::wstring> dirs = ls_all_dirs(path_name);
         std::vector<std::wstring> files = ls_all_files(path_name);
 

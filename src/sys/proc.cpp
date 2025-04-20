@@ -544,6 +544,54 @@ namespace YanLib::sys {
     }
 
     std::wstring proc::cmdline_wide(HANDLE proc_handle) {
+        // 0: kd> dt nt!_PEB
+        // +0x000 InheritedAddressSpace : UChar
+        // +0x001 ReadImageFileExecOptions : UChar
+        // +0x002 BeingDebugged    : UChar
+        // +0x003 BitField         : UChar
+        // +0x003 ImageUsesLargePages : Pos 0, 1 Bit
+        // +0x003 IsProtectedProcess : Pos 1, 1 Bit
+        // +0x003 IsImageDynamicallyRelocated : Pos 2, 1 Bit
+        // +0x003 SkipPatchingUser32Forwarders : Pos 3, 1 Bit
+        // +0x003 IsPackagedProcess : Pos 4, 1 Bit
+        // +0x003 IsAppContainer   : Pos 5, 1 Bit
+        // +0x003 IsProtectedProcessLight : Pos 6, 1 Bit
+        // +0x003 IsLongPathAwareProcess : Pos 7, 1 Bit
+        // +0x004 Padding0         : [4] UChar
+        // +0x008 Mutant           : Ptr64 Void
+        // +0x010 ImageBaseAddress : Ptr64 Void
+        // +0x018 Ldr              : Ptr64 _PEB_LDR_DATA
+        // +0x020 ProcessParameters : Ptr64 _RTL_USER_PROCESS_PARAMETERS
+        struct _peb {
+            uint8_t fill[0x20];
+            void *process_parameters;
+        };
+
+        // 0: kd> dt nt!_RTL_USER_PROCESS_PARAMETERS
+        // +0x000 MaximumLength    : Uint4B
+        // +0x004 Length           : Uint4B
+        // +0x008 Flags            : Uint4B
+        // +0x00c DebugFlags       : Uint4B
+        // +0x010 ConsoleHandle    : Ptr64 Void
+        // +0x018 ConsoleFlags     : Uint4B
+        // +0x020 StandardInput    : Ptr64 Void
+        // +0x028 StandardOutput   : Ptr64 Void
+        // +0x030 StandardError    : Ptr64 Void
+        // +0x038 CurrentDirectory : _CURDIR
+        // +0x050 DllPath          : _UNICODE_STRING
+        // +0x060 ImagePathName    : _UNICODE_STRING
+        // +0x070 CommandLine      : _UNICODE_STRING
+        // +0x080 Environment      : Ptr64 Void
+
+        // 0: kd> dt _UNICODE_STRING
+        // nt!_UNICODE_STRING
+        // +0x000 Length           : Uint2B
+        // +0x002 MaximumLength    : Uint2B
+        // +0x008 Buffer           : Ptr64 Wchar
+        struct _process_parameters {
+            uint8_t fill[0x70 + 0x8];
+            void *cmdline;
+        };
         HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
         DWORD ret_size = 0;
         PROCESS_BASIC_INFORMATION pbi{};

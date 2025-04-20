@@ -251,15 +251,14 @@ int main(int argc, const char *argv[]) {
     // sys::proc proc;
     // auto procs = proc.ls_procs();
     // auto threads = proc.ls_threads();
-    // auto modules = proc.ls_modules(16980);
-    // auto heaps = proc.ls_heaps(16980);
-    // auto base = proc.get_curr_proc_image_base();
-    // auto base2 = proc.get_proc_image_base(proc.curr_proc_handle());
-    // auto cmdline = proc.get_proc_cmdline(nullptr);
-    // auto cmdline2 = proc.get_proc_cmdline_wide(nullptr);
-
-    // auto own = proc.get_proc_owner(nullptr);
-    // auto own2 = proc.get_proc_owner_wide(nullptr);
+    // auto modules = proc.ls_modules();
+    // auto heaps = proc.ls_heaps();
+    // auto base = proc.image_base();
+    // auto base2 = proc.image_base(proc.proc_handle());
+    // auto cmdline = proc.cmdline(nullptr);
+    // auto cmdline2 = proc.cmdline_wide(nullptr);
+    // auto own = proc.owner(nullptr);
+    // auto own2 = proc.owner_wide(nullptr);
 
     // sys::security security;
     // auto result1 = security.check_proc_elevation();

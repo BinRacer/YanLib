@@ -82,15 +82,17 @@ namespace YanLib::sys {
                                LPTHREAD_START_ROUTINE start_addr,
                                void *params,
                                size_t stack_size,
+                               LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
-        HANDLE thread_handle = CreateRemoteThread(proc_handle,
-                                                  security_attrs,
-                                                  stack_size,
-                                                  start_addr,
-                                                  params,
-                                                  0,
-                                                  &tid);
+        HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
+                                                    security_attrs,
+                                                    stack_size,
+                                                    start_addr,
+                                                    params,
+                                                    0,
+                                                    attr_list,
+                                                    &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return false;
@@ -105,15 +107,17 @@ namespace YanLib::sys {
                                             LPTHREAD_START_ROUTINE start_addr,
                                             void *params,
                                             size_t stack_size,
+                                            LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                             LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
-        HANDLE thread_handle = CreateRemoteThread(proc_handle,
-                                                  security_attrs,
-                                                  stack_size,
-                                                  start_addr,
-                                                  params,
-                                                  CREATE_SUSPENDED,
-                                                  &tid);
+        HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
+                                                    security_attrs,
+                                                    stack_size,
+                                                    start_addr,
+                                                    params,
+                                                    CREATE_SUSPENDED,
+                                                    attr_list,
+                                                    &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return false;
@@ -128,15 +132,17 @@ namespace YanLib::sys {
                                                   LPTHREAD_START_ROUTINE start_addr,
                                                   void *params,
                                                   size_t stack_size,
+                                                  LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                                   LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
-        HANDLE thread_handle = CreateRemoteThread(proc_handle,
-                                                  security_attrs,
-                                                  stack_size,
-                                                  start_addr,
-                                                  params,
-                                                  STACK_SIZE_PARAM_IS_A_RESERVATION,
-                                                  &tid);
+        HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
+                                                    security_attrs,
+                                                    stack_size,
+                                                    start_addr,
+                                                    params,
+                                                    STACK_SIZE_PARAM_IS_A_RESERVATION,
+                                                    attr_list,
+                                                    &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return false;
@@ -145,25 +151,6 @@ namespace YanLib::sys {
         thread_records.emplace(tid, thread_handle);
         rwlock.write_unlock();
         return true;
-    }
-
-    bool thread::kill(HANDLE thread_handle, DWORD exit_code) {
-        if (!TerminateThread(thread_handle, exit_code)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    void thread::kill_all(DWORD exit_code) {
-        rwlock.read_lock();
-        for (auto [key, value]: thread_records) {
-            TerminateThread(value, exit_code);
-        }
-    }
-
-    void thread::exit(DWORD exit_code) {
-        ExitThread(exit_code);
     }
 
     HANDLE thread::curr_thread_handle() {
@@ -218,6 +205,108 @@ namespace YanLib::sys {
         return thread_ids;
     }
 
+    DWORD thread::tls_alloc() {
+        DWORD tls_index = TlsAlloc();
+        if (tls_index == TLS_OUT_OF_INDEXES) {
+            error_code = GetLastError();
+        }
+        return tls_index;
+    }
+
+    bool thread::tls_free(DWORD tls_index) {
+        if (!TlsFree(tls_index)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void *thread::tls_get(DWORD tls_index) {
+        void *tls_value = TlsGetValue(tls_index);
+        if (!tls_value) {
+            error_code = GetLastError();
+        }
+        return tls_value;
+    }
+
+    bool thread::tls_set(DWORD tls_index, void *tls_value) {
+        if (!TlsSetValue(tls_index, tls_value)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD thread::wait_for_input_idle(HANDLE proc_handle, DWORD milli_seconds) {
+        return WaitForInputIdle(proc_handle, milli_seconds);
+    }
+
+    bool thread::attach_thread_input(DWORD id_attach,
+                                     DWORD id_attach_to,
+                                     bool is_attach) {
+        if (!AttachThreadInput(id_attach,
+                               id_attach_to,
+                               is_attach ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                            DWORD attr_count,
+                                            DWORD flag,
+                                            PSIZE_T size) {
+        if (!InitializeProcThreadAttributeList(attr_list,
+                                               attr_count,
+                                               flag,
+                                               size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::update_proc_thread_attr(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                         DWORD flag,
+                                         DWORD_PTR attr,
+                                         void *value,
+                                         size_t bytes_size,
+                                         void *previous_value,
+                                         PSIZE_T ret_size) {
+        if (!UpdateProcThreadAttribute(attr_list,
+                                       flag,
+                                       attr,
+                                       value,
+                                       bytes_size,
+                                       previous_value,
+                                       ret_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void thread::delete_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list) {
+        DeleteProcThreadAttributeList(attr_list);
+    }
+
+    DWORD thread::suspend(HANDLE thread_handle) {
+        DWORD ret = SuspendThread(thread_handle);
+        if (ret == static_cast<DWORD>(-1)) {
+            error_code = GetLastError();
+        }
+        return ret;
+    }
+
+    DWORD thread::resume(HANDLE thread_handle) {
+        DWORD ret = ResumeThread(thread_handle);
+        if (ret == static_cast<DWORD>(-1)) {
+            error_code = GetLastError();
+        }
+        return ret;
+    }
+
     bool thread::wait(HANDLE thread_handle, DWORD milli_seconds) {
         DWORD ret = WaitForSingleObject(thread_handle, milli_seconds);
         if (ret == WAIT_OBJECT_0) {
@@ -237,6 +326,255 @@ namespace YanLib::sys {
             return true;
         }
         return false;
+    }
+
+    void thread::sleep(DWORD milli_seconds) {
+        Sleep(milli_seconds);
+    }
+
+    DWORD thread::sleep(DWORD milli_seconds, bool alertable) {
+        return SleepEx(milli_seconds, alertable ? TRUE : FALSE);
+    }
+
+    bool thread::yield() {
+        return SwitchToThread();
+    }
+
+    bool thread::kill(HANDLE thread_handle, DWORD exit_code) {
+        if (!TerminateThread(thread_handle, exit_code)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void thread::kill_all(DWORD exit_code) {
+        rwlock.read_lock();
+        for (auto [key, value]: thread_records) {
+            TerminateThread(value, exit_code);
+        }
+    }
+
+    void thread::exit(DWORD exit_code) {
+        ExitThread(exit_code);
+    }
+
+    DWORD thread::exit_status(HANDLE thread_handle) {
+        DWORD exit_code = 0;
+        if (!GetExitCodeThread(thread_handle, &exit_code)) {
+            error_code = GetLastError();
+        }
+        return exit_code;
+    }
+
+    bool thread::thread_info(HANDLE thread_handle,
+                             THREAD_INFORMATION_CLASS thread_info_class,
+                             void *thread_info,
+                             DWORD thread_info_size) {
+        if (!get_info(thread_handle,
+                      thread_info_class,
+                      thread_info,
+                      thread_info_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::is_io_pending(HANDLE thread_handle) {
+        int is_ok = 0;
+        if (!GetThreadIOPendingFlag(thread_handle, &is_ok)) {
+            error_code = GetLastError();
+        }
+        return is_ok;
+    }
+
+    int thread::get_priority(HANDLE thread_handle) {
+        int priority = GetThreadPriority(thread_handle);
+        if (priority == THREAD_PRIORITY_ERROR_RETURN) {
+            error_code = GetLastError();
+        }
+        return priority;
+    }
+
+    bool thread::set_priority(HANDLE thread_handle, int priority) {
+        if (!SetThreadPriority(thread_handle, priority)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD thread::get_proc_priority(HANDLE proc_handle) {
+        DWORD priority = GetPriorityClass(proc_handle);
+        if (!priority) {
+            error_code = GetLastError();
+        }
+        return priority;
+    }
+
+    bool thread::set_proc_priority(HANDLE proc_handle, DWORD priority) {
+        if (!SetPriorityClass(proc_handle, priority)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::get_priority_boost(HANDLE thread_handle) {
+        int is_disable_priority_boost = 0;
+        if (!GetThreadPriorityBoost(thread_handle, &is_disable_priority_boost)) {
+            error_code = GetLastError();
+        }
+        return is_disable_priority_boost;
+    }
+
+    bool thread::set_priority_boost(HANDLE thread_handle,
+                                    bool is_disable_priority_boost) {
+        if (!SetThreadPriorityBoost(thread_handle,
+                                    is_disable_priority_boost ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::time_statistics(HANDLE thread_handle,
+                                 LPFILETIME creation_time,
+                                 LPFILETIME exit_time,
+                                 LPFILETIME kernel_time,
+                                 LPFILETIME user_time) {
+        if (!GetThreadTimes(thread_handle,
+                            creation_time,
+                            exit_time,
+                            kernel_time,
+                            user_time)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    HRESULT thread::get_description(HANDLE thread_handle,
+                                    wchar_t **thread_description) {
+        return GetThreadDescription(thread_handle, thread_description);
+    }
+
+    HRESULT thread::set_description(HANDLE thread_handle,
+                                    const wchar_t *thread_description) {
+        return SetThreadDescription(thread_handle, thread_description);
+    }
+
+    bool thread::get_group_affinity(HANDLE thread_handle,
+                                    PGROUP_AFFINITY group_affinity) {
+        if (!GetThreadGroupAffinity(thread_handle,
+                                    group_affinity)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::set_group_affinity(HANDLE thread_handle,
+                                    const GROUP_AFFINITY *group_affinity,
+                                    PGROUP_AFFINITY previous_group_affinity) {
+        if (!SetThreadGroupAffinity(thread_handle,
+                                    group_affinity,
+                                    previous_group_affinity)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::get_ideal_processor(HANDLE thread_handle,
+                                     PPROCESSOR_NUMBER ideal_processor) {
+        if (!GetThreadIdealProcessorEx(thread_handle,
+                                       ideal_processor)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::set_ideal_processor(HANDLE thread_handle,
+                                     PPROCESSOR_NUMBER ideal_processor,
+                                     PPROCESSOR_NUMBER previous_ideal_processor) {
+        if (!SetThreadIdealProcessorEx(thread_handle,
+                                       ideal_processor,
+                                       previous_ideal_processor)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::get_info(HANDLE thread_handle,
+                          THREAD_INFORMATION_CLASS thread_info_class,
+                          void *thread_info,
+                          DWORD thread_information_size) {
+        if (!GetThreadInformation(thread_handle,
+                                  thread_info_class,
+                                  thread_info,
+                                  thread_information_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::set_info(HANDLE thread_handle,
+                          THREAD_INFORMATION_CLASS thread_info_class,
+                          void *thread_info,
+                          DWORD thread_information_size) {
+        if (!SetThreadInformation(thread_handle,
+                                  thread_info_class,
+                                  thread_info,
+                                  thread_information_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::query_idle_processor_cycle_time(USHORT group,
+                                                 PULONG buffer_length,
+                                                 PULONG64 processor_idle_cycle_time) {
+        if (QueryIdleProcessorCycleTimeEx(group,
+                                          buffer_length,
+                                          processor_idle_cycle_time)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool thread::query_cycle_time(HANDLE thread_handle,
+                                  PULONG64 cycle_time) {
+        if (!QueryThreadCycleTime(thread_handle,
+                                  cycle_time)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD_PTR thread::set_affinity_mask(HANDLE thread_handle,
+                                        DWORD_PTR thread_affinity_mask) {
+        DWORD_PTR ret = SetThreadAffinityMask(thread_handle,
+                                              thread_affinity_mask);
+        if (!ret) {
+            error_code = GetLastError();
+        }
+        return ret;
+    }
+
+    bool thread::set_stack_guarantee(PULONG bytes_stack) {
+        if (!SetThreadStackGuarantee(bytes_stack)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     DWORD thread::err_code() const {

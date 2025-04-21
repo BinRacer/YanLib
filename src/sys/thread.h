@@ -48,25 +48,22 @@ namespace YanLib::sys {
                            LPTHREAD_START_ROUTINE start_addr,
                            void *params,
                            size_t stack_size = 0,
+                           LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
                            LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
         bool create_remote_with_suspend(HANDLE proc_handle,
                                         LPTHREAD_START_ROUTINE start_addr,
                                         void *params,
                                         size_t stack_size = 0,
+                                        LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
                                         LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
         bool create_remote_with_stack_reserve(HANDLE proc_handle,
                                               LPTHREAD_START_ROUTINE start_addr,
                                               void *params,
                                               size_t stack_size,
+                                              LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
                                               LPSECURITY_ATTRIBUTES security_attrs = nullptr);
-
-        bool kill(HANDLE thread_handle, DWORD exit_code);
-
-        void kill_all(DWORD exit_code);
-
-        void exit(DWORD exit_code);
 
         HANDLE curr_thread_handle();
 
@@ -86,9 +83,124 @@ namespace YanLib::sys {
 
         std::vector<DWORD> thread_ids();
 
+        DWORD tls_alloc();
+
+        bool tls_free(DWORD tls_index);
+
+        void *tls_get(DWORD tls_index);
+
+        bool tls_set(DWORD tls_index, void *tls_value);
+
+        DWORD wait_for_input_idle(HANDLE proc_handle, DWORD milli_seconds);
+
+        bool attach_thread_input(DWORD id_attach,
+                                 DWORD id_attach_to,
+                                 bool is_attach);
+
+        bool init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                        DWORD attr_count,
+                                        DWORD flag,
+                                        PSIZE_T size);
+
+        bool update_proc_thread_attr(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                     DWORD flag,
+                                     DWORD_PTR attr,
+                                     void *value,
+                                     size_t bytes_size,
+                                     void *previous_value,
+                                     PSIZE_T ret_size);
+
+        void delete_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list);
+
+        DWORD suspend(HANDLE thread_handle);
+
+        DWORD resume(HANDLE thread_handle);
+
         bool wait(HANDLE thread_handle, DWORD milli_seconds = INFINITE);
 
         bool wait_all(bool is_wait_all = true, DWORD milli_seconds = INFINITE);
+
+        void sleep(DWORD milli_seconds);
+
+        DWORD sleep(DWORD milli_seconds, bool alertable);
+
+        bool yield();
+
+        bool kill(HANDLE thread_handle, DWORD exit_code);
+
+        void kill_all(DWORD exit_code);
+
+        void exit(DWORD exit_code);
+
+        DWORD exit_status(HANDLE thread_handle);
+
+        bool thread_info(HANDLE thread_handle,
+                         THREAD_INFORMATION_CLASS thread_info_class,
+                         void *thread_info,
+                         DWORD thread_info_size);
+
+        bool is_io_pending(HANDLE thread_handle);
+
+        int get_priority(HANDLE thread_handle);
+
+        bool set_priority(HANDLE thread_handle, int priority);
+
+        DWORD get_proc_priority(HANDLE proc_handle);
+
+        bool set_proc_priority(HANDLE proc_handle, DWORD priority);
+
+        bool get_priority_boost(HANDLE thread_handle);
+
+        bool set_priority_boost(HANDLE thread_handle,
+                                bool is_disable_priority_boost);
+
+        bool time_statistics(HANDLE thread_handle,
+                             LPFILETIME creation_time,
+                             LPFILETIME exit_time,
+                             LPFILETIME kernel_time,
+                             LPFILETIME user_time);
+
+        HRESULT get_description(HANDLE thread_handle,
+                                wchar_t **thread_description);
+
+        HRESULT set_description(HANDLE thread_handle,
+                                const wchar_t *thread_description);
+
+        bool get_group_affinity(HANDLE thread_handle,
+                                PGROUP_AFFINITY group_affinity);
+
+        bool set_group_affinity(HANDLE thread_handle,
+                                const GROUP_AFFINITY *group_affinity,
+                                PGROUP_AFFINITY previous_group_affinity);
+
+        bool get_ideal_processor(HANDLE thread_handle,
+                                 PPROCESSOR_NUMBER ideal_processor);
+
+        bool set_ideal_processor(HANDLE thread_handle,
+                                 PPROCESSOR_NUMBER ideal_processor,
+                                 PPROCESSOR_NUMBER previous_ideal_processor);
+
+        bool get_info(HANDLE thread_handle,
+                      THREAD_INFORMATION_CLASS thread_info_class,
+                      void *thread_info,
+                      DWORD thread_information_size);
+
+        bool set_info(HANDLE thread_handle,
+                      THREAD_INFORMATION_CLASS thread_info_class,
+                      void *thread_info,
+                      DWORD thread_information_size);
+
+        bool query_idle_processor_cycle_time(USHORT group,
+                                             PULONG buffer_length,
+                                             PULONG64 processor_idle_cycle_time);
+
+        bool query_cycle_time(HANDLE thread_handle,
+                              PULONG64 cycle_time);
+
+        DWORD_PTR set_affinity_mask(HANDLE thread_handle,
+                                    DWORD_PTR thread_affinity_mask);
+
+        bool set_stack_guarantee(PULONG bytes_stack);
 
         [[nodiscard]] DWORD err_code() const;
 

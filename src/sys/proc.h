@@ -35,7 +35,7 @@ namespace YanLib::sys {
 
         static NTSTATUS nt_query_info_proc(HANDLE proc_handle,
                                            PROCESSINFOCLASS proc_info_class,
-                                           PVOID proc_info,
+                                           void *proc_info,
                                            ULONG proc_info_len,
                                            PULONG ret_len);
 
@@ -230,6 +230,95 @@ namespace YanLib::sys {
         DWORD processor_num();
 
         DWORD exit_status(HANDLE proc_handle);
+
+        bool get_info(HANDLE proc_handle,
+                      PROCESS_INFORMATION_CLASS proc_info_class,
+                      void *proc_info,
+                      DWORD proc_info_size);
+
+        bool set_info(HANDLE proc_handle,
+                      PROCESS_INFORMATION_CLASS proc_info_class,
+                      void *proc_info,
+                      DWORD proc_info_size);
+
+        bool logical_processor_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buf,
+                                    PDWORD ret_len);
+
+        bool get_affinity_mask(HANDLE proc_handle,
+                               PDWORD_PTR proc_affinity_mask,
+                               PDWORD_PTR system_affinity_mask);
+
+        bool set_affinity_mask(HANDLE proc_handle,
+                               DWORD_PTR proc_affinity_mask);
+
+        bool get_group_affinity(HANDLE proc_handle,
+                                PUSHORT group_count,
+                                PUSHORT group_array);
+
+        bool io_counters(HANDLE proc_handle,
+                         PIO_COUNTERS io_counters);
+
+        bool get_mitigation_policy(HANDLE proc_handle,
+                                   PROCESS_MITIGATION_POLICY mitigation_policy,
+                                   void *buffer,
+                                   size_t len);
+
+        bool set_mitigation_policy(PROCESS_MITIGATION_POLICY mitigation_policy,
+                                   void *buffer,
+                                   size_t len);
+
+        bool get_priority_boost(HANDLE proc_handle);
+
+        bool set_priority_boost(HANDLE proc_handle,
+                                bool is_disable_priority_boost);
+
+        bool get_shutdown_params(LPDWORD level,
+                                 LPDWORD flag);
+
+        bool set_shutdown_params(DWORD level,
+                                 DWORD flag);
+
+        bool time_statistics(HANDLE proc_handle,
+                             LPFILETIME creation_time,
+                             LPFILETIME exit_time,
+                             LPFILETIME kernel_time,
+                             LPFILETIME user_time);
+
+        DWORD system_version(DWORD pid);
+
+        bool get_working_set_size(HANDLE proc_handle,
+                                  PSIZE_T min_working_set_size,
+                                  PSIZE_T max_working_set_size);
+
+        bool set_working_set_size(HANDLE proc_handle,
+                                  size_t min_working_set_size,
+                                  size_t max_working_set_size);
+
+        bool get_processor_system_cycle_time(USHORT group,
+                                             PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION buffer,
+                                             PDWORD ret_len);
+
+        STARTUPINFOW startup_info();
+
+        bool is_microsoft_store_app(HANDLE proc_handle);
+
+        bool is_exe_search_path(const wchar_t *exe_name);
+
+        bool query_full_image_name(HANDLE proc_handle,
+                                   DWORD flag,
+                                   wchar_t *exe_name,
+                                   PDWORD size);
+
+        bool get_affinity_update_mode(HANDLE proc_handle,
+                                      LPDWORD flag);
+
+        bool set_affinity_update_mode(HANDLE proc_handle,
+                                      DWORD flag);
+
+        bool all_thread_cycle_time(HANDLE proc_handle,
+                                   PULONG64 cycle_time);
+
+        bool set_restriction_exemption(bool is_enable_exemption);
 
         bool kill(HANDLE proc_handle, UINT exit_code);
 

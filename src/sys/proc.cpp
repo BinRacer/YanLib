@@ -49,12 +49,12 @@ namespace YanLib::sys {
 
     NTSTATUS proc::nt_query_info_proc(HANDLE proc_handle,
                                       PROCESSINFOCLASS proc_info_class,
-                                      PVOID proc_info,
+                                      void *proc_info,
                                       ULONG proc_info_len,
                                       PULONG ret_len) {
         typedef NTSTATUS (CALLBACK *pfn)(HANDLE ProcessHandle,
                                          PROCESSINFOCLASS ProcessInformationClass,
-                                         PVOID ProcessInformation,
+                                         void *ProcessInformation,
                                          ULONG ProcessInformationLength,
                                          PULONG ReturnLength OPTIONAL);
         NTSTATUS status = -1;
@@ -880,7 +880,7 @@ namespace YanLib::sys {
 
     int proc::get_thread_priority(HANDLE thread_handle) {
         int priority = GetThreadPriority(thread_handle);
-        if (!priority) {
+        if (priority == THREAD_PRIORITY_ERROR_RETURN) {
             error_code = GetLastError();
         }
         return priority;
@@ -920,6 +920,276 @@ namespace YanLib::sys {
             error_code = GetLastError();
         }
         return exit_status;
+    }
+
+    bool proc::get_info(HANDLE proc_handle,
+                        PROCESS_INFORMATION_CLASS proc_info_class,
+                        void *proc_info,
+                        DWORD proc_info_size) {
+        if (!GetProcessInformation(proc_handle,
+                                   proc_info_class,
+                                   proc_info,
+                                   proc_info_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_info(HANDLE proc_handle,
+                        PROCESS_INFORMATION_CLASS proc_info_class,
+                        void *proc_info,
+                        DWORD proc_info_size) {
+        if (!SetProcessInformation(proc_handle,
+                                   proc_info_class,
+                                   proc_info,
+                                   proc_info_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::logical_processor_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buf,
+                                      PDWORD ret_len) {
+        if (!GetLogicalProcessorInformation(buf, ret_len)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_affinity_mask(HANDLE proc_handle,
+                                 PDWORD_PTR proc_affinity_mask,
+                                 PDWORD_PTR system_affinity_mask) {
+        if (!GetProcessAffinityMask(proc_handle,
+                                    proc_affinity_mask,
+                                    system_affinity_mask)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_affinity_mask(HANDLE proc_handle,
+                                 DWORD_PTR proc_affinity_mask) {
+        if (!SetProcessAffinityMask(proc_handle,
+                                    proc_affinity_mask)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_group_affinity(HANDLE proc_handle,
+                                  PUSHORT group_count,
+                                  PUSHORT group_array) {
+        if (!GetProcessGroupAffinity(proc_handle,
+                                     group_count,
+                                     group_array)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::io_counters(HANDLE proc_handle,
+                           PIO_COUNTERS io_counters) {
+        if (!GetProcessIoCounters(proc_handle,
+                                  io_counters)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_mitigation_policy(HANDLE proc_handle,
+                                     PROCESS_MITIGATION_POLICY mitigation_policy,
+                                     void *buffer,
+                                     size_t len) {
+        if (!GetProcessMitigationPolicy(proc_handle,
+                                        mitigation_policy,
+                                        buffer,
+                                        len)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_mitigation_policy(PROCESS_MITIGATION_POLICY mitigation_policy,
+                                     void *buffer,
+                                     size_t len) {
+        if (!SetProcessMitigationPolicy(mitigation_policy,
+                                        buffer,
+                                        len)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_priority_boost(HANDLE proc_handle) {
+        int is_disable_priority_boost = 0;
+        if (!GetProcessPriorityBoost(proc_handle, &is_disable_priority_boost)) {
+            error_code = GetLastError();
+        }
+        return is_disable_priority_boost;
+    }
+
+    bool proc::set_priority_boost(HANDLE proc_handle,
+                                  bool is_disable_priority_boost) {
+        if (!SetProcessPriorityBoost(proc_handle,
+                                     is_disable_priority_boost ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_shutdown_params(LPDWORD level, LPDWORD flag) {
+        if (!GetProcessShutdownParameters(level, flag)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_shutdown_params(DWORD level, DWORD flag) {
+        if (!SetProcessShutdownParameters(level, flag)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::time_statistics(HANDLE proc_handle,
+                               LPFILETIME creation_time,
+                               LPFILETIME exit_time,
+                               LPFILETIME kernel_time,
+                               LPFILETIME user_time) {
+        if (!GetProcessTimes(proc_handle,
+                             creation_time,
+                             exit_time,
+                             kernel_time,
+                             user_time)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD proc::system_version(DWORD pid) {
+        DWORD version = GetProcessVersion(pid);
+        if (!version) {
+            error_code = GetLastError();
+        }
+        return version;
+    }
+
+    bool proc::get_working_set_size(HANDLE proc_handle,
+                                    PSIZE_T min_working_set_size,
+                                    PSIZE_T max_working_set_size) {
+        if (GetProcessWorkingSetSize(proc_handle,
+                                     min_working_set_size,
+                                     max_working_set_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_working_set_size(HANDLE proc_handle,
+                                    size_t min_working_set_size,
+                                    size_t max_working_set_size) {
+        if (SetProcessWorkingSetSize(proc_handle,
+                                     min_working_set_size,
+                                     max_working_set_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_processor_system_cycle_time(USHORT group,
+                                               PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION buffer,
+                                               PDWORD ret_len) {
+        if (!GetProcessorSystemCycleTime(group,
+                                         buffer,
+                                         ret_len)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    STARTUPINFOW proc::startup_info() {
+        STARTUPINFOW startup_info;
+        GetStartupInfoW(&startup_info);
+        return startup_info;
+    }
+
+    bool proc::is_microsoft_store_app(HANDLE proc_handle) {
+        if (!IsImmersiveProcess(proc_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::is_exe_search_path(const wchar_t *exe_name) {
+        return NeedCurrentDirectoryForExePathW(exe_name);
+    }
+
+    bool proc::query_full_image_name(HANDLE proc_handle,
+                                     DWORD flag,
+                                     wchar_t *exe_name,
+                                     PDWORD size) {
+        if (!QueryFullProcessImageNameW(proc_handle,
+                                        flag,
+                                        exe_name,
+                                        size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_affinity_update_mode(HANDLE proc_handle,
+                                        LPDWORD flag) {
+        if (!QueryProcessAffinityUpdateMode(proc_handle,
+                                            flag)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_affinity_update_mode(HANDLE proc_handle, DWORD flag) {
+        if (!SetProcessAffinityUpdateMode(proc_handle,
+                                          flag)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::all_thread_cycle_time(HANDLE proc_handle, PULONG64 cycle_time) {
+        if (!QueryProcessCycleTime(proc_handle,
+                                   cycle_time)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::set_restriction_exemption(bool is_enable_exemption) {
+        if (!SetProcessRestrictionExemption(
+            is_enable_exemption ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool proc::kill(HANDLE proc_handle, UINT exit_code) {
@@ -1145,7 +1415,7 @@ namespace YanLib::sys {
 
     bool proc::resume_child() {
         if (pi.hThread) {
-            if (ResumeThread(pi.hThread) == -1) {
+            if (ResumeThread(pi.hThread) == static_cast<DWORD>(-1)) {
                 error_code = GetLastError();
                 return false;
             }

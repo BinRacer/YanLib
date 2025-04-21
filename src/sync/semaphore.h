@@ -33,7 +33,7 @@ namespace YanLib::sync {
 
         bool open(const wchar_t *name,
                   DWORD desired_access = SEMAPHORE_ALL_ACCESS,
-                  BOOL inherit_handle = FALSE);
+                  bool inherit_handle = false);
 
         bool wait(DWORD milli_seconds = INFINITE);
 

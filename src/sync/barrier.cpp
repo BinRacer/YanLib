@@ -20,17 +20,16 @@ namespace YanLib::sync {
     }
 
     bool barrier::enter(DWORD flag) {
-        const BOOL ret = EnterSynchronizationBarrier(&synchronization_barrier, flag);
-        return ret == TRUE;
+        return EnterSynchronizationBarrier(&synchronization_barrier, flag);
     }
 
     bool barrier::wait(DWORD count,
                        const HANDLE *handles,
-                       BOOL wait_all,
+                       bool wait_all,
                        DWORD milli_seconds) {
         DWORD ret = WaitForMultipleObjects(count,
                                            handles,
-                                           wait_all,
+                                           wait_all ? TRUE : FALSE,
                                            milli_seconds);
         if (ret == WAIT_FAILED) {
             error_code = GetLastError();

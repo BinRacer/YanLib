@@ -40,7 +40,16 @@ namespace YanLib::sys {
                           TOKEN_TYPE token_type = TokenPrimary);
 
         void *create_env_block(HANDLE token_handle,
-                               BOOL is_inherit = FALSE);
+                               bool is_inherit = false);
+
+        SECURITY_ATTRIBUTES create_attrs(bool is_inherit = true,
+                                         PSECURITY_DESCRIPTOR security_descriptor = nullptr);
+
+        SECURITY_DESCRIPTOR create_descriptor(bool is_dacl_present = true,
+                                              PACL pDacl = nullptr,
+                                              bool is_dacl_defaulted = false);
+
+        bool is_valid_descriptor(PSECURITY_DESCRIPTOR security_descriptor);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool enable_privilege(HANDLE proc_handle,

@@ -30,8 +30,10 @@ namespace YanLib::sync {
 
     bool semaphore::open(const wchar_t *name,
                          DWORD desired_access,
-                         BOOL inherit_handle) {
-        semaphore_handle = OpenSemaphoreW(desired_access, inherit_handle, name);
+                         bool inherit_handle) {
+        semaphore_handle = OpenSemaphoreW(desired_access,
+                                          inherit_handle ? TRUE : FALSE,
+                                          name);
         error_code = GetLastError();
         return semaphore_handle != nullptr;
     }

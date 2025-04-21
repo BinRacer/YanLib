@@ -19,7 +19,7 @@ namespace YanLib::sync {
         EnterCriticalSection(&critical_section);
     }
 
-    BOOL condVarCS::try_lock() {
+    bool condVarCS::try_lock() {
         return TryEnterCriticalSection(&critical_section);
     }
 
@@ -55,7 +55,7 @@ namespace sync {
         AcquireSRWLockShared(&rw_lock);
     }
 
-    BOOLEAN condVarSRW::try_read_lock() {
+    bool condVarSRW::try_read_lock() {
         return TryAcquireSRWLockShared(&rw_lock);
     }
 
@@ -67,7 +67,7 @@ namespace sync {
         AcquireSRWLockExclusive(&rw_lock);
     }
 
-    BOOLEAN condVarSRW::try_write_lock() {
+    bool condVarSRW::try_write_lock() {
         return TryAcquireSRWLockExclusive(&rw_lock);
     }
 

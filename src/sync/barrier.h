@@ -32,7 +32,7 @@ namespace YanLib::sync {
 
         bool wait(DWORD count,
                   const HANDLE *handles,
-                  BOOL wait_all = TRUE,
+                  bool wait_all = false,
                   DWORD milli_seconds = INFINITE);
 
         [[nodiscard]] DWORD err_code() const;

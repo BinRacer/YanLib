@@ -17,12 +17,12 @@ namespace YanLib::sync {
     }
 
     bool event::create(LPSECURITY_ATTRIBUTES event_attrs,
-                       BOOL is_manual_reset,
-                       BOOL is_initial_state,
+                       bool is_manual_reset,
+                       bool is_initial_state,
                        const wchar_t *name) {
         event_handle = CreateEventW(event_attrs,
-                                    is_manual_reset,
-                                    is_initial_state,
+                                    is_manual_reset ? TRUE : FALSE,
+                                    is_initial_state ? TRUE : FALSE,
                                     name);
         error_code = GetLastError();
         return event_handle != nullptr;
@@ -30,9 +30,9 @@ namespace YanLib::sync {
 
     bool event::open(const wchar_t *name,
                      DWORD desired_access,
-                     BOOL is_inherit_handle) {
+                     bool is_inherit_handle) {
         event_handle = OpenEventW(desired_access,
-                                  is_inherit_handle,
+                                  is_inherit_handle ? TRUE : FALSE,
                                   name);
         error_code = GetLastError();
         return event_handle != nullptr;

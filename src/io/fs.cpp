@@ -172,7 +172,7 @@ namespace YanLib::io {
         std::string raw_data;
         raw_data.reserve(buffer_size);
         DWORD bytes_read = 0;
-        BOOL ret = FALSE;
+        bool ret = false;
         do {
             ret = ReadFile(
                 file_handle,
@@ -200,7 +200,7 @@ namespace YanLib::io {
         std::wstring raw_data;
         raw_data.reserve(buffer_size);
         DWORD bytes_read = 0;
-        BOOL ret = FALSE;
+        bool ret = false;
         do {
             ret = ReadFile(
                 file_handle,
@@ -248,7 +248,7 @@ namespace YanLib::io {
         std::vector<uint8_t> raw_data;
         raw_data.reserve(buffer_size);
         DWORD bytes_read = 0;
-        BOOL ret = FALSE;
+        bool ret = false;
         do {
             ret = ReadFile(
                 file_handle,

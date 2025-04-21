@@ -32,7 +32,7 @@ namespace YanLib::sync {
 
         void lock();
 
-        BOOL try_lock();
+        bool try_lock();
 
         void unlock();
     };

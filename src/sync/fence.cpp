@@ -25,7 +25,7 @@ namespace YanLib::sync {
         EnterCriticalSection(&critical_section);
     }
 
-    BOOL fence::try_lock() {
+    bool fence::try_lock() {
         return TryEnterCriticalSection(&critical_section);
     }
 

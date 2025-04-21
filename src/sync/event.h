@@ -27,13 +27,13 @@ namespace YanLib::sync {
         ~event();
 
         bool create(LPSECURITY_ATTRIBUTES event_attrs = nullptr,
-                    BOOL is_manual_reset = FALSE,
-                    BOOL is_initial_state = FALSE,
+                    bool is_manual_reset = false,
+                    bool is_initial_state = false,
                     const wchar_t *name = nullptr);
 
         bool open(const wchar_t *name,
                   DWORD desired_access = EVENT_ALL_ACCESS,
-                  BOOL is_inherit_handle = FALSE);
+                  bool is_inherit_handle = false);
 
         bool on();
 

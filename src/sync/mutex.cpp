@@ -17,17 +17,21 @@ namespace YanLib::sync {
     }
 
     bool mutex::create(LPSECURITY_ATTRIBUTES mutex_attrs,
-                       BOOL is_initial_owner,
+                       bool is_initial_owner,
                        const wchar_t *name) {
-        mutex_handle = CreateMutexW(mutex_attrs, is_initial_owner, name);
+        mutex_handle = CreateMutexW(mutex_attrs,
+                                    is_initial_owner ? TRUE : FALSE,
+                                    name);
         error_code = GetLastError();
         return mutex_handle != nullptr;
     }
 
     bool mutex::open(const wchar_t *name,
                      DWORD desired_access,
-                     BOOL is_inherit_handle) {
-        mutex_handle = OpenMutexW(desired_access, is_inherit_handle, name);
+                     bool is_inherit_handle) {
+        mutex_handle = OpenMutexW(desired_access,
+                                  is_inherit_handle ? TRUE : FALSE,
+                                  name);
         error_code = GetLastError();
         return mutex_handle != nullptr;
     }

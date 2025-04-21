@@ -13,7 +13,7 @@ namespace YanLib::sync {
         AcquireSRWLockShared(&rw_lock);
     }
 
-    BOOLEAN rwlock::try_read_lock() {
+    bool rwlock::try_read_lock() {
         return TryAcquireSRWLockShared(&rw_lock);
     }
 
@@ -25,7 +25,7 @@ namespace YanLib::sync {
         AcquireSRWLockExclusive(&rw_lock);
     }
 
-    BOOLEAN rwlock::try_write_lock() {
+    bool rwlock::try_write_lock() {
         return TryAcquireSRWLockExclusive(&rw_lock);
     }
 

@@ -76,17 +76,51 @@ namespace YanLib::sys {
         return ret_token;
     }
 
-    void *security::create_env_block(HANDLE token_handle, BOOL is_inherit) {
+    void *security::create_env_block(HANDLE token_handle, bool is_inherit) {
         if (env) {
             cleanup();
         }
         if (!CreateEnvironmentBlock(&env,
                                     token_handle,
-                                    is_inherit)) {
+                                    is_inherit ? TRUE : FALSE)) {
             error_code = GetLastError();
             return nullptr;
         }
         return env;
+    }
+
+    SECURITY_ATTRIBUTES security::create_attrs(bool is_inherit,
+                                               PSECURITY_DESCRIPTOR security_descriptor) {
+        SECURITY_ATTRIBUTES attrs;
+        attrs.nLength = sizeof(SECURITY_ATTRIBUTES);
+        attrs.bInheritHandle = is_inherit ? TRUE : FALSE;
+        attrs.lpSecurityDescriptor = security_descriptor;
+        return attrs;
+    }
+
+    SECURITY_DESCRIPTOR security::create_descriptor(bool is_dacl_present,
+                                                    PACL pDacl,
+                                                    bool is_dacl_defaulted) {
+        SECURITY_DESCRIPTOR sd;
+        do {
+            if (!InitializeSecurityDescriptor(&sd,
+                                              SECURITY_DESCRIPTOR_REVISION)) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!SetSecurityDescriptorDacl(&sd,
+                                           is_dacl_present ? TRUE : FALSE,
+                                           pDacl,
+                                           is_dacl_defaulted ? TRUE : FALSE)) {
+                error_code = GetLastError();
+                break;
+            }
+        } while (false);
+        return sd;
+    }
+
+    bool security::is_valid_descriptor(PSECURITY_DESCRIPTOR security_descriptor) {
+        return IsValidSecurityDescriptor(security_descriptor);
     }
 
     bool security::enable_privilege(HANDLE proc_handle,
@@ -223,7 +257,7 @@ namespace YanLib::sys {
         helper::autoclean<HANDLE> token_handle(nullptr);
         helper::autoclean<HANDLE> filter_token_handle(nullptr);
         TOKEN_ELEVATION_TYPE token_type = TokenElevationTypeDefault;
-        BOOL is_admin = FALSE;
+        int is_admin = 0;
         DWORD size = 0;
         do {
             if (!OpenProcessToken(process_handle,

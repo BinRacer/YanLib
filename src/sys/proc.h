@@ -56,7 +56,7 @@ namespace YanLib::sys {
                     wchar_t *cmdline = nullptr,
                     LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
                     LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                    BOOL is_inherit_handles = FALSE,
+                    bool is_inherit_handles = false,
                     DWORD create_flag = 0,
                     void *env = nullptr,
                     const wchar_t *curr_dir = nullptr);
@@ -65,7 +65,7 @@ namespace YanLib::sys {
                                    wchar_t *cmdline = nullptr,
                                    LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
                                    LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                                   BOOL is_inherit_handles = FALSE,
+                                   bool is_inherit_handles = false,
                                    DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                        CREATE_SUSPENDED,
                                    void *env = nullptr,
@@ -76,7 +76,7 @@ namespace YanLib::sys {
                             wchar_t *cmdline = nullptr,
                             LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
                             LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                            BOOL is_inherit_handles = FALSE,
+                            bool is_inherit_handles = false,
                             DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                 CREATE_UNICODE_ENVIRONMENT,
                             void *env = nullptr,
@@ -87,7 +87,7 @@ namespace YanLib::sys {
                                  wchar_t *cmdline = nullptr,
                                  LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
                                  LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                                 BOOL is_inherit_handles = FALSE,
+                                 bool is_inherit_handles = false,
                                  DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                                      CREATE_UNICODE_ENVIRONMENT |
                                                      CREATE_NEW_CONSOLE,
@@ -231,7 +231,9 @@ namespace YanLib::sys {
 
         DWORD exit_status(HANDLE proc_handle);
 
-        void kill(UINT exit_code);
+        bool kill(HANDLE proc_handle, UINT exit_code);
+
+        void exit(UINT exit_code);
 
         bool fake_proc(HANDLE proc_handle,
                        const wchar_t *app_name,
@@ -247,7 +249,7 @@ namespace YanLib::sys {
 
         HANDLE pid_to_handle(DWORD pid,
                              DWORD desired_access = PROCESS_ALL_ACCESS,
-                             BOOL is_inherit_handle = FALSE);
+                             bool is_inherit_handle = false);
 
         DWORD handle_to_pid(HANDLE proc_handle);
 

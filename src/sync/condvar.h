@@ -27,7 +27,7 @@ namespace YanLib::sync {
 
         void lock();
 
-        BOOL try_lock();
+        bool try_lock();
 
         void unlock();
 
@@ -60,13 +60,13 @@ namespace sync {
 
         void read_lock();
 
-        BOOLEAN try_read_lock();
+        bool try_read_lock();
 
         void read_unlock();
 
         void write_lock();
 
-        BOOLEAN try_write_lock();
+        bool try_write_lock();
 
         void write_unlock();
 

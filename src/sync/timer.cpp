@@ -17,10 +17,10 @@ namespace YanLib::sync {
     }
 
     bool timer::create(LPSECURITY_ATTRIBUTES timer_attrs,
-                       BOOL is_manual_reset,
+                       bool is_manual_reset,
                        const wchar_t *timer_name) {
         timer_handle = CreateWaitableTimerW(timer_attrs,
-                                            is_manual_reset,
+                                            is_manual_reset ? TRUE : FALSE,
                                             timer_name);
         error_code = GetLastError();
         return timer_handle != nullptr;
@@ -28,9 +28,9 @@ namespace YanLib::sync {
 
     bool timer::open(const wchar_t *timer_name,
                      DWORD desired_access,
-                     BOOL is_inherit_handle) {
+                     bool is_inherit_handle) {
         timer_handle = OpenWaitableTimerW(desired_access,
-                                          is_inherit_handle,
+                                          is_inherit_handle ? TRUE : FALSE,
                                           timer_name);
         error_code = GetLastError();
         return timer_handle != nullptr;
@@ -39,8 +39,8 @@ namespace YanLib::sync {
     bool timer::set_timer(const LARGE_INTEGER *due_time,
                           LONG period,
                           PTIMERAPCROUTINE pfn_completion_routine,
-                          void* arg_to_completion_routine,
-                          BOOL is_resume) {
+                          void *arg_to_completion_routine,
+                          bool is_resume) {
         // SYSTEMTIME st = {0};
         // FILETIME ftLocal, ftUTC;
         // LARGE_INTEGER li;
@@ -67,7 +67,7 @@ namespace YanLib::sync {
                                              period,
                                              pfn_completion_routine,
                                              arg_to_completion_routine,
-                                             is_resume)) {
+                                             is_resume ? TRUE : FALSE)) {
             return true;
         }
         error_code = GetLastError();

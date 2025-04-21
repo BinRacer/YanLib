@@ -166,7 +166,7 @@ namespace YanLib::io {
     }
 
     bool ftp::read(HINTERNET file_handle,
-                   void* buf,
+                   void *buf,
                    DWORD size,
                    LPDWORD ret_size) {
         if (!InternetReadFile(file_handle,
@@ -407,14 +407,14 @@ namespace YanLib::io {
 
     bool ftp::download(const wchar_t *remote_file,
                        const wchar_t *new_file,
-                       BOOL is_fail_if_exists,
+                       bool is_fail_if_exists,
                        DWORD flags_and_attrs,
                        DWORD flag,
                        DWORD_PTR context) {
         if (!FtpGetFileW(session_read_handle,
                          remote_file,
                          new_file,
-                         is_fail_if_exists,
+                         is_fail_if_exists ? TRUE : FALSE,
                          flags_and_attrs,
                          flag, context)) {
             error_code = GetLastError();

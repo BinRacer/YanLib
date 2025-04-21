@@ -85,7 +85,7 @@ namespace YanLib::sys {
                       wchar_t *cmdline,
                       LPSECURITY_ATTRIBUTES proc_attrs,
                       LPSECURITY_ATTRIBUTES thread_attrs,
-                      BOOL is_inherit_handles,
+                      bool is_inherit_handles,
                       DWORD create_flag,
                       void *env,
                       const wchar_t *curr_dir) {
@@ -94,7 +94,7 @@ namespace YanLib::sys {
                             cmdline,
                             proc_attrs,
                             thread_attrs,
-                            is_inherit_handles,
+                            is_inherit_handles ? TRUE : FALSE,
                             create_flag,
                             env,
                             curr_dir,
@@ -110,7 +110,7 @@ namespace YanLib::sys {
                                      wchar_t *cmdline,
                                      LPSECURITY_ATTRIBUTES proc_attrs,
                                      LPSECURITY_ATTRIBUTES thread_attrs,
-                                     BOOL is_inherit_handles,
+                                     bool is_inherit_handles,
                                      DWORD create_flag,
                                      void *env,
                                      const wchar_t *curr_dir) {
@@ -119,7 +119,7 @@ namespace YanLib::sys {
                             cmdline,
                             proc_attrs,
                             thread_attrs,
-                            is_inherit_handles,
+                            is_inherit_handles ? TRUE : FALSE,
                             create_flag,
                             env,
                             curr_dir,
@@ -136,7 +136,7 @@ namespace YanLib::sys {
                               wchar_t *cmdline,
                               LPSECURITY_ATTRIBUTES proc_attrs,
                               LPSECURITY_ATTRIBUTES thread_attrs,
-                              BOOL is_inherit_handles,
+                              bool is_inherit_handles,
                               DWORD create_flag,
                               void *env,
                               const wchar_t *curr_dir) {
@@ -157,7 +157,7 @@ namespace YanLib::sys {
                                   cmdline,
                                   proc_attrs,
                                   thread_attrs,
-                                  is_inherit_handles,
+                                  is_inherit_handles ? TRUE : FALSE,
                                   create_flag,
                                   environment,
                                   curr_dir,
@@ -173,7 +173,7 @@ namespace YanLib::sys {
                                    wchar_t *cmdline,
                                    LPSECURITY_ATTRIBUTES proc_attrs,
                                    LPSECURITY_ATTRIBUTES thread_attrs,
-                                   BOOL is_inherit_handles,
+                                   bool is_inherit_handles,
                                    DWORD create_flag,
                                    void *env,
                                    const wchar_t *curr_dir) {
@@ -200,7 +200,7 @@ namespace YanLib::sys {
                                   cmdline,
                                   proc_attrs,
                                   thread_attrs,
-                                  is_inherit_handles,
+                                  is_inherit_handles ? TRUE : FALSE,
                                   create_flag,
                                   environment,
                                   curr_dir,
@@ -922,7 +922,15 @@ namespace YanLib::sys {
         return exit_status;
     }
 
-    void proc::kill(UINT exit_code) {
+    bool proc::kill(HANDLE proc_handle, UINT exit_code) {
+        if (!TerminateProcess(proc_handle, exit_code)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void proc::exit(UINT exit_code) {
         ExitProcess(exit_code);
     }
 
@@ -1016,9 +1024,9 @@ namespace YanLib::sys {
 
     HANDLE proc::pid_to_handle(DWORD pid,
                                DWORD desired_access,
-                               BOOL is_inherit_handle) {
+                               bool is_inherit_handle) {
         HANDLE proc_handle = OpenProcess(desired_access,
-                                         is_inherit_handle,
+                                         is_inherit_handle ? TRUE : FALSE,
                                          pid);
         if (!proc_handle) {
             error_code = GetLastError();

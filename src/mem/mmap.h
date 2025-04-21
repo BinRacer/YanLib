@@ -37,7 +37,7 @@ namespace YanLib::mem {
 
         bool open(const wchar_t *mmap_name,
                   DWORD desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
-                  BOOL is_inherit_handle = FALSE);
+                  bool is_inherit_handle = false);
 
         int64_t size();
 

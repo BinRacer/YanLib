@@ -114,7 +114,7 @@ namespace YanLib::io {
 
         bool download(const wchar_t *remote_file,
                       const wchar_t *new_file,
-                      BOOL is_fail_if_exists = FALSE,
+                      bool is_fail_if_exists = false,
                       DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                       DWORD flag = FTP_TRANSFER_TYPE_BINARY |
                                    INTERNET_FLAG_RELOAD |

@@ -40,22 +40,22 @@ namespace YanLib::mem {
         }
 
         file_handle = CreateFileW(file_name,
-                            GENERIC_READ | GENERIC_WRITE,
-                            FILE_SHARE_READ | FILE_SHARE_WRITE,
-                            nullptr,
-                            OPEN_EXISTING,
-                            FILE_ATTRIBUTE_NORMAL,
-                            nullptr);
+                                  GENERIC_READ | GENERIC_WRITE,
+                                  FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                  nullptr,
+                                  OPEN_EXISTING,
+                                  FILE_ATTRIBUTE_NORMAL,
+                                  nullptr);
         if (file_handle == INVALID_HANDLE_VALUE) {
             error_code = GetLastError();
             return false;
         }
         map_file_handle = CreateFileMappingW(file_handle,
-                                      file_mapping_attrs,
-                                      protect_flag,
-                                      max_high,
-                                      max_low,
-                                      mmap_name);
+                                             file_mapping_attrs,
+                                             protect_flag,
+                                             max_high,
+                                             max_low,
+                                             mmap_name);
         if (!map_file_handle) {
             error_code = GetLastError();
             return false;
@@ -65,15 +65,15 @@ namespace YanLib::mem {
 
     bool mmap::open(const wchar_t *mmap_name,
                     DWORD desired_access,
-                    BOOL is_inherit_handle) {
+                    bool is_inherit_handle) {
         // avoid open map twice
         if (file_handle != INVALID_HANDLE_VALUE || map_file_handle) {
             return false;
         }
 
         map_file_handle = OpenFileMappingW(desired_access,
-                                    is_inherit_handle,
-                                    mmap_name);
+                                           is_inherit_handle ? TRUE : FALSE,
+                                           mmap_name);
         if (!map_file_handle) {
             error_code = GetLastError();
             return false;
@@ -97,10 +97,10 @@ namespace YanLib::mem {
                          DWORD file_offset_low,
                          SIZE_T size) {
         address = static_cast<uint8_t *>(MapViewOfFile(map_file_handle,
-                                                        desired_access,
-                                                        file_offset_high,
-                                                        file_offset_low,
-                                                        size));
+                                                       desired_access,
+                                                       file_offset_high,
+                                                       file_offset_low,
+                                                       size));
         if (!address) {
             error_code = GetLastError();
             return false;

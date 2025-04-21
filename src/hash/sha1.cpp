@@ -4,7 +4,7 @@
 
 #include "sha1.h"
 #include "helper/convert.h"
-#include "../io/fs.h"
+#include "io/fs.h"
 
 namespace YanLib::hash {
     sha1::sha1(const std::vector<uint8_t> &data) {

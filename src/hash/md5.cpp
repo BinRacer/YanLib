@@ -4,7 +4,7 @@
 
 #include "md5.h"
 #include "helper/convert.h"
-#include "../io/fs.h"
+#include "io/fs.h"
 
 namespace YanLib::hash {
     md5::md5(const std::vector<uint8_t> &data) {

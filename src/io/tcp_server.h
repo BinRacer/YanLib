@@ -7,7 +7,7 @@
 #include <winsock2.h>
 #include <string>
 #include <list>
-#include "../sync/rwlock.h"
+#include "sync/rwlock.h"
 
 #pragma comment(lib, "ws2_32.lib")
 namespace YanLib::io {

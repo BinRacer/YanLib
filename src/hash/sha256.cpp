@@ -4,7 +4,7 @@
 
 #include "sha256.h"
 #include "helper/convert.h"
-#include "../io/fs.h"
+#include "io/fs.h"
 
 namespace YanLib::hash {
     sha256::sha256(const std::vector<uint8_t> &data) {

@@ -6,10 +6,14 @@
 #define THREAD_H
 #include <Windows.h>
 #include <string>
+#include <unordered_map>
+#include "sync/rwlock.h"
 
 namespace YanLib::sys {
     class thread {
     private:
+        std::unordered_map<DWORD, HANDLE> thread_records = {};
+        sync::rwlock rwlock = {};
         DWORD error_code = 0;
 
     public:

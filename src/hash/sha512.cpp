@@ -4,7 +4,7 @@
 
 #include "sha512.h"
 #include "helper/convert.h"
-#include "../io/fs.h"
+#include "io/fs.h"
 
 namespace YanLib::hash {
     sha512::sha512(const std::vector<uint8_t> &data) {

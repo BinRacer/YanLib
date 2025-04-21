@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <string>
 #include <list>
-#include "../sync/rwlock.h"
+#include "sync/rwlock.h"
 
 namespace YanLib::mem {
     class allocate {

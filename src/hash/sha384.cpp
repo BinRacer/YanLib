@@ -4,7 +4,7 @@
 
 #include "sha384.h"
 #include "helper/convert.h"
-#include "../io/fs.h"
+#include "io/fs.h"
 
 namespace YanLib::hash {
     sha384::sha384(const std::vector<uint8_t> &data) {

@@ -96,6 +96,8 @@ add_library(YanLib STATIC
         src/sys/proc.h
         src/sys/thread.cpp
         src/sys/thread.h
+        src/sys/thread_pool.cpp
+        src/sys/thread_pool.h
 )
 
 target_include_directories(YanLib

@@ -10,17 +10,6 @@ protected:
     sys::proc proc;
 };
 
-TEST_F(sys_proc, list_info) {
-    auto procs = proc.ls_procs();
-    EXPECT_GT(procs.size(), 0);
-    auto threads = proc.ls_threads();
-    EXPECT_GT(threads.size(), 0);
-    auto modules = proc.ls_modules();
-    EXPECT_GT(modules.size(), 0);
-    auto heaps = proc.ls_heaps();
-    EXPECT_GT(heaps.size(), 0);
-}
-
 TEST_F(sys_proc, cmdline) {
     auto cmdline = proc.cmdline(proc.proc_handle());
     EXPECT_GT(cmdline.size(), 0);

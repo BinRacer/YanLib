@@ -98,6 +98,8 @@ add_library(YanLib STATIC
         src/sys/thread.h
         src/sys/thread_pool.cpp
         src/sys/thread_pool.h
+        src/sys/fiber.cpp
+        src/sys/fiber.h
 )
 
 target_include_directories(YanLib

@@ -12,9 +12,9 @@
 namespace YanLib::mem {
     class allocate {
     private:
-        std::list<void *> memory_ptr_list;
-        DWORD error_code;
-        sync::rwlock rwlock;
+        std::list<void *> mem_list = {};
+        sync::rwlock rwlock = {};
+        DWORD error_code = 0;
 
     public:
         allocate(const allocate &other) = delete;
@@ -25,7 +25,7 @@ namespace YanLib::mem {
 
         allocate &operator=(allocate &&other) = delete;
 
-        allocate();
+        allocate() = default;
 
         ~allocate();
 

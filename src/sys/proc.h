@@ -187,6 +187,8 @@ namespace YanLib::sys {
                        PMEMORY_BASIC_INFORMATION buffer,
                        size_t len);
 
+        bool global_mem_status(LPMEMORYSTATUSEX buffer);
+
         bool read(HANDLE proc_handle,
                   const void *base_addr,
                   void *buf,

@@ -6,62 +6,61 @@
 #include "helper/convert.h"
 
 namespace YanLib::mem {
-    heap::heap() : heap_handle(nullptr), error_code(0) {
-    }
-
     heap::~heap() {
-        if (heap_handle) {
-            HeapDestroy(heap_handle);
-            heap_handle = nullptr;
+        if (!heap_handles.empty()) {
+            for (auto &heap_handle: heap_handles) {
+                HeapDestroy(heap_handle);
+                heap_handle = nullptr;
+            }
+            heap_handles.clear();
         }
     }
 
-    bool heap::create(DWORD options,
-                      size_t initial_size,
-                      size_t maximum_size) {
-        // avoid create heap twice
-        if (heap_handle) {
-            return false;
-        }
-        heap_handle = HeapCreate(options,
-                                 initial_size,
-                                 maximum_size);
+    HANDLE heap::create(DWORD options,
+                        size_t initial_size,
+                        size_t maximum_size) {
+        HANDLE heap_handle = HeapCreate(options,
+                                        initial_size,
+                                        maximum_size);
         if (!heap_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        return true;
+        heap_rwlock.write_lock();
+        heap_handles.push_back(heap_handle);
+        heap_rwlock.write_unlock();
+        return heap_handle;
     }
 
-    bool heap::open_proc_heap() {
-        // avoid open heap twice
-        if (heap_handle) {
-            return false;
-        }
-        heap_handle = GetProcessHeap();
+    HANDLE heap::open() {
+        HANDLE heap_handle = GetProcessHeap();
         if (!heap_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        return true;
+        heap_rwlock.write_lock();
+        heap_handles.push_back(heap_handle);
+        heap_rwlock.write_unlock();
+        return heap_handle;
     }
 
-    void *heap::malloc(size_t size) const {
-        // don't call GetLastError()
+    void *heap::malloc(HANDLE heap_handle,
+                       size_t size) const {
         return HeapAlloc(heap_handle,
                          HEAP_ZERO_MEMORY,
                          size);
     }
 
-    void *heap::realloc(void *addr, size_t new_size) const {
-        // don't call GetLastError()
+    void *heap::realloc(HANDLE heap_handle,
+                        void *addr,
+                        size_t new_size) const {
         return HeapReAlloc(heap_handle,
                            HEAP_ZERO_MEMORY,
                            addr,
                            new_size);
     }
 
-    bool heap::free(void *addr) {
+    bool heap::free(HANDLE heap_handle, void *addr) {
         if (!HeapFree(heap_handle, 0, addr)) {
             error_code = GetLastError();
             return false;
@@ -69,17 +68,15 @@ namespace YanLib::mem {
         return true;
     }
 
-    size_t heap::size(void *addr) const {
-        // don't call GetLastError()
+    size_t heap::size(HANDLE heap_handle, void *addr) const {
         return HeapSize(heap_handle, 0, addr);
     }
 
-    bool heap::is_ok(void *addr) const {
-        // don't call GetLastError()
+    bool heap::is_ok(HANDLE heap_handle, void *addr) const {
         return HeapValidate(heap_handle, 0, addr);
     }
 
-    bool heap::lock() {
+    bool heap::lock(HANDLE heap_handle) {
         if (!HeapLock(heap_handle)) {
             error_code = GetLastError();
             return false;
@@ -87,7 +84,7 @@ namespace YanLib::mem {
         return true;
     }
 
-    bool heap::unlock() {
+    bool heap::unlock(HANDLE heap_handle) {
         if (!HeapUnlock(heap_handle)) {
             error_code = GetLastError();
             return false;

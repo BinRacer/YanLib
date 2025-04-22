@@ -6,22 +6,15 @@
 #include "helper/convert.h"
 
 namespace YanLib::mem {
-    allocate::allocate(): memory_ptr_list({}),
-                          error_code(0) {
-    }
-
     allocate::~allocate() {
-        rwlock.write_lock();
-        if (!memory_ptr_list.empty()) {
-            while (memory_ptr_list.back() != nullptr) {
-                VirtualFree(memory_ptr_list.back(),
+        if (!mem_list.empty()) {
+            for (auto mem: mem_list) {
+                VirtualFree(mem,
                             0,
                             MEM_RELEASE);
-                memory_ptr_list.back() = nullptr;
-                memory_ptr_list.pop_back();
+                mem = nullptr;
             }
         }
-        rwlock.write_unlock();
     }
 
     void *allocate::malloc(size_t size) {
@@ -34,14 +27,14 @@ namespace YanLib::mem {
             return nullptr;
         }
         rwlock.write_lock();
-        memory_ptr_list.push_back(address);
+        mem_list.push_back(address);
         rwlock.write_unlock();
         return address;
     }
 
     bool allocate::free(void *addr) {
         rwlock.write_lock();
-        memory_ptr_list.remove_if([addr](void *ele)-> bool {
+        mem_list.remove_if([addr](void *ele)-> bool {
             return ele == addr;
         });
         rwlock.write_unlock();
@@ -65,14 +58,14 @@ namespace YanLib::mem {
             return nullptr;
         }
         rwlock.write_lock();
-        memory_ptr_list.push_back(address);
+        mem_list.push_back(address);
         rwlock.write_unlock();
         return address;
     }
 
     bool allocate::free_reserve(void *addr, size_t size) {
         rwlock.write_lock();
-        memory_ptr_list.remove_if([addr](void *ele)-> bool {
+        mem_list.remove_if([addr](void *ele)-> bool {
             return ele == addr;
         });
         rwlock.write_unlock();

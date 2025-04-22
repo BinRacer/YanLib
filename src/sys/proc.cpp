@@ -607,6 +607,14 @@ namespace YanLib::sys {
         return true;
     }
 
+    bool proc::global_mem_status(LPMEMORYSTATUSEX buffer) {
+        if (!GlobalMemoryStatusEx(buffer)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     bool proc::read(HANDLE proc_handle,
                     const void *base_addr,
                     void *buf,

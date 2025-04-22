@@ -6,11 +6,14 @@
 #define HEAP_H
 #include <Windows.h>
 #include <string>
+#include <vector>
+#include "sync/rwlock.h"
 
 namespace YanLib::mem {
     class heap {
-        HANDLE heap_handle;
-        DWORD error_code;
+        std::vector<HANDLE> heap_handles = {};
+        sync::rwlock heap_rwlock = {};
+        DWORD error_code = 0;
 
     public:
         heap(const heap &other) = delete;
@@ -21,30 +24,35 @@ namespace YanLib::mem {
 
         heap &operator=(heap &&other) = delete;
 
-        heap();
+        heap() = default;
 
         ~heap();
 
-        bool create(DWORD options = 0,
-                    size_t initial_size = 0,
-                    size_t maximum_size = 0);
+        HANDLE create(DWORD options = 0,
+                      size_t initial_size = 0,
+                      size_t maximum_size = 0);
 
-        bool open_proc_heap();
+        HANDLE open();
 
-        [[nodiscard]] void *malloc(size_t size) const;
+        void *malloc(HANDLE heap_handle,
+                     size_t size) const;
 
-        void *realloc(void *addr,
+        void *realloc(HANDLE heap_handle,
+                      void *addr,
                       size_t new_size) const;
 
-        bool free(void *addr);
+        bool free(HANDLE heap_handle,
+                  void *addr);
 
-        size_t size(void *addr) const;
+        size_t size(HANDLE heap_handle,
+                    void *addr) const;
 
-        bool is_ok(void *addr) const;
+        bool is_ok(HANDLE heap_handle,
+                   void *addr) const;
 
-        bool lock();
+        bool lock(HANDLE heap_handle);
 
-        bool unlock();
+        bool unlock(HANDLE heap_handle);
 
         [[nodiscard]] DWORD err_code() const;
 

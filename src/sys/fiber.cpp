@@ -10,8 +10,10 @@ namespace YanLib::sys {
     fiber::~fiber() {
         if (!fiber_addrs.empty()) {
             for (auto &addr: fiber_addrs) {
-                DeleteFiber(addr);
-                addr = nullptr;
+                if (addr) {
+                    DeleteFiber(addr);
+                    addr = nullptr;
+                }
             }
             fiber_addrs.clear();
         }
@@ -107,13 +109,12 @@ namespace YanLib::sys {
             return false;
         }
         fiber_lock.write_lock();
-        fiber_addrs.erase(
-            std::remove_if(fiber_addrs.begin(),
-                           fiber_addrs.end(),
-                           [addr](const void *fiber_addr) {
-                               return fiber_addr == addr;
-                           }),
-            fiber_addrs.end());
+        const auto it = std::find(fiber_addrs.begin(),
+                                  fiber_addrs.end(),
+                                  addr);
+        if (it != fiber_addrs.end()) {
+            *it = nullptr;
+        }
         fiber_lock.write_unlock();
         if (!ConvertFiberToThread()) {
             error_code = GetLastError();

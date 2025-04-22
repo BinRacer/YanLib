@@ -43,7 +43,7 @@ namespace YanLib::sys {
 
         bool fls_set_value(DWORD index, void *value);
 
-        bool is_in_fiber();
+        bool is_fiber();
 
         void switch_to_fiber(void *addr);
 
@@ -60,6 +60,4 @@ namespace YanLib::sys {
         [[nodiscard]] std::wstring err_wstring() const;
     };
 }
-
-
 #endif //FIBER_H

@@ -100,6 +100,8 @@ add_library(YanLib STATIC
         src/sys/thread_pool.h
         src/sys/fiber.cpp
         src/sys/fiber.h
+        src/sys/job.cpp
+        src/sys/job.h
 )
 
 target_include_directories(YanLib

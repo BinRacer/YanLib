@@ -69,7 +69,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool fiber::is_in_fiber() {
+    bool fiber::is_fiber() {
         return IsThreadAFiber();
     }
 

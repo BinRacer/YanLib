@@ -104,6 +104,8 @@ add_library(YanLib STATIC
         src/sys/job.h
         src/sys/snapshot.cpp
         src/sys/snapshot.h
+        src/sys/processor.cpp
+        src/sys/processor.h
 )
 
 target_include_directories(YanLib

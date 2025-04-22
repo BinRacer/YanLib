@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <winternl.h>
+#include <psapi.h>
 #include "sync/rwlock.h"
 
 #pragma comment(lib, "ntdll.lib")
@@ -181,6 +182,11 @@ namespace YanLib::sys {
                             DWORD new_protect_flag,
                             PDWORD old_protect_flag);
 
+        bool query_mem(HANDLE proc_handle,
+                       const void *address,
+                       PMEMORY_BASIC_INFORMATION buffer,
+                       size_t len);
+
         bool read(HANDLE proc_handle,
                   const void *base_addr,
                   void *buf,
@@ -261,6 +267,15 @@ namespace YanLib::sys {
                       PROCESS_INFORMATION_CLASS proc_info_class,
                       void *proc_info,
                       DWORD proc_info_size);
+
+        bool get_mem_info(HANDLE proc_handle,
+                          PPROCESS_MEMORY_COUNTERS mem_counters,
+                          DWORD mem_counters_size);
+
+        bool get_module_info(HANDLE proc_handle,
+                             HMODULE module_handle,
+                             LPMODULEINFO mod_info,
+                             DWORD mod_info_size);
 
         bool logical_processor_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buf,
                                     PDWORD ret_len);

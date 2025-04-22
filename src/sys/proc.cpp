@@ -593,6 +593,20 @@ namespace YanLib::sys {
         return true;
     }
 
+    bool proc::query_mem(HANDLE proc_handle,
+                         const void *address,
+                         PMEMORY_BASIC_INFORMATION buffer,
+                         size_t len) {
+        if (!VirtualQueryEx(proc_handle,
+                            address,
+                            buffer,
+                            len)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     bool proc::read(HANDLE proc_handle,
                     const void *base_addr,
                     void *buf,
@@ -1061,6 +1075,32 @@ namespace YanLib::sys {
                                    proc_info_class,
                                    proc_info,
                                    proc_info_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_mem_info(HANDLE proc_handle,
+                            PPROCESS_MEMORY_COUNTERS mem_counters,
+                            DWORD mem_counters_size) {
+        if (!GetProcessMemoryInfo(proc_handle,
+                                  mem_counters,
+                                  mem_counters_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool proc::get_module_info(HANDLE proc_handle,
+                               HMODULE module_handle,
+                               LPMODULEINFO mod_info,
+                               DWORD mod_info_size) {
+        if (!GetModuleInformation(proc_handle,
+                                  module_handle,
+                                  mod_info,
+                                  mod_info_size)) {
             error_code = GetLastError();
             return false;
         }

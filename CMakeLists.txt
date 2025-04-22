@@ -102,6 +102,8 @@ add_library(YanLib STATIC
         src/sys/fiber.h
         src/sys/job.cpp
         src/sys/job.h
+        src/sys/snapshot.cpp
+        src/sys/snapshot.h
 )
 
 target_include_directories(YanLib

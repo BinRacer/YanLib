@@ -8,7 +8,6 @@
 #include <memory>
 
 #include "security.h"
-#include "helper/string.h"
 #include "helper/convert.h"
 #include "helper/autoclean.h"
 #include <UserEnv.h>
@@ -16,35 +15,23 @@
 #pragma comment(lib, "UserEnv.lib")
 
 namespace YanLib::sys {
-    proc::proc() {
-        memset(&si, 0, sizeof(si));
-        si.cb = sizeof(si);
-        memset(&pi, 0, sizeof(pi));
-    }
-
     proc::~proc() {
         if (curr_proc_env) {
             FreeEnvironmentStringsW(curr_proc_env);
         }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
+        if (!proc_infos.empty()) {
+            for (auto &info: proc_infos) {
+                if (info.hThread) {
+                    CloseHandle(info.hThread);
+                    info.hThread = nullptr;
+                }
+                if (info.hProcess) {
+                    CloseHandle(info.hProcess);
+                    info.hProcess = nullptr;
+                }
+            }
+            proc_infos.clear();
         }
-        cleanup();
-    }
-
-    void proc::cleanup() {
-        if (pi.hThread) {
-            CloseHandle(pi.hThread);
-            pi.hThread = nullptr;
-        }
-        if (pi.hProcess) {
-            CloseHandle(pi.hProcess);
-            pi.hProcess = nullptr;
-        }
-        memset(&si, 0, sizeof(si));
-        si.cb = sizeof(si);
-        memset(&pi, 0, sizeof(pi));
     }
 
     NTSTATUS proc::nt_query_info_proc(HANDLE proc_handle,
@@ -81,32 +68,7 @@ namespace YanLib::sys {
         return status;
     }
 
-    bool proc::create(const wchar_t *app_name,
-                      wchar_t *cmdline,
-                      LPSECURITY_ATTRIBUTES proc_attrs,
-                      LPSECURITY_ATTRIBUTES thread_attrs,
-                      bool is_inherit_handles,
-                      DWORD create_flag,
-                      void *env,
-                      const wchar_t *curr_dir) {
-        cleanup();
-        if (!CreateProcessW(app_name,
-                            cmdline,
-                            proc_attrs,
-                            thread_attrs,
-                            is_inherit_handles ? TRUE : FALSE,
-                            create_flag,
-                            env,
-                            curr_dir,
-                            &si,
-                            &pi)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool proc::create_with_suspended(const wchar_t *app_name,
+    PROCESS_INFORMATION proc::create(const wchar_t *app_name,
                                      wchar_t *cmdline,
                                      LPSECURITY_ATTRIBUTES proc_attrs,
                                      LPSECURITY_ATTRIBUTES thread_attrs,
@@ -114,7 +76,9 @@ namespace YanLib::sys {
                                      DWORD create_flag,
                                      void *env,
                                      const wchar_t *curr_dir) {
-        cleanup();
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
         if (!CreateProcessW(app_name,
                             cmdline,
                             proc_attrs,
@@ -126,21 +90,56 @@ namespace YanLib::sys {
                             &si,
                             &pi)) {
             error_code = GetLastError();
-            return false;
+            return {};
         }
-        return true;
+        rwlock.write_lock();
+        proc_infos.push_back(pi);
+        rwlock.write_unlock();
+        return pi;
     }
 
-    bool proc::create_as_user(HANDLE token_handle,
-                              const wchar_t *app_name,
-                              wchar_t *cmdline,
-                              LPSECURITY_ATTRIBUTES proc_attrs,
-                              LPSECURITY_ATTRIBUTES thread_attrs,
-                              bool is_inherit_handles,
-                              DWORD create_flag,
-                              void *env,
-                              const wchar_t *curr_dir) {
-        cleanup();
+    PROCESS_INFORMATION proc::create_with_suspended(const wchar_t *app_name,
+                                                    wchar_t *cmdline,
+                                                    LPSECURITY_ATTRIBUTES proc_attrs,
+                                                    LPSECURITY_ATTRIBUTES thread_attrs,
+                                                    bool is_inherit_handles,
+                                                    DWORD create_flag,
+                                                    void *env,
+                                                    const wchar_t *curr_dir) {
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
+        if (!CreateProcessW(app_name,
+                            cmdline,
+                            proc_attrs,
+                            thread_attrs,
+                            is_inherit_handles ? TRUE : FALSE,
+                            create_flag,
+                            env,
+                            curr_dir,
+                            &si,
+                            &pi)) {
+            error_code = GetLastError();
+            return {};
+        }
+        rwlock.write_lock();
+        proc_infos.push_back(pi);
+        rwlock.write_unlock();
+        return pi;
+    }
+
+    PROCESS_INFORMATION proc::create_as_user(HANDLE token_handle,
+                                             const wchar_t *app_name,
+                                             wchar_t *cmdline,
+                                             LPSECURITY_ATTRIBUTES proc_attrs,
+                                             LPSECURITY_ATTRIBUTES thread_attrs,
+                                             bool is_inherit_handles,
+                                             DWORD create_flag,
+                                             void *env,
+                                             const wchar_t *curr_dir) {
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
         security security;
         void *environment = nullptr;
         if (env) {
@@ -149,7 +148,7 @@ namespace YanLib::sys {
             environment = security.create_env_block(token_handle);
             if (!environment) {
                 error_code = security.err_code();
-                return false;
+                return {};
             }
         }
         if (!CreateProcessAsUserW(token_handle,
@@ -164,26 +163,31 @@ namespace YanLib::sys {
                                   &si,
                                   &pi)) {
             error_code = GetLastError();
-            return false;
+            return {};
         }
-        return true;
+        rwlock.write_lock();
+        proc_infos.push_back(pi);
+        rwlock.write_unlock();
+        return pi;
     }
 
-    bool proc::create_session_zero(const wchar_t *app_name,
-                                   wchar_t *cmdline,
-                                   LPSECURITY_ATTRIBUTES proc_attrs,
-                                   LPSECURITY_ATTRIBUTES thread_attrs,
-                                   bool is_inherit_handles,
-                                   DWORD create_flag,
-                                   void *env,
-                                   const wchar_t *curr_dir) {
-        cleanup();
+    PROCESS_INFORMATION proc::create_session_zero(const wchar_t *app_name,
+                                                  wchar_t *cmdline,
+                                                  LPSECURITY_ATTRIBUTES proc_attrs,
+                                                  LPSECURITY_ATTRIBUTES thread_attrs,
+                                                  bool is_inherit_handles,
+                                                  DWORD create_flag,
+                                                  void *env,
+                                                  const wchar_t *curr_dir) {
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
         security security;
         helper::autoclean<HANDLE> token_handle(nullptr);
         token_handle = security.copy_token();
         if (!token_handle.is_ok()) {
             error_code = security.err_code();
-            return false;
+            return {};
         }
         void *environment = nullptr;
         if (env) {
@@ -192,7 +196,7 @@ namespace YanLib::sys {
             environment = security.create_env_block(token_handle);
             if (!environment) {
                 error_code = security.err_code();
-                return false;
+                return {};
             }
         }
         if (!CreateProcessAsUserW(token_handle,
@@ -207,27 +211,32 @@ namespace YanLib::sys {
                                   &si,
                                   &pi)) {
             error_code = GetLastError();
-            return false;
+            return {};
         }
-        return true;
+        rwlock.write_lock();
+        proc_infos.push_back(pi);
+        rwlock.write_unlock();
+        return pi;
     }
 
-    bool proc::create_with_logon(const wchar_t *username,
-                                 const wchar_t *domain,
-                                 const wchar_t *password,
-                                 const wchar_t *app_name,
-                                 wchar_t *cmdline,
-                                 DWORD logon_flag,
-                                 DWORD create_flag,
-                                 void *env,
-                                 const wchar_t *curr_dir) {
-        cleanup();
+    PROCESS_INFORMATION proc::create_with_logon(const wchar_t *username,
+                                                const wchar_t *domain,
+                                                const wchar_t *password,
+                                                const wchar_t *app_name,
+                                                wchar_t *cmdline,
+                                                DWORD logon_flag,
+                                                DWORD create_flag,
+                                                void *env,
+                                                const wchar_t *curr_dir) {
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
         security security;
         helper::autoclean<HANDLE> token_handle(nullptr);
         token_handle = security.copy_token();
         if (!token_handle.is_ok()) {
             error_code = security.err_code();
-            return false;
+            return {};
         }
         void *environment = nullptr;
         if (env) {
@@ -236,7 +245,7 @@ namespace YanLib::sys {
             environment = security.create_env_block(token_handle);
             if (!environment) {
                 error_code = security.err_code();
-                return false;
+                return {};
             }
         }
         if (!CreateProcessWithLogonW(username,
@@ -251,19 +260,24 @@ namespace YanLib::sys {
                                      &si,
                                      &pi)) {
             error_code = GetLastError();
-            return false;
+            return {};
         }
-        return true;
+        rwlock.write_lock();
+        proc_infos.push_back(pi);
+        rwlock.write_unlock();
+        return pi;
     }
 
-    bool proc::create_with_token(HANDLE token_handle,
-                                 const wchar_t *app_name,
-                                 wchar_t *cmdline,
-                                 DWORD logon_flag,
-                                 DWORD create_flag,
-                                 void *env,
-                                 const wchar_t *curr_dir) {
-        cleanup();
+    PROCESS_INFORMATION proc::create_with_token(HANDLE token_handle,
+                                                const wchar_t *app_name,
+                                                wchar_t *cmdline,
+                                                DWORD logon_flag,
+                                                DWORD create_flag,
+                                                void *env,
+                                                const wchar_t *curr_dir) {
+        STARTUPINFOW si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
         security security;
         void *environment = nullptr;
         if (env) {
@@ -272,7 +286,7 @@ namespace YanLib::sys {
             environment = security.create_env_block(token_handle);
             if (!environment) {
                 error_code = security.err_code();
-                return false;
+                return {};
             }
         }
         if (!CreateProcessWithTokenW(token_handle,
@@ -285,9 +299,12 @@ namespace YanLib::sys {
                                      &si,
                                      &pi)) {
             error_code = GetLastError();
-            return false;
+            return {};
         }
-        return true;
+        rwlock.write_lock();
+        proc_infos.push_back(pi);
+        rwlock.write_unlock();
+        return pi;
     }
 
     bool proc::win_exec(const char *cmdline, UINT show_flag) {
@@ -339,6 +356,162 @@ namespace YanLib::sys {
             error_code = GetLastError();
         }
         return true;
+    }
+
+    bool proc::fake_proc(HANDLE proc_handle,
+                         const wchar_t *app_name,
+                         const wchar_t *cmdline) {
+        DWORD size = 0;
+        PROCESS_BASIC_INFORMATION pbi{};
+        do {
+            NTSTATUS status = nt_query_info_proc(proc_handle,
+                                                 ProcessBasicInformation,
+                                                 &pbi,
+                                                 sizeof(pbi),
+                                                 &size);
+            if (!NT_SUCCESS(status)) {
+                break;
+            }
+            auto peb = std::make_unique<PEB>();
+            size_t ret_size = size;
+            if (!ReadProcessMemory(proc_handle,
+                                   pbi.PebBaseAddress,
+                                   peb.get(),
+                                   sizeof(PEB),
+                                   &ret_size)) {
+                error_code = GetLastError();
+                break;
+            }
+            auto params = std::make_unique<RTL_USER_PROCESS_PARAMETERS>();
+            if (!ReadProcessMemory(proc_handle,
+                                   peb->ProcessParameters,
+                                   params.get(),
+                                   sizeof(RTL_USER_PROCESS_PARAMETERS),
+                                   &ret_size)) {
+                error_code = GetLastError();
+                break;
+            }
+            USHORT len = (wcslen(cmdline) + 1) * sizeof(wchar_t);
+            if (!WriteProcessMemory(proc_handle,
+                                    params->CommandLine.Buffer,
+                                    cmdline,
+                                    len,
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!WriteProcessMemory(proc_handle,
+                                    &params->CommandLine.Length,
+                                    &len,
+                                    sizeof(len),
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            len = (wcslen(app_name) + 1) * sizeof(wchar_t);
+            if (!WriteProcessMemory(proc_handle,
+                                    params->ImagePathName.Buffer,
+                                    app_name,
+                                    len,
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!WriteProcessMemory(proc_handle,
+                                    &params->ImagePathName.Length,
+                                    &len,
+                                    sizeof(len),
+                                    nullptr)) {
+                error_code = GetLastError();
+                break;
+            }
+            return true;
+        } while (false);
+        return false;
+    }
+
+    bool proc::wait_child(HANDLE child_proc_handle, DWORD milli_seconds) {
+        if (child_proc_handle) {
+            DWORD ret = WaitForSingleObject(child_proc_handle, milli_seconds);
+            if (ret == WAIT_OBJECT_0) {
+                return true;
+            }
+            error_code = GetLastError();
+        }
+        return false;
+    }
+
+    bool proc::resume_child(HANDLE child_thread_handle) {
+        if (child_thread_handle) {
+            if (ResumeThread(child_thread_handle) == static_cast<DWORD>(-1)) {
+                error_code = GetLastError();
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    HANDLE proc::thread_handle() {
+        return GetCurrentThread();
+    }
+
+    HANDLE proc::proc_handle() {
+        return GetCurrentProcess();
+    }
+
+    DWORD proc::thread_id() {
+        return GetCurrentThreadId();
+    }
+
+    DWORD proc::proc_id() {
+        return GetCurrentProcessId();
+    }
+
+    HANDLE proc::pid_to_handle(DWORD pid,
+                               DWORD desired_access,
+                               bool is_inherit_handle) {
+        HANDLE proc_handle = OpenProcess(desired_access,
+                                         is_inherit_handle ? TRUE : FALSE,
+                                         pid);
+        if (!proc_handle) {
+            error_code = GetLastError();
+        }
+        return proc_handle;
+    }
+
+    DWORD proc::handle_to_pid(HANDLE proc_handle) {
+        DWORD pid = GetProcessId(proc_handle);
+        if (!pid) {
+            error_code = GetLastError();
+        }
+        return pid;
+    }
+
+    bool proc::kill(HANDLE proc_handle, UINT exit_code) {
+        if (!TerminateProcess(proc_handle, exit_code)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void proc::exit(UINT exit_code) {
+        ExitProcess(exit_code);
+    }
+
+    DWORD proc::exit_status(HANDLE proc_handle) {
+        DWORD exit_status = 0;
+        if (!GetExitCodeProcess(proc_handle, &exit_status)) {
+            error_code = GetLastError();
+        }
+        return exit_status;
+    }
+
+    STARTUPINFOW proc::startup_info() {
+        STARTUPINFOW startup_info;
+        GetStartupInfoW(&startup_info);
+        return startup_info;
     }
 
     void *proc::malloc(HANDLE proc_handle,
@@ -756,54 +929,6 @@ namespace YanLib::sys {
         return name;
     }
 
-    void *proc::module_image_base(MODULEENTRY32W &module_entry) {
-        IMAGE_DOS_HEADER dos_header{};
-        IMAGE_NT_HEADERS64 nt_headers64{};
-        IMAGE_NT_HEADERS32 nt_headers32{};
-        do {
-            if (!Toolhelp32ReadProcessMemory(module_entry.th32ProcessID,
-                                             module_entry.modBaseAddr,
-                                             &dos_header,
-                                             sizeof(dos_header),
-                                             nullptr)) {
-                break;
-            }
-            if (dos_header.e_magic != IMAGE_DOS_SIGNATURE) {
-                break;
-            }
-            if (!Toolhelp32ReadProcessMemory(module_entry.th32ProcessID,
-                                             module_entry.modBaseAddr + dos_header.e_lfanew,
-                                             &nt_headers64,
-                                             sizeof(nt_headers64),
-                                             nullptr)) {
-                break;
-            }
-            if (nt_headers64.Signature != IMAGE_NT_SIGNATURE) {
-                break;
-            }
-
-            if (nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ||
-                nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_ARM64) {
-                return reinterpret_cast<void *>(nt_headers64.OptionalHeader.ImageBase);
-            } else {
-                if (!Toolhelp32ReadProcessMemory(module_entry.th32ProcessID,
-                                                 module_entry.modBaseAddr + dos_header.e_lfanew,
-                                                 &nt_headers32,
-                                                 sizeof(nt_headers32),
-                                                 nullptr)) {
-                    break;
-                }
-                if (nt_headers32.Signature != IMAGE_NT_SIGNATURE) {
-                    break;
-                }
-                return reinterpret_cast<void *>(
-                    static_cast<int64_t>(
-                        nt_headers32.OptionalHeader.ImageBase));
-            }
-        } while (false);
-        return nullptr;
-    }
-
     void *proc::image_base() {
         IMAGE_DOS_HEADER dos_header{};
         IMAGE_NT_HEADERS64 nt_headers64{};
@@ -912,14 +1037,6 @@ namespace YanLib::sys {
 
     DWORD proc::processor_num() {
         return GetCurrentProcessorNumber();
-    }
-
-    DWORD proc::exit_status(HANDLE proc_handle) {
-        DWORD exit_status = 0;
-        if (!GetExitCodeProcess(proc_handle, &exit_status)) {
-            error_code = GetLastError();
-        }
-        return exit_status;
     }
 
     bool proc::get_info(HANDLE proc_handle,
@@ -1123,12 +1240,6 @@ namespace YanLib::sys {
         return true;
     }
 
-    STARTUPINFOW proc::startup_info() {
-        STARTUPINFOW startup_info;
-        GetStartupInfoW(&startup_info);
-        return startup_info;
-    }
-
     bool proc::is_microsoft_store_app(HANDLE proc_handle) {
         if (!IsImmersiveProcess(proc_handle)) {
             error_code = GetLastError();
@@ -1190,712 +1301,6 @@ namespace YanLib::sys {
             return false;
         }
         return true;
-    }
-
-    bool proc::kill(HANDLE proc_handle, UINT exit_code) {
-        if (!TerminateProcess(proc_handle, exit_code)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    void proc::exit(UINT exit_code) {
-        ExitProcess(exit_code);
-    }
-
-    bool proc::fake_proc(HANDLE proc_handle,
-                         const wchar_t *app_name,
-                         const wchar_t *cmdline) {
-        DWORD size = 0;
-        PROCESS_BASIC_INFORMATION pbi{};
-        do {
-            NTSTATUS status = nt_query_info_proc(proc_handle,
-                                                 ProcessBasicInformation,
-                                                 &pbi,
-                                                 sizeof(pbi),
-                                                 &size);
-            if (!NT_SUCCESS(status)) {
-                break;
-            }
-            auto peb = std::make_unique<PEB>();
-            size_t ret_size = size;
-            if (!ReadProcessMemory(proc_handle,
-                                   pbi.PebBaseAddress,
-                                   peb.get(),
-                                   sizeof(PEB),
-                                   &ret_size)) {
-                error_code = GetLastError();
-                break;
-            }
-            auto params = std::make_unique<RTL_USER_PROCESS_PARAMETERS>();
-            if (!ReadProcessMemory(proc_handle,
-                                   peb->ProcessParameters,
-                                   params.get(),
-                                   sizeof(RTL_USER_PROCESS_PARAMETERS),
-                                   &ret_size)) {
-                error_code = GetLastError();
-                break;
-            }
-            USHORT len = (wcslen(cmdline) + 1) * sizeof(wchar_t);
-            if (!WriteProcessMemory(proc_handle,
-                                    params->CommandLine.Buffer,
-                                    cmdline,
-                                    len,
-                                    nullptr)) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!WriteProcessMemory(proc_handle,
-                                    &params->CommandLine.Length,
-                                    &len,
-                                    sizeof(len),
-                                    nullptr)) {
-                error_code = GetLastError();
-                break;
-            }
-            len = (wcslen(app_name) + 1) * sizeof(wchar_t);
-            if (!WriteProcessMemory(proc_handle,
-                                    params->ImagePathName.Buffer,
-                                    app_name,
-                                    len,
-                                    nullptr)) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!WriteProcessMemory(proc_handle,
-                                    &params->ImagePathName.Length,
-                                    &len,
-                                    sizeof(len),
-                                    nullptr)) {
-                error_code = GetLastError();
-                break;
-            }
-            return true;
-        } while (false);
-        return false;
-    }
-
-    HANDLE proc::thread_handle() {
-        return GetCurrentThread();
-    }
-
-    HANDLE proc::proc_handle() {
-        return GetCurrentProcess();
-    }
-
-    DWORD proc::thread_id() {
-        return GetCurrentThreadId();
-    }
-
-    DWORD proc::proc_id() {
-        return GetCurrentProcessId();
-    }
-
-    HANDLE proc::pid_to_handle(DWORD pid,
-                               DWORD desired_access,
-                               bool is_inherit_handle) {
-        HANDLE proc_handle = OpenProcess(desired_access,
-                                         is_inherit_handle ? TRUE : FALSE,
-                                         pid);
-        if (!proc_handle) {
-            error_code = GetLastError();
-        }
-        return proc_handle;
-    }
-
-    DWORD proc::handle_to_pid(HANDLE proc_handle) {
-        DWORD pid = GetProcessId(proc_handle);
-        if (!pid) {
-            error_code = GetLastError();
-        }
-        return pid;
-    }
-
-    bool proc::is_heap(HANDLE proc_handle, void *address) {
-        if (!proc_handle) {
-            return false;
-        }
-        const DWORD pid = handle_to_pid(proc_handle);
-        if (!pid) {
-            return false;
-        }
-        std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
-        if (blocks.empty()) {
-            return false;
-        }
-        for (auto block: blocks) {
-            MEMORY_BASIC_INFORMATION mbi;
-            if (!VirtualQueryEx(proc_handle,
-                                reinterpret_cast<void *>(block.dwAddress),
-                                &mbi,
-                                sizeof(mbi))) {
-                error_code = GetLastError();
-                break;
-            }
-            if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
-                address <= static_cast<uint8_t *>(mbi.AllocationBase) + mbi.RegionSize) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    bool proc::is_heap(DWORD pid, void *address) {
-        HANDLE proc_handle = nullptr;
-        if (GetCurrentProcessId() == pid) {
-            proc_handle = GetCurrentProcess();
-        } else {
-            proc_handle = pid_to_handle(pid);
-        }
-        if (!proc_handle) {
-            return false;
-        }
-        std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
-        if (blocks.empty()) {
-            return false;
-        }
-        for (auto block: blocks) {
-            MEMORY_BASIC_INFORMATION mbi;
-            if (!VirtualQueryEx(proc_handle,
-                                reinterpret_cast<void *>(block.dwAddress),
-                                &mbi,
-                                sizeof(mbi))) {
-                error_code = GetLastError();
-                break;
-            }
-            if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
-                address <= static_cast<uint8_t *>(mbi.AllocationBase) + mbi.RegionSize) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    HANDLE proc::child_thread_handle() const {
-        return pi.hThread;
-    }
-
-    HANDLE proc::child_proc_handle() const {
-        return pi.hProcess;
-    }
-
-    DWORD proc::child_thread_id() {
-        if (pi.hThread) {
-            DWORD id = GetThreadId(pi.hThread);
-            if (!id) {
-                error_code = GetLastError();
-            }
-            return id;
-        }
-        return 0;
-    }
-
-    DWORD proc::child_proc_id() {
-        if (pi.hProcess) {
-            DWORD id = GetProcessId(pi.hProcess);
-            if (!id) {
-                error_code = GetLastError();
-            }
-            return id;
-        }
-        return 0;
-    }
-
-    bool proc::wait_child(DWORD milli_seconds) {
-        if (pi.hProcess) {
-            DWORD ret = WaitForSingleObject(pi.hProcess, milli_seconds);
-            if (ret == WAIT_OBJECT_0) {
-                return true;
-            }
-            error_code = GetLastError();
-        }
-        return false;
-    }
-
-    bool proc::resume_child() {
-        if (pi.hThread) {
-            if (ResumeThread(pi.hThread) == static_cast<DWORD>(-1)) {
-                error_code = GetLastError();
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    std::vector<PROCESSENTRY32W> proc::ls_procs(DWORD pid) {
-        if (!procs.empty()) {
-            return procs;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        PROCESSENTRY32W pe = {sizeof(PROCESSENTRY32W)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Process32FirstW(snapshot_handle, &pe)) {
-                error_code = GetLastError();
-                break;
-            }
-            procs.push_back(pe);
-            while (Process32NextW(snapshot_handle, &pe)) {
-                procs.push_back(pe);
-            }
-        } while (false);
-        return procs;
-    }
-
-    std::unordered_set<DWORD> proc::ls_pids(DWORD pid) {
-        if (!pids.empty()) {
-            return pids;
-        }
-        if (!procs.empty()) {
-            for (auto process: procs) {
-                pids.insert(process.th32ProcessID);
-            }
-            return pids;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        PROCESSENTRY32W pe = {sizeof(PROCESSENTRY32W)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Process32FirstW(snapshot_handle, &pe)) {
-                error_code = GetLastError();
-                break;
-            }
-            pids.insert(pe.th32ProcessID);
-            while (Process32NextW(snapshot_handle, &pe)) {
-                pids.insert(pe.th32ProcessID);
-            }
-        } while (false);
-        return pids;
-    }
-
-    void proc::refresh_procs() {
-        procs.clear();
-        pids.clear();
-    }
-
-    bool proc::pid_exists(DWORD pid) {
-        if (pids.empty()) {
-            ls_pids();
-        }
-        return pids.find(pid) != pids.end();
-    }
-
-    DWORD proc::get_ppid(DWORD pid) {
-        if (procs.empty()) {
-            ls_procs();
-        }
-        for (auto process: procs) {
-            if (process.th32ProcessID == pid) {
-                return process.th32ParentProcessID;
-            }
-        }
-        return 0;
-    }
-
-    PROCESSENTRY32W proc::find_proc(DWORD pid) {
-        if (procs.empty()) {
-            ls_procs();
-        }
-        for (auto process: procs) {
-            if (process.th32ProcessID == pid) {
-                return process;
-            }
-        }
-        return {};
-    }
-
-    PROCESSENTRY32W proc::find_proc(const wchar_t *proc_name) {
-        if (!proc_name || wcslen(proc_name) == 0) {
-            return {};
-        }
-        if (procs.empty()) {
-            ls_procs();
-        }
-        for (auto process: procs) {
-            if (helper::string::strstr_case_insen(process.szExeFile,
-                                                  proc_name)) {
-                return process;
-            }
-        }
-        return {};
-    }
-
-    std::vector<THREADENTRY32> proc::ls_threads(DWORD pid) {
-        if (!threads.empty()) {
-            return threads;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        THREADENTRY32 te = {sizeof(THREADENTRY32)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Thread32First(snapshot_handle, &te)) {
-                error_code = GetLastError();
-                break;
-            }
-            threads.push_back(te);
-            while (Thread32Next(snapshot_handle, &te)) {
-                threads.push_back(te);
-            }
-        } while (false);
-        return threads;
-    }
-
-    std::unordered_set<DWORD> proc::ls_thread_ids(DWORD pid) {
-        if (!thread_ids.empty()) {
-            return thread_ids;
-        }
-        if (!threads.empty()) {
-            for (auto thread: threads) {
-                thread_ids.insert(thread.th32ThreadID);
-            }
-            return thread_ids;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        THREADENTRY32 te = {sizeof(THREADENTRY32)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Thread32First(snapshot_handle, &te)) {
-                error_code = GetLastError();
-                break;
-            }
-            thread_ids.insert(te.th32ThreadID);
-            while (Thread32Next(snapshot_handle, &te)) {
-                thread_ids.insert(te.th32ThreadID);
-            }
-        } while (false);
-        return thread_ids;
-    }
-
-    void proc::refresh_threads() {
-        threads.clear();
-        thread_ids.clear();
-    }
-
-    bool proc::tid_exists(DWORD tid) {
-        if (thread_ids.empty()) {
-            ls_thread_ids();
-        }
-        return thread_ids.find(tid) != thread_ids.end();
-    }
-
-    DWORD proc::tid_to_pid(DWORD tid) {
-        if (threads.empty()) {
-            ls_threads();
-        }
-        for (auto thread: threads) {
-            if (thread.th32ThreadID == tid) {
-                return thread.th32OwnerProcessID;
-            }
-        }
-        return 0;
-    }
-
-    THREADENTRY32 proc::find_thread(DWORD tid) {
-        if (threads.empty()) {
-            ls_threads();
-        }
-        for (auto thread: threads) {
-            if (thread.th32ThreadID == tid) {
-                return thread;
-            }
-        }
-        return {};
-    }
-
-    std::vector<THREADENTRY32> proc::find_threads(DWORD pid) {
-        if (threads.empty()) {
-            ls_threads();
-        }
-        std::vector<THREADENTRY32> result;
-        for (auto thread: threads) {
-            if (thread.th32OwnerProcessID == pid) {
-                result.push_back(thread);
-            }
-        }
-        return result;
-    }
-
-
-    std::vector<MODULEENTRY32W> proc::ls_modules(DWORD pid) {
-        if (!modules.empty()) {
-            return modules;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Module32FirstW(snapshot_handle, &me)) {
-                error_code = GetLastError();
-                break;
-            }
-            modules.push_back(me);
-            while (Module32NextW(snapshot_handle, &me)) {
-                modules.push_back(me);
-            }
-        } while (false);
-        return modules;
-    }
-
-    std::unordered_set<HMODULE> proc::ls_module_handles(DWORD pid) {
-        if (!module_handles.empty()) {
-            return module_handles;
-        }
-        if (!modules.empty()) {
-            for (auto module: modules) {
-                module_handles.insert(module.hModule);
-            }
-            return module_handles;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Module32FirstW(snapshot_handle, &me)) {
-                error_code = GetLastError();
-                break;
-            }
-            module_handles.insert(me.hModule);
-            while (Module32NextW(snapshot_handle, &me)) {
-                module_handles.insert(me.hModule);
-            }
-        } while (false);
-        return module_handles;
-    }
-
-    void proc::refresh_modules() {
-        modules.clear();
-        module_handles.clear();
-    }
-
-    MODULEENTRY32W proc::find_module(const wchar_t *proc_name) {
-        if (!proc_name || wcslen(proc_name) == 0) {
-            return {};
-        }
-        if (modules.empty()) {
-            ls_modules();
-        }
-        for (auto module: modules) {
-            if (helper::string::strstr_case_insen(module.szModule,
-                                                  proc_name) ||
-                helper::string::strstr_case_insen(module.szExePath,
-                                                  proc_name)) {
-                return module;
-            }
-        }
-        return {};
-    }
-
-    MODULEENTRY32W proc::find_module(const void *address) {
-        if (!address) {
-            return {};
-        }
-        if (modules.empty()) {
-            ls_modules();
-        }
-        for (auto module: modules) {
-            if (module.modBaseAddr == address) {
-                return module;
-            }
-        }
-        return {};
-    }
-
-    std::vector<HEAPLIST32> proc::ls_heaps(DWORD pid) {
-        if (!heaps.empty()) {
-            return heaps;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        HEAPLIST32 he = {sizeof(HEAPLIST32)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Heap32ListFirst(snapshot_handle, &he)) {
-                error_code = GetLastError();
-                break;
-            }
-            heaps.push_back(he);
-            while (Heap32ListNext(snapshot_handle, &he)) {
-                heaps.push_back(he);
-            }
-        } while (false);
-        return heaps;
-    }
-
-    std::unordered_set<ULONG_PTR> proc::ls_heap_ids(DWORD pid) {
-        if (!heap_ids.empty()) {
-            return heap_ids;
-        }
-        if (!heaps.empty()) {
-            for (auto heap: heaps) {
-                heap_ids.insert(heap.th32HeapID);
-            }
-            return heap_ids;
-        }
-        if (snapshot_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(snapshot_handle);
-            snapshot_handle = INVALID_HANDLE_VALUE;
-        }
-        HEAPLIST32 he = {sizeof(HEAPLIST32)};
-        do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
-                                                       pid);
-            if (snapshot_handle == INVALID_HANDLE_VALUE) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!Heap32ListFirst(snapshot_handle, &he)) {
-                error_code = GetLastError();
-                break;
-            }
-            heap_ids.insert(he.th32HeapID);
-            while (Heap32ListNext(snapshot_handle, &he)) {
-                heap_ids.insert(he.th32HeapID);
-            }
-        } while (false);
-        return heap_ids;
-    }
-
-    void proc::refresh_heaps() {
-        heaps.clear();
-        heap_ids.clear();
-    }
-
-    HEAPLIST32 proc::find_heap(ULONG_PTR heap_id) {
-        if (heaps.empty()) {
-            ls_heaps();
-        }
-        for (auto heap: heaps) {
-            if (heap.th32HeapID == heap_id) {
-                return heap;
-            }
-        }
-        return {};
-    }
-
-    std::vector<HEAPLIST32> proc::find_heaps(DWORD pid) {
-        if (heaps.empty()) {
-            ls_heaps();
-        }
-        std::vector<HEAPLIST32> result;
-        for (auto heap: heaps) {
-            if (heap.th32ProcessID == pid) {
-                result.push_back(heap);
-            }
-        }
-        return result;
-    }
-
-    std::vector<HEAPENTRY32>
-    proc::find_heap_blocks(HEAPLIST32 &heap_list) {
-        HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
-        std::vector<HEAPENTRY32> result;
-        do {
-            if (!Heap32First(&he, heap_list.th32ProcessID, heap_list.th32HeapID)) {
-                error_code = GetLastError();
-                break;
-            }
-            result.push_back(he);
-            while (Heap32Next(&he)) {
-                result.push_back(he);
-            }
-        } while (false);
-        return result;
-    }
-
-    std::vector<HEAPENTRY32> proc::find_heap_blocks(ULONG_PTR heap_id) {
-        HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
-        std::vector<HEAPENTRY32> result;
-        do {
-            HEAPLIST32 heaplist32 = find_heap(heap_id);
-            if (!Heap32First(&he, heaplist32.th32ProcessID, heap_id)) {
-                error_code = GetLastError();
-                break;
-            }
-            result.push_back(he);
-            while (Heap32Next(&he)) {
-                result.push_back(he);
-            }
-        } while (false);
-        return result;
-    }
-
-    std::vector<HEAPENTRY32> proc::find_heap_blocks(DWORD pid) {
-        HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
-        std::vector<HEAPENTRY32> result;
-        do {
-            auto heaplists = find_heaps(pid);
-            if (heaplists.empty()) {
-                break;
-            }
-            for (auto heaplist: heaplists) {
-                if (!Heap32First(&he, heaplist.th32ProcessID, heaplist.th32HeapID)) {
-                    error_code = GetLastError();
-                    break;
-                }
-                result.push_back(he);
-                while (Heap32Next(&he)) {
-                    result.push_back(he);
-                }
-            }
-        } while (false);
-        return result;
     }
 
     DWORD proc::err_code() const {

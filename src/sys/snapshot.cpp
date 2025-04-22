@@ -1,0 +1,566 @@
+//
+// Created by forkernel on 2025/4/22.
+//
+
+#include "snapshot.h"
+#include "helper/string.h"
+#include "helper/convert.h"
+
+namespace YanLib::sys {
+    snapshot::~snapshot() {
+        cleanup();
+    }
+
+    void snapshot::cleanup() {
+        if (snapshot_handle != INVALID_HANDLE_VALUE) {
+            CloseHandle(snapshot_handle);
+            snapshot_handle = INVALID_HANDLE_VALUE;
+        }
+    }
+
+    std::vector<PROCESSENTRY32W> snapshot::ls_procs(DWORD pid) {
+        if (!procs.empty()) {
+            return procs;
+        }
+        cleanup();
+        PROCESSENTRY32W pe = {sizeof(PROCESSENTRY32W)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Process32FirstW(snapshot_handle, &pe)) {
+                error_code = GetLastError();
+                break;
+            }
+            procs.push_back(pe);
+            while (Process32NextW(snapshot_handle, &pe)) {
+                procs.push_back(pe);
+            }
+        } while (false);
+        return procs;
+    }
+
+    std::unordered_set<DWORD> snapshot::ls_pids(DWORD pid) {
+        if (!pids.empty()) {
+            return pids;
+        }
+        if (!procs.empty()) {
+            for (auto process: procs) {
+                pids.insert(process.th32ProcessID);
+            }
+            return pids;
+        }
+        cleanup();
+        PROCESSENTRY32W pe = {sizeof(PROCESSENTRY32W)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Process32FirstW(snapshot_handle, &pe)) {
+                error_code = GetLastError();
+                break;
+            }
+            pids.insert(pe.th32ProcessID);
+            while (Process32NextW(snapshot_handle, &pe)) {
+                pids.insert(pe.th32ProcessID);
+            }
+        } while (false);
+        return pids;
+    }
+
+    void snapshot::refresh_procs() {
+        procs.clear();
+        pids.clear();
+    }
+
+    bool snapshot::pid_exists(DWORD pid) {
+        if (pids.empty()) {
+            ls_pids();
+        }
+        return pids.find(pid) != pids.end();
+    }
+
+    DWORD snapshot::get_ppid(DWORD pid) {
+        if (procs.empty()) {
+            ls_procs();
+        }
+        for (auto process: procs) {
+            if (process.th32ProcessID == pid) {
+                return process.th32ParentProcessID;
+            }
+        }
+        return 0;
+    }
+
+    PROCESSENTRY32W snapshot::find_proc(DWORD pid) {
+        if (procs.empty()) {
+            ls_procs();
+        }
+        for (auto process: procs) {
+            if (process.th32ProcessID == pid) {
+                return process;
+            }
+        }
+        return {};
+    }
+
+    PROCESSENTRY32W snapshot::find_proc(const wchar_t *proc_name) {
+        if (!proc_name || wcslen(proc_name) == 0) {
+            return {};
+        }
+        if (procs.empty()) {
+            ls_procs();
+        }
+        for (auto process: procs) {
+            if (helper::string::strstr_case_insen(process.szExeFile,
+                                                  proc_name)) {
+                return process;
+            }
+        }
+        return {};
+    }
+
+    std::vector<THREADENTRY32> snapshot::ls_threads(DWORD pid) {
+        if (!threads.empty()) {
+            return threads;
+        }
+        cleanup();
+        THREADENTRY32 te = {sizeof(THREADENTRY32)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Thread32First(snapshot_handle, &te)) {
+                error_code = GetLastError();
+                break;
+            }
+            threads.push_back(te);
+            while (Thread32Next(snapshot_handle, &te)) {
+                threads.push_back(te);
+            }
+        } while (false);
+        return threads;
+    }
+
+    std::unordered_set<DWORD> snapshot::ls_thread_ids(DWORD pid) {
+        if (!thread_ids.empty()) {
+            return thread_ids;
+        }
+        if (!threads.empty()) {
+            for (auto thread: threads) {
+                thread_ids.insert(thread.th32ThreadID);
+            }
+            return thread_ids;
+        }
+        cleanup();
+        THREADENTRY32 te = {sizeof(THREADENTRY32)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Thread32First(snapshot_handle, &te)) {
+                error_code = GetLastError();
+                break;
+            }
+            thread_ids.insert(te.th32ThreadID);
+            while (Thread32Next(snapshot_handle, &te)) {
+                thread_ids.insert(te.th32ThreadID);
+            }
+        } while (false);
+        return thread_ids;
+    }
+
+    void snapshot::refresh_threads() {
+        threads.clear();
+        thread_ids.clear();
+    }
+
+    bool snapshot::tid_exists(DWORD tid) {
+        if (thread_ids.empty()) {
+            ls_thread_ids();
+        }
+        return thread_ids.find(tid) != thread_ids.end();
+    }
+
+    DWORD snapshot::tid_to_pid(DWORD tid) {
+        if (threads.empty()) {
+            ls_threads();
+        }
+        for (auto thread: threads) {
+            if (thread.th32ThreadID == tid) {
+                return thread.th32OwnerProcessID;
+            }
+        }
+        return 0;
+    }
+
+    THREADENTRY32 snapshot::find_thread(DWORD tid) {
+        if (threads.empty()) {
+            ls_threads();
+        }
+        for (auto thread: threads) {
+            if (thread.th32ThreadID == tid) {
+                return thread;
+            }
+        }
+        return {};
+    }
+
+    std::vector<THREADENTRY32> snapshot::find_threads(DWORD pid) {
+        if (threads.empty()) {
+            ls_threads();
+        }
+        std::vector<THREADENTRY32> result;
+        for (auto thread: threads) {
+            if (thread.th32OwnerProcessID == pid) {
+                result.push_back(thread);
+            }
+        }
+        return result;
+    }
+
+
+    std::vector<MODULEENTRY32W> snapshot::ls_modules(DWORD pid) {
+        if (!modules.empty()) {
+            return modules;
+        }
+        cleanup();
+        MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Module32FirstW(snapshot_handle, &me)) {
+                error_code = GetLastError();
+                break;
+            }
+            modules.push_back(me);
+            while (Module32NextW(snapshot_handle, &me)) {
+                modules.push_back(me);
+            }
+        } while (false);
+        return modules;
+    }
+
+    std::unordered_set<HMODULE> snapshot::ls_module_handles(DWORD pid) {
+        if (!module_handles.empty()) {
+            return module_handles;
+        }
+        if (!modules.empty()) {
+            for (auto module: modules) {
+                module_handles.insert(module.hModule);
+            }
+            return module_handles;
+        }
+        cleanup();
+        MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Module32FirstW(snapshot_handle, &me)) {
+                error_code = GetLastError();
+                break;
+            }
+            module_handles.insert(me.hModule);
+            while (Module32NextW(snapshot_handle, &me)) {
+                module_handles.insert(me.hModule);
+            }
+        } while (false);
+        return module_handles;
+    }
+
+    void snapshot::refresh_modules() {
+        modules.clear();
+        module_handles.clear();
+    }
+
+    MODULEENTRY32W snapshot::find_module(const wchar_t *proc_name) {
+        if (!proc_name || wcslen(proc_name) == 0) {
+            return {};
+        }
+        if (modules.empty()) {
+            ls_modules();
+        }
+        for (auto module: modules) {
+            if (helper::string::strstr_case_insen(module.szModule,
+                                                  proc_name) ||
+                helper::string::strstr_case_insen(module.szExePath,
+                                                  proc_name)) {
+                return module;
+            }
+        }
+        return {};
+    }
+
+    MODULEENTRY32W snapshot::find_module(const void *address) {
+        if (!address) {
+            return {};
+        }
+        if (modules.empty()) {
+            ls_modules();
+        }
+        for (auto module: modules) {
+            if (module.modBaseAddr == address) {
+                return module;
+            }
+        }
+        return {};
+    }
+
+    std::vector<HEAPLIST32> snapshot::ls_heaps(DWORD pid) {
+        if (!heaps.empty()) {
+            return heaps;
+        }
+        cleanup();
+        HEAPLIST32 he = {sizeof(HEAPLIST32)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Heap32ListFirst(snapshot_handle, &he)) {
+                error_code = GetLastError();
+                break;
+            }
+            heaps.push_back(he);
+            while (Heap32ListNext(snapshot_handle, &he)) {
+                heaps.push_back(he);
+            }
+        } while (false);
+        return heaps;
+    }
+
+    std::unordered_set<ULONG_PTR> snapshot::ls_heap_ids(DWORD pid) {
+        if (!heap_ids.empty()) {
+            return heap_ids;
+        }
+        if (!heaps.empty()) {
+            for (auto heap: heaps) {
+                heap_ids.insert(heap.th32HeapID);
+            }
+            return heap_ids;
+        }
+        cleanup();
+        HEAPLIST32 he = {sizeof(HEAPLIST32)};
+        do {
+            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
+                                                       pid);
+            if (snapshot_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!Heap32ListFirst(snapshot_handle, &he)) {
+                error_code = GetLastError();
+                break;
+            }
+            heap_ids.insert(he.th32HeapID);
+            while (Heap32ListNext(snapshot_handle, &he)) {
+                heap_ids.insert(he.th32HeapID);
+            }
+        } while (false);
+        return heap_ids;
+    }
+
+    void snapshot::refresh_heaps() {
+        heaps.clear();
+        heap_ids.clear();
+    }
+
+    HEAPLIST32 snapshot::find_heap(ULONG_PTR heap_id) {
+        if (heaps.empty()) {
+            ls_heaps();
+        }
+        for (auto heap: heaps) {
+            if (heap.th32HeapID == heap_id) {
+                return heap;
+            }
+        }
+        return {};
+    }
+
+    std::vector<HEAPLIST32> snapshot::find_heaps(DWORD pid) {
+        if (heaps.empty()) {
+            ls_heaps();
+        }
+        std::vector<HEAPLIST32> result;
+        for (auto heap: heaps) {
+            if (heap.th32ProcessID == pid) {
+                result.push_back(heap);
+            }
+        }
+        return result;
+    }
+
+    std::vector<HEAPENTRY32>
+    snapshot::find_heap_blocks(HEAPLIST32 &heap_list) {
+        HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
+        std::vector<HEAPENTRY32> result;
+        do {
+            if (!Heap32First(&he, heap_list.th32ProcessID, heap_list.th32HeapID)) {
+                error_code = GetLastError();
+                break;
+            }
+            result.push_back(he);
+            while (Heap32Next(&he)) {
+                result.push_back(he);
+            }
+        } while (false);
+        return result;
+    }
+
+    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(ULONG_PTR heap_id) {
+        HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
+        std::vector<HEAPENTRY32> result;
+        do {
+            HEAPLIST32 heaplist32 = find_heap(heap_id);
+            if (!Heap32First(&he, heaplist32.th32ProcessID, heap_id)) {
+                error_code = GetLastError();
+                break;
+            }
+            result.push_back(he);
+            while (Heap32Next(&he)) {
+                result.push_back(he);
+            }
+        } while (false);
+        return result;
+    }
+
+    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(DWORD pid) {
+        HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
+        std::vector<HEAPENTRY32> result;
+        do {
+            auto heaplists = find_heaps(pid);
+            if (heaplists.empty()) {
+                break;
+            }
+            for (auto heaplist: heaplists) {
+                if (!Heap32First(&he, heaplist.th32ProcessID, heaplist.th32HeapID)) {
+                    error_code = GetLastError();
+                    break;
+                }
+                result.push_back(he);
+                while (Heap32Next(&he)) {
+                    result.push_back(he);
+                }
+            }
+        } while (false);
+        return result;
+    }
+
+
+    HANDLE snapshot::pid_to_handle(DWORD pid,
+                                   DWORD desired_access,
+                                   bool is_inherit_handle) {
+        HANDLE proc_handle = OpenProcess(desired_access,
+                                         is_inherit_handle ? TRUE : FALSE,
+                                         pid);
+        if (!proc_handle) {
+            error_code = GetLastError();
+        }
+        return proc_handle;
+    }
+
+    DWORD snapshot::handle_to_pid(HANDLE proc_handle) {
+        DWORD pid = GetProcessId(proc_handle);
+        if (!pid) {
+            error_code = GetLastError();
+        }
+        return pid;
+    }
+
+
+    bool snapshot::is_heap(HANDLE proc_handle, void *address) {
+        if (!proc_handle) {
+            return false;
+        }
+        const DWORD pid = handle_to_pid(proc_handle);
+        if (!pid) {
+            return false;
+        }
+        std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
+        if (blocks.empty()) {
+            return false;
+        }
+        for (auto block: blocks) {
+            MEMORY_BASIC_INFORMATION mbi;
+            if (!VirtualQueryEx(proc_handle,
+                                reinterpret_cast<void *>(block.dwAddress),
+                                &mbi,
+                                sizeof(mbi))) {
+                error_code = GetLastError();
+                break;
+            }
+            if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
+                address <= static_cast<uint8_t *>(mbi.AllocationBase) + mbi.RegionSize) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool snapshot::is_heap(DWORD pid, void *address) {
+        HANDLE proc_handle = nullptr;
+        if (GetCurrentProcessId() == pid) {
+            proc_handle = GetCurrentProcess();
+        } else {
+            proc_handle = pid_to_handle(pid);
+        }
+        if (!proc_handle) {
+            return false;
+        }
+        std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
+        if (blocks.empty()) {
+            return false;
+        }
+        for (auto block: blocks) {
+            MEMORY_BASIC_INFORMATION mbi;
+            if (!VirtualQueryEx(proc_handle,
+                                reinterpret_cast<void *>(block.dwAddress),
+                                &mbi,
+                                sizeof(mbi))) {
+                error_code = GetLastError();
+                break;
+            }
+            if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
+                address <= static_cast<uint8_t *>(mbi.AllocationBase) + mbi.RegionSize) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    DWORD snapshot::err_code() const {
+        return error_code;
+    }
+
+    std::string snapshot::err_string() const {
+        std::string result = helper::convert::err_string(error_code);
+        return result;
+    }
+
+    std::wstring snapshot::err_wstring() const {
+        std::wstring result = helper::convert::err_wstring(error_code);
+        return result;
+    }
+}

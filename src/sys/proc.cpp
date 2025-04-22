@@ -32,6 +32,13 @@ namespace YanLib::sys {
             }
             proc_infos.clear();
         }
+        if (!proc_handles.empty()) {
+            for (auto &proc_handle: proc_handles) {
+                CloseHandle(proc_handle);
+                proc_handle = nullptr;
+            }
+            proc_handles.clear();
+        }
     }
 
     NTSTATUS proc::nt_query_info_proc(HANDLE proc_handle,
@@ -92,9 +99,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return {};
         }
-        rwlock.write_lock();
+        proc_info_rwlock.write_lock();
         proc_infos.push_back(pi);
-        rwlock.write_unlock();
+        proc_info_rwlock.write_unlock();
         return pi;
     }
 
@@ -122,9 +129,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return {};
         }
-        rwlock.write_lock();
+        proc_info_rwlock.write_lock();
         proc_infos.push_back(pi);
-        rwlock.write_unlock();
+        proc_info_rwlock.write_unlock();
         return pi;
     }
 
@@ -165,9 +172,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return {};
         }
-        rwlock.write_lock();
+        proc_info_rwlock.write_lock();
         proc_infos.push_back(pi);
-        rwlock.write_unlock();
+        proc_info_rwlock.write_unlock();
         return pi;
     }
 
@@ -213,9 +220,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return {};
         }
-        rwlock.write_lock();
+        proc_info_rwlock.write_lock();
         proc_infos.push_back(pi);
-        rwlock.write_unlock();
+        proc_info_rwlock.write_unlock();
         return pi;
     }
 
@@ -262,9 +269,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return {};
         }
-        rwlock.write_lock();
+        proc_info_rwlock.write_lock();
         proc_infos.push_back(pi);
-        rwlock.write_unlock();
+        proc_info_rwlock.write_unlock();
         return pi;
     }
 
@@ -301,9 +308,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return {};
         }
-        rwlock.write_lock();
+        proc_info_rwlock.write_lock();
         proc_infos.push_back(pi);
-        rwlock.write_unlock();
+        proc_info_rwlock.write_unlock();
         return pi;
     }
 
@@ -476,7 +483,11 @@ namespace YanLib::sys {
                                          pid);
         if (!proc_handle) {
             error_code = GetLastError();
+            return nullptr;
         }
+        proc_handle_rwlock.write_lock();
+        proc_handles.push_back(proc_handle);
+        proc_handle_rwlock.write_unlock();
         return proc_handle;
     }
 

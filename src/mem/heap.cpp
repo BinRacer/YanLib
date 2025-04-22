@@ -7,6 +7,12 @@
 
 namespace YanLib::mem {
     heap::~heap() {
+        if (!mem_list.empty()) {
+            for (auto &[heap_handle, mem]: mem_list) {
+                HeapFree(heap_handle, 0, mem);
+                mem = nullptr;
+            }
+        }
         if (!heap_handles.empty()) {
             for (auto &heap_handle: heap_handles) {
                 HeapDestroy(heap_handle);
@@ -45,22 +51,41 @@ namespace YanLib::mem {
     }
 
     void *heap::malloc(HANDLE heap_handle,
-                       size_t size) const {
-        return HeapAlloc(heap_handle,
-                         HEAP_ZERO_MEMORY,
-                         size);
+                       size_t size) {
+        void *addr = HeapAlloc(heap_handle,
+                               HEAP_ZERO_MEMORY,
+                               size);
+        if (!addr) {
+            return nullptr;
+        }
+        mem_rwlock.write_lock();
+        mem_list.push_back(std::make_pair(heap_handle, addr));
+        mem_rwlock.write_unlock();
+        return addr;
     }
 
     void *heap::realloc(HANDLE heap_handle,
                         void *addr,
-                        size_t new_size) const {
-        return HeapReAlloc(heap_handle,
-                           HEAP_ZERO_MEMORY,
-                           addr,
-                           new_size);
+                        size_t new_size) {
+        void *address = HeapReAlloc(heap_handle,
+                                    HEAP_ZERO_MEMORY,
+                                    addr,
+                                    new_size);
+        if (!address) {
+            return nullptr;
+        }
+        mem_rwlock.write_lock();
+        mem_list.push_back(std::make_pair(heap_handle, address));
+        mem_rwlock.write_unlock();
+        return address;
     }
 
     bool heap::free(HANDLE heap_handle, void *addr) {
+        mem_rwlock.write_lock();
+        mem_list.remove_if([addr](const auto &ele)-> bool {
+            return ele.second == addr;
+        });
+        mem_rwlock.write_unlock();
         if (!HeapFree(heap_handle, 0, addr)) {
             error_code = GetLastError();
             return false;

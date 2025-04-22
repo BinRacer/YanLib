@@ -7,12 +7,15 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include <list>
 #include "sync/rwlock.h"
 
 namespace YanLib::mem {
     class heap {
         std::vector<HANDLE> heap_handles = {};
+        std::list<std::pair<HANDLE, void *> > mem_list = {};
         sync::rwlock heap_rwlock = {};
+        sync::rwlock mem_rwlock = {};
         DWORD error_code = 0;
 
     public:
@@ -35,11 +38,11 @@ namespace YanLib::mem {
         HANDLE open();
 
         void *malloc(HANDLE heap_handle,
-                     size_t size) const;
+                     size_t size);
 
         void *realloc(HANDLE heap_handle,
                       void *addr,
-                      size_t new_size) const;
+                      size_t new_size);
 
         bool free(HANDLE heap_handle,
                   void *addr);

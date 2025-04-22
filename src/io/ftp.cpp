@@ -199,7 +199,7 @@ namespace YanLib::io {
     }
 
     bool ftp::write(HINTERNET file_handle,
-                    LPCVOID buf,
+                    const void *buf,
                     DWORD size,
                     LPDWORD ret_size) {
         if (!InternetWriteFile(file_handle,
@@ -441,7 +441,8 @@ namespace YanLib::io {
                          const wchar_t *local_file) {
         DWORD error = 0;
         fs file;
-        if (!file.create(local_file)) {
+        HANDLE file_handle = file.create(local_file);
+        if (!file_handle) {
             return file.err_code();
         }
         constexpr DWORD buf_size = 4096;
@@ -455,7 +456,7 @@ namespace YanLib::io {
                 break;
             }
             if (bytes_read <= 0) break;
-            if (!file.write(buf, bytes_read, &bytes_written)) {
+            if (!file.write(file_handle, buf, bytes_read, &bytes_written)) {
                 error = file.err_code();
                 break;
             }
@@ -468,7 +469,8 @@ namespace YanLib::io {
                        const wchar_t *local_file) {
         DWORD error = 0;
         fs file;
-        if (!file.open(local_file)) {
+        HANDLE file_handle = file.open(local_file);
+        if (!file_handle) {
             return file.err_code();
         }
         constexpr DWORD buf_size = 4096;
@@ -477,7 +479,7 @@ namespace YanLib::io {
         DWORD bytes_read = 0;
         DWORD bytes_written = 0;
         do {
-            if (!file.read(buf, buf_size, &bytes_read)) {
+            if (!file.read(file_handle, buf, buf_size, &bytes_read)) {
                 error = file.err_code();
                 break;
             }

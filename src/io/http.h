@@ -122,7 +122,7 @@ namespace YanLib::io {
 
         std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
-        bool write(LPCVOID buf,
+        bool write(const void* buf,
                    DWORD size,
                    LPDWORD ret_size);
 

@@ -18,7 +18,9 @@ namespace YanLib::sys {
     class proc {
     private:
         std::vector<PROCESS_INFORMATION> proc_infos = {};
-        sync::rwlock rwlock = {};
+        std::vector<HANDLE> proc_handles = {};
+        sync::rwlock proc_info_rwlock = {};
+        sync::rwlock proc_handle_rwlock = {};
         wchar_t *curr_proc_env = nullptr;
         DWORD error_code = 0;
 

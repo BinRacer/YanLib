@@ -86,12 +86,13 @@ namespace YanLib::hash {
     bool md5::process_file() {
         do {
             io::fs file;
-            if (!file.open(file_name.data())) {
+            HANDLE file_handle = file.open(file_name.data());
+            if (!file_handle) {
                 error_code = file.err_code();
                 break;
             }
-            if (file.size() <= 4096) {
-                std::vector<uint8_t> data = file.read_bytes_to_end();
+            if (file.size(file_handle) <= 4096) {
+                std::vector<uint8_t> data = file.read_bytes_to_end(file_handle);
                 if (!CryptHashData(crypt_hash_handle,
                                    data.data(),
                                    data.size(),
@@ -102,13 +103,14 @@ namespace YanLib::hash {
             } else {
                 bool is_error = false;
                 constexpr size_t BLOCKSIZE = 4096;
-                size_t total_size = file.size();
+                size_t total_size = file.size(file_handle);
                 size_t offset = 0;
                 while (offset < total_size) {
                     size_t block_size = (total_size - offset) > BLOCKSIZE
-                                           ? BLOCKSIZE
-                                           : total_size - offset;
-                    std::vector<uint8_t> data = file.read_bytes(block_size);
+                                            ? BLOCKSIZE
+                                            : total_size - offset;
+                    std::vector<uint8_t> data = file.read_bytes(file_handle,
+                                                                block_size);
                     if (!CryptHashData(crypt_hash_handle,
                                        data.data(),
                                        data.size(),
@@ -145,8 +147,8 @@ namespace YanLib::hash {
                 size_t offset = 0;
                 while (offset < total_size) {
                     size_t block_size = (total_size - offset) > BLOCKSIZE
-                                           ? BLOCKSIZE
-                                           : total_size - offset;
+                                            ? BLOCKSIZE
+                                            : total_size - offset;
                     BYTE *block_ptr = data_bytes.data() + offset;
                     if (!CryptHashData(crypt_hash_handle,
                                        block_ptr,

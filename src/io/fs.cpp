@@ -10,92 +10,92 @@ namespace YanLib::io {
         std::transform(path.begin(),
                        path.end(),
                        path.begin(),
-                       [](const wchar_t ch) { return (ch == L'/') ? L'\\' : ch; });
+                       [](const wchar_t ch) {
+                           return (ch == L'/') ? L'\\' : ch;
+                       });
         if (path.back() == L'\\') {
             path.pop_back();
         }
     }
 
-    fs::fs() : file_handle(INVALID_HANDLE_VALUE), error_code(0) {
-    }
-
     fs::~fs() {
-        if (file_handle != INVALID_HANDLE_VALUE) {
-            CloseHandle(file_handle);
-            file_handle = INVALID_HANDLE_VALUE;
+        if (!file_handles.empty()) {
+            for (auto &file_handle: file_handles) {
+                CloseHandle(file_handle);
+                file_handle = INVALID_HANDLE_VALUE;
+            }
+            file_handles.clear();
         }
     }
 
-    bool fs::open(const wchar_t *file_name,
-                  DWORD desired_access,
-                  DWORD share_mode,
-                  LPSECURITY_ATTRIBUTES security_attrs,
-                  DWORD creation_disposition,
-                  DWORD flags_and_attrs,
-                  HANDLE template_file) {
-        // avoid open file twice
-        if (file_handle != INVALID_HANDLE_VALUE) {
-            return false;
-        }
-        file_handle = CreateFileW(file_name,
-                                  desired_access,
-                                  share_mode,
-                                  security_attrs,
-                                  creation_disposition,
-                                  flags_and_attrs,
-                                  template_file);
-        if (file_handle == INVALID_HANDLE_VALUE) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool fs::create(const wchar_t *file_name,
+    HANDLE fs::open(const wchar_t *file_name,
                     DWORD desired_access,
                     DWORD share_mode,
                     LPSECURITY_ATTRIBUTES security_attrs,
                     DWORD creation_disposition,
                     DWORD flags_and_attrs,
                     HANDLE template_file) {
-        // avoid create file twice
-        if (file_handle != INVALID_HANDLE_VALUE) {
-            return false;
-        }
-        file_handle = CreateFileW(file_name,
-                                  desired_access,
-                                  share_mode,
-                                  security_attrs,
-                                  creation_disposition,
-                                  flags_and_attrs,
-                                  template_file);
+        HANDLE file_handle = CreateFileW(file_name,
+                                         desired_access,
+                                         share_mode,
+                                         security_attrs,
+                                         creation_disposition,
+                                         flags_and_attrs,
+                                         template_file);
         if (file_handle == INVALID_HANDLE_VALUE) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        return true;
+        rwlock.write_lock();
+        file_handles.push_back(file_handle);
+        rwlock.write_lock();
+        return file_handle;
     }
 
-    bool fs::touch(const wchar_t *file_name) {
-        // avoid touch file twice
-        if (file_handle != INVALID_HANDLE_VALUE) {
-            return false;
-        }
-        file_handle = CreateFileW(file_name,
-                                  GENERIC_READ | GENERIC_WRITE,
-                                  FILE_SHARE_READ | FILE_SHARE_WRITE,
-                                  nullptr,
-                                  CREATE_NEW,
-                                  FILE_ATTRIBUTE_NORMAL,
-                                  nullptr);
+    HANDLE fs::create(const wchar_t *file_name,
+                      DWORD desired_access,
+                      DWORD share_mode,
+                      LPSECURITY_ATTRIBUTES security_attrs,
+                      DWORD creation_disposition,
+                      DWORD flags_and_attrs,
+                      HANDLE template_file) {
+        HANDLE file_handle = CreateFileW(file_name,
+                                         desired_access,
+                                         share_mode,
+                                         security_attrs,
+                                         creation_disposition,
+                                         flags_and_attrs,
+                                         template_file);
         if (file_handle == INVALID_HANDLE_VALUE) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        return true;
+        rwlock.write_lock();
+        file_handles.push_back(file_handle);
+        rwlock.write_lock();
+        return file_handle;
     }
 
-    bool fs::read(void *buf,
+    HANDLE fs::touch(const wchar_t *file_name) {
+        HANDLE file_handle = CreateFileW(file_name,
+                                         GENERIC_READ | GENERIC_WRITE,
+                                         FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                         nullptr,
+                                         CREATE_NEW,
+                                         FILE_ATTRIBUTE_NORMAL,
+                                         nullptr);
+        if (file_handle == INVALID_HANDLE_VALUE) {
+            error_code = GetLastError();
+            return nullptr;
+        }
+        rwlock.write_lock();
+        file_handles.push_back(file_handle);
+        rwlock.write_lock();
+        return file_handle;
+    }
+
+    bool fs::read(HANDLE file_handle,
+                  void *buf,
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped) {
@@ -110,7 +110,8 @@ namespace YanLib::io {
         return false;
     }
 
-    bool fs::write(LPCVOID buf,
+    bool fs::write(HANDLE file_handle,
+                   const void *buf,
                    DWORD size,
                    LPDWORD ret_size,
                    LPOVERLAPPED overlapped) {
@@ -125,7 +126,8 @@ namespace YanLib::io {
         return false;
     }
 
-    std::string fs::read_string(int32_t buffer_size) {
+    std::string fs::read_string(HANDLE file_handle,
+                                int32_t buffer_size) {
         if (buffer_size <= 1024) {
             buffer_size = 1024;
         }
@@ -145,7 +147,8 @@ namespace YanLib::io {
         return {};
     }
 
-    std::wstring fs::read_wstring(int32_t buffer_size) {
+    std::wstring fs::read_wstring(HANDLE file_handle,
+                                  int32_t buffer_size) {
         if (buffer_size < 512) {
             buffer_size = 512;
         }
@@ -165,7 +168,7 @@ namespace YanLib::io {
         return {};
     }
 
-    std::string fs::read_string_to_end() {
+    std::string fs::read_string_to_end(HANDLE file_handle) {
         constexpr DWORD buffer_size = 4096;
         char *buf = new char[buffer_size];
         memset(buf, 0, buffer_size);
@@ -193,7 +196,7 @@ namespace YanLib::io {
         return raw_data;
     }
 
-    std::wstring fs::read_wstring_to_end() {
+    std::wstring fs::read_wstring_to_end(HANDLE file_handle) {
         constexpr DWORD buffer_size = 2048;
         wchar_t *buf = new wchar_t[buffer_size];
         memset(buf, 0, buffer_size * sizeof(wchar_t));
@@ -221,7 +224,8 @@ namespace YanLib::io {
         return raw_data;
     }
 
-    std::vector<uint8_t> fs::read_bytes(int32_t buffer_size) {
+    std::vector<uint8_t> fs::read_bytes(HANDLE file_handle,
+                                        int32_t buffer_size) {
         if (buffer_size < 1024) {
             buffer_size = 1024;
         }
@@ -241,7 +245,7 @@ namespace YanLib::io {
         return {};
     }
 
-    std::vector<uint8_t> fs::read_bytes_to_end() {
+    std::vector<uint8_t> fs::read_bytes_to_end(HANDLE file_handle) {
         constexpr DWORD buffer_size = 4096;
         uint8_t *buf = new uint8_t[buffer_size];
         memset(buf, 0, buffer_size);
@@ -269,7 +273,8 @@ namespace YanLib::io {
         return raw_data;
     }
 
-    DWORD fs::write_string_to_file(const std::string &str) {
+    DWORD fs::write_string_to_file(HANDLE file_handle,
+                                   const std::string &str) {
         if (str.empty()) {
             return 0;
         }
@@ -284,7 +289,8 @@ namespace YanLib::io {
         return bytes_written;
     }
 
-    DWORD fs::write_wstring_to_file(const std::wstring &wstr) {
+    DWORD fs::write_wstring_to_file(HANDLE file_handle,
+                                    const std::wstring &wstr) {
         if (wstr.empty()) {
             return 0;
         }
@@ -299,7 +305,8 @@ namespace YanLib::io {
         return bytes_written;
     }
 
-    DWORD fs::write_bytes_to_file(const std::vector<uint8_t> &vec) {
+    DWORD fs::write_bytes_to_file(HANDLE file_handle,
+                                  const std::vector<uint8_t> &vec) {
         if (vec.empty()) {
             return 0;
         }
@@ -314,7 +321,7 @@ namespace YanLib::io {
         return bytes_written;
     }
 
-    int64_t fs::size() {
+    int64_t fs::size(HANDLE file_handle) {
         LARGE_INTEGER file_size{};
         if (!GetFileSizeEx(file_handle, &file_size)) {
             error_code = GetLastError();
@@ -514,7 +521,8 @@ namespace YanLib::io {
             std::wstring search_path = stack.back();
             stack.pop_back();
 
-            HANDLE find_handle = FindFirstFileW(search_path.data(), &find_data);
+            HANDLE find_handle = FindFirstFileW(search_path.data(),
+                                                &find_data);
             if (find_handle != INVALID_HANDLE_VALUE) {
                 do {
                     if (wcscmp(find_data.cFileName, L".") == 0 ||

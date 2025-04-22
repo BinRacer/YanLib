@@ -17,6 +17,13 @@
 namespace YanLib::sys {
     security::~security() {
         cleanup();
+        if (!token_handles.empty()) {
+            for (auto &token_handle: token_handles) {
+                CloseHandle(token_handle);
+                token_handle = nullptr;
+            }
+            token_handles.clear();
+        }
     }
 
     void security::cleanup() {
@@ -37,6 +44,9 @@ namespace YanLib::sys {
             error_code = GetLastError();
             return nullptr;
         }
+        rwlock.write_lock();
+        token_handles.push_back(token);
+        rwlock.write_unlock();
         return token;
     }
 
@@ -45,16 +55,10 @@ namespace YanLib::sys {
                                 LPSECURITY_ATTRIBUTES token_attrs,
                                 SECURITY_IMPERSONATION_LEVEL impersonation_level,
                                 TOKEN_TYPE token_type) {
-        HANDLE token_handle = nullptr;
-        bool is_curr = false;
-        if (existing_token_handle) {
-            token_handle = existing_token_handle;
-        } else {
-            token_handle = curr_session_token();
-            is_curr = true;
-        }
+        HANDLE token_handle = existing_token_handle
+                                  ? existing_token_handle
+                                  : curr_session_token();
         if (!token_handle) {
-            is_curr = false;
             return nullptr;
         }
         HANDLE ret_token = nullptr;
@@ -65,14 +69,11 @@ namespace YanLib::sys {
                               token_type,
                               &ret_token)) {
             error_code = GetLastError();
-            if (is_curr) {
-                CloseHandle(token_handle);
-            }
             return nullptr;
         }
-        if (is_curr) {
-            CloseHandle(token_handle);
-        }
+        rwlock.write_lock();
+        token_handles.push_back(ret_token);
+        rwlock.write_unlock();
         return ret_token;
     }
 

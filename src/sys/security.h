@@ -7,11 +7,15 @@
 #include <Windows.h>
 #include <string>
 #include <tuple>
+#include <vector>
+#include "sync/rwlock.h"
 
 namespace YanLib::sys {
     class security {
     private:
         void *env = nullptr;
+        std::vector<HANDLE> token_handles = {};
+        sync::rwlock rwlock = {};
         DWORD error_code = 0;
 
         void cleanup();

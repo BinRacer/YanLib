@@ -8,17 +8,25 @@
 namespace YanLib::sys {
     thread::~thread() {
         if (!thread_records.empty()) {
-            for (auto [key, value]: thread_records) {
+            for (auto &[key, value]: thread_records) {
                 CloseHandle(value);
+                value = nullptr;
             }
             thread_records.clear();
         }
+        if (!open_thread_handles.empty()) {
+            for (auto &thread_handle: open_thread_handles) {
+                CloseHandle(thread_handle);
+                thread_handle = nullptr;
+            }
+            open_thread_handles.clear();
+        }
     }
 
-    bool thread::create(LPTHREAD_START_ROUTINE start_addr,
-                        void *params,
-                        size_t stack_size,
-                        LPSECURITY_ATTRIBUTES security_attrs) {
+    HANDLE thread::create(LPTHREAD_START_ROUTINE start_addr,
+                          void *params,
+                          size_t stack_size,
+                          LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
@@ -28,18 +36,18 @@ namespace YanLib::sys {
                                             &tid);
         if (!thread_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        rwlock.write_lock();
-        thread_records.emplace(tid, thread_handle);
-        rwlock.write_unlock();
-        return true;
+        thread_record_rwlock.write_lock();
+        thread_records.push_back(std::make_pair(tid, thread_handle));
+        thread_record_rwlock.write_unlock();
+        return thread_handle;
     }
 
-    bool thread::create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
-                                     void *params,
-                                     size_t stack_size,
-                                     LPSECURITY_ATTRIBUTES security_attrs) {
+    HANDLE thread::create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
+                                       void *params,
+                                       size_t stack_size,
+                                       LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
@@ -49,18 +57,18 @@ namespace YanLib::sys {
                                             &tid);
         if (!thread_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        rwlock.write_lock();
-        thread_records.emplace(tid, thread_handle);
-        rwlock.write_unlock();
-        return true;
+        thread_record_rwlock.write_lock();
+        thread_records.push_back(std::make_pair(tid, thread_handle));
+        thread_record_rwlock.write_unlock();
+        return thread_handle;
     }
 
-    bool thread::create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                           void *params,
-                                           size_t stack_size,
-                                           LPSECURITY_ATTRIBUTES security_attrs) {
+    HANDLE thread::create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
+                                             void *params,
+                                             size_t stack_size,
+                                             LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
@@ -70,20 +78,20 @@ namespace YanLib::sys {
                                             &tid);
         if (!thread_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        rwlock.write_lock();
-        thread_records.emplace(tid, thread_handle);
-        rwlock.write_unlock();
-        return true;
+        thread_record_rwlock.write_lock();
+        thread_records.push_back(std::make_pair(tid, thread_handle));
+        thread_record_rwlock.write_unlock();
+        return thread_handle;
     }
 
-    bool thread::create_remote(HANDLE proc_handle,
-                               LPTHREAD_START_ROUTINE start_addr,
-                               void *params,
-                               size_t stack_size,
-                               LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                               LPSECURITY_ATTRIBUTES security_attrs) {
+    HANDLE thread::create_remote(HANDLE proc_handle,
+                                 LPTHREAD_START_ROUTINE start_addr,
+                                 void *params,
+                                 size_t stack_size,
+                                 LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                 LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
                                                     security_attrs,
@@ -95,20 +103,20 @@ namespace YanLib::sys {
                                                     &tid);
         if (!thread_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        rwlock.write_lock();
-        thread_records.emplace(tid, thread_handle);
-        rwlock.write_unlock();
-        return true;
+        thread_record_rwlock.write_lock();
+        thread_records.push_back(std::make_pair(tid, thread_handle));
+        thread_record_rwlock.write_unlock();
+        return thread_handle;
     }
 
-    bool thread::create_remote_with_suspend(HANDLE proc_handle,
-                                            LPTHREAD_START_ROUTINE start_addr,
-                                            void *params,
-                                            size_t stack_size,
-                                            LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                            LPSECURITY_ATTRIBUTES security_attrs) {
+    HANDLE thread::create_remote_with_suspend(HANDLE proc_handle,
+                                              LPTHREAD_START_ROUTINE start_addr,
+                                              void *params,
+                                              size_t stack_size,
+                                              LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                              LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
                                                     security_attrs,
@@ -120,20 +128,20 @@ namespace YanLib::sys {
                                                     &tid);
         if (!thread_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        rwlock.write_lock();
-        thread_records.emplace(tid, thread_handle);
-        rwlock.write_unlock();
-        return true;
+        thread_record_rwlock.write_lock();
+        thread_records.push_back(std::make_pair(tid, thread_handle));
+        thread_record_rwlock.write_unlock();
+        return thread_handle;
     }
 
-    bool thread::create_remote_with_stack_reserve(HANDLE proc_handle,
-                                                  LPTHREAD_START_ROUTINE start_addr,
-                                                  void *params,
-                                                  size_t stack_size,
-                                                  LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                                  LPSECURITY_ATTRIBUTES security_attrs) {
+    HANDLE thread::create_remote_with_stack_reserve(HANDLE proc_handle,
+                                                    LPTHREAD_START_ROUTINE start_addr,
+                                                    void *params,
+                                                    size_t stack_size,
+                                                    LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+                                                    LPSECURITY_ATTRIBUTES security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
                                                     security_attrs,
@@ -145,12 +153,12 @@ namespace YanLib::sys {
                                                     &tid);
         if (!thread_handle) {
             error_code = GetLastError();
-            return false;
+            return nullptr;
         }
-        rwlock.write_lock();
-        thread_records.emplace(tid, thread_handle);
-        rwlock.write_unlock();
-        return true;
+        thread_record_rwlock.write_lock();
+        thread_records.push_back(std::make_pair(tid, thread_handle));
+        thread_record_rwlock.write_unlock();
+        return thread_handle;
     }
 
     HANDLE thread::curr_thread_handle() {
@@ -177,31 +185,47 @@ namespace YanLib::sys {
                                           thread_id);
         if (!thread_handle) {
             error_code = GetLastError();
+            return nullptr;
         }
+        open_thread_record_rwlock.write_lock();
+        open_thread_handles.push_back(thread_handle);
+        open_thread_record_rwlock.write_unlock();
         return thread_handle;
     }
 
+    DWORD thread::handle_to_tid(HANDLE thread_handle) {
+        DWORD thread_id = GetThreadId(thread_handle);
+        if (!thread_handle) {
+            error_code = GetLastError();
+        }
+        return thread_id;
+    }
+
     DWORD thread::handle_to_pid(HANDLE thread_handle) {
-        return GetProcessIdOfThread(thread_handle);
+        DWORD pid = GetProcessIdOfThread(thread_handle);
+        if (!pid) {
+            error_code = GetLastError();
+        }
+        return pid;
     }
 
     std::vector<HANDLE> thread::thread_handles() {
         std::vector<HANDLE> thread_handles;
-        rwlock.read_lock();
+        thread_record_rwlock.read_lock();
         for (auto [key, value]: thread_records) {
             thread_handles.push_back(value);
         }
-        rwlock.read_unlock();
+        thread_record_rwlock.read_unlock();
         return thread_handles;
     }
 
     std::vector<DWORD> thread::thread_ids() {
         std::vector<DWORD> thread_ids;
-        rwlock.read_lock();
+        thread_record_rwlock.read_lock();
         for (auto [key, value]: thread_records) {
             thread_ids.push_back(key);
         }
-        rwlock.read_unlock();
+        thread_record_rwlock.read_unlock();
         return thread_ids;
     }
 
@@ -349,7 +373,7 @@ namespace YanLib::sys {
     }
 
     void thread::kill_all(DWORD exit_code) {
-        rwlock.read_lock();
+        thread_record_rwlock.read_lock();
         for (auto [key, value]: thread_records) {
             TerminateThread(value, exit_code);
         }

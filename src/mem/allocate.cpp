@@ -9,9 +9,7 @@ namespace YanLib::mem {
     allocate::~allocate() {
         if (!mem_list.empty()) {
             for (auto mem: mem_list) {
-                VirtualFree(mem,
-                            0,
-                            MEM_RELEASE);
+                VirtualFree(mem, 0,MEM_RELEASE);
                 mem = nullptr;
             }
         }

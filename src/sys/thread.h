@@ -6,14 +6,16 @@
 #define THREAD_H
 #include <Windows.h>
 #include <string>
-#include <unordered_map>
+#include <vector>
 #include "sync/rwlock.h"
 
 namespace YanLib::sys {
     class thread {
     private:
-        std::unordered_map<DWORD, HANDLE> thread_records = {};
-        sync::rwlock rwlock = {};
+        std::vector<std::pair<DWORD, HANDLE> > thread_records = {};
+        sync::rwlock thread_record_rwlock = {};
+        std::vector<HANDLE> open_thread_handles = {};
+        sync::rwlock open_thread_record_rwlock = {};
         DWORD error_code = 0;
 
     public:
@@ -29,41 +31,41 @@ namespace YanLib::sys {
 
         ~thread();
 
-        bool create(LPTHREAD_START_ROUTINE start_addr,
-                    void *params,
-                    size_t stack_size = 0,
-                    LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+        HANDLE create(LPTHREAD_START_ROUTINE start_addr,
+                      void *params,
+                      size_t stack_size = 0,
+                      LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        bool create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
-                                 void *params,
-                                 size_t stack_size = 0,
-                                 LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+        HANDLE create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
+                                   void *params,
+                                   size_t stack_size = 0,
+                                   LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        bool create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                       void *params,
-                                       size_t stack_size,
-                                       LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+        HANDLE create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
+                                         void *params,
+                                         size_t stack_size,
+                                         LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        bool create_remote(HANDLE proc_handle,
-                           LPTHREAD_START_ROUTINE start_addr,
-                           void *params,
-                           size_t stack_size = 0,
-                           LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                           LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+        HANDLE create_remote(HANDLE proc_handle,
+                             LPTHREAD_START_ROUTINE start_addr,
+                             void *params,
+                             size_t stack_size = 0,
+                             LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
+                             LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        bool create_remote_with_suspend(HANDLE proc_handle,
-                                        LPTHREAD_START_ROUTINE start_addr,
-                                        void *params,
-                                        size_t stack_size = 0,
-                                        LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                                        LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+        HANDLE create_remote_with_suspend(HANDLE proc_handle,
+                                          LPTHREAD_START_ROUTINE start_addr,
+                                          void *params,
+                                          size_t stack_size = 0,
+                                          LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
+                                          LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
-        bool create_remote_with_stack_reserve(HANDLE proc_handle,
-                                              LPTHREAD_START_ROUTINE start_addr,
-                                              void *params,
-                                              size_t stack_size,
-                                              LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                                              LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+        HANDLE create_remote_with_stack_reserve(HANDLE proc_handle,
+                                                LPTHREAD_START_ROUTINE start_addr,
+                                                void *params,
+                                                size_t stack_size,
+                                                LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
+                                                LPSECURITY_ATTRIBUTES security_attrs = nullptr);
 
         HANDLE curr_thread_handle();
 
@@ -76,6 +78,8 @@ namespace YanLib::sys {
         HANDLE tid_to_handle(DWORD thread_id,
                              DWORD desired_access = THREAD_ALL_ACCESS,
                              bool is_inherit_handle = false);
+
+        DWORD handle_to_tid(HANDLE thread_handle);
 
         DWORD handle_to_pid(HANDLE thread_handle);
 

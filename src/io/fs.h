@@ -8,12 +8,14 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "sync/rwlock.h"
 
 namespace YanLib::io {
     class fs {
     private:
-        HANDLE file_handle;
-        DWORD error_code;
+        std::vector<HANDLE> file_handles = {};
+        sync::rwlock rwlock = {};
+        DWORD error_code = 0;
 
         static inline void remove_tail_slash(std::wstring &path);
 
@@ -26,57 +28,65 @@ namespace YanLib::io {
 
         fs &operator=(fs &&other) = delete;
 
-        fs();
+        fs() = default;
 
         ~fs();
 
-        bool open(const wchar_t *file_name,
-                  DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
-                  DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
-                  LPSECURITY_ATTRIBUTES security_attrs = nullptr,
-                  DWORD creation_disposition = OPEN_EXISTING,
-                  DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
-                  HANDLE template_file = nullptr);
-
-        bool create(const wchar_t *file_name,
+        HANDLE open(const wchar_t *file_name,
                     DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
                     DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
                     LPSECURITY_ATTRIBUTES security_attrs = nullptr,
-                    DWORD creation_disposition = CREATE_ALWAYS,
+                    DWORD creation_disposition = OPEN_EXISTING,
                     DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                     HANDLE template_file = nullptr);
 
-        bool touch(const wchar_t *file_name);
+        HANDLE create(const wchar_t *file_name,
+                      DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
+                      DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
+                      LPSECURITY_ATTRIBUTES security_attrs = nullptr,
+                      DWORD creation_disposition = CREATE_ALWAYS,
+                      DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
+                      HANDLE template_file = nullptr);
 
-        bool read(void *buf,
+        HANDLE touch(const wchar_t *file_name);
+
+        bool read(HANDLE file_handle,
+                  void *buf,
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped = nullptr);
 
-        bool write(LPCVOID buf,
+        bool write(HANDLE file_handle,
+                   const void *buf,
                    DWORD size,
                    LPDWORD ret_size,
                    LPOVERLAPPED overlapped = nullptr);
 
-        std::string read_string(int32_t buffer_size = 1024);
+        std::string read_string(HANDLE file_handle,
+                                int32_t buffer_size = 1024);
 
-        std::wstring read_wstring(int32_t buffer_size = 512);
+        std::wstring read_wstring(HANDLE file_handle,
+                                  int32_t buffer_size = 512);
 
-        std::string read_string_to_end();
+        std::string read_string_to_end(HANDLE file_handle);
 
-        std::wstring read_wstring_to_end();
+        std::wstring read_wstring_to_end(HANDLE file_handle);
 
-        std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
+        std::vector<uint8_t> read_bytes(HANDLE file_handle,
+                                        int32_t buffer_size = 1024);
 
-        std::vector<uint8_t> read_bytes_to_end();
+        std::vector<uint8_t> read_bytes_to_end(HANDLE file_handle);
 
-        DWORD write_string_to_file(const std::string &str);
+        DWORD write_string_to_file(HANDLE file_handle,
+                                   const std::string &str);
 
-        DWORD write_wstring_to_file(const std::wstring &wstr);
+        DWORD write_wstring_to_file(HANDLE file_handle,
+                                    const std::wstring &wstr);
 
-        DWORD write_bytes_to_file(const std::vector<uint8_t> &vec);
+        DWORD write_bytes_to_file(HANDLE file_handle,
+                                  const std::vector<uint8_t> &vec);
 
-        int64_t size();
+        int64_t size(HANDLE file_handle);
 
         static bool rm_file(const wchar_t *file_name);
 

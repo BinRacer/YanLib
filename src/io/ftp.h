@@ -83,7 +83,7 @@ namespace YanLib::io {
                                         int32_t buffer_size = 1024);
 
         bool write(HINTERNET file_handle,
-                   LPCVOID buf,
+                   const void* buf,
                    DWORD size,
                    LPDWORD ret_size);
 

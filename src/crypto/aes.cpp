@@ -312,9 +312,9 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> aes::encode_cbc(const std::vector<uint8_t> &data,
-                                               const std::vector<uint8_t> &key,
-                                               const std::vector<uint8_t> &iv,
-                                               AES_PADDING padding) {
+                                         const std::vector<uint8_t> &key,
+                                         const std::vector<uint8_t> &iv,
+                                         AES_PADDING padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -340,9 +340,9 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> aes::decode_cbc(const std::vector<uint8_t> &data,
-                                               const std::vector<uint8_t> &key,
-                                               const std::vector<uint8_t> &iv,
-                                               AES_PADDING padding) {
+                                         const std::vector<uint8_t> &key,
+                                         const std::vector<uint8_t> &iv,
+                                         AES_PADDING padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -368,8 +368,8 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> aes::encode_ecb(const std::vector<uint8_t> &data,
-                                               const std::vector<uint8_t> &key,
-                                               AES_PADDING padding) {
+                                         const std::vector<uint8_t> &key,
+                                         AES_PADDING padding) {
         if (data.empty() ||
             key.empty() ||
             key.size() != 16) {
@@ -393,8 +393,8 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> aes::decode_ecb(const std::vector<uint8_t> &data,
-                                               const std::vector<uint8_t> &key,
-                                               AES_PADDING padding) {
+                                         const std::vector<uint8_t> &key,
+                                         AES_PADDING padding) {
         if (data.empty() ||
             key.empty() ||
             key.size() != 16) {
@@ -418,9 +418,9 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> aes::encode_cfb(const std::vector<uint8_t> &data,
-                                               const std::vector<uint8_t> &key,
-                                               const std::vector<uint8_t> &iv,
-                                               AES_PADDING padding) {
+                                         const std::vector<uint8_t> &key,
+                                         const std::vector<uint8_t> &iv,
+                                         AES_PADDING padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -446,9 +446,9 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> aes::decode_cfb(const std::vector<uint8_t> &data,
-                                               const std::vector<uint8_t> &key,
-                                               const std::vector<uint8_t> &iv,
-                                               AES_PADDING padding) {
+                                         const std::vector<uint8_t> &key,
+                                         const std::vector<uint8_t> &iv,
+                                         AES_PADDING padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -489,12 +489,10 @@ namespace YanLib::crypto {
             if (!CryptGenRandom(crypt_prov_handle, iv.size(), iv.data())) {
                 break;
             }
-            if (crypt_prov_handle) {
-                CryptReleaseContext(crypt_prov_handle, 0);
-                crypt_prov_handle = 0;
-            }
+            cleanup();
             return iv;
         } while (false);
+        cleanup();
         return {};
     }
 

@@ -161,6 +161,9 @@ namespace YanLib::io {
                 &bytes_read,
                 nullptr) && bytes_read > 0) {
             raw_data.resize(bytes_read);
+            while (raw_data.back() == L'\0') {
+                raw_data.pop_back();
+            }
             raw_data.shrink_to_fit();
             return raw_data;
         }
@@ -321,12 +324,531 @@ namespace YanLib::io {
         return bytes_written;
     }
 
+    int64_t fs::seek(HANDLE file_handle,
+                     int64_t offset,
+                     DWORD move_method) {
+        LARGE_INTEGER move = {};
+        move.QuadPart = offset;
+        LARGE_INTEGER new_pos = {};
+        if (!SetFilePointerEx(file_handle,
+                              move,
+                              &new_pos,
+                              move_method)) {
+            error_code = GetLastError();
+            return 0;
+        }
+        return new_pos.QuadPart;
+    }
+
+    bool fs::truncate(HANDLE file_handle) {
+        if (!SetEndOfFile(file_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::lock(HANDLE file_handle,
+                  DWORD flag,
+                  uint64_t range,
+                  LPOVERLAPPED overlapped,
+                  DWORD reserved) {
+        auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
+        auto high = static_cast<DWORD>(range >> 32);
+        if (!LockFileEx(file_handle,
+                        flag,
+                        reserved,
+                        low,
+                        high,
+                        overlapped)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::unlock(HANDLE file_handle,
+                    uint64_t range,
+                    LPOVERLAPPED overlapped,
+                    DWORD reserved) {
+        auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
+        auto high = static_cast<DWORD>(range >> 32);
+        if (!UnlockFileEx(file_handle,
+                          reserved,
+                          low,
+                          high,
+                          overlapped)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::get_info(HANDLE file_handle,
+                      FILE_INFO_BY_HANDLE_CLASS file_info_class,
+                      void *file_info,
+                      DWORD file_info_size) {
+        if (!GetFileInformationByHandleEx(file_handle,
+                                          file_info_class,
+                                          file_info,
+                                          file_info_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::set_info(HANDLE file_handle,
+                      FILE_INFO_BY_HANDLE_CLASS file_info_class,
+                      void *file_info,
+                      DWORD file_info_size) {
+        if (!SetFileInformationByHandle(file_handle,
+                                        file_info_class,
+                                        file_info,
+                                        file_info_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::set_io_overlapped_range(HANDLE file_handle,
+                                     uint8_t *overlapped_range_start,
+                                     ULONG length) {
+        if (!SetFileIoOverlappedRange(file_handle,
+                                      overlapped_range_start,
+                                      length)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::get_volume_info(HANDLE file_handle,
+                             wchar_t *volume_name_buffer,
+                             DWORD volume_name_size,
+                             LPDWORD volume_serial_number,
+                             LPDWORD max_component_length,
+                             LPDWORD file_system_flag,
+                             wchar_t *file_system_name_buffer,
+                             DWORD file_system_name_size) {
+        if (!GetVolumeInformationByHandleW(file_handle,
+                                           volume_name_buffer,
+                                           volume_name_size,
+                                           volume_serial_number,
+                                           max_component_length,
+                                           file_system_flag,
+                                           file_system_name_buffer,
+                                           file_system_name_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    std::wstring fs::get_final_path_name(HANDLE file_handle,
+                                         DWORD flag) {
+        DWORD size = GetFinalPathNameByHandleW(file_handle,
+                                               nullptr,
+                                               0,
+                                               flag);
+        std::wstring buffer(size, L'\0');
+        size = GetFinalPathNameByHandleW(file_handle,
+                                         buffer.data(),
+                                         buffer.size(),
+                                         flag);
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    bool fs::is_short_name_enabled(HANDLE file_handle) {
+        int is_ok = 0;
+        if (!AreShortNamesEnabled(file_handle, &is_ok)) {
+            error_code = GetLastError();
+        }
+        return is_ok;
+    }
+
+    bool fs::monitor_dir_change(HANDLE dir_handle,
+                                void *buffer,
+                                DWORD buffer_length,
+                                bool is_watch_subtree,
+                                DWORD notify_filter,
+                                LPDWORD bytes_returned,
+                                LPOVERLAPPED overlapped,
+                                LPOVERLAPPED_COMPLETION_ROUTINE completion_routine) {
+        if (!ReadDirectoryChangesW(dir_handle,
+                                   buffer,
+                                   buffer_length,
+                                   is_watch_subtree ? TRUE : FALSE,
+                                   notify_filter,
+                                   bytes_returned,
+                                   overlapped,
+                                   completion_routine)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD fs::file_type(HANDLE file_handle) {
+        DWORD ret = GetFileType(file_handle);
+        if (ret == FILE_TYPE_UNKNOWN) {
+            error_code = GetLastError();
+        }
+        return ret;
+    }
+
     int64_t fs::size(HANDLE file_handle) {
         LARGE_INTEGER file_size{};
         if (!GetFileSizeEx(file_handle, &file_size)) {
             error_code = GetLastError();
         }
         return file_size.QuadPart;
+    }
+
+    DWORD fs::get_attr(const wchar_t *file_name) {
+        DWORD attr = GetFileAttributesW(file_name);
+        if (attr == INVALID_FILE_ATTRIBUTES) {
+            error_code = GetLastError();
+            return 0;
+        }
+        return attr;
+    }
+
+    bool fs::set_attr(const wchar_t *file_name, DWORD attr) {
+        if (!SetFileAttributesW(file_name, attr)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    UINT fs::get_drive_type(const wchar_t *path_name) {
+        return GetDriveTypeW(path_name);
+    }
+
+    std::wstring fs::get_volume_path_name(const wchar_t *file_name) {
+        std::wstring buffer(MAX_PATH + 1, L'\0');
+        if (!GetVolumePathNameW(file_name,
+                                buffer.data(),
+                                MAX_PATH)) {
+            error_code = GetLastError();
+            return {};
+        }
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    std::wstring
+    fs::get_volume_path_names_for_volume_name(const wchar_t *volume_name) {
+        DWORD size = 0;
+        if (!GetVolumePathNamesForVolumeNameW(volume_name,
+                                              nullptr,
+                                              0,
+                                              &size)) {
+            if (GetLastError() == ERROR_MORE_DATA) {
+                std::wstring buffer(size, L'\0');
+                if (!GetVolumePathNamesForVolumeNameW(volume_name,
+                                                      buffer.data(),
+                                                      buffer.size(),
+                                                      &size)) {
+                    error_code = GetLastError();
+                    return {};
+                }
+                buffer.resize(size);
+                while (buffer.back() == L'\0') {
+                    buffer.pop_back();
+                }
+                return buffer;
+            }
+        }
+        return {};
+    }
+
+    std::wstring
+    fs::get_volume_name_for_volume_mount_point(const wchar_t *volume_mount_point) {
+        std::wstring buffer(MAX_PATH + 1, L'\0');
+        if (!GetVolumeNameForVolumeMountPointW(volume_mount_point,
+                                               buffer.data(),
+                                               MAX_PATH)) {
+            error_code = GetLastError();
+            return {};
+        }
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    bool fs::delete_volume_mount_point(const wchar_t *volume_mount_point) {
+        if (!DeleteVolumeMountPointW(volume_mount_point)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    std::wstring fs::get_temp_path() {
+        std::wstring buffer(MAX_PATH + 1, L'\0');
+        DWORD size = GetTempPathW(MAX_PATH,
+                                  buffer.data());
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    std::wstring fs::get_temp_file_name(const wchar_t *path_name,
+                                        const wchar_t *prefix,
+                                        UINT unique) {
+        std::wstring buffer(MAX_PATH + 1, L'\0');
+        if (!GetTempFileNameW(path_name,
+                              prefix,
+                              unique, buffer.data())) {
+            error_code = GetLastError();
+            return {};
+        }
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    std::wstring fs::get_short_path_name(const wchar_t *long_path) {
+        DWORD size = GetShortPathNameW(long_path,
+                                       nullptr,
+                                       0);
+        std::wstring buffer(size, L'\0');
+        size = GetShortPathNameW(long_path,
+                                 buffer.data(),
+                                 buffer.size());
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    std::wstring fs::get_long_path_name(const wchar_t *short_path) {
+        DWORD size = GetLongPathNameW(short_path,
+                                      nullptr,
+                                      0);
+        std::wstring buffer(size, L'\0');
+        size = GetLongPathNameW(short_path,
+                                buffer.data(),
+                                buffer.size());
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    std::wstring fs::get_logical_drive_strings() {
+        DWORD size = GetLogicalDriveStringsW(0,
+                                             nullptr);
+        std::wstring buffer(size, L'\0');
+        size = GetLogicalDriveStringsW(buffer.size(),
+                                       buffer.data());
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    DWORD fs::get_logica_drives() {
+        return GetLogicalDrives();
+    }
+
+    std::wstring fs::get_full_path_name(const wchar_t *file_name) {
+        DWORD size = GetFullPathNameW(file_name,
+                                      0,
+                                      nullptr,
+                                      nullptr);
+        std::wstring buffer(size, L'\0');
+        size = GetFullPathNameW(file_name,
+                                buffer.size(),
+                                buffer.data(),
+                                nullptr);
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    HRESULT fs::get_disk_space_info(const wchar_t *root_path,
+                                    DISK_SPACE_INFORMATION *disk_space_info) {
+        HRESULT is_ok = GetDiskSpaceInformationW(root_path, disk_space_info);
+        if (is_ok != S_OK) {
+            error_code = GetLastError();
+        }
+        return is_ok;
+    }
+
+    bool fs::get_disk_free_space(const wchar_t *root_path_name,
+                                 LPDWORD sectors_per_cluster,
+                                 LPDWORD bytes_per_sector,
+                                 LPDWORD number_of_free_clusters,
+                                 LPDWORD total_number_of_clusters) {
+        if (!GetDiskFreeSpaceW(root_path_name,
+                               sectors_per_cluster,
+                               bytes_per_sector,
+                               number_of_free_clusters,
+                               total_number_of_clusters)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::get_disk_free_space(const wchar_t *directory_name,
+                                 PULARGE_INTEGER free_bytes_available_to_caller,
+                                 PULARGE_INTEGER total_number_of_bytes,
+                                 PULARGE_INTEGER total_number_of_free_bytes) {
+        if (!GetDiskFreeSpaceExW(directory_name,
+                                 free_bytes_available_to_caller,
+                                 total_number_of_bytes,
+                                 total_number_of_free_bytes)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    int64_t fs::get_compressed_file_size(const wchar_t *file_name) {
+        DWORD high = 0;
+        DWORD low = GetCompressedFileSizeW(file_name, &high);
+        if (low == INVALID_FILE_SIZE) {
+            error_code = GetLastError();
+            if (error_code != NO_ERROR) {
+                return 0;
+            }
+        }
+        return (static_cast<int64_t>(high) << 32) | low;
+    }
+
+    std::wstring fs::query_dos_device(const wchar_t *device_name) {
+        std::wstring buffer(MAX_PATH + 1, L'\0');
+        DWORD size = QueryDosDeviceW(device_name,
+                                     buffer.data(),
+                                     buffer.size());
+        if (!size) {
+            error_code = GetLastError();
+            return {};
+        }
+        buffer.resize(size);
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        return buffer;
+    }
+
+    bool fs::control_dos_device(const wchar_t *device_name,
+                                const wchar_t *target_path,
+                                DWORD flag) {
+        if (!DefineDosDeviceW(flag,
+                              device_name,
+                              target_path)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<std::wstring> fs::ls_volume_name() {
+        do {
+            std::vector<std::wstring> result;
+            std::wstring volume_name(MAX_PATH + 1, L'\0');
+            HANDLE file_handle = FindFirstVolumeW(volume_name.data(),
+                                                  volume_name.size());
+            if (file_handle == INVALID_HANDLE_VALUE) {
+                break;
+            }
+            do {
+                result.push_back(volume_name.data());
+            } while (FindNextVolumeW(file_handle,
+                                     volume_name.data(),
+                                     volume_name.size()));
+            FindVolumeClose(file_handle);
+            return result;
+        } while (false);
+        return {};
+    }
+
+    std::vector<std::wstring> fs::ls_device_name() {
+        std::vector<std::wstring> volumes = ls_volume_name();
+        std::vector<std::wstring> devices;
+        if (volumes.empty()) {
+            return {};
+        }
+        for (auto volume: volumes) {
+            if (volume.back() == L'\\') {
+                volume.pop_back();
+            }
+            std::wstring device_name(MAX_PATH + 1, L'\0');
+            if (!QueryDosDeviceW(volume.data() + 4,
+                                 device_name.data(),
+                                 device_name.size())) {
+                break;
+            }
+            devices.push_back(device_name.data());
+        }
+        return devices;
+    }
+
+    std::vector<WIN32_FIND_STREAM_DATA>
+    fs::ls_stream_data(const wchar_t *file_name) {
+        do {
+            std::vector<WIN32_FIND_STREAM_DATA> result;
+            WIN32_FIND_STREAM_DATA stream_data = {};
+            HANDLE file_handle = FindFirstStreamW(file_name,
+                                                  FindStreamInfoStandard,
+                                                  &stream_data,
+                                                  0);
+            if (file_handle == INVALID_HANDLE_VALUE) {
+                break;
+            }
+            do {
+                result.push_back(stream_data);
+            } while (FindNextStreamW(file_handle,
+                                     &stream_data));
+            FindClose(file_handle);
+            return result;
+        } while (false);
+        return {};
     }
 
     bool fs::rm_file(const wchar_t *file_name) {
@@ -344,11 +866,6 @@ namespace YanLib::io {
         return (attr != INVALID_FILE_ATTRIBUTES) &&
                (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
-
-    DWORD fs::attr(const wchar_t *path_name) {
-        return GetFileAttributesW(path_name);
-    }
-
 
     bool fs::mkdir(const wchar_t *path_name,
                    LPSECURITY_ATTRIBUTES
@@ -414,6 +931,26 @@ namespace YanLib::io {
                       [](const std::wstring &dir) {
                           rm_dir(dir.data());
                       });
+    }
+
+    std::vector<WIN32_FIND_DATAW> fs::ls_detail(const wchar_t *path_name) {
+        std::vector<WIN32_FIND_DATAW> result;
+        std::wstring path(path_name);
+        remove_tail_slash(path);
+        path.append(L"\\*.*");
+        WIN32_FIND_DATAW find_data;
+        HANDLE find_handle = FindFirstFileW(path.data(), &find_data);
+        if (find_handle == INVALID_HANDLE_VALUE) {
+            return result;
+        }
+        do {
+            if (wcscmp(find_data.cFileName, L".") != 0 &&
+                wcscmp(find_data.cFileName, L"..") != 0) {
+                result.emplace_back(find_data);
+            }
+        } while (FindNextFileW(find_handle, &find_data));
+        FindClose(find_handle);
+        return result;
     }
 
     std::vector<std::wstring> fs::ls(const wchar_t *path_name) {

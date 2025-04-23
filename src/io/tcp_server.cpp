@@ -31,18 +31,29 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 break;
             }
+            init_done = true;
         } while (false);
+        init_done = false;
     }
 
     tcp_server::~tcp_server() {
-        for (const auto &sock: client_sockets) {
+        for (auto &sock: client_sockets) {
             closesocket(sock);
+            sock = INVALID_SOCKET;
         }
         closesocket(server_socket);
+        server_socket = INVALID_SOCKET;
         WSACleanup();
     }
 
+    bool tcp_server::init_ok() {
+        return init_done;
+    }
+
     bool tcp_server::bind(const char *local_ip, uint16_t local_port) {
+        if (!init_done) {
+            return false;
+        }
         if (is_ipv6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;
@@ -77,6 +88,9 @@ namespace YanLib::io {
     }
 
     bool tcp_server::listen(int backlog) {
+        if (!init_done) {
+            return false;
+        }
         if (::listen(server_socket, backlog) == SOCKET_ERROR) {
             error_code = WSAGetLastError();
             return false;
@@ -85,6 +99,9 @@ namespace YanLib::io {
     }
 
     SOCKET tcp_server::accept(sockaddr *addr, int *addrlen) {
+        if (!init_done) {
+            return INVALID_SOCKET;
+        }
         SOCKET client_socket = ::accept(server_socket, addr, addrlen);
         if (client_socket == INVALID_SOCKET) {
             error_code = WSAGetLastError();

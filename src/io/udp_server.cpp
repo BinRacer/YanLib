@@ -31,16 +31,26 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 break;
             }
+            init_done = true;
         } while (false);
+        init_done = false;
     }
 
     udp_server::~udp_server() {
         closesocket(server_socket);
+        server_socket = INVALID_SOCKET;
         WSACleanup();
+    }
+
+    bool udp_server::init_ok() {
+        return init_done;
     }
 
     bool udp_server::bind(const char *local_ip,
                           uint16_t local_port) {
+        if (!init_done) {
+            return false;
+        }
         if (is_ipv6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;

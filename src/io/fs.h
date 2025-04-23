@@ -86,15 +86,130 @@ namespace YanLib::io {
         DWORD write_bytes_to_file(HANDLE file_handle,
                                   const std::vector<uint8_t> &vec);
 
+        int64_t seek(HANDLE file_handle,
+                     int64_t offset,
+                     DWORD move_method = FILE_CURRENT);
+
+        bool truncate(HANDLE file_handle);
+
+        bool lock(HANDLE file_handle,
+                  DWORD flag = LOCKFILE_EXCLUSIVE_LOCK,
+                  uint64_t range = UINT64_MAX,
+                  LPOVERLAPPED overlapped = nullptr,
+                  DWORD reserved = 0);
+
+        bool unlock(HANDLE file_handle,
+                    uint64_t range = UINT64_MAX,
+                    LPOVERLAPPED overlapped = nullptr,
+                    DWORD reserved = 0);
+
+        bool get_info(HANDLE file_handle,
+                      FILE_INFO_BY_HANDLE_CLASS file_info_class,
+                      void *file_info,
+                      DWORD file_info_size);
+
+        bool set_info(HANDLE file_handle,
+                      FILE_INFO_BY_HANDLE_CLASS file_info_class,
+                      void *file_info,
+                      DWORD file_info_size);
+
+        bool set_io_overlapped_range(HANDLE file_handle,
+                                     uint8_t *overlapped_range_start,
+                                     ULONG length);
+
+        bool get_volume_info(HANDLE file_handle,
+                             wchar_t *volume_name_buffer,
+                             DWORD volume_name_size,
+                             LPDWORD volume_serial_number,
+                             LPDWORD max_component_length,
+                             LPDWORD file_system_flag,
+                             wchar_t *file_system_name_buffer,
+                             DWORD file_system_name_size);
+
+        std::wstring get_final_path_name(HANDLE file_handle,
+                                         DWORD flag = FILE_NAME_NORMALIZED);
+
+        bool is_short_name_enabled(HANDLE file_handle);
+
+        bool monitor_dir_change(HANDLE dir_handle,
+                                void *buffer,
+                                DWORD buffer_length,
+                                bool is_watch_subtree,
+                                DWORD notify_filter,
+                                LPDWORD bytes_returned,
+                                LPOVERLAPPED overlapped,
+                                LPOVERLAPPED_COMPLETION_ROUTINE completion_routine);
+
+        DWORD file_type(HANDLE file_handle);
+
         int64_t size(HANDLE file_handle);
+
+        DWORD get_attr(const wchar_t *file_name);
+
+        bool set_attr(const wchar_t *file_name, DWORD attr);
+
+        UINT get_drive_type(const wchar_t *path_name);
+
+        std::wstring get_volume_path_name(const wchar_t *file_name);
+
+        std::wstring
+        get_volume_path_names_for_volume_name(const wchar_t *volume_name);
+
+        std::wstring
+        get_volume_name_for_volume_mount_point(const wchar_t *volume_mount_point);
+
+        bool delete_volume_mount_point(const wchar_t *volume_mount_point);
+
+        std::wstring get_temp_path();
+
+        std::wstring get_temp_file_name(const wchar_t *path_name,
+                                        const wchar_t *prefix = nullptr,
+                                        UINT unique = 0);
+
+        std::wstring get_short_path_name(const wchar_t *long_path);
+
+        std::wstring get_long_path_name(const wchar_t *short_path);
+
+        std::wstring get_logical_drive_strings();
+
+        DWORD get_logica_drives();
+
+        std::wstring get_full_path_name(const wchar_t *file_name);
+
+        HRESULT get_disk_space_info(const wchar_t *root_path,
+                                    DISK_SPACE_INFORMATION *disk_space_info);
+
+        bool get_disk_free_space(const wchar_t *root_path_name,
+                                 LPDWORD sectors_per_cluster,
+                                 LPDWORD bytes_per_sector,
+                                 LPDWORD number_of_free_clusters,
+                                 LPDWORD total_number_of_clusters);
+
+        bool get_disk_free_space(const wchar_t *directory_name,
+                                 PULARGE_INTEGER free_bytes_available_to_caller,
+                                 PULARGE_INTEGER total_number_of_bytes,
+                                 PULARGE_INTEGER total_number_of_free_bytes);
+
+        int64_t get_compressed_file_size(const wchar_t *file_name);
+
+        std::wstring query_dos_device(const wchar_t *device_name);
+
+        bool control_dos_device(const wchar_t *device_name,
+                                const wchar_t *target_path,
+                                DWORD flag);
+
+        static std::vector<std::wstring> ls_volume_name();
+
+        static std::vector<std::wstring> ls_device_name();
+
+        static std::vector<WIN32_FIND_STREAM_DATA>
+        ls_stream_data(const wchar_t *file_name);
 
         static bool rm_file(const wchar_t *file_name);
 
         static bool is_file(const wchar_t *file_name);
 
         static bool is_dir(const wchar_t *path_name);
-
-        static DWORD attr(const wchar_t *path_name);
 
         static bool mkdir(const wchar_t *path_name,
                           LPSECURITY_ATTRIBUTES security_attrs = nullptr);
@@ -107,6 +222,8 @@ namespace YanLib::io {
         static bool rm_dir_all(const wchar_t *path_name);
 
         static void rm_dir_all_slow(const wchar_t *path_name);
+
+        static std::vector<WIN32_FIND_DATAW> ls_detail(const wchar_t *path_name);
 
         static std::vector<std::wstring> ls(const wchar_t *path_name);
 

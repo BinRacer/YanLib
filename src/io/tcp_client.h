@@ -12,10 +12,11 @@
 namespace YanLib::io {
     class tcp_client {
     private:
-        WSADATA wsa_data{};
+        WSADATA wsa_data = {};
         volatile bool is_ipv6 = false;
-        SOCKET client_socket{};
-        int error_code{};
+        SOCKET client_socket = INVALID_SOCKET;
+        volatile bool init_done = false;
+        int error_code = 0;
 
         tcp_client() = default;
 
@@ -31,6 +32,8 @@ namespace YanLib::io {
         explicit tcp_client(bool active_ipv6 = false);
 
         ~tcp_client();
+
+        bool init_ok();
 
         bool connect(const char *remote_ip = "127.0.0.1",
                      uint16_t remote_port = 8080);

@@ -829,7 +829,7 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            std::vector<wchar_t> cmdline(MAX_PATH + 1, L'\0');
+            std::wstring cmdline(MAX_PATH + 1, L'\0');
             if (!ReadProcessMemory(process_handle,
                                    block->cmdline,
                                    cmdline.data(),
@@ -839,8 +839,11 @@ namespace YanLib::sys {
                 break;
             }
             cmdline.resize(size);
+            while (cmdline.back() == L'\0') {
+                cmdline.pop_back();
+            }
             cmdline.shrink_to_fit();
-            return cmdline.data();
+            return cmdline;
         } while (false);
         return {};
     }
@@ -959,6 +962,9 @@ namespace YanLib::sys {
             return {};
         }
         name.resize(size);
+        while (name.back() == L'\0') {
+            name.pop_back();
+        }
         return name;
     }
 

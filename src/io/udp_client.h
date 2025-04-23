@@ -12,10 +12,11 @@
 namespace YanLib::io {
     class udp_client {
     private:
-        WSADATA wsa_data{};
+        WSADATA wsa_data = {};
         volatile bool is_ipv6 = false;
-        SOCKET client_socket{};
-        int error_code{};
+        SOCKET client_socket = INVALID_SOCKET;
+        volatile bool init_done = false;
+        int error_code = 0;
 
         udp_client() = default;
 
@@ -31,6 +32,8 @@ namespace YanLib::io {
         explicit udp_client(bool active_ipv6 = false);
 
         ~udp_client();
+
+        bool init_ok();
 
         int read(char *buf, int len,
                  int flags,

@@ -6,19 +6,20 @@
 #define TCP_H
 #include <winsock2.h>
 #include <string>
-#include <list>
+#include <vector>
 #include "sync/rwlock.h"
 
 #pragma comment(lib, "ws2_32.lib")
 namespace YanLib::io {
     class tcp_server {
     private:
-        WSADATA wsa_data{};
+        WSADATA wsa_data = {};
         volatile bool is_ipv6 = false;
-        SOCKET server_socket{};
-        int error_code{};
-        sync::rwlock rwlock{};
-        std::list<SOCKET> client_sockets{};
+        SOCKET server_socket = INVALID_SOCKET;
+        volatile bool init_done = false;
+        int error_code = {};
+        sync::rwlock rwlock = {};
+        std::vector<SOCKET> client_sockets = {};
 
         tcp_server() = default;
 
@@ -34,6 +35,8 @@ namespace YanLib::io {
         explicit tcp_server(bool active_ipv6 = false);
 
         ~tcp_server();
+
+        bool init_ok();
 
         bool bind(const char *local_ip = "0.0.0.0",
                   uint16_t local_port = 8080);

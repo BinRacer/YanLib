@@ -11,10 +11,11 @@
 namespace YanLib::io {
     class udp_server {
     private:
-        WSADATA wsa_data{};
+        WSADATA wsa_data = {};
         volatile bool is_ipv6 = false;
-        SOCKET server_socket{};
-        int error_code{};
+        SOCKET server_socket = INVALID_SOCKET;
+        volatile bool init_done = false;
+        int error_code = 0;
 
         udp_server() = default;
 
@@ -30,6 +31,8 @@ namespace YanLib::io {
         explicit udp_server(bool active_ipv6 = false);
 
         ~udp_server();
+
+        bool init_ok();
 
         bool bind(const char *local_ip = "0.0.0.0",
                   uint16_t local_port = 8080);

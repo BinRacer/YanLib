@@ -31,12 +31,19 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 break;
             }
+            init_done = true;
         } while (false);
+        init_done = false;
     }
 
     udp_client::~udp_client() {
         closesocket(client_socket);
+        client_socket = INVALID_SOCKET;
         WSACleanup();
+    }
+
+    bool udp_client::init_ok() {
+        return init_done;
     }
 
     int udp_client::read(char *buf, int len,

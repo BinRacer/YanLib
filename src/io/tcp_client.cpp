@@ -31,15 +31,25 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 break;
             }
+            init_done = true;
         } while (false);
+        init_done = false;
     }
 
     tcp_client::~tcp_client() {
         closesocket(client_socket);
+        client_socket = INVALID_SOCKET;
         WSACleanup();
     }
 
+    bool tcp_client::init_ok() {
+        return init_done;
+    }
+
     bool tcp_client::connect(const char *remote_ip, uint16_t remote_port) {
+        if (!init_done) {
+            return false;
+        }
         if (is_ipv6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;

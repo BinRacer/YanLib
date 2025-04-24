@@ -457,21 +457,17 @@ namespace YanLib::io {
     }
 
     bool fs::get_volume_info(HANDLE file_handle,
-                             wchar_t *volume_name_buffer,
-                             DWORD volume_name_size,
-                             LPDWORD volume_serial_number,
-                             LPDWORD max_component_length,
-                             LPDWORD file_system_flag,
-                             wchar_t *file_system_name_buffer,
-                             DWORD file_system_name_size) {
+                             VolumeInfo *volume_info) {
+        memset(volume_info, 0, size(volume_info));
+        DWORD size = 0;
         if (!GetVolumeInformationByHandleW(file_handle,
-                                           volume_name_buffer,
-                                           volume_name_size,
-                                           volume_serial_number,
-                                           max_component_length,
-                                           file_system_flag,
-                                           file_system_name_buffer,
-                                           file_system_name_size)) {
+                                           volume_info->volume_name,
+                                           MAX_PATH,
+                                           &(volume_info->serial_number),
+                                           &size,
+                                           &(volume_info->file_system_flag),
+                                           volume_info->file_system_name,
+                                           MAX_PATH)) {
             error_code = GetLastError();
             return false;
         }

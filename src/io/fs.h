@@ -129,14 +129,14 @@ namespace YanLib::io {
                                      uint8_t *overlapped_range_start,
                                      ULONG length);
 
-        bool get_volume_info(HANDLE file_handle,
-                             wchar_t *volume_name_buffer,
-                             DWORD volume_name_size,
-                             LPDWORD volume_serial_number,
-                             LPDWORD max_component_length,
-                             LPDWORD file_system_flag,
-                             wchar_t *file_system_name_buffer,
-                             DWORD file_system_name_size);
+        struct VolumeInfo {
+            wchar_t volume_name[MAX_PATH + 1];
+            wchar_t file_system_name[MAX_PATH + 1];
+            DWORD serial_number;
+            DWORD file_system_flag;
+        };
+
+        bool get_volume_info(HANDLE file_handle, VolumeInfo *volume_info);
 
         std::wstring get_final_path_name(HANDLE file_handle,
                                          DWORD flag = FILE_NAME_NORMALIZED);

@@ -59,8 +59,8 @@ namespace YanLib::io {
         bool read(HANDLE file_handle,
                   void *buf,
                   DWORD size,
-                  LPOVERLAPPED overlapped = nullptr,
-                  LPOVERLAPPED_COMPLETION_ROUTINE completion_routine = nullptr);
+                  LPOVERLAPPED overlapped,
+                  LPOVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
         bool write(HANDLE file_handle,
                    const void *buf,
@@ -71,8 +71,12 @@ namespace YanLib::io {
         bool write(HANDLE file_handle,
                    const void *buf,
                    DWORD size,
-                   LPOVERLAPPED overlapped = nullptr,
-                   LPOVERLAPPED_COMPLETION_ROUTINE completion_routine = nullptr);
+                   LPOVERLAPPED overlapped,
+                   LPOVERLAPPED_COMPLETION_ROUTINE completion_routine);
+
+
+        std::vector<uint8_t> read_bytes(HANDLE file_handle,
+                                        int32_t buffer_size = 1024);
 
         std::string read_string(HANDLE file_handle,
                                 int32_t buffer_size = 1024);
@@ -80,23 +84,20 @@ namespace YanLib::io {
         std::wstring read_wstring(HANDLE file_handle,
                                   int32_t buffer_size = 512);
 
+        std::vector<uint8_t> read_bytes_to_end(HANDLE file_handle);
+
         std::string read_string_to_end(HANDLE file_handle);
 
         std::wstring read_wstring_to_end(HANDLE file_handle);
 
-        std::vector<uint8_t> read_bytes(HANDLE file_handle,
-                                        int32_t buffer_size = 1024);
+        DWORD write_bytes(HANDLE file_handle,
+                          const std::vector<uint8_t> &vec);
 
-        std::vector<uint8_t> read_bytes_to_end(HANDLE file_handle);
+        DWORD write_string(HANDLE file_handle,
+                           const std::string &str);
 
-        DWORD write_string_to_file(HANDLE file_handle,
-                                   const std::string &str);
-
-        DWORD write_wstring_to_file(HANDLE file_handle,
-                                    const std::wstring &wstr);
-
-        DWORD write_bytes_to_file(HANDLE file_handle,
-                                  const std::vector<uint8_t> &vec);
+        DWORD write_wstring(HANDLE file_handle,
+                            const std::wstring &wstr);
 
         int64_t seek(HANDLE file_handle,
                      int64_t offset,
@@ -105,15 +106,25 @@ namespace YanLib::io {
         bool truncate(HANDLE file_handle);
 
         bool lock(HANDLE file_handle,
-                  DWORD flag = LOCKFILE_EXCLUSIVE_LOCK,
-                  uint64_t range = UINT64_MAX,
-                  LPOVERLAPPED overlapped = nullptr,
-                  DWORD reserved = 0);
+                  uint64_t offset = 0,
+                  uint64_t range = UINT64_MAX);
+
+        bool lock_async(HANDLE file_handle,
+                        DWORD flag = LOCKFILE_EXCLUSIVE_LOCK,
+                        uint64_t range = UINT64_MAX,
+                        LPOVERLAPPED overlapped = nullptr,
+                        DWORD reserved = 0);
 
         bool unlock(HANDLE file_handle,
-                    uint64_t range = UINT64_MAX,
-                    LPOVERLAPPED overlapped = nullptr,
-                    DWORD reserved = 0);
+                    uint64_t offset = 0,
+                    uint64_t range = UINT64_MAX);
+
+        bool unlock_async(HANDLE file_handle,
+                          uint64_t range = UINT64_MAX,
+                          LPOVERLAPPED overlapped = nullptr,
+                          DWORD reserved = 0);
+
+        bool is_exists(const wchar_t *path_name);
 
         bool get_info(HANDLE file_handle,
                       FILE_INFO_BY_HANDLE_CLASS file_info_class,
@@ -188,23 +199,33 @@ namespace YanLib::io {
 
         std::wstring get_full_path_name(const wchar_t *file_name);
 
-        HRESULT get_disk_space_info(const wchar_t *root_path,
-                                    DISK_SPACE_INFORMATION *disk_space_info);
+        bool get_disk_space_info(const wchar_t *root_path,
+                                 DISK_SPACE_INFORMATION *disk_space_info);
+
+        struct DiskFreeSpace4 {
+            DWORD sectors_per_cluster;
+            DWORD bytes_per_sector;
+            DWORD number_of_free_clusters;
+            DWORD total_number_of_clusters;
+        };
 
         bool get_disk_free_space(const wchar_t *root_path_name,
-                                 LPDWORD sectors_per_cluster,
-                                 LPDWORD bytes_per_sector,
-                                 LPDWORD number_of_free_clusters,
-                                 LPDWORD total_number_of_clusters);
+                                 DiskFreeSpace4 *disk_free_space4);
+
+        struct DiskFreeSpace3 {
+            uint64_t free_bytes_available_to_caller;
+            uint64_t total_number_of_bytes;
+            uint64_t total_number_of_free_bytes;
+        };
 
         bool get_disk_free_space(const wchar_t *directory_name,
-                                 PULARGE_INTEGER free_bytes_available_to_caller,
-                                 PULARGE_INTEGER total_number_of_bytes,
-                                 PULARGE_INTEGER total_number_of_free_bytes);
+                                 DiskFreeSpace3 *disk_free_space3);
 
         int64_t get_compressed_file_size(const wchar_t *file_name);
 
-        std::wstring query_dos_device(const wchar_t *device_name);
+        std::wstring get_dos_device(const wchar_t *device_name);
+
+        std::vector<std::wstring> get_dos_device();
 
         bool control_dos_device(const wchar_t *device_name,
                                 const wchar_t *target_path,
@@ -246,7 +267,8 @@ namespace YanLib::io {
         static std::vector<std::wstring> ls_all_dirs(const wchar_t *path_name);
 
         static bool copy(const wchar_t *existing_file_name,
-                         const wchar_t *new_file_name);
+                         const wchar_t *new_file_name,
+                         bool fail_if_exists = false);
 
         static bool copy_all(const wchar_t *existing_path_name,
                              const wchar_t *new_path_name);

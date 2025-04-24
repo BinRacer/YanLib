@@ -4,6 +4,9 @@
 
 #include "fs.h"
 #include "helper/convert.h"
+#include <shlwapi.h>
+
+#pragma comment(lib, "shlwapi.lib")
 
 namespace YanLib::io {
     void fs::remove_tail_slash(std::wstring &path) {
@@ -48,7 +51,7 @@ namespace YanLib::io {
         }
         rwlock.write_lock();
         file_handles.push_back(file_handle);
-        rwlock.write_lock();
+        rwlock.write_unlock();
         return file_handle;
     }
 
@@ -72,7 +75,7 @@ namespace YanLib::io {
         }
         rwlock.write_lock();
         file_handles.push_back(file_handle);
-        rwlock.write_lock();
+        rwlock.write_unlock();
         return file_handle;
     }
 
@@ -90,7 +93,7 @@ namespace YanLib::io {
         }
         rwlock.write_lock();
         file_handles.push_back(file_handle);
-        rwlock.write_lock();
+        rwlock.write_unlock();
         return file_handle;
     }
 
@@ -158,10 +161,31 @@ namespace YanLib::io {
         return true;
     }
 
+    std::vector<uint8_t> fs::read_bytes(HANDLE file_handle,
+                                        int32_t buffer_size) {
+        if (buffer_size <= 0) {
+            buffer_size = 1;
+        }
+        std::vector<uint8_t> raw_data(buffer_size, '\0');
+        DWORD bytes_read = 0;
+        if (ReadFile(
+                file_handle,
+                raw_data.data(),
+                buffer_size,
+                &bytes_read,
+                nullptr) && bytes_read > 0) {
+            raw_data.resize(bytes_read);
+            raw_data.shrink_to_fit();
+            return raw_data;
+        }
+        error_code = GetLastError();
+        return {};
+    }
+
     std::string fs::read_string(HANDLE file_handle,
                                 int32_t buffer_size) {
-        if (buffer_size <= 1024) {
-            buffer_size = 1024;
+        if (buffer_size <= 0) {
+            buffer_size = 1;
         }
         std::string raw_data(buffer_size, '\0');
         DWORD bytes_read = 0;
@@ -181,8 +205,8 @@ namespace YanLib::io {
 
     std::wstring fs::read_wstring(HANDLE file_handle,
                                   int32_t buffer_size) {
-        if (buffer_size < 512) {
-            buffer_size = 512;
+        if (buffer_size <= 0) {
+            buffer_size = 1;
         }
         std::wstring raw_data(buffer_size, L'\0');
         DWORD bytes_read = 0;
@@ -192,15 +216,40 @@ namespace YanLib::io {
                 buffer_size * sizeof(wchar_t),
                 &bytes_read,
                 nullptr) && bytes_read > 0) {
-            raw_data.resize(bytes_read);
-            while (raw_data.back() == L'\0') {
-                raw_data.pop_back();
-            }
+            raw_data.resize(bytes_read / sizeof(wchar_t));
             raw_data.shrink_to_fit();
             return raw_data;
         }
         error_code = GetLastError();
         return {};
+    }
+
+    std::vector<uint8_t> fs::read_bytes_to_end(HANDLE file_handle) {
+        constexpr DWORD buffer_size = 4096;
+        uint8_t *buf = new uint8_t[buffer_size];
+        memset(buf, 0, buffer_size);
+        std::vector<uint8_t> raw_data;
+        raw_data.reserve(buffer_size);
+        DWORD bytes_read = 0;
+        bool ret = false;
+        do {
+            ret = ReadFile(
+                file_handle,
+                buf,
+                buffer_size,
+                &bytes_read,
+                nullptr);
+            if (ret && bytes_read > 0) {
+                raw_data.insert(raw_data.end(),
+                                buf,
+                                buf + bytes_read);
+            } else {
+                error_code = GetLastError();
+            }
+        } while (ret && bytes_read > 0);
+        delete[] buf;
+        raw_data.shrink_to_fit();
+        return raw_data;
     }
 
     std::string fs::read_string_to_end(HANDLE file_handle) {
@@ -259,57 +308,24 @@ namespace YanLib::io {
         return raw_data;
     }
 
-    std::vector<uint8_t> fs::read_bytes(HANDLE file_handle,
-                                        int32_t buffer_size) {
-        if (buffer_size < 1024) {
-            buffer_size = 1024;
+    DWORD fs::write_bytes(HANDLE file_handle,
+                          const std::vector<uint8_t> &vec) {
+        if (vec.empty()) {
+            return 0;
         }
-        std::vector<uint8_t> raw_data(buffer_size, '\0');
-        DWORD bytes_read = 0;
-        if (ReadFile(
-                file_handle,
-                raw_data.data(),
-                buffer_size,
-                &bytes_read,
-                nullptr) && bytes_read > 0) {
-            raw_data.resize(bytes_read);
-            raw_data.shrink_to_fit();
-            return raw_data;
+        DWORD bytes_written = 0;
+        if (!WriteFile(file_handle,
+                       vec.data(),
+                       vec.size(),
+                       &bytes_written,
+                       nullptr)) {
+            error_code = GetLastError();
         }
-        error_code = GetLastError();
-        return {};
+        return bytes_written;
     }
 
-    std::vector<uint8_t> fs::read_bytes_to_end(HANDLE file_handle) {
-        constexpr DWORD buffer_size = 4096;
-        uint8_t *buf = new uint8_t[buffer_size];
-        memset(buf, 0, buffer_size);
-        std::vector<uint8_t> raw_data;
-        raw_data.reserve(buffer_size);
-        DWORD bytes_read = 0;
-        bool ret = false;
-        do {
-            ret = ReadFile(
-                file_handle,
-                buf,
-                buffer_size,
-                &bytes_read,
-                nullptr);
-            if (ret && bytes_read > 0) {
-                raw_data.insert(raw_data.end(),
-                                buf,
-                                buf + bytes_read);
-            } else {
-                error_code = GetLastError();
-            }
-        } while (ret && bytes_read > 0);
-        delete[] buf;
-        raw_data.shrink_to_fit();
-        return raw_data;
-    }
-
-    DWORD fs::write_string_to_file(HANDLE file_handle,
-                                   const std::string &str) {
+    DWORD fs::write_string(HANDLE file_handle,
+                           const std::string &str) {
         if (str.empty()) {
             return 0;
         }
@@ -324,8 +340,8 @@ namespace YanLib::io {
         return bytes_written;
     }
 
-    DWORD fs::write_wstring_to_file(HANDLE file_handle,
-                                    const std::wstring &wstr) {
+    DWORD fs::write_wstring(HANDLE file_handle,
+                            const std::wstring &wstr) {
         if (wstr.empty()) {
             return 0;
         }
@@ -337,23 +353,7 @@ namespace YanLib::io {
                        nullptr)) {
             error_code = GetLastError();
         }
-        return bytes_written;
-    }
-
-    DWORD fs::write_bytes_to_file(HANDLE file_handle,
-                                  const std::vector<uint8_t> &vec) {
-        if (vec.empty()) {
-            return 0;
-        }
-        DWORD bytes_written = 0;
-        if (!WriteFile(file_handle,
-                       vec.data(),
-                       vec.size(),
-                       &bytes_written,
-                       nullptr)) {
-            error_code = GetLastError();
-        }
-        return bytes_written;
+        return bytes_written / sizeof(wchar_t);
     }
 
     int64_t fs::seek(HANDLE file_handle,
@@ -381,10 +381,28 @@ namespace YanLib::io {
     }
 
     bool fs::lock(HANDLE file_handle,
-                  DWORD flag,
-                  uint64_t range,
-                  LPOVERLAPPED overlapped,
-                  DWORD reserved) {
+                  uint64_t offset,
+                  uint64_t range) {
+        auto offset_low = static_cast<DWORD>(offset & 0xFFFFFFFF);
+        auto offset_high = static_cast<DWORD>(offset >> 32);
+        auto range_low = static_cast<DWORD>(range & 0xFFFFFFFF);
+        auto range_high = static_cast<DWORD>(range >> 32);
+        if (!LockFile(file_handle,
+                      offset_low,
+                      offset_high,
+                      range_low,
+                      range_high)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::lock_async(HANDLE file_handle,
+                        DWORD flag,
+                        uint64_t range,
+                        LPOVERLAPPED overlapped,
+                        DWORD reserved) {
         auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
         auto high = static_cast<DWORD>(range >> 32);
         if (!LockFileEx(file_handle,
@@ -400,9 +418,27 @@ namespace YanLib::io {
     }
 
     bool fs::unlock(HANDLE file_handle,
-                    uint64_t range,
-                    LPOVERLAPPED overlapped,
-                    DWORD reserved) {
+                    uint64_t offset,
+                    uint64_t range) {
+        auto offset_low = static_cast<DWORD>(offset & 0xFFFFFFFF);
+        auto offset_high = static_cast<DWORD>(offset >> 32);
+        auto range_low = static_cast<DWORD>(range & 0xFFFFFFFF);
+        auto range_high = static_cast<DWORD>(range >> 32);
+        if (!UnlockFile(file_handle,
+                        offset_low,
+                        offset_high,
+                        range_low,
+                        range_high)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::unlock_async(HANDLE file_handle,
+                          uint64_t range,
+                          LPOVERLAPPED overlapped,
+                          DWORD reserved) {
         auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
         auto high = static_cast<DWORD>(range >> 32);
         if (!UnlockFileEx(file_handle,
@@ -410,6 +446,14 @@ namespace YanLib::io {
                           low,
                           high,
                           overlapped)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool fs::is_exists(const wchar_t *path_name) {
+        if (!PathFileExistsW(path_name)) {
             error_code = GetLastError();
             return false;
         }
@@ -737,25 +781,23 @@ namespace YanLib::io {
         return buffer;
     }
 
-    HRESULT fs::get_disk_space_info(const wchar_t *root_path,
-                                    DISK_SPACE_INFORMATION *disk_space_info) {
+    bool fs::get_disk_space_info(const wchar_t *root_path,
+                                 DISK_SPACE_INFORMATION *disk_space_info) {
         HRESULT is_ok = GetDiskSpaceInformationW(root_path, disk_space_info);
         if (is_ok != S_OK) {
             error_code = GetLastError();
+            return false;
         }
-        return is_ok;
+        return true;
     }
 
     bool fs::get_disk_free_space(const wchar_t *root_path_name,
-                                 LPDWORD sectors_per_cluster,
-                                 LPDWORD bytes_per_sector,
-                                 LPDWORD number_of_free_clusters,
-                                 LPDWORD total_number_of_clusters) {
+                                 DiskFreeSpace4 *disk_free_space4) {
         if (!GetDiskFreeSpaceW(root_path_name,
-                               sectors_per_cluster,
-                               bytes_per_sector,
-                               number_of_free_clusters,
-                               total_number_of_clusters)) {
+                               &(disk_free_space4->sectors_per_cluster),
+                               &(disk_free_space4->bytes_per_sector),
+                               &(disk_free_space4->number_of_free_clusters),
+                               &(disk_free_space4->total_number_of_clusters))) {
             error_code = GetLastError();
             return false;
         }
@@ -763,16 +805,23 @@ namespace YanLib::io {
     }
 
     bool fs::get_disk_free_space(const wchar_t *directory_name,
-                                 PULARGE_INTEGER free_bytes_available_to_caller,
-                                 PULARGE_INTEGER total_number_of_bytes,
-                                 PULARGE_INTEGER total_number_of_free_bytes) {
+                                 DiskFreeSpace3 *disk_free_space3) {
+        ULARGE_INTEGER free_bytes_available_to_caller = {};
+        ULARGE_INTEGER total_number_of_bytes = {};
+        ULARGE_INTEGER total_number_of_free_bytes = {};
         if (!GetDiskFreeSpaceExW(directory_name,
-                                 free_bytes_available_to_caller,
-                                 total_number_of_bytes,
-                                 total_number_of_free_bytes)) {
+                                 &free_bytes_available_to_caller,
+                                 &total_number_of_bytes,
+                                 &total_number_of_free_bytes)) {
             error_code = GetLastError();
             return false;
         }
+        disk_free_space3->free_bytes_available_to_caller =
+                free_bytes_available_to_caller.QuadPart;
+        disk_free_space3->total_number_of_bytes =
+                total_number_of_bytes.QuadPart;
+        disk_free_space3->total_number_of_free_bytes =
+                total_number_of_free_bytes.QuadPart;
         return true;
     }
 
@@ -788,20 +837,61 @@ namespace YanLib::io {
         return (static_cast<int64_t>(high) << 32) | low;
     }
 
-    std::wstring fs::query_dos_device(const wchar_t *device_name) {
-        std::wstring buffer(MAX_PATH + 1, L'\0');
+    std::wstring fs::get_dos_device(const wchar_t *device_name) {
+        size_t buff_size = MAX_PATH;
+        std::wstring buffer(buff_size + 1, L'\0');
         DWORD size = QueryDosDeviceW(device_name,
                                      buffer.data(),
-                                     buffer.size());
-        if (!size) {
+                                     MAX_PATH);
+        while (!size) {
             error_code = GetLastError();
-            return {};
+            if (error_code != ERROR_INSUFFICIENT_BUFFER) {
+                return {};
+            }
+            buff_size = buff_size * 2;
+            buffer.resize(buff_size + 1, L'\0');
+            size = QueryDosDeviceW(device_name,
+                                   buffer.data(),
+                                   buff_size);
         }
-        buffer.resize(size);
         while (buffer.back() == L'\0') {
             buffer.pop_back();
         }
         return buffer;
+    }
+
+    std::vector<std::wstring> fs::get_dos_device() {
+        size_t buff_size = 4096;
+        std::wstring buffer(buff_size, L'\0');
+        DWORD size = QueryDosDeviceW(nullptr,
+                                     buffer.data(),
+                                     buff_size - 1);
+        while (!size) {
+            error_code = GetLastError();
+            if (error_code != ERROR_INSUFFICIENT_BUFFER) {
+                return {};
+            }
+            buff_size = buff_size * 2;
+            buffer.resize(buff_size, L'\0');
+            size = QueryDosDeviceW(nullptr,
+                                   buffer.data(),
+                                   buff_size - 1);
+        }
+        while (buffer.back() == L'\0') {
+            buffer.pop_back();
+        }
+        std::vector<std::wstring> result;
+        size_t start = 0;
+        size_t end = buffer.find(L'\0');
+        while (end != std::wstring::npos) {
+            result.push_back(buffer.substr(start, end - start));
+            start = end + 1;
+            end = buffer.find(L'\0', start);
+        }
+        if (start < buffer.size()) {
+            result.push_back(buffer.substr(start));
+        }
+        return result;
     }
 
     bool fs::control_dos_device(const wchar_t *device_name,
@@ -1109,10 +1199,11 @@ namespace YanLib::io {
     }
 
     bool fs::copy(const wchar_t *existing_file_name,
-                  const wchar_t *new_file_name) {
+                  const wchar_t *new_file_name,
+                  bool fail_if_exists) {
         return CopyFileW(existing_file_name,
                          new_file_name,
-                         false);
+                         fail_if_exists ? TRUE : FALSE);
     }
 
     bool fs::copy_all(const wchar_t *existing_path_name,

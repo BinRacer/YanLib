@@ -36,6 +36,8 @@ add_library(YanLib STATIC
         src/mem/heap.h
         src/io/fs.cpp
         src/io/fs.h
+        src/io/completion_port.cpp
+        src/io/completion_port.h
         src/io/tcp_server.cpp
         src/io/tcp_server.h
         src/io/tcp_client.cpp

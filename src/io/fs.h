@@ -56,11 +56,23 @@ namespace YanLib::io {
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped = nullptr);
 
+        bool read(HANDLE file_handle,
+                  void *buf,
+                  DWORD size,
+                  LPOVERLAPPED overlapped = nullptr,
+                  LPOVERLAPPED_COMPLETION_ROUTINE completion_routine = nullptr);
+
         bool write(HANDLE file_handle,
                    const void *buf,
                    DWORD size,
                    LPDWORD ret_size,
                    LPOVERLAPPED overlapped = nullptr);
+
+        bool write(HANDLE file_handle,
+                   const void *buf,
+                   DWORD size,
+                   LPOVERLAPPED overlapped = nullptr,
+                   LPOVERLAPPED_COMPLETION_ROUTINE completion_routine = nullptr);
 
         std::string read_string(HANDLE file_handle,
                                 int32_t buffer_size = 1024);

@@ -99,15 +99,31 @@ namespace YanLib::io {
                   DWORD size,
                   LPDWORD ret_size,
                   LPOVERLAPPED overlapped) {
-        if (ReadFile(file_handle,
-                     buf,
-                     size,
-                     ret_size,
-                     overlapped)) {
-            return true;
+        if (!ReadFile(file_handle,
+                      buf,
+                      size,
+                      ret_size,
+                      overlapped)) {
+            error_code = GetLastError();
+            return false;
         }
-        error_code = GetLastError();
-        return false;
+        return true;
+    }
+
+    bool fs::read(HANDLE file_handle,
+                  void *buf,
+                  DWORD size,
+                  LPOVERLAPPED overlapped,
+                  LPOVERLAPPED_COMPLETION_ROUTINE completion_routine) {
+        if (!ReadFileEx(file_handle,
+                        buf,
+                        size,
+                        overlapped,
+                        completion_routine)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool fs::write(HANDLE file_handle,
@@ -115,15 +131,31 @@ namespace YanLib::io {
                    DWORD size,
                    LPDWORD ret_size,
                    LPOVERLAPPED overlapped) {
-        if (WriteFile(file_handle,
-                      buf,
-                      size,
-                      ret_size,
-                      overlapped)) {
-            return true;
+        if (!WriteFile(file_handle,
+                       buf,
+                       size,
+                       ret_size,
+                       overlapped)) {
+            error_code = GetLastError();
+            return false;
         }
-        error_code = GetLastError();
-        return false;
+        return true;
+    }
+
+    bool fs::write(HANDLE file_handle,
+                   const void *buf,
+                   DWORD size,
+                   LPOVERLAPPED overlapped,
+                   LPOVERLAPPED_COMPLETION_ROUTINE completion_routine) {
+        if (!WriteFileEx(file_handle,
+                         buf,
+                         size,
+                         overlapped,
+                         completion_routine)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     std::string fs::read_string(HANDLE file_handle,

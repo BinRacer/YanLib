@@ -4,7 +4,7 @@ namespace io = YanLib::io;
 
 class io_fs : public ::testing::Test {
 protected:
-    LARGE_INTEGER date_to_large_integer(const SYSTEMTIME &st) {
+    static LARGE_INTEGER date_to_large_integer(const SYSTEMTIME &st) {
         FILETIME ft;
         if (!SystemTimeToFileTime(&st, &ft)) {
             return {};
@@ -18,7 +18,7 @@ protected:
         return li;
     }
 
-    SYSTEMTIME large_integer_to_date(LARGE_INTEGER &liTime) {
+    static SYSTEMTIME large_integer_to_date(LARGE_INTEGER &liTime) {
         FILETIME ft;
         SYSTEMTIME stUTC, stLocal;
         ft.dwLowDateTime = liTime.LowPart;
@@ -207,7 +207,7 @@ TEST_F(io_fs, disk_check) {
 
     EXPECT_TRUE(fs.get_logica_drives() & 4);
 
-    const wchar_t windows_name[] = L"C:\\Windows\\System32\\..\\..\\";
+    constexpr wchar_t windows_name[] = L"C:\\Windows\\System32\\..\\..\\";
     auto full_path_name = fs.get_full_path_name(windows_name);
     EXPECT_NE(full_path_name.find(L"C:\\"), std::wstring::npos);
 
@@ -234,13 +234,13 @@ TEST_F(io_fs, device_check) {
 TEST_F(io_fs, list_check) {
     auto volume_name_list = io::fs::ls_volume_name();
     EXPECT_GT(volume_name_list.size(), 0);
-    for (auto volume_name: volume_name_list) {
+    for (const auto &volume_name: volume_name_list) {
         EXPECT_NE(volume_name.find(L"\\\\?\\Volume{"), std::wstring::npos);
     }
 
     auto device_name_list = io::fs::ls_device_name();
     EXPECT_GT(device_name_list.size(), 0);
-    for (auto device_name: device_name_list) {
+    for (const auto &device_name: device_name_list) {
         EXPECT_NE(device_name.find(L"\\Device\\HarddiskVolume"), std::wstring::npos);
     }
 

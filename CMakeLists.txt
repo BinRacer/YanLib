@@ -38,8 +38,8 @@ add_library(YanLib STATIC
         src/io/fs.h
         src/io/completion_port.cpp
         src/io/completion_port.h
-        src/io/pe.cpp
-        src/io/pe.h
+        src/io/pe64.cpp
+        src/io/pe64.h
         src/io/tcp_server.cpp
         src/io/tcp_server.h
         src/io/tcp_client.cpp

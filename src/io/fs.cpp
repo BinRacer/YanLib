@@ -1231,14 +1231,16 @@ namespace YanLib::io {
                     const wchar_t *new_file_name) {
         return MoveFileExW(existing_file_name,
                            new_file_name,
-                           MOVEFILE_COPY_ALLOWED);
+                           MOVEFILE_COPY_ALLOWED |
+                           MOVEFILE_WRITE_THROUGH);
     }
 
     bool fs::replace(const wchar_t *existing_file_name,
                      const wchar_t *new_file_name) {
         return MoveFileExW(existing_file_name,
                            new_file_name,
-                           MOVEFILE_REPLACE_EXISTING);
+                           MOVEFILE_REPLACE_EXISTING |
+                           MOVEFILE_WRITE_THROUGH);
     }
 
     DWORD fs::err_code() const {

@@ -123,6 +123,95 @@ namespace YanLib::io {
         bool set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
                                      std::vector<WORD> &func_ordinals);
 
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> get_import_table();
+
+        bool set_import_table(std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+
+        std::vector<std::string> get_import_table_dll_name_strings(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+
+        std::vector<DWORD> get_import_table_dll_name(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+
+        bool set_import_table_dll_name(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
+            std::vector<DWORD> &dll_names);
+
+        std::vector<DWORD> get_import_table_first_thunk(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+
+        bool set_import_table_first_thunk(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
+            std::vector<DWORD> &first_thunks);
+
+        std::vector<IMAGE_THUNK_DATA64> get_import_table_thunk_data(
+            DWORD &first_thunk);
+
+        bool
+        set_import_table_thunk_data(DWORD &first_thunk,
+                                    std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+
+        std::vector<std::string>
+        get_import_table_func_name_strings(std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+
+        struct ImportTableFuncName {
+            WORD hint;
+            std::string name;
+        };
+
+        std::vector<ImportTableFuncName>
+        get_import_table_func_name(std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+
+        bool set_import_table_func_name(
+            std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
+            std::vector<ImportTableFuncName> &func_name);
+
+        std::vector<std::pair<ULONGLONG, DWORD> > get_import_table_func_ordinal(
+            std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+
+        bool set_import_table_func_ordinal(
+            DWORD &first_thunk,
+            std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
+            std::vector<std::pair<ULONGLONG, DWORD> > &func_ordinals);
+
+        // std::pair<ForwarderChain,OriginalFirstThunk>
+        std::vector<std::pair<DWORD, DWORD> > get_import_table_forwarder_chain(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+
+        // std::pair<ForwarderChain,OriginalFirstThunk>
+        bool set_import_table_forwarder_chain(
+            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
+            std::vector<std::pair<DWORD, DWORD> > &forwarder_chain);
+
+        std::vector<std::string> get_import_table_forwarder_string(
+            std::vector<std::pair<DWORD, DWORD> > &forwarder_chain);
+
+        std::vector<ULONGLONG> get_import_table_forwarder_string_addr(
+            std::vector<std::pair<DWORD, DWORD> > &forwarder_chain);
+
+        bool set_import_table_forwarder_string_addr(
+            std::vector<std::pair<DWORD, DWORD> > &forwarder_chain,
+            std::vector<ULONGLONG> &forwarder_string_addrs);
+
+        struct RelocationTable {
+            DWORD virtual_address;
+            DWORD size_of_block;
+            std::vector<WORD> items;
+        };
+
+        std::vector<RelocationTable> get_relocation_table();
+
+        bool set_relocation_table(
+            std::vector<RelocationTable> &relocation_table);
+
+        // std::tuple<raw item value, item type, real offset>
+        std::vector<std::tuple<WORD, WORD, DWORD> >
+        get_relocation_table_item(RelocationTable &relocation);
+
+        bool
+        set_relocation_table_item(RelocationTable &relocation,
+                                  std::vector<std::tuple<WORD, WORD, DWORD> > &items);
+
         IMAGE_SECTION_HEADER find_section_header(DWORD rva);
 
         // relative virtual address to file offset address

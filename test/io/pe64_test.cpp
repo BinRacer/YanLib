@@ -7,7 +7,7 @@ protected:
     void SetUp() override {
     }
 
-    const wchar_t *zlib = L"C:\\Users\\curry\\Downloads\\zlibd1.dll";
+    const wchar_t *zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
 };
 
 TEST_F(io_pe64, pre_check) {
@@ -161,6 +161,166 @@ TEST_F(io_pe64, func_ordinals) {
     EXPECT_TRUE(pe64.set_export_func_ordinal(export_table_ptr.get(), func_ordinals));
     func_ordinals[0] = func_ordinals_backup;
     EXPECT_TRUE(pe64.set_export_func_ordinal(export_table_ptr.get(), func_ordinals));
+}
+
+TEST_F(io_pe64, import_table_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+
+    auto dll_name = import_table[0].Name;
+    import_table[0].Name = 1234;
+    EXPECT_TRUE(pe64.set_import_table(import_table));
+    import_table[0].Name = dll_name;
+    EXPECT_TRUE(pe64.set_import_table(import_table));
+}
+
+TEST_F(io_pe64, dll_name_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+
+    auto dll_name_strings = pe64.get_import_table_dll_name_strings(import_table);
+    EXPECT_GT(dll_name_strings.size(), 0);
+
+    auto dll_name = pe64.get_import_table_dll_name(import_table);
+    EXPECT_GT(dll_name.size(), 0);
+
+    auto dll_name_backup = dll_name[0];
+    dll_name[0] = 1234;
+    EXPECT_TRUE(pe64.set_import_table_dll_name(import_table, dll_name));
+    dll_name[0] = dll_name_backup;
+    EXPECT_TRUE(pe64.set_import_table_dll_name(import_table, dll_name));
+}
+
+TEST_F(io_pe64, first_thunk_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+
+    auto first_thunk = pe64.get_import_table_first_thunk(import_table);
+    EXPECT_GT(first_thunk.size(), 0);
+
+    auto first_thunk_backup = first_thunk[0];
+    first_thunk[0] = 1234;
+    EXPECT_TRUE(pe64.set_import_table_first_thunk(import_table, first_thunk));
+    first_thunk[0] = first_thunk_backup;
+    EXPECT_TRUE(pe64.set_import_table_first_thunk(import_table, first_thunk));
+}
+
+TEST_F(io_pe64, thunk_data_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+    auto first_thunk = pe64.get_import_table_first_thunk(import_table);
+    EXPECT_GT(first_thunk.size(), 0);
+
+    auto thunk_data = pe64.get_import_table_thunk_data(first_thunk[0]);
+    EXPECT_GT(thunk_data.size(), 0);
+
+    auto address_of_data = thunk_data[0].u1.AddressOfData;
+    thunk_data[0].u1.AddressOfData = 1234;
+    EXPECT_TRUE(pe64.set_import_table_thunk_data(first_thunk[0], thunk_data));
+    thunk_data[0].u1.AddressOfData = address_of_data;
+    EXPECT_TRUE(pe64.set_import_table_thunk_data(first_thunk[0], thunk_data));
+}
+
+TEST_F(io_pe64, func_name_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+    auto first_thunk = pe64.get_import_table_first_thunk(import_table);
+    EXPECT_GT(first_thunk.size(), 0);
+    auto thunk_data = pe64.get_import_table_thunk_data(first_thunk[0]);
+    EXPECT_GT(thunk_data.size(), 0);
+
+    auto func_name_string = pe64.get_import_table_func_name_strings(thunk_data);
+    EXPECT_GT(func_name_string.size(), 0);
+    auto func_name = pe64.get_import_table_func_name(thunk_data);
+    EXPECT_GT(func_name.size(), 0);
+
+    auto func_name_backup = func_name[0].name;
+    func_name[0].name = "haha";
+    EXPECT_TRUE(pe64.set_import_table_func_name(thunk_data, func_name));
+    // auto func_name2 = pe64.get_import_table_func_name(thunk_data);
+    // EXPECT_GT(func_name2.size(), 0);
+    func_name[0].name = func_name_backup;
+    EXPECT_TRUE(pe64.set_import_table_func_name(thunk_data, func_name));
+    // auto func_name3 = pe64.get_import_table_func_name(thunk_data);
+    // EXPECT_GT(func_name3.size(), 0);
+}
+
+TEST_F(io_pe64, func_ordinals_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+    auto first_thunk = pe64.get_import_table_first_thunk(import_table);
+    EXPECT_GT(first_thunk.size(), 0);
+    auto thunk_data = pe64.get_import_table_thunk_data(first_thunk[0]);
+    EXPECT_GT(thunk_data.size(), 0);
+
+    auto func_ordinals = pe64.get_import_table_func_ordinal(thunk_data);
+    EXPECT_GT(func_ordinals.size(), 0);
+    auto func_ordinals_backup = func_ordinals[0];
+    func_ordinals[0] = std::make_pair(1234, 1234);
+    EXPECT_TRUE(pe64.set_import_table_func_ordinal(first_thunk[0],thunk_data, func_ordinals));
+    func_ordinals[0] = func_ordinals_backup;
+    EXPECT_TRUE(pe64.set_import_table_func_ordinal(first_thunk[0],thunk_data, func_ordinals));
+}
+
+TEST_F(io_pe64, forwarder_chain_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+
+    auto forwarder_chains = pe64.get_import_table_forwarder_chain(import_table);
+    EXPECT_GT(forwarder_chains.size(), 0);
+    auto forwarder_chain_backup = forwarder_chains[0];
+    forwarder_chains[0] = std::make_pair(1234, 1234);
+    EXPECT_TRUE(pe64.set_import_table_forwarder_chain(import_table, forwarder_chains));
+    forwarder_chains[0] = forwarder_chain_backup;
+    EXPECT_TRUE(pe64.set_import_table_forwarder_chain(import_table, forwarder_chains));
+}
+
+TEST_F(io_pe64, forwarder_string_addr_check) {
+    io::pe64 pe64(zlib);
+    auto import_table = pe64.get_import_table();
+    EXPECT_GT(import_table.size(), 0);
+    auto forwarder_chains = pe64.get_import_table_forwarder_chain(import_table);
+    EXPECT_GT(forwarder_chains.size(), 0);
+
+    auto forwarder_string = pe64.get_import_table_forwarder_string(forwarder_chains);
+    EXPECT_GT(forwarder_string.size(), 0);
+
+    auto forwarder_string_addrs = pe64.get_import_table_forwarder_string_addr(forwarder_chains);
+    EXPECT_GT(forwarder_string_addrs.size(), 0);
+    auto forwarder_string_addrs_backup = forwarder_string_addrs[0];
+    forwarder_string_addrs[0] = 1234;
+    EXPECT_TRUE(pe64.set_import_table_forwarder_string_addr(forwarder_chains, forwarder_string_addrs));
+    forwarder_string_addrs[0] = forwarder_string_addrs_backup;
+    EXPECT_TRUE(pe64.set_import_table_forwarder_string_addr(forwarder_chains, forwarder_string_addrs));
+}
+
+TEST_F(io_pe64, relocation_table_check) {
+    io::pe64 pe64(zlib);
+    auto relocation_table = pe64.get_relocation_table();
+    EXPECT_GT(relocation_table.size(), 0);
+
+    auto addr_backup = relocation_table[0].virtual_address;
+    relocation_table[0].virtual_address = 0x1234;
+    EXPECT_TRUE(pe64.set_relocation_table(relocation_table));
+    relocation_table[0].virtual_address = addr_backup;
+    EXPECT_TRUE(pe64.set_relocation_table(relocation_table));
+
+    auto items = pe64.get_relocation_table_item(relocation_table[0]);
+    EXPECT_GT(items.size(), 0);
+    auto item_backup = items[0];
+    std::get<1>(items[0]) = IMAGE_REL_BASED_HIGHLOW;
+    EXPECT_TRUE(pe64.set_relocation_table_item(relocation_table[0], items));
+    EXPECT_TRUE(pe64.set_relocation_table(relocation_table));
+    std::get<1>(items[0]) = IMAGE_REL_BASED_DIR64;
+    EXPECT_TRUE(pe64.set_relocation_table_item(relocation_table[0], items));
+    EXPECT_TRUE(pe64.set_relocation_table(relocation_table));
 }
 
 TEST_F(io_pe64, other_check) {

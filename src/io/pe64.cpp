@@ -401,6 +401,498 @@ namespace YanLib::io {
         return true;
     }
 
+    std::vector<IMAGE_IMPORT_DESCRIPTOR> pe64::get_import_table() {
+        if (_data_table_list.empty()) {
+            get_data_table();
+        }
+        if (_data_table_list[DIRECTORY_ENTRY_IMPORT].Size == 0) {
+            return {};
+        }
+        auto rva = _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        auto offset = rva_to_foa(rva);
+        if (offset == 0) {
+            return {};
+        }
+        auto import_table = reinterpret_cast<PIMAGE_IMPORT_DESCRIPTOR>(
+            reinterpret_cast<uint8_t *>(_dos_header) + offset);
+        size_t count = 0;
+        while (import_table->OriginalFirstThunk ||
+               import_table->TimeDateStamp ||
+               import_table->ForwarderChain ||
+               import_table->Name ||
+               import_table->FirstThunk) {
+            count++;
+            import_table++;
+        }
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> result(count, {});
+        if (!mmap.read(_dos_header,
+                       reinterpret_cast<uint8_t *>(result.data()),
+                       sizeof(IMAGE_IMPORT_DESCRIPTOR) * count,
+                       offset)) {
+            error_code = mmap.err_code();
+            return {};
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table(std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+        if (import_table.empty()) {
+            return false;
+        }
+        if (_data_table_list.empty()) {
+            get_data_table();
+        }
+        if (_data_table_list[DIRECTORY_ENTRY_IMPORT].Size == 0) {
+            return false;
+        }
+        auto rva = _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        auto offset = rva_to_foa(rva);
+        if (offset == 0) {
+            return false;
+        }
+        if (!mmap.write(_dos_header,
+                        reinterpret_cast<uint8_t *>(import_table.data()),
+                        sizeof(IMAGE_IMPORT_DESCRIPTOR) * import_table.size(),
+                        offset)) {
+            error_code = mmap.err_code();
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<std::string> pe64::get_import_table_dll_name_strings(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+        if (import_table.empty()) {
+            return {};
+        }
+        std::vector<std::string> result;
+        for (const auto &entry: import_table) {
+            auto name = reinterpret_cast<char *>(
+                reinterpret_cast<uint8_t *>(_dos_header) + rva_to_foa(entry.Name));
+            result.push_back(name);
+        }
+        return result;
+    }
+
+    std::vector<DWORD> pe64::get_import_table_dll_name(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+        if (import_table.empty()) {
+            return {};
+        }
+        std::vector<DWORD> result;
+        for (const auto &entry: import_table) {
+            result.push_back(entry.Name);
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table_dll_name(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
+        std::vector<DWORD> &dll_names) {
+        if (import_table.empty() ||
+            dll_names.empty() ||
+            import_table.size() != dll_names.size()) {
+            return false;
+        }
+        for (int i = 0; i < import_table.size(); i++) {
+            import_table[i].Name = dll_names[i];
+        }
+        return set_import_table(import_table);
+    }
+
+    std::vector<DWORD> pe64::get_import_table_first_thunk(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+        if (import_table.empty()) {
+            return {};
+        }
+        std::vector<DWORD> result;
+        for (const auto &entry: import_table) {
+            result.push_back(entry.FirstThunk);
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table_first_thunk(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
+        std::vector<DWORD> &first_thunks) {
+        if (import_table.empty() ||
+            first_thunks.empty() ||
+            import_table.size() != first_thunks.size()) {
+            return false;
+        }
+        for (int i = 0; i < import_table.size(); i++) {
+            import_table[i].FirstThunk = first_thunks[i];
+        }
+        return set_import_table(import_table);
+    }
+
+    std::vector<IMAGE_THUNK_DATA64>
+    pe64::get_import_table_thunk_data(DWORD &first_thunk) {
+        size_t offset = rva_to_foa(first_thunk);
+        if (offset == 0) {
+            return {};
+        }
+        auto thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA64>(
+            reinterpret_cast<uint8_t *>(_dos_header) + offset);
+        size_t count = 0;
+        while (thunk_data->u1.AddressOfData != 0) {
+            count++;
+            thunk_data++;
+        }
+        std::vector<IMAGE_THUNK_DATA64> result(count, {});
+        if (!mmap.read(_dos_header,
+                       reinterpret_cast<uint8_t *>(result.data()),
+                       sizeof(IMAGE_THUNK_DATA64) * count,
+                       offset)) {
+            error_code = mmap.err_code();
+            return {};
+        }
+        return result;
+    }
+
+    bool
+    pe64::set_import_table_thunk_data(DWORD &first_thunk,
+                                      std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+        if (thunk_datas.empty()) {
+            return false;
+        }
+        size_t offset = rva_to_foa(first_thunk);
+        if (offset == 0) {
+            return false;
+        }
+        if (!mmap.write(_dos_header,
+                        reinterpret_cast<uint8_t *>(thunk_datas.data()),
+                        sizeof(IMAGE_THUNK_DATA64) * thunk_datas.size(),
+                        offset)) {
+            error_code = mmap.err_code();
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<std::string> pe64::get_import_table_func_name_strings(
+        std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+        if (thunk_datas.empty()) {
+            return {};
+        }
+        std::vector<std::string> result;
+        for (const auto &entry: thunk_datas) {
+            if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
+                auto func_name = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                    reinterpret_cast<uint8_t *>(_dos_header) +
+                    rva_to_foa(entry.u1.AddressOfData));
+                result.push_back(reinterpret_cast<char *>(&func_name->Name));
+            } else {
+                result.push_back({});
+            }
+        }
+        return result;
+    }
+
+    std::vector<pe64::ImportTableFuncName> pe64::get_import_table_func_name(
+        std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+        if (thunk_datas.empty()) {
+            return {};
+        }
+        std::vector<ImportTableFuncName> result;
+        for (const auto &entry: thunk_datas) {
+            if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
+                auto func_name = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                    reinterpret_cast<uint8_t *>(_dos_header) +
+                    rva_to_foa(entry.u1.AddressOfData));
+                ImportTableFuncName temp_func_name = {};
+                temp_func_name.hint = func_name->Hint;
+                temp_func_name.name.append(
+                    reinterpret_cast<char *>(&func_name->Name));
+                result.push_back(temp_func_name);
+            } else {
+                result.push_back({});
+            }
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table_func_name(
+        std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
+        std::vector<ImportTableFuncName> &func_name) {
+        if (thunk_datas.empty() ||
+            func_name.empty() ||
+            thunk_datas.size() != func_name.size()) {
+            return false;
+        }
+        int is_all_ordinals = 0;
+        for (int i = 0; i < thunk_datas.size(); i++) {
+            if (!(thunk_datas[i].u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
+                auto func_name_addr = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                    reinterpret_cast<uint8_t *>(_dos_header) +
+                    rva_to_foa(thunk_datas[i].u1.AddressOfData));
+                func_name_addr->Hint = func_name[i].hint;
+                auto len = strlen(reinterpret_cast<char *>(
+                    &(func_name_addr->Name)));
+                memset(&(func_name_addr->Name), 0, len);
+                memcpy_s(&(func_name_addr->Name),
+                         func_name[i].name.size(),
+                         func_name[i].name.data(),
+                         func_name[i].name.size());
+            } else {
+                is_all_ordinals = is_all_ordinals + 1;
+            }
+        }
+        if (is_all_ordinals == thunk_datas.size()) {
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<std::pair<ULONGLONG, DWORD> > pe64::get_import_table_func_ordinal(
+        std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+        if (thunk_datas.empty()) {
+            return {};
+        }
+        std::vector<std::pair<ULONGLONG, DWORD> > result;
+        for (const auto &entry: thunk_datas) {
+            if (entry.u1.Ordinal & IMAGE_ORDINAL_FLAG64) {
+                result.push_back(
+                    std::make_pair(
+                        entry.u1.Ordinal,
+                        static_cast<DWORD>(entry.u1.Ordinal & 0xFFFF)));
+            } else {
+                result.push_back(std::make_pair(0, 0));
+            }
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table_func_ordinal(
+        DWORD &first_thunk,
+        std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
+        std::vector<std::pair<ULONGLONG, DWORD> > &func_ordinals) {
+        if (thunk_datas.empty() ||
+            func_ordinals.empty() ||
+            thunk_datas.size() != func_ordinals.size()) {
+            return false;
+        }
+        for (int i = 0; i < thunk_datas.size(); i++) {
+            if (thunk_datas[i].u1.Ordinal & IMAGE_ORDINAL_FLAG64) {
+                thunk_datas[i].u1.Ordinal =
+                        (func_ordinals[i].first & 0xFFFFFFFFFFFF0000)
+                        | func_ordinals[i].second;
+            }
+        }
+        return set_import_table_thunk_data(first_thunk, thunk_datas);
+    }
+
+    std::vector<std::pair<DWORD, DWORD> > pe64::get_import_table_forwarder_chain(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+        if (import_table.empty()) {
+            return {};
+        }
+        std::vector<std::pair<DWORD, DWORD> > result;
+        for (const auto &entry: import_table) {
+            result.push_back(
+                std::make_pair(
+                    entry.ForwarderChain,
+                    entry.OriginalFirstThunk));
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table_forwarder_chain(
+        std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
+        std::vector<std::pair<DWORD, DWORD> > &forwarder_chain) {
+        if (import_table.empty() ||
+            forwarder_chain.empty() ||
+            import_table.size() != forwarder_chain.size()) {
+            return false;
+        }
+        for (int i = 0; i < import_table.size(); i++) {
+            import_table[i].ForwarderChain = forwarder_chain[i].first;
+            import_table[i].OriginalFirstThunk = forwarder_chain[i].second;
+        }
+        return set_import_table(import_table);
+    }
+
+    std::vector<std::string> pe64::get_import_table_forwarder_string(
+        std::vector<std::pair<DWORD, DWORD> > &forwarder_chain) {
+        if (forwarder_chain.empty()) {
+            return {};
+        }
+
+        std::vector<std::string> result;
+        for (const auto &entry: forwarder_chain) {
+            size_t offset = rva_to_foa(entry.second);
+            auto original_thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA64>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
+            if (entry.first != static_cast<DWORD>(-1)) {
+                auto target_thunk_data = original_thunk_data[entry.first];
+                auto forwarder_string = reinterpret_cast<char *>(
+                                            reinterpret_cast<uint8_t *>(_dos_header)) +
+                                        rva_to_foa(target_thunk_data.u1.ForwarderString);
+                result.push_back(forwarder_string);
+            } else {
+                result.push_back({});
+            }
+        }
+        return result;
+    }
+
+    std::vector<ULONGLONG> pe64::get_import_table_forwarder_string_addr(
+        std::vector<std::pair<DWORD, DWORD> > &forwarder_chain) {
+        if (forwarder_chain.empty()) {
+            return {};
+        }
+
+        std::vector<ULONGLONG> result;
+        for (const auto &entry: forwarder_chain) {
+            size_t offset = rva_to_foa(entry.second);
+            auto original_thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA64>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
+            if (entry.first != static_cast<DWORD>(-1)) {
+                auto target_thunk_data = original_thunk_data[entry.first];
+                result.push_back(target_thunk_data.u1.ForwarderString);
+            } else {
+                result.push_back(0);
+            }
+        }
+        return result;
+    }
+
+    bool pe64::set_import_table_forwarder_string_addr(
+        std::vector<std::pair<DWORD, DWORD> > &forwarder_chain,
+        std::vector<ULONGLONG> &forwarder_string_addrs) {
+        if (forwarder_chain.empty() ||
+            forwarder_string_addrs.empty() ||
+            forwarder_chain.size() != forwarder_string_addrs.size()) {
+            return false;
+        }
+
+        int is_no_forward = 0;
+        for (int i = 0; i < forwarder_chain.size(); i++) {
+            size_t offset = rva_to_foa(forwarder_chain[i].second);
+            auto original_thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA64>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
+            if (forwarder_chain[i].first != static_cast<DWORD>(-1)) {
+                auto target_thunk_data =
+                        original_thunk_data[forwarder_chain[i].first];
+                target_thunk_data.u1.ForwarderString = forwarder_string_addrs[i];
+            } else {
+                is_no_forward++;
+            }
+        }
+        if (is_no_forward == forwarder_chain.size()) {
+            return false;
+        }
+        return true;
+    }
+
+    std::vector<pe64::RelocationTable> pe64::get_relocation_table() {
+        if (_data_table_list.empty()) {
+            get_data_table();
+        }
+        if (_data_table_list[DIRECTORY_ENTRY_BASERELOC].Size == 0) {
+            return {};
+        }
+        auto rva = _data_table_list[DIRECTORY_ENTRY_BASERELOC].VirtualAddress;
+        auto offset = rva_to_foa(rva);
+        if (offset == 0) {
+            return {};
+        }
+        auto relocation_table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+            reinterpret_cast<uint8_t *>(_dos_header) + offset);
+        std::vector<RelocationTable> result;
+        while (relocation_table->VirtualAddress) {
+            RelocationTable relocation = {};
+            relocation.virtual_address = relocation_table->VirtualAddress;
+            relocation.size_of_block = relocation_table->SizeOfBlock;
+            auto item_addr = reinterpret_cast<PWORD>(
+                reinterpret_cast<uint8_t *>(relocation_table) +
+                sizeof(IMAGE_BASE_RELOCATION));
+            auto item_count = (relocation_table->SizeOfBlock -
+                               sizeof(IMAGE_BASE_RELOCATION)) / sizeof(WORD);
+
+            relocation.items.resize(item_count);
+            memcpy_s(relocation.items.data(),
+                     sizeof(WORD) * item_count,
+                     item_addr,
+                     sizeof(WORD) * item_count);
+            result.push_back(relocation);
+            relocation_table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+                reinterpret_cast<uint8_t *>(relocation_table) +
+                relocation_table->SizeOfBlock);
+        }
+        return result;
+    }
+
+    bool pe64::set_relocation_table(
+        std::vector<RelocationTable> &relocation_table) {
+        if (_data_table_list.empty()) {
+            get_data_table();
+        }
+        if (_data_table_list[DIRECTORY_ENTRY_BASERELOC].Size == 0) {
+            return false;
+        }
+        auto rva = _data_table_list[DIRECTORY_ENTRY_BASERELOC].VirtualAddress;
+        auto offset = rva_to_foa(rva);
+        if (offset == 0) {
+            return false;
+        }
+        auto table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+            reinterpret_cast<uint8_t *>(_dos_header) + offset);
+        for (const auto &entry: relocation_table) {
+            auto item_addr = reinterpret_cast<PWORD>(
+                reinterpret_cast<uint8_t *>(table) +
+                sizeof(IMAGE_BASE_RELOCATION));
+            auto item_count = (table->SizeOfBlock -
+                               sizeof(IMAGE_BASE_RELOCATION)) / sizeof(WORD);
+            memcpy_s(item_addr,
+                     sizeof(WORD) * item_count,
+                     entry.items.data(),
+                     sizeof(WORD) * item_count);
+            table->VirtualAddress = entry.virtual_address;
+            table->SizeOfBlock = entry.size_of_block;
+            table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+                reinterpret_cast<uint8_t *>(table) +
+                table->SizeOfBlock);
+        }
+        return true;
+    }
+
+    std::vector<std::tuple<WORD, WORD, DWORD> >
+    pe64::get_relocation_table_item(RelocationTable &relocation) {
+        if (!relocation.virtual_address ||
+            !relocation.size_of_block) {
+            return {};
+        }
+        std::vector<std::tuple<WORD, WORD, DWORD> > result;
+        for (const auto &entry: relocation.items) {
+            WORD type = entry >> 12;
+            DWORD real_addr = relocation.virtual_address + (entry & 0x0FFF);
+            result.push_back(std::make_tuple(
+                entry,
+                type,
+                (IMAGE_REL_BASED_DIR64 == type) ? real_addr : 0));
+        }
+        return result;
+    }
+
+    bool
+    pe64::set_relocation_table_item(RelocationTable &relocation,
+                                    std::vector<std::tuple<WORD, WORD, DWORD> > &items) {
+        if (!relocation.virtual_address ||
+            !relocation.size_of_block ||
+            relocation.items.empty() ||
+            items.empty() ||
+            relocation.items.size() != items.size()) {
+            return false;
+        }
+        for (int i = 0; i < relocation.items.size(); i++) {
+            relocation.items[i] = std::get<1>(items[i]) << 12 |
+                                  ((std::get<2>(items[i]) - relocation.virtual_address) &
+                                   0x0FFF);
+        }
+        return true;
+    }
+
     IMAGE_SECTION_HEADER pe64::find_section_header(DWORD rva) {
         IMAGE_SECTION_HEADER result = {};
         if (_section_header_list.empty()) {

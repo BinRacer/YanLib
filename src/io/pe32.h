@@ -10,7 +10,7 @@
 
 namespace YanLib::io {
     class pe32 {
-         private:
+    private:
         mem::mmap mmap = {};
         HANDLE mmap_handle = nullptr;
         void *addr = nullptr;
@@ -216,6 +216,8 @@ namespace YanLib::io {
 
         // relative virtual address to file offset address
         int64_t rva_to_foa(DWORD rva);
+
+        DWORD foa_to_rva(IMAGE_SECTION_HEADER &section_header, int64_t foa);
 
         std::string datetime(DWORD timestamp);
 

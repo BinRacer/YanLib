@@ -217,6 +217,8 @@ namespace YanLib::io {
         // relative virtual address to file offset address
         int64_t rva_to_foa(DWORD rva);
 
+        DWORD foa_to_rva(IMAGE_SECTION_HEADER &section_header, int64_t foa);
+
         std::string datetime(DWORD timestamp);
 
         [[nodiscard]] DWORD err_code() const;

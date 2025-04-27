@@ -927,6 +927,11 @@ namespace YanLib::io {
         return result;
     }
 
+    DWORD pe64::foa_to_rva(IMAGE_SECTION_HEADER &section_header, int64_t foa) {
+        return foa - section_header.PointerToRawData +
+               section_header.VirtualAddress;
+    }
+
     std::string pe64::datetime(DWORD timestamp) {
         FILETIME ft, ftLocal;
         SYSTEMTIME st;

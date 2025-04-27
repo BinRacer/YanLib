@@ -24,6 +24,7 @@ private:
         }
         return decoded;
     }
+
 protected:
     void SetUp() override {
         data_str = "Hello World!你好世界";
@@ -31,12 +32,18 @@ protected:
         ciphertext_str = "e1d24db90d71fa78674ec917eb5f0fb4c4e8d893a2863b11318e8e7dd6fd63fcb5990d22ba97ae9dba900eb5538b1236";
         ciphertext_vec.insert(ciphertext_vec.end(), ciphertext_str.begin(), ciphertext_str.end());
         ciphertext_vec = hex_decode(ciphertext_vec);
+        zlib_str = "677594fa93df2389b04364bcec0454091ed08297e81f3fba32ad6a8ec433e61e9a23a052974ba1ec1ff28214ff77fc85";
+        zlib_vec.insert(zlib_vec.end(), zlib_str.begin(), zlib_str.end());
+        zlib_vec = hex_decode(zlib_vec);
     }
 
     std::string data_str{};
     std::vector<uint8_t> data_vec{};
     std::string ciphertext_str{};
     std::vector<uint8_t> ciphertext_vec{};
+    const wchar_t *zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
+    std::string zlib_str{};
+    std::vector<uint8_t> zlib_vec{};
 };
 
 TEST_F(hash_sha384, sha384) {
@@ -46,8 +53,11 @@ TEST_F(hash_sha384, sha384) {
     EXPECT_GT(ciphertext_vec.size(), 0);
     hash::sha384 sha384_str(data_str);
     hash::sha384 sha384_vec(data_vec);
+    hash::sha384 sha384_file(zlib);
     EXPECT_EQ(sha384_str.hash(), ciphertext_vec);
     EXPECT_EQ(sha384_str.hash_string(), ciphertext_str);
     EXPECT_EQ(sha384_vec.hash(), ciphertext_vec);
     EXPECT_EQ(sha384_vec.hash_string(), ciphertext_str);
+    EXPECT_EQ(sha384_file.hash(), zlib_vec);
+    EXPECT_EQ(sha384_file.hash_string(), zlib_str);
 }

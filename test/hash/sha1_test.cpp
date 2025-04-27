@@ -24,6 +24,7 @@ private:
         }
         return decoded;
     }
+
 protected:
     void SetUp() override {
         data_str = "Hello World!你好世界";
@@ -31,12 +32,18 @@ protected:
         ciphertext_str = "92cccfb0bcb6b6a99cfdf8b0ed899c657292882d";
         ciphertext_vec.insert(ciphertext_vec.end(), ciphertext_str.begin(), ciphertext_str.end());
         ciphertext_vec = hex_decode(ciphertext_vec);
+        zlib_str = "29ad8fc16ce4d5cb0f4d2ff5795620ae1910b3b4";
+        zlib_vec.insert(zlib_vec.end(), zlib_str.begin(), zlib_str.end());
+        zlib_vec = hex_decode(zlib_vec);
     }
 
     std::string data_str{};
     std::vector<uint8_t> data_vec{};
     std::string ciphertext_str{};
     std::vector<uint8_t> ciphertext_vec{};
+    const wchar_t *zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
+    std::string zlib_str{};
+    std::vector<uint8_t> zlib_vec{};
 };
 
 TEST_F(hash_sha1, sha1) {
@@ -46,8 +53,11 @@ TEST_F(hash_sha1, sha1) {
     EXPECT_GT(ciphertext_vec.size(), 0);
     hash::sha1 sha1_str(data_str);
     hash::sha1 sha1_vec(data_vec);
+    hash::sha1 sha1_file(zlib);
     EXPECT_EQ(sha1_str.hash(), ciphertext_vec);
     EXPECT_EQ(sha1_str.hash_string(), ciphertext_str);
     EXPECT_EQ(sha1_vec.hash(), ciphertext_vec);
     EXPECT_EQ(sha1_vec.hash_string(), ciphertext_str);
+    EXPECT_EQ(sha1_file.hash(), zlib_vec);
+    EXPECT_EQ(sha1_file.hash_string(), zlib_str);
 }

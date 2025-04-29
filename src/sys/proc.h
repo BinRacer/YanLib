@@ -24,11 +24,11 @@ namespace YanLib::sys {
         wchar_t *curr_proc_env = nullptr;
         DWORD error_code = 0;
 
-        static NTSTATUS nt_query_info_proc(HANDLE proc_handle,
-                                           PROCESSINFOCLASS proc_info_class,
-                                           void *proc_info,
-                                           ULONG proc_info_len,
-                                           PULONG ret_len);
+        NTSTATUS nt_query_info_proc(HANDLE proc_handle,
+                                    PROCESSINFOCLASS proc_info_class,
+                                    void *proc_info,
+                                    ULONG proc_info_len,
+                                    PULONG ret_len);
 
     public:
         proc(const proc &other) = delete;

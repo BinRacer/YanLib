@@ -56,11 +56,13 @@ namespace YanLib::sys {
         do {
             ntdll_module = LoadLibraryW(L"ntdll.dll");
             if (!ntdll_module) {
+                error_code = GetLastError();
                 break;
             }
             pfn query_info_proc = reinterpret_cast<pfn>(
                 GetProcAddress(ntdll_module, "NtQueryInformationProcess"));
             if (!query_info_proc) {
+                error_code = GetLastError();
                 break;
             }
             status = query_info_proc(proc_handle,

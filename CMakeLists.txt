@@ -112,6 +112,8 @@ add_library(YanLib STATIC
         src/sys/snapshot.h
         src/sys/processor.cpp
         src/sys/processor.h
+        src/ui/window.cpp
+        src/ui/window.h
 )
 
 target_include_directories(YanLib

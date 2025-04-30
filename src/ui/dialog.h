@@ -26,6 +26,52 @@ namespace YanLib::ui {
 
         ~dialog() = default;
 
+        INT_PTR create_dialog(HINSTANCE instance,
+                              const wchar_t *template_name,
+                              HWND hwnd_parent,
+                              DLGPROC dialog_func);
+
+        INT_PTR create_dialog(HINSTANCE instance,
+                              const wchar_t *template_name,
+                              HWND hwnd_parent,
+                              DLGPROC dialog_func,
+                              LPARAM init_param);
+
+        INT_PTR create_dialog_indirect(HINSTANCE instance,
+                                       LPCDLGTEMPLATEW dialog_template,
+                                       HWND hwnd_parent,
+                                       DLGPROC dialog_func);
+
+        INT_PTR create_dialog_indirect(HINSTANCE instance,
+                                       LPCDLGTEMPLATEW dialog_template,
+                                       HWND hwnd_parent,
+                                       DLGPROC dialog_func,
+                                       LPARAM init_param);
+
+        HWND create_dialog_modeless(HINSTANCE instance,
+                                    const wchar_t *template_name,
+                                    HWND hwnd_parent,
+                                    DLGPROC dialog_func);
+
+        HWND create_dialog_modeless(HINSTANCE instance,
+                                    const wchar_t *template_name,
+                                    HWND hwnd_parent,
+                                    DLGPROC dialog_func,
+                                    LPARAM init_param);
+
+        HWND create_dialog_indirect_modeless(HINSTANCE instance,
+                                             LPCDLGTEMPLATEW dialog_template,
+                                             HWND hwnd_parent,
+                                             DLGPROC dialog_func);
+
+        HWND create_dialog_indirect_modeless(HINSTANCE instance,
+                                             LPCDLGTEMPLATEW dialog_template,
+                                             HWND hwnd_parent,
+                                             DLGPROC dialog_func,
+                                             LPARAM init_param);
+
+        bool end_dialog(HWND hwnd_dialog, INT_PTR result);
+
         bool check_dialog_button(HWND hwnd_dialog,
                                  int id_button,
                                  UINT check);
@@ -34,6 +80,80 @@ namespace YanLib::ui {
                                     UINT msg,
                                     WPARAM w_param,
                                     LPARAM l_param);
+
+        int dialog_dir_list(HWND hwnd_dialog,
+                            wchar_t *path_spec,
+                            int id_listbox,
+                            int id_static_path,
+                            UINT file_type);
+
+        int dialog_dir_list_combobox(HWND hwnd_dialog,
+                                     wchar_t *path_spec,
+                                     int id_combobox,
+                                     int id_static_path,
+                                     UINT filetype);
+
+        bool dialog_dir_select_combobox(HWND hwnd_dialog,
+                                        wchar_t *text,
+                                        int cch_size,
+                                        int id_combobox);
+
+        bool dialog_dir_select(HWND hwnd_dialog,
+                               wchar_t *text,
+                               int cch_size,
+                               int id_listbox);
+
+        int get_dialog_ctrl_id(HWND hwnd_ctrl);
+
+        HWND get_dialog_item(HWND hwnd_dialog, int id_dialog_item);
+
+        std::pair<UINT, bool> get_dialog_item_int(HWND hwnd_dialog,
+                                                  int id_dialog_item,
+                                                  bool is_signed);
+
+        bool set_dialog_item_int(HWND hwnd_dialog,
+                                 int id_dialog_item,
+                                 UINT value,
+                                 bool is_signed);
+
+        UINT get_dialog_item_text(HWND hwnd_dialog,
+                                  int id_dialog_item,
+                                  wchar_t *text,
+                                  int cch_max);
+
+        bool set_dialog_item_text(HWND hwnd_dialog,
+                                  int id_dialog_item,
+                                  const wchar_t *text);
+
+        HWND get_next_dialog_group_item(HWND hwnd_dialog,
+                                        HWND hwnd_ctrl,
+                                        bool previous);
+
+        HWND get_next_dialog_tab_item(HWND hwnd_dialog,
+                                      HWND hwnd_ctrl,
+                                      bool previous);
+
+        UINT is_dialog_button_checked(HWND hwnd_dialog, int id_button);
+
+        long get_dialog_base_units();
+
+        DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS
+        get_dialog_control_dpi_change_behavior(HWND hwnd_dialog);
+
+        bool set_dialog_control_dpi_change_behavior(
+            HWND hwnd_dialog,
+            DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS mask,
+            DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS values);
+
+        DIALOG_DPI_CHANGE_BEHAVIORS
+        get_dialog_dpi_change_behavior(HWND hwnd_dialog);
+
+        bool set_dialog_dpi_change_behavior(
+            HWND hwnd_dialog,
+            DIALOG_DPI_CHANGE_BEHAVIORS mask,
+            DIALOG_DPI_CHANGE_BEHAVIORS values);
+
+        bool map_dialog_rect(HWND hwnd_dialog, LPRECT rect);
 
         [[nodiscard]] DWORD err_code() const;
 

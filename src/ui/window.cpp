@@ -132,6 +132,37 @@ namespace YanLib::ui {
         return true;
     }
 
+    LRESULT window::call_next_hook(HHOOK hhk,
+                                   int code,
+                                   WPARAM w_param,
+                                   LPARAM l_param) {
+        return CallNextHookEx(hhk, code, w_param, l_param);
+    }
+
+    HWINEVENTHOOK window::set_win_event_hook(DWORD event_min,
+                                             DWORD event_max,
+                                             HMODULE hmod_win_event_proc,
+                                             WINEVENTPROC fn_win_event_proc,
+                                             DWORD pid,
+                                             DWORD tid,
+                                             DWORD flag) {
+        return SetWinEventHook(event_min,
+                               event_max,
+                               hmod_win_event_proc,
+                               fn_win_event_proc,
+                               pid,
+                               tid,
+                               flag);
+    }
+
+    bool window::unhook_win_event(HWINEVENTHOOK hwin_event_hook) {
+        return UnhookWinEvent(hwin_event_hook);
+    }
+
+    bool window::is_win_event_hook_installed(DWORD event) {
+        return IsWinEventHookInstalled(event);
+    }
+
     bool window::register_touch_hit_testing_window(HWND hwnd, ULONG value) {
         if (!RegisterTouchHitTestingWindow(hwnd, value)) {
             error_code = GetLastError();

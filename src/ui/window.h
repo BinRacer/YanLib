@@ -80,6 +80,23 @@ namespace YanLib::ui {
 
         bool unhook_windows_hook(HHOOK hhk);
 
+        LRESULT call_next_hook(HHOOK hhk,
+                               int code,
+                               WPARAM w_param,
+                               LPARAM l_param);
+
+        HWINEVENTHOOK set_win_event_hook(DWORD event_min,
+                                         DWORD event_max,
+                                         HMODULE hmod_win_event_proc,
+                                         WINEVENTPROC fn_win_event_proc,
+                                         DWORD pid,
+                                         DWORD tid,
+                                         DWORD flag);
+
+        bool unhook_win_event(HWINEVENTHOOK hwin_event_hook);
+
+        bool is_win_event_hook_installed(DWORD event);
+
         bool register_touch_hit_testing_window(HWND hwnd, ULONG value);
 
         bool register_touch_window(HWND hwnd,

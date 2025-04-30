@@ -103,6 +103,8 @@ namespace YanLib::ui {
 
         LRESULT dispatch_message(const MSG *msg);
 
+        bool call_message_filter(LPMSG msg, int code);
+
         bool get_current_input_message_source(
             INPUT_MESSAGE_SOURCE *input_message_source);
 

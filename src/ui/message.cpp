@@ -205,6 +205,10 @@ namespace YanLib::ui {
         return DispatchMessageW(msg);
     }
 
+    bool message::call_message_filter(LPMSG msg, int code) {
+        return CallMsgFilterW(msg, code);
+    }
+
     bool message::get_current_input_message_source(
         INPUT_MESSAGE_SOURCE *input_message_source) {
         if (!GetCurrentInputMessageSource(input_message_source)) {

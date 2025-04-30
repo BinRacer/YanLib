@@ -172,7 +172,7 @@ namespace YanLib::ui {
                                  WPARAM w_param,
                                  LPARAM l_param);
 
-        LRESULT def_window_proc(HWND hwnd,
+        LRESULT default_window_proc(HWND hwnd,
                                 UINT msg,
                                 WPARAM w_param,
                                 LPARAM l_param);

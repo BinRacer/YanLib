@@ -116,6 +116,8 @@ add_library(YanLib STATIC
         src/ui/window.h
         src/ui/message.cpp
         src/ui/message.h
+        src/ui/dialog.cpp
+        src/ui/dialog.h
 )
 
 target_include_directories(YanLib

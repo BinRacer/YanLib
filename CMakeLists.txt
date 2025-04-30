@@ -130,6 +130,8 @@ add_library(YanLib STATIC
         src/ui/bitmap.h
         src/ui/image.cpp
         src/ui/image.h
+        src/ui/clipboard.cpp
+        src/ui/clipboard.h
 )
 
 target_include_directories(YanLib

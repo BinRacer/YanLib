@@ -25,6 +25,46 @@ namespace YanLib::ui {
 
         ~clipboard() = default;
 
+        bool open_clipboard(HWND hwnd = nullptr);
+
+        UINT register_clipboard_format(const wchar_t *format);
+
+        bool empty_clipboard();
+
+        bool close_clipboard();
+
+        HANDLE get_clipboard_data(UINT format);
+
+        HANDLE set_clipboard_data(UINT format, HANDLE mem_handle);
+
+        int get_clipboard_format_name(UINT format,
+                                      wchar_t *format_name,
+                                      int cch_max);
+
+        HWND get_clipboard_owner();
+
+        DWORD get_clipboard_sequence_number();
+
+        HWND get_clipboard_viewer();
+
+        int get_priority_clipboard_format(UINT *format_priority_list, int formats);
+
+        bool get_updated_clipboard_formats(PUINT formats,
+                                           UINT formats_count,
+                                           PUINT formats_out);
+
+        bool is_clipboard_format_available(UINT format);
+
+        bool add_clipboard_format_listener(HWND hwnd);
+
+        bool remove_clipboard_format_listener(HWND hwnd);
+
+        bool change_clipboard_chain(HWND hwnd_remove, HWND hwnd_new_next);
+
+        UINT enum_clipboard_formats(UINT format);
+
+        int count_clipboard_formats();
+
         [[nodiscard]] DWORD err_code() const;
 
         [[nodiscard]] std::string err_string() const;

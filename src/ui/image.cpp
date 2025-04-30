@@ -6,42 +6,116 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    HANDLE image::load_image(HINSTANCE instance_handle,
-                             const wchar_t *image_name,
-                             UINT type,
-                             int cx,
-                             int cy,
-                             UINT load) {
-        HANDLE image_handle = LoadImageW(instance_handle,
-                                         image_name,
-                                         type,
-                                         cx,
-                                         cy,
-                                         load);
-        if (!image_handle) {
+    HBITMAP image::load_bitmap(HINSTANCE instance_handle,
+                               const wchar_t *image_name,
+                               int cx,
+                               int cy,
+                               UINT load) {
+        HBITMAP bitmap = static_cast<HBITMAP>(LoadImageW(instance_handle,
+                                                         image_name,
+                                                         IMAGE_BITMAP,
+                                                         cx,
+                                                         cy,
+                                                         load));
+        if (!bitmap) {
             error_code = GetLastError();
         }
-        return image_handle;
+        return bitmap;
     }
 
-    HANDLE image::copy_image(HANDLE image_handle,
-                             UINT type,
-                             int cx,
-                             int cy,
-                             UINT flag) {
-        HANDLE result = CopyImage(image_handle,
-                                  type,
-                                  cx,
-                                  cy,
-                                  flag);
+    HICON image::load_icon(HINSTANCE instance_handle,
+                           const wchar_t *image_name,
+                           int cx,
+                           int cy,
+                           UINT load) {
+        HICON icon = static_cast<HICON>(LoadImageW(instance_handle,
+                                                   image_name,
+                                                   IMAGE_ICON,
+                                                   cx,
+                                                   cy,
+                                                   load));
+        if (!icon) {
+            error_code = GetLastError();
+        }
+        return icon;
+    }
+
+    HCURSOR image::load_cursor(HINSTANCE instance_handle,
+                               const wchar_t *image_name,
+                               int cx,
+                               int cy,
+                               UINT load) {
+        HCURSOR cursor = static_cast<HCURSOR>(LoadImageW(instance_handle,
+                                                         image_name,
+                                                         IMAGE_CURSOR,
+                                                         cx,
+                                                         cy,
+                                                         load));
+        if (!cursor) {
+            error_code = GetLastError();
+        }
+        return cursor;
+    }
+
+    HBITMAP image::copy_bitmap(HBITMAP bitmap_handle,
+                               int cx,
+                               int cy,
+                               UINT flag) {
+        HBITMAP result = static_cast<HBITMAP>(CopyImage(bitmap_handle,
+                                                        IMAGE_BITMAP,
+                                                        cx,
+                                                        cy,
+                                                        flag));
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    bool image::close_image(HANDLE image_handle) {
-        if (!CloseHandle(image_handle)) {
+    HICON image::copy_icon(HICON icon_handle,
+                           int cx,
+                           int cy,
+                           UINT flag) {
+        HICON result = static_cast<HICON>(CopyImage(icon_handle,
+                                                    IMAGE_ICON,
+                                                    cx,
+                                                    cy,
+                                                    flag));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HCURSOR image::copy_cursor(HCURSOR cursor_handle,
+                               int cx,
+                               int cy,
+                               UINT flag) {
+        HCURSOR result = static_cast<HCURSOR>(CopyImage(cursor_handle,
+                                                        IMAGE_CURSOR,
+                                                        cx,
+                                                        cy,
+                                                        flag));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool image::close_bitmap(HBITMAP bitmap_handle) {
+        return DeleteObject(bitmap_handle);
+    }
+
+    bool image::close_icon(HICON icon_handle) {
+        if (!DestroyIcon(icon_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool image::close_cursor(HCURSOR cursor_handle) {
+        if (!DestroyCursor(cursor_handle)) {
             error_code = GetLastError();
             return false;
         }

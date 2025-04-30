@@ -25,20 +25,44 @@ namespace YanLib::ui {
 
         ~image() = default;
 
-        HANDLE load_image(HINSTANCE instance_handle,
-                          const wchar_t *image_name,
-                          UINT type,
-                          int cx,
-                          int cy,
-                          UINT load);
+        HBITMAP load_bitmap(HINSTANCE instance_handle,
+                            const wchar_t *image_name,
+                            int cx,
+                            int cy,
+                            UINT load);
 
-        HANDLE copy_image(HANDLE image_handle,
-                          UINT type,
-                          int cx,
-                          int cy,
-                          UINT flag);
+        HICON load_icon(HINSTANCE instance_handle,
+                        const wchar_t *image_name,
+                        int cx,
+                        int cy,
+                        UINT load);
 
-        bool close_image(HANDLE image_handle);
+        HCURSOR load_cursor(HINSTANCE instance_handle,
+                            const wchar_t *image_name,
+                            int cx,
+                            int cy,
+                            UINT load);
+
+        HBITMAP copy_bitmap(HBITMAP bitmap_handle,
+                            int cx,
+                            int cy,
+                            UINT flag);
+
+        HICON copy_icon(HICON icon_handle,
+                        int cx,
+                        int cy,
+                        UINT flag);
+
+        HCURSOR copy_cursor(HCURSOR cursor_handle,
+                            int cx,
+                            int cy,
+                            UINT flag);
+
+        bool close_bitmap(HBITMAP bitmap_handle);
+
+        bool close_icon(HICON icon_handle);
+
+        bool close_cursor(HCURSOR cursor_handle);
 
         [[nodiscard]] DWORD err_code() const;
 

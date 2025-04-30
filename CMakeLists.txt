@@ -124,6 +124,8 @@ add_library(YanLib STATIC
         src/ui/icon.h
         src/ui/cursor.cpp
         src/ui/cursor.h
+        src/ui/caret.cpp
+        src/ui/caret.h
 )
 
 target_include_directories(YanLib

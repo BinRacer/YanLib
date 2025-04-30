@@ -269,7 +269,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT window::arrange_iconic_windows(HWND hwnd) {
+    UINT window::arrange_minimize_windows(HWND hwnd) {
         UINT height = ArrangeIconicWindows(hwnd);
         if (!height) {
             error_code = GetLastError();
@@ -1087,6 +1087,18 @@ namespace YanLib::ui {
             return false;
         }
         return true;
+    }
+
+    bool window::restore_window(HWND hwnd) {
+        if (!OpenIcon(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::is_window_minimize(HWND hwnd) {
+        return IsIconic(hwnd);
     }
 
     DWORD window::err_code() const {

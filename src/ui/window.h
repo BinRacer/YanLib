@@ -139,7 +139,7 @@ namespace YanLib::ui {
 
         bool animate_window(HWND hwnd, DWORD time, DWORD flag);
 
-        UINT arrange_iconic_windows(HWND hwnd);
+        UINT arrange_minimize_windows(HWND hwnd);
 
         HDWP begin_defer_window_pos(int num_windows);
 
@@ -457,6 +457,10 @@ namespace YanLib::ui {
                       const wchar_t *help,
                       UINT cmd,
                       ULONG_PTR data);
+
+        bool restore_window(HWND hwnd);
+
+        bool is_window_minimize(HWND hwnd);
 
         [[nodiscard]] DWORD err_code() const;
 

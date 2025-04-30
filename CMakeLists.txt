@@ -114,6 +114,8 @@ add_library(YanLib STATIC
         src/sys/processor.h
         src/ui/window.cpp
         src/ui/window.h
+        src/ui/message.cpp
+        src/ui/message.h
 )
 
 target_include_directories(YanLib

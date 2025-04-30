@@ -4,7 +4,6 @@
 
 #ifndef DIALOG_H
 #define DIALOG_H
-
 #include <Windows.h>
 #include <string>
 
@@ -26,45 +25,45 @@ namespace YanLib::ui {
 
         ~dialog() = default;
 
-        INT_PTR create_dialog(HINSTANCE instance,
+        INT_PTR create_dialog(HINSTANCE instance_handle,
                               const wchar_t *template_name,
                               HWND hwnd_parent,
                               DLGPROC dialog_func);
 
-        INT_PTR create_dialog(HINSTANCE instance,
+        INT_PTR create_dialog(HINSTANCE instance_handle,
                               const wchar_t *template_name,
                               HWND hwnd_parent,
                               DLGPROC dialog_func,
                               LPARAM init_param);
 
-        INT_PTR create_dialog_indirect(HINSTANCE instance,
+        INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
                                        LPCDLGTEMPLATEW dialog_template,
                                        HWND hwnd_parent,
                                        DLGPROC dialog_func);
 
-        INT_PTR create_dialog_indirect(HINSTANCE instance,
+        INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
                                        LPCDLGTEMPLATEW dialog_template,
                                        HWND hwnd_parent,
                                        DLGPROC dialog_func,
                                        LPARAM init_param);
 
-        HWND create_dialog_modeless(HINSTANCE instance,
+        HWND create_dialog_modeless(HINSTANCE instance_handle,
                                     const wchar_t *template_name,
                                     HWND hwnd_parent,
                                     DLGPROC dialog_func);
 
-        HWND create_dialog_modeless(HINSTANCE instance,
+        HWND create_dialog_modeless(HINSTANCE instance_handle,
                                     const wchar_t *template_name,
                                     HWND hwnd_parent,
                                     DLGPROC dialog_func,
                                     LPARAM init_param);
 
-        HWND create_dialog_indirect_modeless(HINSTANCE instance,
+        HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
                                              LPCDLGTEMPLATEW dialog_template,
                                              HWND hwnd_parent,
                                              DLGPROC dialog_func);
 
-        HWND create_dialog_indirect_modeless(HINSTANCE instance,
+        HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
                                              LPCDLGTEMPLATEW dialog_template,
                                              HWND hwnd_parent,
                                              DLGPROC dialog_func,

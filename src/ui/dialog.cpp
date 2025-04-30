@@ -6,11 +6,11 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    INT_PTR dialog::create_dialog(HINSTANCE instance,
+    INT_PTR dialog::create_dialog(HINSTANCE instance_handle,
                                   const wchar_t *template_name,
                                   HWND hwnd_parent,
                                   DLGPROC dialog_func) {
-        INT_PTR result = DialogBoxParamW(instance,
+        INT_PTR result = DialogBoxParamW(instance_handle,
                                          template_name,
                                          hwnd_parent,
                                          dialog_func,
@@ -21,12 +21,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    INT_PTR dialog::create_dialog(HINSTANCE instance,
+    INT_PTR dialog::create_dialog(HINSTANCE instance_handle,
                                   const wchar_t *template_name,
                                   HWND hwnd_parent,
                                   DLGPROC dialog_func,
                                   LPARAM init_param) {
-        INT_PTR result = DialogBoxParamW(instance,
+        INT_PTR result = DialogBoxParamW(instance_handle,
                                          template_name,
                                          hwnd_parent,
                                          dialog_func,
@@ -37,11 +37,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    INT_PTR dialog::create_dialog_indirect(HINSTANCE instance,
+    INT_PTR dialog::create_dialog_indirect(HINSTANCE instance_handle,
                                            LPCDLGTEMPLATEW dialog_template,
                                            HWND hwnd_parent,
                                            DLGPROC dialog_func) {
-        INT_PTR result = DialogBoxIndirectParamW(instance,
+        INT_PTR result = DialogBoxIndirectParamW(instance_handle,
                                                  dialog_template,
                                                  hwnd_parent,
                                                  dialog_func,
@@ -52,12 +52,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    INT_PTR dialog::create_dialog_indirect(HINSTANCE instance,
+    INT_PTR dialog::create_dialog_indirect(HINSTANCE instance_handle,
                                            LPCDLGTEMPLATEW dialog_template,
                                            HWND hwnd_parent,
                                            DLGPROC dialog_func,
                                            LPARAM init_param) {
-        INT_PTR result = DialogBoxIndirectParamW(instance,
+        INT_PTR result = DialogBoxIndirectParamW(instance_handle,
                                                  dialog_template,
                                                  hwnd_parent,
                                                  dialog_func,
@@ -68,11 +68,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND dialog::create_dialog_modeless(HINSTANCE instance,
+    HWND dialog::create_dialog_modeless(HINSTANCE instance_handle,
                                         const wchar_t *template_name,
                                         HWND hwnd_parent,
                                         DLGPROC dialog_func) {
-        HWND result = CreateDialogParamW(instance,
+        HWND result = CreateDialogParamW(instance_handle,
                                          template_name,
                                          hwnd_parent,
                                          dialog_func,
@@ -83,12 +83,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND dialog::create_dialog_modeless(HINSTANCE instance,
+    HWND dialog::create_dialog_modeless(HINSTANCE instance_handle,
                                         const wchar_t *template_name,
                                         HWND hwnd_parent,
                                         DLGPROC dialog_func,
                                         LPARAM init_param) {
-        HWND result = CreateDialogParamW(instance,
+        HWND result = CreateDialogParamW(instance_handle,
                                          template_name,
                                          hwnd_parent,
                                          dialog_func,
@@ -99,11 +99,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance,
+    HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance_handle,
                                                  LPCDLGTEMPLATEW dialog_template,
                                                  HWND hwnd_parent,
                                                  DLGPROC dialog_func) {
-        HWND result = CreateDialogIndirectParamW(instance,
+        HWND result = CreateDialogIndirectParamW(instance_handle,
                                                  dialog_template,
                                                  hwnd_parent,
                                                  dialog_func,
@@ -114,12 +114,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance,
+    HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance_handle,
                                                  LPCDLGTEMPLATEW dialog_template,
                                                  HWND hwnd_parent,
                                                  DLGPROC dialog_func,
                                                  LPARAM init_param) {
-        HWND result = CreateDialogIndirectParamW(instance,
+        HWND result = CreateDialogIndirectParamW(instance_handle,
                                                  dialog_template,
                                                  hwnd_parent,
                                                  dialog_func,

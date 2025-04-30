@@ -8,9 +8,9 @@
 namespace YanLib::ui {
     HWND window::create_window(const wchar_t *class_name,
                                const wchar_t *window_name,
-                               HINSTANCE instance, void *param,
+                               HINSTANCE instance_handle, void *param,
                                HWND hwnd_parent,
-                               HMENU menu,
+                               HMENU menu_handle,
                                int x,
                                int y,
                                int width,
@@ -26,8 +26,8 @@ namespace YanLib::ui {
                                            width,
                                            height,
                                            hwnd_parent,
-                                           menu,
-                                           instance,
+                                           menu_handle,
+                                           instance_handle,
                                            param);
         if (!hwnd_handle) {
             error_code = GetLastError();
@@ -37,7 +37,7 @@ namespace YanLib::ui {
 
     HWND window::create_mdi_window(const wchar_t *class_name,
                                    const wchar_t *window_name,
-                                   HINSTANCE instance,
+                                   HINSTANCE instance_handle,
                                    LPARAM l_param,
                                    HWND hwnd_parent,
                                    int x,
@@ -53,7 +53,7 @@ namespace YanLib::ui {
                                             width,
                                             height,
                                             hwnd_parent,
-                                            instance,
+                                            instance_handle,
                                             l_param);
         if (!hwnd_handle) {
             error_code = GetLastError();
@@ -63,28 +63,28 @@ namespace YanLib::ui {
 
     WNDCLASSEXW window::make_window_class(const wchar_t *class_name,
                                           WNDPROC window_proc,
-                                          HINSTANCE instance,
+                                          HINSTANCE instance_handle,
                                           UINT style,
                                           const wchar_t *menu_name,
                                           int cb_class_extra,
                                           int cb_window_extra,
-                                          HICON icon,
-                                          HCURSOR cursor,
-                                          HBRUSH brush_background,
-                                          HICON icon_small) {
+                                          HICON icon_handle,
+                                          HCURSOR cursor_handle,
+                                          HBRUSH brush_background_handle,
+                                          HICON icon_small_handle) {
         WNDCLASSEXW wnd_class = {};
         wnd_class.cbSize = sizeof(WNDCLASSEXW);
         wnd_class.style = style;
         wnd_class.lpfnWndProc = window_proc;
         wnd_class.cbClsExtra = cb_class_extra;
         wnd_class.cbWndExtra = cb_window_extra;
-        wnd_class.hInstance = instance;
-        wnd_class.hIcon = icon;
-        wnd_class.hCursor = cursor;
-        wnd_class.hbrBackground = brush_background;
+        wnd_class.hInstance = instance_handle;
+        wnd_class.hIcon = icon_handle;
+        wnd_class.hCursor = cursor_handle;
+        wnd_class.hbrBackground = brush_background_handle;
         wnd_class.lpszMenuName = menu_name;
         wnd_class.lpszClassName = class_name;
-        wnd_class.hIconSm = icon_small;
+        wnd_class.hIconSm = icon_small_handle;
         return wnd_class;
     }
 
@@ -97,8 +97,8 @@ namespace YanLib::ui {
     }
 
     bool window::unregister_class(const wchar_t *class_name,
-                                  HINSTANCE instance) {
-        if (!UnregisterClassW(class_name, instance)) {
+                                  HINSTANCE instance_handle) {
+        if (!UnregisterClassW(class_name, instance_handle)) {
             error_code = GetLastError();
             return false;
         }
@@ -372,9 +372,9 @@ namespace YanLib::ui {
     }
 
     LRESULT window::default_window_proc(HWND hwnd,
-                                    UINT msg,
-                                    WPARAM w_param,
-                                    LPARAM l_param) {
+                                        UINT msg,
+                                        WPARAM w_param,
+                                        LPARAM l_param) {
         return DefWindowProcW(hwnd, msg, w_param, l_param);
     }
 

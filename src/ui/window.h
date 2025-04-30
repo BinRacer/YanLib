@@ -27,10 +27,10 @@ namespace YanLib::ui {
 
         HWND create_window(const wchar_t *class_name,
                            const wchar_t *window_name,
-                           HINSTANCE instance,
+                           HINSTANCE instance_handle,
                            void *param = nullptr,
                            HWND hwnd_parent = nullptr,
-                           HMENU menu = nullptr,
+                           HMENU menu_handle = nullptr,
                            int x = CW_USEDEFAULT,
                            int y = CW_USEDEFAULT,
                            int width = CW_USEDEFAULT,
@@ -40,34 +40,38 @@ namespace YanLib::ui {
 
         HWND create_mdi_window(const wchar_t *class_name,
                                const wchar_t *window_name,
-                               HINSTANCE instance,
+                               HINSTANCE instance_handle,
                                LPARAM l_param,
                                HWND hwnd_parent,
                                int x = CW_USEDEFAULT,
                                int y = CW_USEDEFAULT,
                                int width = CW_USEDEFAULT,
                                int height = CW_USEDEFAULT,
-                               DWORD style = MDIS_ALLCHILDSTYLES | WS_OVERLAPPEDWINDOW);
+                               DWORD style = MDIS_ALLCHILDSTYLES |
+                                             WS_OVERLAPPEDWINDOW);
 
         WNDCLASSEXW make_window_class(const wchar_t *class_name,
                                       WNDPROC window_proc,
-                                      HINSTANCE instance,
+                                      HINSTANCE instance_handle,
                                       UINT style = CS_HREDRAW | CS_VREDRAW,
                                       const wchar_t *menu_name = nullptr,
                                       int cb_class_extra = 0,
                                       int cb_window_extra = 0,
-                                      HICON icon = LoadIconW(nullptr,
-                                                             IDI_APPLICATION),
-                                      HCURSOR cursor = LoadCursorW(nullptr,
-                                                                   IDC_ARROW),
-                                      HBRUSH brush_background = static_cast<HBRUSH>(
-                                          GetStockObject(WHITE_BRUSH)),
-                                      HICON icon_small = nullptr);
+                                      HICON icon_handle = LoadIconW(
+                                          nullptr,
+                                          IDI_APPLICATION),
+                                      HCURSOR cursor_handle = LoadCursorW(
+                                          nullptr,
+                                          IDC_ARROW),
+                                      HBRUSH brush_background_handle =
+                                              static_cast<HBRUSH>(
+                                                  GetStockObject(WHITE_BRUSH)),
+                                      HICON icon_small_handle = nullptr);
 
         ATOM register_class(const WNDCLASSEXW *window_class);
 
         bool unregister_class(const wchar_t *class_name,
-                              HINSTANCE instance);
+                              HINSTANCE instance_handle);
 
         bool register_shell_hook_window(HWND hwnd);
 
@@ -173,9 +177,9 @@ namespace YanLib::ui {
                                  LPARAM l_param);
 
         LRESULT default_window_proc(HWND hwnd,
-                                UINT msg,
-                                WPARAM w_param,
-                                LPARAM l_param);
+                                    UINT msg,
+                                    WPARAM w_param,
+                                    LPARAM l_param);
 
         WORD cascade_windows(HWND hwnd_parent,
                              UINT how,

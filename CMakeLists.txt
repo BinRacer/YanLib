@@ -122,6 +122,8 @@ add_library(YanLib STATIC
         src/ui/menu.h
         src/ui/icon.cpp
         src/ui/icon.h
+        src/ui/cursor.cpp
+        src/ui/cursor.h
 )
 
 target_include_directories(YanLib

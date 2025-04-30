@@ -128,6 +128,8 @@ add_library(YanLib STATIC
         src/ui/caret.h
         src/ui/bitmap.cpp
         src/ui/bitmap.h
+        src/ui/image.cpp
+        src/ui/image.h
 )
 
 target_include_directories(YanLib

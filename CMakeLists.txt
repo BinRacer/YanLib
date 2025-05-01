@@ -138,6 +138,8 @@ add_library(YanLib STATIC
         src/ui/keyboard.h
         src/ui/mouse.cpp
         src/ui/mouse.h
+        src/ui/touch.cpp
+        src/ui/touch.h
 )
 
 target_include_directories(YanLib

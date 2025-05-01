@@ -134,6 +134,8 @@ add_library(YanLib STATIC
         src/ui/clipboard.h
         src/ui/desktop.cpp
         src/ui/desktop.h
+        src/ui/keyboard.cpp
+        src/ui/keyboard.h
 )
 
 target_include_directories(YanLib

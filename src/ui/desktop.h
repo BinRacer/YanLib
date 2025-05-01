@@ -58,6 +58,34 @@ namespace YanLib::ui {
 
         bool switch_desktop(HDESK desktop_handle);
 
+        HWINSTA create_window_station(const wchar_t *window_station_name,
+                                      DWORD flag = 0,
+                                      ACCESS_MASK desired_access = WINSTA_ALL_ACCESS,
+                                      LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+
+        HWINSTA open_window_station(const wchar_t *window_station_name,
+                                    bool is_inherit = false,
+                                    ACCESS_MASK desired_access = WINSTA_ALL_ACCESS);
+
+        bool close_window_station(HWINSTA window_station_handle);
+
+        bool enum_window_stations(WINSTAENUMPROCW enum_func, LPARAM param);
+
+        HWINSTA get_process_window_station();
+
+        bool set_process_window_station(HWINSTA window_station_handle);
+
+        bool get_user_object_info(HANDLE desktop_or_window_station_handle,
+                                  int index,
+                                  void *info,
+                                  DWORD len,
+                                  LPDWORD ret_len);
+
+        bool set_user_object_information(HANDLE desktop_or_window_station_handle,
+                                         int index,
+                                         void *info,
+                                         DWORD len);
+
         [[nodiscard]] DWORD err_code() const;
 
         [[nodiscard]] std::string err_string() const;

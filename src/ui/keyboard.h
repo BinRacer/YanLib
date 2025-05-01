@@ -73,9 +73,81 @@ namespace YanLib::ui {
 
         SHORT vk_key_scan(wchar_t ch, HKL hkl);
 
+        HWND get_focus();
+
+        HWND set_focus(HWND hwnd);
+
+        int to_ascii(UINT vk,
+                     UINT scan_code,
+                     const uint8_t *key_state,
+                     LPWORD ch,
+                     UINT flag);
+
+        int to_ascii(UINT vk,
+                     UINT scan_code,
+                     const uint8_t *key_state,
+                     LPWORD ch,
+                     UINT flag,
+                     HKL hkl);
+
+        int to_unicode(UINT vk,
+                       UINT scan_code,
+                       const uint8_t *key_state,
+                       wchar_t *buf,
+                       int cch_size,
+                       UINT flag);
+
+        int to_unicode(UINT vk,
+                       UINT scan_code,
+                       const uint8_t *key_state,
+                       wchar_t *buf,
+                       int cch_size,
+                       UINT flag,
+                       HKL hkl);
+
+        bool get_input_state();
+
         bool block_input(bool block_it);
 
         bool attach_thread_input(DWORD tid_from, DWORD tid_to, bool attach);
+
+        DWORD wait_for_input_idle(HANDLE proc_handle, DWORD milli_seconds);
+
+        LRESULT default_raw_input_proc(PRAWINPUT *raw_input,
+                                       INT input,
+                                       UINT cb_size_header);
+
+        WORD get_rawinput_code_wparam(WPARAM w_param);
+
+        UINT get_raw_input_buffer(PRAWINPUT data,
+                                  PUINT cb_size,
+                                  UINT cb_size_header);
+
+        UINT get_raw_input_data(HRAWINPUT raw_input,
+                                UINT command,
+                                void *data,
+                                PUINT cb_size,
+                                UINT cb_size_header);
+
+        UINT get_raw_input_device_info(HANDLE device_handle,
+                                       UINT command,
+                                       void *data,
+                                       PUINT cb_size);
+
+        UINT get_raw_input_device_list(PRAWINPUTDEVICELIST raw_input_device_list,
+                                       PUINT num_devices,
+                                       UINT cb_size);
+
+        UINT get_registered_raw_input_devices(PRAWINPUTDEVICE raw_input_devices,
+                                              PUINT num_devices,
+                                              UINT cb_size);
+
+
+        PRAWINPUT next_raw_input_block(PRAWINPUT raw_input);
+
+        bool register_raw_input_devices(PCRAWINPUTDEVICE raw_input_devices,
+                                        UINT num_devices,
+                                        UINT cb_size);
 
         [[nodiscard]] DWORD err_code() const;
 

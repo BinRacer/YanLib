@@ -141,6 +141,74 @@ namespace YanLib::ui {
         return VkKeyScanExW(ch, hkl);
     }
 
+    HWND keyboard::get_focus() {
+        return GetFocus();
+    }
+
+    HWND keyboard::set_focus(HWND hwnd) {
+        HWND result = SetFocus(hwnd);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int keyboard::to_ascii(UINT vk,
+                           UINT scan_code,
+                           const uint8_t *key_state,
+                           LPWORD ch,
+                           UINT flag) {
+        return ToAscii(vk, scan_code, key_state, ch, flag);
+    }
+
+    int keyboard::to_ascii(UINT vk,
+                           UINT scan_code,
+                           const uint8_t *key_state,
+                           LPWORD ch,
+                           UINT flag,
+                           HKL hkl) {
+        return ToAsciiEx(vk,
+                         scan_code,
+                         key_state,
+                         ch,
+                         flag,
+                         hkl);
+    }
+
+    int keyboard::to_unicode(UINT vk,
+                             UINT scan_code,
+                             const uint8_t *key_state,
+                             wchar_t *buf,
+                             int cch_size,
+                             UINT flag) {
+        return ToUnicode(vk,
+                         scan_code,
+                         key_state,
+                         buf,
+                         cch_size,
+                         flag);
+    }
+
+    int keyboard::to_unicode(UINT vk,
+                             UINT scan_code,
+                             const uint8_t *key_state,
+                             wchar_t *buf,
+                             int cch_size,
+                             UINT flag,
+                             HKL hkl) {
+        return ToUnicodeEx(vk,
+                           scan_code,
+                           key_state,
+                           buf,
+                           cch_size,
+                           flag,
+                           hkl);
+    }
+
+    bool keyboard::get_input_state() {
+        return GetInputState();
+    }
+
     bool keyboard::block_input(bool block_it) {
         if (!BlockInput(block_it ? TRUE : FALSE)) {
             error_code = GetLastError();
@@ -153,6 +221,97 @@ namespace YanLib::ui {
         if (!AttachThreadInput(tid_from,
                                tid_to,
                                attach ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD keyboard::wait_for_input_idle(HANDLE proc_handle, DWORD milli_seconds) {
+        return WaitForInputIdle(proc_handle, milli_seconds);
+    }
+
+    LRESULT keyboard::default_raw_input_proc(PRAWINPUT *raw_input,
+                                             INT input,
+                                             UINT cb_size_header) {
+        return DefRawInputProc(raw_input, input, cb_size_header);
+    }
+
+    WORD keyboard::get_rawinput_code_wparam(WPARAM w_param) {
+        return GET_RAWINPUT_CODE_WPARAM(w_param);
+    }
+
+    UINT keyboard::get_raw_input_buffer(PRAWINPUT data,
+                                        PUINT cb_size,
+                                        UINT cb_size_header) {
+        UINT result = GetRawInputBuffer(data, cb_size, cb_size_header);
+        if (result == static_cast<UINT>(-1)) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    UINT keyboard::get_raw_input_data(HRAWINPUT raw_input,
+                                      UINT command,
+                                      void *data,
+                                      PUINT cb_size,
+                                      UINT cb_size_header) {
+        return GetRawInputData(raw_input,
+                               command,
+                               data,
+                               cb_size,
+                               cb_size_header);
+    }
+
+    UINT keyboard::get_raw_input_device_info(HANDLE device_handle,
+                                             UINT command,
+                                             void *data,
+                                             PUINT cb_size) {
+        UINT result = GetRawInputDeviceInfoW(device_handle,
+                                             command,
+                                             data,
+                                             cb_size);
+        error_code = GetLastError();
+        return result;
+    }
+
+    UINT
+    keyboard::get_raw_input_device_list(PRAWINPUTDEVICELIST raw_input_device_list,
+                                        PUINT num_devices,
+                                        UINT cb_size) {
+        UINT result = GetRawInputDeviceList(raw_input_device_list,
+                                            num_devices,
+                                            cb_size);
+        if (result == static_cast<UINT>(-1)) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    UINT
+    keyboard::get_registered_raw_input_devices(PRAWINPUTDEVICE raw_input_devices,
+                                               PUINT num_devices,
+                                               UINT cb_size) {
+        UINT result = GetRegisteredRawInputDevices(raw_input_devices,
+                                                   num_devices,
+                                                   cb_size);
+        if (result == static_cast<UINT>(-1)) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    PRAWINPUT keyboard::next_raw_input_block(PRAWINPUT raw_input) {
+        typedef unsigned __int64 QWORD;
+        return NEXTRAWINPUTBLOCK(raw_input);
+    }
+
+    bool keyboard::register_raw_input_devices(PCRAWINPUTDEVICE raw_input_devices,
+                                              UINT num_devices,
+                                              UINT cb_size) {
+        if (!RegisterRawInputDevices(raw_input_devices,
+                                     num_devices,
+                                     cb_size)) {
             error_code = GetLastError();
             return false;
         }

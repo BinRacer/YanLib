@@ -144,6 +144,8 @@ add_library(YanLib STATIC
         src/ui/accelerator.h
         src/ui/display.cpp
         src/ui/display.h
+        src/ui/dc.cpp
+        src/ui/dc.h
 )
 
 target_include_directories(YanLib

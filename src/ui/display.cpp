@@ -121,4 +121,27 @@ namespace YanLib::ui {
                                         flag,
                                         l_param);
     }
+
+    HMONITOR display::monitor_from_point(POINT point, DWORD flag) {
+        return MonitorFromPoint(point, flag);
+    }
+
+    HMONITOR display::monitor_from_rect(LPCRECT rect, DWORD flag) {
+        return MonitorFromRect(rect, flag);
+    }
+
+    bool display::get_monitor_info(HMONITOR monitor_handle,
+                                   LPMONITORINFO monitor_info) {
+        return GetMonitorInfoW(monitor_handle, monitor_info);
+    }
+
+    bool display::logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
+                                                                LPPOINT point) {
+        return LogicalToPhysicalPointForPerMonitorDPI(hwnd, point);
+    }
+
+    bool display::physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
+                                                                LPPOINT point) {
+        return PhysicalToLogicalPointForPerMonitorDPI(hwnd, point);
+    }
 }

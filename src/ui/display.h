@@ -83,6 +83,19 @@ namespace YanLib::ui {
                                             HWND hwnd,
                                             DWORD flag,
                                             void *l_param);
+
+        static HMONITOR monitor_from_point(POINT point, DWORD flag);
+
+        static HMONITOR monitor_from_rect(LPCRECT rect, DWORD flag);
+
+        static bool get_monitor_info(HMONITOR monitor_handle,
+                                     LPMONITORINFO monitor_info);
+
+        static bool logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
+                                                                  LPPOINT point);
+
+        static bool physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
+                                                                  LPPOINT point);
     };
 }
 #endif //DISPLAY_H

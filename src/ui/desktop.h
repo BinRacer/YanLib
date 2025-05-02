@@ -61,7 +61,7 @@ namespace YanLib::ui {
 
         bool set_thread_desktop(HDESK desktop_handle);
 
-        bool paint_desktop(HDC hdc);
+        bool paint_desktop(HDC dc_handle);
 
         bool switch_desktop(HDESK desktop_handle);
 

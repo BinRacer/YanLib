@@ -26,7 +26,7 @@ namespace YanLib::ui {
                                          PDISPLAY_DEVICEW display_device,
                                          DWORD flag);
 
-        static bool enum_display_monitors(HDC hdc,
+        static bool enum_display_monitors(HDC dc_handle,
                                           LPCRECT rect,
                                           MONITORENUMPROC monitor_enum_proc,
                                           LPARAM data);

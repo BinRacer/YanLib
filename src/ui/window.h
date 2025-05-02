@@ -290,10 +290,6 @@ namespace YanLib::ui {
         bool set_window_context_help_id(HWND hwnd,
                                         DWORD param);
 
-        HDC get_window_dc(HWND hwnd);
-
-        HWND window_from_dc(HDC hdc);
-
         bool get_window_display_affinity(HWND hwnd, DWORD *affinity);
 
         bool set_window_display_affinity(HWND hwnd, DWORD affinity);
@@ -405,7 +401,7 @@ namespace YanLib::ui {
                          bool is_repaint);
 
         bool print_window(HWND hwnd,
-                          HDC hdc,
+                          HDC dc_handle,
                           UINT flag);
 
         UINT real_get_window_class(HWND hwnd,

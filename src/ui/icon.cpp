@@ -84,15 +84,15 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool icon::draw_icon(HDC hdc, int x, int y, HICON icon_handle) {
-        if (!DrawIcon(hdc, x, y, icon_handle)) {
+    bool icon::draw_icon(HDC dc_handle, int x, int y, HICON icon_handle) {
+        if (!DrawIcon(dc_handle, x, y, icon_handle)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool icon::draw_icon(HDC hdc,
+    bool icon::draw_icon(HDC dc_handle,
                          int x_left,
                          int y_top,
                          HICON icon_handle,
@@ -101,7 +101,7 @@ namespace YanLib::ui {
                          UINT step_if_ani_cur,
                          HBRUSH hbr_flicker_free_draw,
                          UINT flag) {
-        if (!DrawIconEx(hdc,
+        if (!DrawIconEx(dc_handle,
                         x_left,
                         y_top,
                         icon_handle,

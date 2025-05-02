@@ -15,11 +15,11 @@ namespace YanLib::ui {
                                    flag);
     }
 
-    bool display::enum_display_monitors(HDC hdc,
+    bool display::enum_display_monitors(HDC dc_handle,
                                         LPCRECT rect,
                                         MONITORENUMPROC monitor_enum_proc,
                                         LPARAM data) {
-        return EnumDisplayMonitors(hdc, rect, monitor_enum_proc, data);
+        return EnumDisplayMonitors(dc_handle, rect, monitor_enum_proc, data);
     }
 
     bool display::enum_display_settings(const wchar_t *device_name,

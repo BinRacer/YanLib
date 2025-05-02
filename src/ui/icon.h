@@ -52,9 +52,9 @@ namespace YanLib::ui {
 
         HICON copy_icon(HICON icon_handle);
 
-        bool draw_icon(HDC hdc, int x, int y, HICON icon_handle);
+        bool draw_icon(HDC dc_handle, int x, int y, HICON icon_handle);
 
-        bool draw_icon(HDC hdc,
+        bool draw_icon(HDC dc_handle,
                        int x_left,
                        int y_top,
                        HICON icon_handle,

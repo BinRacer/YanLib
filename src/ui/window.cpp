@@ -658,14 +658,6 @@ namespace YanLib::ui {
         return true;
     }
 
-    HDC window::get_window_dc(HWND hWnd) {
-        return GetWindowDC(hWnd);
-    }
-
-    HWND window::window_from_dc(HDC hdc) {
-        return WindowFromDC(hdc);
-    }
-
     bool window::get_window_display_affinity(HWND hwnd, DWORD *affinity) {
         if (!GetWindowDisplayAffinity(hwnd, affinity)) {
             error_code = GetLastError();
@@ -964,8 +956,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::print_window(HWND hwnd, HDC hdc, UINT flag) {
-        return PrintWindow(hwnd, hdc, flag);
+    bool window::print_window(HWND hwnd, HDC dc_handle, UINT flag) {
+        return PrintWindow(hwnd, dc_handle, flag);
     }
 
     UINT window::real_get_window_class(HWND hwnd,

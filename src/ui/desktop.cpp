@@ -104,8 +104,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool desktop::paint_desktop(HDC hdc) {
-        return PaintDesktop(hdc);
+    bool desktop::paint_desktop(HDC dc_handle) {
+        return PaintDesktop(dc_handle);
     }
 
     bool desktop::switch_desktop(HDESK desktop_handle) {

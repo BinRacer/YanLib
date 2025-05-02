@@ -46,9 +46,16 @@ namespace YanLib::ui {
 
         bool close_desktop(HDESK desktop_handle);
 
+
+        bool enum_desktop_windows(HDESK desktop_handle,
+                          WNDENUMPROC fn,
+                          LPARAM l_param);
+
         bool enum_desktops(HWINSTA window_station_handle,
                            DESKTOPENUMPROCW enum_func,
                            LPARAM param);
+
+        HWND get_desktop_window();
 
         HDESK get_thread_desktop(DWORD tid);
 

@@ -25,10 +25,7 @@ namespace YanLib::ui {
 
         ~caret() = default;
 
-        bool create_caret(HWND hwnd,
-                          HBITMAP bitmap_handle,
-                          int width,
-                          int height);
+        bool create_caret(HWND hwnd, HBITMAP bitmap_handle, int width, int height);
 
         UINT get_caret_blink_time();
 

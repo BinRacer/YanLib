@@ -105,6 +105,110 @@ namespace YanLib::ui {
         return true;
     }
 
+    bool window::get_class_info(HINSTANCE instance_handle,
+                                const wchar_t *class_name,
+                                LPWNDCLASSW wnd_class) {
+        if (!GetClassInfoW(instance_handle,
+                           class_name,
+                           wnd_class)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::get_class_info(HINSTANCE instance_handle,
+                                const wchar_t *class_name,
+                                LPWNDCLASSEXW wnd_class) {
+        if (!GetClassInfoExW(instance_handle,
+                             class_name,
+                             wnd_class)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD window::get_class_long(HWND hwnd, int index) {
+        DWORD result = GetClassLongW(hwnd, index);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    DWORD window::set_class_long(HWND hwnd, int index, LONG value) {
+        DWORD result = SetClassLongW(hwnd, index, value);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    ULONG_PTR window::get_class_long_ptr(HWND hwnd, int index) {
+        ULONG_PTR result = GetClassLongPtrW(hwnd, index);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    ULONG_PTR window::set_class_long_ptr(HWND hwnd, int index, LONG_PTR value) {
+        ULONG_PTR result = SetClassLongPtrW(hwnd, index, value);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    WORD window::get_class_word(HWND hwnd, int index) {
+        WORD result = GetClassWord(hwnd, index);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    WORD window::set_class_word(HWND hwnd, int index, WORD value) {
+        WORD result = SetClassWord(hwnd, index, value);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int window::get_class_name(HWND hwnd, wchar_t *class_name, int cch_size) {
+        int result = GetClassNameW(hwnd, class_name, cch_size);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int window::enum_props(HWND hwnd, PROPENUMPROCW enum_func) {
+        return EnumPropsW(hwnd, enum_func);
+    }
+
+    int window::enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM l_param) {
+        return EnumPropsExW(hwnd, enum_func, l_param);
+    }
+
+    HANDLE window::get_prop(HWND hwnd, const wchar_t *text) {
+        return GetPropW(hwnd, text);
+    }
+
+    bool window::set_prop(HWND hwnd, const wchar_t *text, HANDLE data_handle) {
+        if (!SetPropW(hwnd, text, data_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    HANDLE window::remove_prop(HWND hwnd, const wchar_t *text) {
+        return RemovePropW(hwnd, text);
+    }
+
     bool window::register_shell_hook_window(HWND hwnd) {
         return RegisterShellHookWindow(hwnd);
     }
@@ -161,60 +265,6 @@ namespace YanLib::ui {
 
     bool window::is_win_event_hook_installed(DWORD event) {
         return IsWinEventHookInstalled(event);
-    }
-
-    bool window::register_touch_hit_testing_window(HWND hwnd, ULONG value) {
-        if (!RegisterTouchHitTestingWindow(hwnd, value)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::register_touch_window(HWND hwnd, ULONG flag) {
-        if (!RegisterTouchWindow(hwnd, flag)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::unregister_touch_window(HWND hwnd) {
-        if (!UnregisterTouchWindow(hwnd)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    UINT window::register_window_message(const wchar_t *message) {
-        UINT result = RegisterWindowMessageW(message);
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
-    bool window::change_window_message_filter(UINT message, DWORD flag) {
-        if (!ChangeWindowMessageFilter(message, flag)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::change_window_message_filter(HWND hwnd,
-                                              UINT message,
-                                              DWORD action,
-                                              PCHANGEFILTERSTRUCT change_filter_struct) {
-        if (!ChangeWindowMessageFilterEx(hwnd,
-                                         message,
-                                         action,
-                                         change_filter_struct)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
     }
 
     bool window::show_window(HWND hwnd, int cmd_show) const {
@@ -432,65 +482,6 @@ namespace YanLib::ui {
         return true;
     }
 
-    HWINSTA window::create_window_station(const wchar_t *window_station,
-                                          DWORD flag,
-                                          ACCESS_MASK desired_access,
-                                          LPSECURITY_ATTRIBUTES security_attrs) {
-        HWINSTA hwinsta = CreateWindowStationW(window_station,
-                                               flag,
-                                               desired_access,
-                                               security_attrs);
-        if (!hwinsta) {
-            error_code = GetLastError();
-        }
-        return hwinsta;
-    }
-
-    HWINSTA window::open_window_station(const wchar_t *window_station,
-                                        bool is_inherit,
-                                        ACCESS_MASK desired_access) {
-        HWINSTA result = OpenWindowStationW(window_station,
-                                            is_inherit ? TRUE : FALSE,
-                                            desired_access);
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
-    bool window::close_window_station(HWINSTA window_station) {
-        if (!CloseWindowStation(window_station)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::enum_window_stations(WINSTAENUMPROCW enum_func,
-                                      LPARAM l_param) {
-        if (!EnumWindowStationsW(enum_func, l_param)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    HWINSTA window::get_process_window_station() {
-        HWINSTA hwinsta = GetProcessWindowStation();
-        if (!hwinsta) {
-            error_code = GetLastError();
-        }
-        return hwinsta;
-    }
-
-    bool window::set_process_window_station(HWINSTA window_station) {
-        if (!SetProcessWindowStation(window_station)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
     bool window::destroy_window(HWND hwnd) {
         if (!DestroyWindow(hwnd)) {
             error_code = GetLastError();
@@ -519,18 +510,6 @@ namespace YanLib::ui {
                                     WNDENUMPROC enum_func,
                                     LPARAM l_param) {
         return EnumChildWindows(hwnd_parent, enum_func, l_param);
-    }
-
-    bool window::enum_desktop_windows(HDESK desktop,
-                                      WNDENUMPROC fn,
-                                      LPARAM l_param) {
-        if (!EnumDesktopWindows(desktop,
-                                fn,
-                                l_param)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
     }
 
     bool window::enum_thread_windows(DWORD tid,
@@ -584,10 +563,6 @@ namespace YanLib::ui {
             error_code = GetLastError();
         }
         return hwnd_handle;
-    }
-
-    HWND window::get_desktop_window() {
-        return GetDesktopWindow();
     }
 
     UINT window::get_dpi_for_window(HWND hwnd) {
@@ -657,14 +632,6 @@ namespace YanLib::ui {
 
     HWND window::get_next_window(HWND hwnd, UINT cmd) {
         return GetWindow(hwnd, cmd);
-    }
-
-    HWND window::get_open_clipboard_window() {
-        HWND hwnd = GetOpenClipboardWindow();
-        if (!hwnd) {
-            error_code = GetLastError();
-        }
-        return hwnd;
     }
 
     HWND window::get_shell_window() {
@@ -928,10 +895,6 @@ namespace YanLib::ui {
 
     bool window::is_hung_app_window(HWND hwnd) {
         return IsHungAppWindow(hwnd);
-    }
-
-    bool window::is_touch_window(HWND hwnd, PULONG flag) {
-        return IsTouchWindow(hwnd, flag);
     }
 
     bool window::is_window(HWND hwnd) {

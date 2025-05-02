@@ -37,9 +37,9 @@ namespace YanLib::ui {
 
         HANDLE set_clipboard_data(UINT format, HANDLE mem_handle);
 
-        int get_clipboard_format_name(UINT format,
-                                      wchar_t *format_name,
-                                      int cch_max);
+        int get_clipboard_format_name(UINT format, wchar_t *format_name, int cch_max);
+
+        HWND get_open_clipboard_window();
 
         HWND get_clipboard_owner();
 

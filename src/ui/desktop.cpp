@@ -59,6 +59,18 @@ namespace YanLib::ui {
         return true;
     }
 
+    bool desktop::enum_desktop_windows(HDESK desktop,
+                                       WNDENUMPROC fn,
+                                       LPARAM l_param) {
+        if (!EnumDesktopWindows(desktop,
+                                fn,
+                                l_param)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     bool desktop::enum_desktops(HWINSTA window_station_handle,
                                 DESKTOPENUMPROCW enum_func,
                                 LPARAM param) {
@@ -69,6 +81,11 @@ namespace YanLib::ui {
             return false;
         }
         return true;
+    }
+
+
+    HWND desktop::get_desktop_window() {
+        return GetDesktopWindow();
     }
 
     HDESK desktop::get_thread_desktop(DWORD tid) {

@@ -64,6 +64,14 @@ namespace YanLib::ui {
         return result;
     }
 
+    HWND clipboard::get_open_clipboard_window() {
+        HWND hwnd = GetOpenClipboardWindow();
+        if (!hwnd) {
+            error_code = GetLastError();
+        }
+        return hwnd;
+    }
+
     HWND clipboard::get_clipboard_owner() {
         HWND result = GetClipboardOwner();
         if (!result) {

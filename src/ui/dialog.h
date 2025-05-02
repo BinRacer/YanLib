@@ -71,9 +71,7 @@ namespace YanLib::ui {
 
         bool end_dialog(HWND hwnd_dialog, INT_PTR result);
 
-        bool check_dialog_button(HWND hwnd_dialog,
-                                 int id_button,
-                                 UINT check);
+        bool check_dialog_button(HWND hwnd_dialog, int id_button, UINT check);
 
         LRESULT default_dialog_proc(HWND hwnd_dialog,
                                     UINT msg,

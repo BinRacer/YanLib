@@ -25,6 +25,14 @@ namespace YanLib::ui {
 
         ~touch() = default;
 
+        bool register_touch_hit_testing_window(HWND hwnd, ULONG value);
+
+        bool register_touch_window(HWND hwnd, ULONG flag);
+
+        bool unregister_touch_window(HWND hwnd);
+
+        bool is_touch_window(HWND hwnd, PULONG flag);
+
         HSYNTHETICPOINTERDEVICE
         create_synthetic_pointer_device(POINTER_INPUT_TYPE pointer_type,
                                         ULONG max_count,

@@ -6,6 +6,34 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
+    bool touch::register_touch_hit_testing_window(HWND hwnd, ULONG value) {
+        if (!RegisterTouchHitTestingWindow(hwnd, value)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool touch::register_touch_window(HWND hwnd, ULONG flag) {
+        if (!RegisterTouchWindow(hwnd, flag)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool touch::unregister_touch_window(HWND hwnd) {
+        if (!UnregisterTouchWindow(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool touch::is_touch_window(HWND hwnd, PULONG flag) {
+        return IsTouchWindow(hwnd, flag);
+    }
+
     HSYNTHETICPOINTERDEVICE
     touch::create_synthetic_pointer_device(POINTER_INPUT_TYPE pointer_type,
                                            ULONG max_count,

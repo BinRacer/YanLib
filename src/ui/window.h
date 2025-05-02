@@ -73,6 +73,38 @@ namespace YanLib::ui {
         bool unregister_class(const wchar_t *class_name,
                               HINSTANCE instance_handle);
 
+        bool get_class_info(HINSTANCE instance_handle,
+                            const wchar_t *class_name,
+                            LPWNDCLASSW wnd_class);
+
+        bool get_class_info(HINSTANCE instance_handle,
+                            const wchar_t *class_name,
+                            LPWNDCLASSEXW wnd_class);
+
+        DWORD get_class_long(HWND hwnd, int index);
+
+        DWORD set_class_long(HWND hwnd, int index, LONG value);
+
+        ULONG_PTR get_class_long_ptr(HWND hwnd, int index);
+
+        ULONG_PTR set_class_long_ptr(HWND hwnd, int index, LONG_PTR value);
+
+        WORD get_class_word(HWND hwnd, int index);
+
+        WORD set_class_word(HWND hwnd, int index, WORD value);
+
+        int get_class_name(HWND hwnd, wchar_t *class_name, int cch_size);
+
+        int enum_props(HWND hwnd, PROPENUMPROCW enum_func);
+
+        int enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM l_param);
+
+        HANDLE get_prop(HWND hwnd, const wchar_t *text);
+
+        bool set_prop(HWND hwnd, const wchar_t *text, HANDLE data_handle);
+
+        HANDLE remove_prop(HWND hwnd, const wchar_t *text);
+
         bool register_shell_hook_window(HWND hwnd);
 
         bool deregister_shell_hook_window(HWND hwnd);
@@ -100,22 +132,6 @@ namespace YanLib::ui {
         bool unhook_win_event(HWINEVENTHOOK hwin_event_hook);
 
         bool is_win_event_hook_installed(DWORD event);
-
-        bool register_touch_hit_testing_window(HWND hwnd, ULONG value);
-
-        bool register_touch_window(HWND hwnd,
-                                   ULONG flag);
-
-        bool unregister_touch_window(HWND hwnd);
-
-        UINT register_window_message(const wchar_t *message);
-
-        bool change_window_message_filter(UINT message, DWORD flag);
-
-        bool change_window_message_filter(HWND hwnd,
-                                          UINT message,
-                                          DWORD action,
-                                          PCHANGEFILTERSTRUCT change_filter_struct);
 
         bool show_window(HWND hwnd, int cmd_show) const;
 
@@ -205,24 +221,6 @@ namespace YanLib::ui {
 
         bool close_window(HWND hwnd);
 
-        HWINSTA create_window_station(const wchar_t *window_station,
-                                      DWORD flag,
-                                      ACCESS_MASK desired_access,
-                                      LPSECURITY_ATTRIBUTES security_attrs);
-
-        HWINSTA open_window_station(const wchar_t *window_station,
-                                    bool is_inherit,
-                                    ACCESS_MASK desired_access);
-
-        bool close_window_station(HWINSTA window_station);
-
-        bool enum_window_stations(WINSTAENUMPROCW enum_func,
-                                  LPARAM l_param);
-
-        HWINSTA get_process_window_station();
-
-        bool set_process_window_station(HWINSTA window_station);
-
         bool destroy_window(HWND hwnd);
 
         void disable_process_windows_ghosting();
@@ -234,10 +232,6 @@ namespace YanLib::ui {
         bool enum_child_windows(HWND hwnd_parent,
                                 WNDENUMPROC enum_func,
                                 LPARAM l_param);
-
-        bool enum_desktop_windows(HDESK desktop,
-                                  WNDENUMPROC fn,
-                                  LPARAM l_param);
 
         bool enum_thread_windows(DWORD tid,
                                  WNDENUMPROC fn,
@@ -260,8 +254,6 @@ namespace YanLib::ui {
         HWND get_active_window();
 
         HWND set_active_window(HWND hwnd);
-
-        HWND get_desktop_window();
 
         UINT get_dpi_for_window(HWND hwnd);
 
@@ -288,8 +280,6 @@ namespace YanLib::ui {
         HWND get_window(HWND hwnd, UINT cmd);
 
         HWND get_next_window(HWND hwnd, UINT cmd);
-
-        HWND get_open_clipboard_window();
 
         HWND get_shell_window();
 
@@ -393,9 +383,6 @@ namespace YanLib::ui {
                                      int cch_size);
 
         bool is_hung_app_window(HWND hwnd);
-
-        bool is_touch_window(HWND hwnd,
-                             PULONG flag);
 
         bool is_window(HWND hwnd);
 

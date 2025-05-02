@@ -1056,6 +1056,46 @@ namespace YanLib::ui {
         return IsIconic(hwnd);
     }
 
+    bool window::scroll_dc(HDC dc_handle,
+                           int x,
+                           int y,
+                           const RECT *rect_scroll,
+                           const RECT *rect_clip,
+                           HRGN region_update_handle,
+                           LPRECT rect_update) {
+        if (!ScrollDC(dc_handle,
+                      x,
+                      y,
+                      rect_scroll,
+                      rect_clip,
+                      region_update_handle,
+                      rect_update)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DWORD window::get_layout(HDC dc_handle) {
+        DWORD result = GetLayout(dc_handle);
+        if (result == GDI_ERROR) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    DWORD window::set_layout(HDC dc_handle, DWORD value) {
+        return SetLayout(dc_handle, value);
+    }
+
+    bool window::get_client_rect(HWND hwnd, LPRECT rect) {
+        if (!GetClientRect(hwnd, rect)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     DWORD window::err_code() const {
         return error_code;
     }

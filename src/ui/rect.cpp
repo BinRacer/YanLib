@@ -86,10 +86,6 @@ namespace YanLib::ui {
         return DrawAnimatedRects(hwnd, animate_id, rect_from, rect_to);
     }
 
-    bool rect::get_client_rect(HWND hwnd, LPRECT rect) {
-        return GetClientRect(hwnd, rect);
-    }
-
     bool rect::get_update_rect(HWND hwnd, LPRECT rect, bool is_erase) {
         return GetUpdateRect(hwnd, rect, is_erase);
     }

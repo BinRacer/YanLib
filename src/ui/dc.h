@@ -45,14 +45,6 @@ namespace YanLib::ui {
 
         static HWND window_from_dc(HDC dc_handle);
 
-        static bool scroll_dc(HDC dc_handle,
-                              int x,
-                              int y,
-                              const RECT *rect_scroll,
-                              const RECT *rect_clip,
-                              HRGN region_update_handle,
-                              LPRECT rect_update);
-
         static bool cancel_dc(HDC dc_handle);
 
         static HDC reset_dc(HDC dc_handle, const DEVMODEW *device_mode);
@@ -70,10 +62,6 @@ namespace YanLib::ui {
         static COLORREF get_dc_pen_color(HDC dc_handle);
 
         static COLORREF set_dc_pen_color(HDC dc_handle, COLORREF color);
-
-        static DWORD get_layout(HDC dc_handle);
-
-        static DWORD set_layout(HDC dc_handle, DWORD value);
 
         static int get_object(HANDLE gdi_handle, int size, void *buf);
 

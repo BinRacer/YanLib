@@ -68,8 +68,6 @@ namespace YanLib::ui {
                                         const RECT *rect_from,
                                         const RECT *rect_to);
 
-        static bool get_client_rect(HWND hwnd, LPRECT rect);
-
         static bool get_update_rect(HWND hwnd,
                                     LPRECT rect,
                                     bool is_erase);

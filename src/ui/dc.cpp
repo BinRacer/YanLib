@@ -47,22 +47,6 @@ namespace YanLib::ui {
         return WindowFromDC(dc_handle);
     }
 
-    bool dc::scroll_dc(HDC dc_handle,
-                       int x,
-                       int y,
-                       const RECT *rect_scroll,
-                       const RECT *rect_clip,
-                       HRGN region_update_handle,
-                       LPRECT rect_update) {
-        return ScrollDC(dc_handle,
-                        x,
-                        y,
-                        rect_scroll,
-                        rect_clip,
-                        region_update_handle,
-                        rect_update);
-    }
-
     bool dc::cancel_dc(HDC dc_handle) {
         return CancelDC(dc_handle);
     }
@@ -97,14 +81,6 @@ namespace YanLib::ui {
 
     COLORREF dc::set_dc_pen_color(HDC dc_handle, COLORREF color) {
         return SetDCPenColor(dc_handle, color);
-    }
-
-    DWORD dc::get_layout(HDC dc_handle) {
-        return GetLayout(dc_handle);
-    }
-
-    DWORD dc::set_layout(HDC dc_handle, DWORD value) {
-        return SetLayout(dc_handle, value);
     }
 
     int dc::get_object(HANDLE gdi_handle, int size, void *buf) {

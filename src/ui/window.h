@@ -445,6 +445,20 @@ namespace YanLib::ui {
 
         bool is_window_minimize(HWND hwnd);
 
+        bool scroll_dc(HDC dc_handle,
+                       int x,
+                       int y,
+                       const RECT *rect_scroll,
+                       const RECT *rect_clip,
+                       HRGN region_update_handle,
+                       LPRECT rect_update);
+
+        DWORD get_layout(HDC dc_handle);
+
+        DWORD set_layout(HDC dc_handle, DWORD value);
+
+        bool get_client_rect(HWND hwnd, LPRECT rect);
+
         [[nodiscard]] DWORD err_code() const;
 
         [[nodiscard]] std::string err_string() const;

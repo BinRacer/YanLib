@@ -1096,6 +1096,14 @@ namespace YanLib::ui {
         return true;
     }
 
+    DWORD window::get_region_data(HRGN region_handle, DWORD size, LPRGNDATA buf) {
+        DWORD result = GetRegionData(region_handle, size, buf);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     DWORD window::err_code() const {
         return error_code;
     }

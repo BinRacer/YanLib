@@ -148,6 +148,8 @@ add_library(YanLib STATIC
         src/ui/dc.h
         src/ui/rect.cpp
         src/ui/rect.h
+        src/ui/region.cpp
+        src/ui/region.h
 )
 
 target_include_directories(YanLib

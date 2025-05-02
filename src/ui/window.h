@@ -459,6 +459,8 @@ namespace YanLib::ui {
 
         bool get_client_rect(HWND hwnd, LPRECT rect);
 
+        DWORD get_region_data(HRGN region_handle, DWORD size, LPRGNDATA buf);
+
         [[nodiscard]] DWORD err_code() const;
 
         [[nodiscard]] std::string err_string() const;

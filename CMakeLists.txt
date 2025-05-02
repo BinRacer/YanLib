@@ -142,6 +142,8 @@ add_library(YanLib STATIC
         src/ui/touch.h
         src/ui/accelerator.cpp
         src/ui/accelerator.h
+        src/ui/display.cpp
+        src/ui/display.h
 )
 
 target_include_directories(YanLib

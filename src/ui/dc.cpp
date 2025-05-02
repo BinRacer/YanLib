@@ -3,7 +3,6 @@
 //
 
 #include "dc.h"
-#include "helper/convert.h"
 
 namespace YanLib::ui {
     HDC dc::create_dc(const wchar_t *driver_name,

@@ -621,8 +621,8 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring
-    fs::get_volume_path_names_for_volume_name(const wchar_t *volume_name) {
+    std::wstring fs::get_volume_path_names_for_volume_name(
+        const wchar_t *volume_name) {
         DWORD size = 0;
         if (!GetVolumePathNamesForVolumeNameW(volume_name,
                                               nullptr,
@@ -647,8 +647,8 @@ namespace YanLib::io {
         return {};
     }
 
-    std::wstring
-    fs::get_volume_name_for_volume_mount_point(const wchar_t *volume_mount_point) {
+    std::wstring fs::get_volume_name_for_volume_mount_point(
+        const wchar_t *volume_mount_point) {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         if (!GetVolumeNameForVolumeMountPointW(volume_mount_point,
                                                buffer.data(),
@@ -947,8 +947,8 @@ namespace YanLib::io {
         return devices;
     }
 
-    std::vector<WIN32_FIND_STREAM_DATA>
-    fs::ls_stream_data(const wchar_t *file_name) {
+    std::vector<WIN32_FIND_STREAM_DATA> fs::ls_stream_data(
+        const wchar_t *file_name) {
         do {
             std::vector<WIN32_FIND_STREAM_DATA> result;
             WIN32_FIND_STREAM_DATA stream_data = {};

@@ -175,11 +175,11 @@ namespace YanLib::io {
 
         std::wstring get_volume_path_name(const wchar_t *file_name);
 
-        std::wstring
-        get_volume_path_names_for_volume_name(const wchar_t *volume_name);
+        std::wstring get_volume_path_names_for_volume_name(
+            const wchar_t *volume_name);
 
-        std::wstring
-        get_volume_name_for_volume_mount_point(const wchar_t *volume_mount_point);
+        std::wstring get_volume_name_for_volume_mount_point(
+            const wchar_t *volume_mount_point);
 
         bool delete_volume_mount_point(const wchar_t *volume_mount_point);
 
@@ -235,8 +235,8 @@ namespace YanLib::io {
 
         static std::vector<std::wstring> ls_device_name();
 
-        static std::vector<WIN32_FIND_STREAM_DATA>
-        ls_stream_data(const wchar_t *file_name);
+        static std::vector<WIN32_FIND_STREAM_DATA> ls_stream_data(
+            const wchar_t *file_name);
 
         static bool rm_file(const wchar_t *file_name);
 

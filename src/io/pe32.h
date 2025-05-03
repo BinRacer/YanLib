@@ -95,30 +95,29 @@ namespace YanLib::io {
 
         std::vector<IMAGE_SECTION_HEADER> get_section_headers();
 
-        bool
-        set_section_headers(std::vector<IMAGE_SECTION_HEADER> &section_headers);
+        bool set_section_headers(std::vector<IMAGE_SECTION_HEADER> &section_headers);
 
         bool get_export_table(IMAGE_EXPORT_DIRECTORY &export_table);
 
         bool set_export_table(IMAGE_EXPORT_DIRECTORY &export_table);
 
-        std::vector<std::string>
-        get_export_func_name_string(IMAGE_EXPORT_DIRECTORY *export_table);
+        std::vector<std::string> get_export_func_name_string(
+            IMAGE_EXPORT_DIRECTORY *export_table);
 
-        std::vector<DWORD>
-        get_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table);
+        std::vector<DWORD> get_export_func_name(
+            IMAGE_EXPORT_DIRECTORY *export_table);
 
         bool set_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<DWORD> &func_name_addrs);
 
-        std::vector<DWORD>
-        get_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table);
+        std::vector<DWORD> get_export_func_addr(
+            IMAGE_EXPORT_DIRECTORY *export_table);
 
         bool set_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<DWORD> &func_addrs);
 
-        std::vector<WORD>
-        get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table);
+        std::vector<WORD> get_export_func_ordinal(
+            IMAGE_EXPORT_DIRECTORY *export_table);
 
         bool set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
                                      std::vector<WORD> &func_ordinals);
@@ -147,20 +146,20 @@ namespace YanLib::io {
         std::vector<IMAGE_THUNK_DATA32> get_import_table_thunk_data(
             DWORD &first_thunk);
 
-        bool
-        set_import_table_thunk_data(DWORD &first_thunk,
-                                    std::vector<IMAGE_THUNK_DATA32> &thunk_datas);
+        bool set_import_table_thunk_data(
+            DWORD &first_thunk,
+            std::vector<IMAGE_THUNK_DATA32> &thunk_datas);
 
-        std::vector<std::string>
-        get_import_table_func_name_strings(std::vector<IMAGE_THUNK_DATA32> &thunk_datas);
+        std::vector<std::string> get_import_table_func_name_strings(
+            std::vector<IMAGE_THUNK_DATA32> &thunk_datas);
 
         struct ImportTableFuncName {
             WORD hint;
             std::string name;
         };
 
-        std::vector<ImportTableFuncName>
-        get_import_table_func_name(std::vector<IMAGE_THUNK_DATA32> &thunk_datas);
+        std::vector<ImportTableFuncName> get_import_table_func_name(
+            std::vector<IMAGE_THUNK_DATA32> &thunk_datas);
 
         bool set_import_table_func_name(
             std::vector<IMAGE_THUNK_DATA32> &thunk_datas,
@@ -205,12 +204,12 @@ namespace YanLib::io {
             std::vector<RelocationTable> &relocation_table);
 
         // std::tuple<raw item value, item type, real offset>
-        std::vector<std::tuple<WORD, WORD, DWORD> >
-        get_relocation_table_item(RelocationTable &relocation);
+        std::vector<std::tuple<WORD, WORD, DWORD> > get_relocation_table_item(
+            RelocationTable &relocation);
 
-        bool
-        set_relocation_table_item(RelocationTable &relocation,
-                                  std::vector<std::tuple<WORD, WORD, DWORD> > &items);
+        bool set_relocation_table_item(
+            RelocationTable &relocation,
+            std::vector<std::tuple<WORD, WORD, DWORD> > &items);
 
         IMAGE_SECTION_HEADER find_section_header(DWORD rva);
 

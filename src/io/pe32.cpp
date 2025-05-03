@@ -227,8 +227,8 @@ namespace YanLib::io {
         return _section_header_list;
     }
 
-    bool
-    pe32::set_section_headers(std::vector<IMAGE_SECTION_HEADER> &section_headers) {
+    bool pe32::set_section_headers(
+        std::vector<IMAGE_SECTION_HEADER> &section_headers) {
         const size_t count = _nt_headers->FileHeader.NumberOfSections;
         if (section_headers.size() != count) {
             return false;
@@ -287,8 +287,8 @@ namespace YanLib::io {
     }
 
 
-    std::vector<std::string>
-    pe32::get_export_func_name_string(IMAGE_EXPORT_DIRECTORY *export_table) {
+    std::vector<std::string> pe32::get_export_func_name_string(
+        IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -305,8 +305,8 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<DWORD>
-    pe32::get_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table) {
+    std::vector<DWORD> pe32::get_export_func_name(
+        IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -337,8 +337,8 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<DWORD>
-    pe32::get_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table) {
+    std::vector<DWORD> pe32::get_export_func_addr(
+        IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -369,8 +369,8 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<WORD>
-    pe32::get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table) {
+    std::vector<WORD> pe32::get_export_func_ordinal(
+        IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -526,8 +526,8 @@ namespace YanLib::io {
         return set_import_table(import_table);
     }
 
-    std::vector<IMAGE_THUNK_DATA32>
-    pe32::get_import_table_thunk_data(DWORD &first_thunk) {
+    std::vector<IMAGE_THUNK_DATA32> pe32::get_import_table_thunk_data(
+        DWORD &first_thunk) {
         size_t offset = rva_to_foa(first_thunk);
         if (offset == 0) {
             return {};
@@ -550,9 +550,9 @@ namespace YanLib::io {
         return result;
     }
 
-    bool
-    pe32::set_import_table_thunk_data(DWORD &first_thunk,
-                                      std::vector<IMAGE_THUNK_DATA32> &thunk_datas) {
+    bool pe32::set_import_table_thunk_data(
+        DWORD &first_thunk,
+        std::vector<IMAGE_THUNK_DATA32> &thunk_datas) {
         if (thunk_datas.empty()) {
             return false;
         }
@@ -857,8 +857,8 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<std::tuple<WORD, WORD, DWORD> >
-    pe32::get_relocation_table_item(RelocationTable &relocation) {
+    std::vector<std::tuple<WORD, WORD, DWORD> > pe32::get_relocation_table_item(
+        RelocationTable &relocation) {
         if (!relocation.virtual_address ||
             !relocation.size_of_block) {
             return {};
@@ -875,9 +875,9 @@ namespace YanLib::io {
         return result;
     }
 
-    bool
-    pe32::set_relocation_table_item(RelocationTable &relocation,
-                                    std::vector<std::tuple<WORD, WORD, DWORD> > &items) {
+    bool pe32::set_relocation_table_item(
+        RelocationTable &relocation,
+        std::vector<std::tuple<WORD, WORD, DWORD> > &items) {
         if (!relocation.virtual_address ||
             !relocation.size_of_block ||
             relocation.items.empty() ||
@@ -929,7 +929,7 @@ namespace YanLib::io {
 
     DWORD pe32::foa_to_rva(IMAGE_SECTION_HEADER &section_header, int64_t foa) {
         return foa - section_header.PointerToRawData +
-       section_header.VirtualAddress;
+               section_header.VirtualAddress;
     }
 
     std::string pe32::datetime(DWORD timestamp) {

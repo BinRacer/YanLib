@@ -100,7 +100,7 @@ namespace YanLib::sys {
     }
 
     SECURITY_DESCRIPTOR security::create_descriptor(bool is_dacl_present,
-                                                    PACL pDacl,
+                                                    ACL* acl,
                                                     bool is_dacl_defaulted) {
         SECURITY_DESCRIPTOR sd;
         do {
@@ -111,7 +111,7 @@ namespace YanLib::sys {
             }
             if (!SetSecurityDescriptorDacl(&sd,
                                            is_dacl_present ? TRUE : FALSE,
-                                           pDacl,
+                                           acl,
                                            is_dacl_defaulted ? TRUE : FALSE)) {
                 error_code = GetLastError();
                 break;
@@ -334,7 +334,7 @@ namespace YanLib::sys {
                 }
             }
             std::vector<uint8_t> buf(size, '\0');
-            auto token_info = reinterpret_cast<PTOKEN_MANDATORY_LABEL>(buf.data());
+            auto token_info = reinterpret_cast<TOKEN_MANDATORY_LABEL*>(buf.data());
             if (!GetTokenInformation(token_handle,
                                      TokenIntegrityLevel,
                                      token_info,
@@ -399,7 +399,7 @@ namespace YanLib::sys {
                 token_policy = TOKEN_NEW_PROCESS_MIN;
             }
 
-            PACL sacl = nullptr;
+            ACL* sacl = nullptr;
             PSECURITY_DESCRIPTOR sd = nullptr;
             DWORD ret = ERROR_SUCCESS;
             ret = GetSecurityInfo(process_handle,

@@ -186,7 +186,7 @@ namespace YanLib::sys {
 
         bool query_mem(HANDLE proc_handle,
                        const void *address,
-                       PMEMORY_BASIC_INFORMATION buffer,
+                       MEMORY_BASIC_INFORMATION* buffer,
                        size_t len);
 
         bool global_mem_status(MEMORYSTATUSEX* buffer);
@@ -281,7 +281,7 @@ namespace YanLib::sys {
                              MODULEINFO* mod_info,
                              DWORD mod_info_size);
 
-        bool logical_processor_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buf,
+        bool logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buf,
                                     DWORD* ret_len);
 
         bool get_affinity_mask(HANDLE proc_handle,
@@ -296,7 +296,7 @@ namespace YanLib::sys {
                                 USHORT* group_array);
 
         bool io_counters(HANDLE proc_handle,
-                         PIO_COUNTERS io_counters);
+                         IO_COUNTERS* io_counters);
 
         bool get_mitigation_policy(HANDLE proc_handle,
                                    PROCESS_MITIGATION_POLICY mitigation_policy,
@@ -335,7 +335,7 @@ namespace YanLib::sys {
                                   size_t max_working_set_size);
 
         bool get_processor_system_cycle_time(USHORT group,
-                                             PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION buffer,
+                                             SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION* buffer,
                                              DWORD* ret_len);
 
         bool is_microsoft_store_app(HANDLE proc_handle);

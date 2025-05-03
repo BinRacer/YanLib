@@ -608,7 +608,7 @@ namespace YanLib::sys {
 
     bool proc::query_mem(HANDLE proc_handle,
                          const void *address,
-                         PMEMORY_BASIC_INFORMATION buffer,
+                         MEMORY_BASIC_INFORMATION* buffer,
                          size_t len) {
         if (!VirtualQueryEx(proc_handle,
                             address,
@@ -906,7 +906,7 @@ namespace YanLib::sys {
             DWORD domain_size = MAX_PATH;
             DWORD* domain_size_ptr = &domain_size;
             if (!LookupAccountSidW(nullptr,
-                                   reinterpret_cast<PTOKEN_USER>(
+                                   reinterpret_cast<TOKEN_USER*>(
                                        token_user.data())->User.Sid,
                                    user,
                                    user_size_ptr,
@@ -1134,7 +1134,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::logical_processor_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buf,
+    bool proc::logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buf,
                                       DWORD* ret_len) {
         if (!GetLogicalProcessorInformation(buf, ret_len)) {
             error_code = GetLastError();
@@ -1178,7 +1178,7 @@ namespace YanLib::sys {
     }
 
     bool proc::io_counters(HANDLE proc_handle,
-                           PIO_COUNTERS io_counters) {
+                           IO_COUNTERS* io_counters) {
         if (!GetProcessIoCounters(proc_handle,
                                   io_counters)) {
             error_code = GetLastError();
@@ -1296,7 +1296,7 @@ namespace YanLib::sys {
     }
 
     bool proc::get_processor_system_cycle_time(USHORT group,
-                                               PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION buffer,
+                                               SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION* buffer,
                                                DWORD* ret_len) {
         if (!GetProcessorSystemCycleTime(group,
                                          buffer,

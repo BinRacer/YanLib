@@ -31,13 +31,13 @@ namespace YanLib::sys {
 
         DWORD number();
 
-        void number(PPROCESSOR_NUMBER processor_number);
+        void number(PROCESSOR_NUMBER* processor_number);
 
-        bool logic_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer,
+        bool logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buffer,
                         DWORD* ret_len);
 
         bool logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
-                        PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX buffer,
+                        SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* buffer,
                         DWORD* ret_len);
 
         DWORD max_count(WORD GroupNumber);

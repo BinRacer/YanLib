@@ -50,7 +50,7 @@ namespace YanLib::sys {
                                          PSECURITY_DESCRIPTOR security_descriptor = nullptr);
 
         SECURITY_DESCRIPTOR create_descriptor(bool is_dacl_present = true,
-                                              PACL pDacl = nullptr,
+                                              ACL* acl = nullptr,
                                               bool is_dacl_defaulted = false);
 
         bool is_valid_descriptor(PSECURITY_DESCRIPTOR security_descriptor);

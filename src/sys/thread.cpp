@@ -490,7 +490,7 @@ namespace YanLib::sys {
     }
 
     bool thread::get_group_affinity(HANDLE thread_handle,
-                                    PGROUP_AFFINITY group_affinity) {
+                                    GROUP_AFFINITY* group_affinity) {
         if (!GetThreadGroupAffinity(thread_handle,
                                     group_affinity)) {
             error_code = GetLastError();
@@ -501,7 +501,7 @@ namespace YanLib::sys {
 
     bool thread::set_group_affinity(HANDLE thread_handle,
                                     const GROUP_AFFINITY *group_affinity,
-                                    PGROUP_AFFINITY previous_group_affinity) {
+                                    GROUP_AFFINITY* previous_group_affinity) {
         if (!SetThreadGroupAffinity(thread_handle,
                                     group_affinity,
                                     previous_group_affinity)) {
@@ -512,7 +512,7 @@ namespace YanLib::sys {
     }
 
     bool thread::get_ideal_processor(HANDLE thread_handle,
-                                     PPROCESSOR_NUMBER ideal_processor) {
+                                     PROCESSOR_NUMBER* ideal_processor) {
         if (!GetThreadIdealProcessorEx(thread_handle,
                                        ideal_processor)) {
             error_code = GetLastError();
@@ -522,8 +522,8 @@ namespace YanLib::sys {
     }
 
     bool thread::set_ideal_processor(HANDLE thread_handle,
-                                     PPROCESSOR_NUMBER ideal_processor,
-                                     PPROCESSOR_NUMBER previous_ideal_processor) {
+                                     PROCESSOR_NUMBER* ideal_processor,
+                                     PROCESSOR_NUMBER* previous_ideal_processor) {
         if (!SetThreadIdealProcessorEx(thread_handle,
                                        ideal_processor,
                                        previous_ideal_processor)) {

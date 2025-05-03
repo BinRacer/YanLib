@@ -171,18 +171,18 @@ namespace YanLib::sys {
                                 const wchar_t *thread_description);
 
         bool get_group_affinity(HANDLE thread_handle,
-                                PGROUP_AFFINITY group_affinity);
+                                GROUP_AFFINITY* group_affinity);
 
         bool set_group_affinity(HANDLE thread_handle,
                                 const GROUP_AFFINITY *group_affinity,
-                                PGROUP_AFFINITY previous_group_affinity);
+                                GROUP_AFFINITY* previous_group_affinity);
 
         bool get_ideal_processor(HANDLE thread_handle,
-                                 PPROCESSOR_NUMBER ideal_processor);
+                                 PROCESSOR_NUMBER* ideal_processor);
 
         bool set_ideal_processor(HANDLE thread_handle,
-                                 PPROCESSOR_NUMBER ideal_processor,
-                                 PPROCESSOR_NUMBER previous_ideal_processor);
+                                 PROCESSOR_NUMBER* ideal_processor,
+                                 PROCESSOR_NUMBER* previous_ideal_processor);
 
         bool get_info(HANDLE thread_handle,
                       THREAD_INFORMATION_CLASS thread_info_class,

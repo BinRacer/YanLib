@@ -23,11 +23,11 @@ namespace YanLib::sys {
         return GetCurrentProcessorNumber();
     }
 
-    void processor::number(PPROCESSOR_NUMBER processor_number) {
+    void processor::number(PROCESSOR_NUMBER* processor_number) {
         GetCurrentProcessorNumberEx(processor_number);
     }
 
-    bool processor::logic_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer,
+    bool processor::logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buffer,
                                DWORD* ret_len) {
         if (!GetLogicalProcessorInformation(buffer, ret_len)) {
             error_code = GetLastError();
@@ -37,7 +37,7 @@ namespace YanLib::sys {
     }
 
     bool processor::logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
-                               PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX buffer,
+                               SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* buffer,
                                DWORD* ret_len) {
         if (!GetLogicalProcessorInformationEx(relationship_type, buffer, ret_len)) {
             error_code = GetLastError();

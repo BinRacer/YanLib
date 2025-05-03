@@ -60,7 +60,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HICON icon::create_icon_indirect(PICONINFO icon_info) {
+    HICON icon::create_icon_indirect(ICONINFO* icon_info) {
         HICON result = CreateIconIndirect(icon_info);
         if (!result) {
             error_code = GetLastError();
@@ -124,7 +124,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool icon::get_icon_info(HICON icon_handle, PICONINFO icon_info) {
+    bool icon::get_icon_info(HICON icon_handle, ICONINFO* icon_info) {
         if (!GetIconInfo(icon_handle, icon_info)) {
             error_code = GetLastError();
             return false;
@@ -132,7 +132,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool icon::get_icon_info(HICON icon_handle, PICONINFOEXW icon_info) {
+    bool icon::get_icon_info(HICON icon_handle, ICONINFOEXW* icon_info) {
         return GetIconInfoExW(icon_handle, icon_info);
     }
 

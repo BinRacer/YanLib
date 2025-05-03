@@ -39,22 +39,22 @@ namespace YanLib::io {
 
         bool post_status(ULONG_PTR completion_key,
                          DWORD num_bytes = 0,
-                         LPOVERLAPPED overlapped = nullptr);
+                         OVERLAPPED* overlapped = nullptr);
 
         bool get_status(ULONG_PTR *completion_key,
-                        PDWORD num_bytes,
-                        LPOVERLAPPED *overlapped,
+                        DWORD* num_bytes,
+                        OVERLAPPED* *overlapped,
                         DWORD milli_seconds = INFINITE);
 
-        bool get_status(LPOVERLAPPED_ENTRY completion_port_entries,
+        bool get_status(OVERLAPPED_ENTRY* completion_port_entries,
                         ULONG count,
-                        PULONG num_entries_removed,
+                        ULONG* num_entries_removed,
                         DWORD milli_seconds = INFINITE,
                         bool alertable = false);
 
         bool cancel(HANDLE file_handle);
 
-        bool cancel(HANDLE file_handle, LPOVERLAPPED overlapped);
+        bool cancel(HANDLE file_handle, OVERLAPPED* overlapped);
 
         bool cancel_sync_io(HANDLE thread_handle);
 
@@ -64,17 +64,17 @@ namespace YanLib::io {
                                DWORD in_buffer_size,
                                void *out_buffer,
                                DWORD out_buffer_size,
-                               LPDWORD bytes_returned,
-                               LPOVERLAPPED overlapped);
+                               DWORD* bytes_returned,
+                               OVERLAPPED* overlapped);
 
         bool get_overlapped_result(HANDLE file_handle,
-                                   LPOVERLAPPED overlapped,
-                                   LPDWORD number_of_bytes_transferred,
+                                   OVERLAPPED* overlapped,
+                                   DWORD* number_of_bytes_transferred,
                                    bool is_wait);
 
         bool get_overlapped_result(HANDLE file_handle,
-                                   LPOVERLAPPED overlapped,
-                                   LPDWORD number_of_bytes_transferred,
+                                   OVERLAPPED* overlapped,
+                                   DWORD* number_of_bytes_transferred,
                                    DWORD milli_seconds,
                                    bool is_wait);
 

@@ -71,7 +71,7 @@ namespace YanLib::io {
 
         bool query_option(DWORD option,
                           void* buffer,
-                          LPDWORD buffer_length);
+                          DWORD* buffer_length);
 
         bool set_option(DWORD option,
                         void* buffer,
@@ -107,24 +107,24 @@ namespace YanLib::io {
                           void* optional = nullptr,
                           DWORD optional_length = 0);
 
-        bool send_request_ex(LPINTERNET_BUFFERSW buffers_in,
-                             LPINTERNET_BUFFERSW buffers_out = nullptr,
+        bool send_request_ex(INTERNET_BUFFERSW* buffers_in,
+                             INTERNET_BUFFERSW* buffers_out = nullptr,
                              DWORD flag = 0,
                              DWORD_PTR context = 0);
 
-        bool end_request_ex(LPINTERNET_BUFFERSW buffers_out = nullptr,
+        bool end_request_ex(INTERNET_BUFFERSW* buffers_out = nullptr,
                             DWORD flag = 0,
                             DWORD_PTR context = 0);
 
         bool read(void* buf,
                   DWORD size,
-                  LPDWORD ret_size);
+                  DWORD* ret_size);
 
         std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
         bool write(const void* buf,
                    DWORD size,
-                   LPDWORD ret_size);
+                   DWORD* ret_size);
 
         DWORD write_bytes(std::vector<uint8_t> &vec);
 

@@ -45,12 +45,12 @@ namespace YanLib::sys {
                                       PROCESSINFOCLASS proc_info_class,
                                       void *proc_info,
                                       ULONG proc_info_len,
-                                      PULONG ret_len) {
+                                      ULONG* ret_len) {
         typedef NTSTATUS (CALLBACK *pfn)(HANDLE ProcessHandle,
                                          PROCESSINFOCLASS ProcessInformationClass,
                                          void *ProcessInformation,
                                          ULONG ProcessInformationLength,
-                                         PULONG ReturnLength OPTIONAL);
+                                         ULONG* ReturnLength OPTIONAL);
         NTSTATUS status = -1;
         HMODULE ntdll_module = nullptr;
         do {
@@ -79,8 +79,8 @@ namespace YanLib::sys {
 
     PROCESS_INFORMATION proc::create(const wchar_t *app_name,
                                      wchar_t *cmdline,
-                                     LPSECURITY_ATTRIBUTES proc_attrs,
-                                     LPSECURITY_ATTRIBUTES thread_attrs,
+                                     SECURITY_ATTRIBUTES* proc_attrs,
+                                     SECURITY_ATTRIBUTES* thread_attrs,
                                      bool is_inherit_handles,
                                      DWORD create_flag,
                                      void *env,
@@ -109,8 +109,8 @@ namespace YanLib::sys {
 
     PROCESS_INFORMATION proc::create_with_suspended(const wchar_t *app_name,
                                                     wchar_t *cmdline,
-                                                    LPSECURITY_ATTRIBUTES proc_attrs,
-                                                    LPSECURITY_ATTRIBUTES thread_attrs,
+                                                    SECURITY_ATTRIBUTES* proc_attrs,
+                                                    SECURITY_ATTRIBUTES* thread_attrs,
                                                     bool is_inherit_handles,
                                                     DWORD create_flag,
                                                     void *env,
@@ -140,8 +140,8 @@ namespace YanLib::sys {
     PROCESS_INFORMATION proc::create_as_user(HANDLE token_handle,
                                              const wchar_t *app_name,
                                              wchar_t *cmdline,
-                                             LPSECURITY_ATTRIBUTES proc_attrs,
-                                             LPSECURITY_ATTRIBUTES thread_attrs,
+                                             SECURITY_ATTRIBUTES* proc_attrs,
+                                             SECURITY_ATTRIBUTES* thread_attrs,
                                              bool is_inherit_handles,
                                              DWORD create_flag,
                                              void *env,
@@ -182,8 +182,8 @@ namespace YanLib::sys {
 
     PROCESS_INFORMATION proc::create_session_zero(const wchar_t *app_name,
                                                   wchar_t *cmdline,
-                                                  LPSECURITY_ATTRIBUTES proc_attrs,
-                                                  LPSECURITY_ATTRIBUTES thread_attrs,
+                                                  SECURITY_ATTRIBUTES* proc_attrs,
+                                                  SECURITY_ATTRIBUTES* thread_attrs,
                                                   bool is_inherit_handles,
                                                   DWORD create_flag,
                                                   void *env,
@@ -594,7 +594,7 @@ namespace YanLib::sys {
                               void *addr,
                               size_t size,
                               DWORD new_protect_flag,
-                              PDWORD old_protect_flag) {
+                              DWORD* old_protect_flag) {
         if (!VirtualProtectEx(proc_handle,
                               addr,
                               size,
@@ -620,7 +620,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::global_mem_status(LPMEMORYSTATUSEX buffer) {
+    bool proc::global_mem_status(MEMORYSTATUSEX* buffer) {
         if (!GlobalMemoryStatusEx(buffer)) {
             error_code = GetLastError();
             return false;
@@ -901,10 +901,10 @@ namespace YanLib::sys {
             SID_NAME_USE snu;
             TCHAR user[MAX_PATH];
             DWORD user_size = MAX_PATH;
-            PDWORD user_size_ptr = &user_size;
+            DWORD* user_size_ptr = &user_size;
             TCHAR domain[MAX_PATH];
             DWORD domain_size = MAX_PATH;
-            PDWORD domain_size_ptr = &domain_size;
+            DWORD* domain_size_ptr = &domain_size;
             if (!LookupAccountSidW(nullptr,
                                    reinterpret_cast<PTOKEN_USER>(
                                        token_user.data())->User.Sid,
@@ -1122,7 +1122,7 @@ namespace YanLib::sys {
 
     bool proc::get_module_info(HANDLE proc_handle,
                                HMODULE module_handle,
-                               LPMODULEINFO mod_info,
+                               MODULEINFO* mod_info,
                                DWORD mod_info_size) {
         if (!GetModuleInformation(proc_handle,
                                   module_handle,
@@ -1135,7 +1135,7 @@ namespace YanLib::sys {
     }
 
     bool proc::logical_processor_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buf,
-                                      PDWORD ret_len) {
+                                      DWORD* ret_len) {
         if (!GetLogicalProcessorInformation(buf, ret_len)) {
             error_code = GetLastError();
             return false;
@@ -1166,8 +1166,8 @@ namespace YanLib::sys {
     }
 
     bool proc::get_group_affinity(HANDLE proc_handle,
-                                  PUSHORT group_count,
-                                  PUSHORT group_array) {
+                                  USHORT* group_count,
+                                  USHORT* group_array) {
         if (!GetProcessGroupAffinity(proc_handle,
                                      group_count,
                                      group_array)) {
@@ -1231,7 +1231,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::get_shutdown_params(LPDWORD level, LPDWORD flag) {
+    bool proc::get_shutdown_params(DWORD* level, DWORD* flag) {
         if (!GetProcessShutdownParameters(level, flag)) {
             error_code = GetLastError();
             return false;
@@ -1248,10 +1248,10 @@ namespace YanLib::sys {
     }
 
     bool proc::time_statistics(HANDLE proc_handle,
-                               LPFILETIME creation_time,
-                               LPFILETIME exit_time,
-                               LPFILETIME kernel_time,
-                               LPFILETIME user_time) {
+                               FILETIME* creation_time,
+                               FILETIME* exit_time,
+                               FILETIME* kernel_time,
+                               FILETIME* user_time) {
         if (!GetProcessTimes(proc_handle,
                              creation_time,
                              exit_time,
@@ -1272,8 +1272,8 @@ namespace YanLib::sys {
     }
 
     bool proc::get_working_set_size(HANDLE proc_handle,
-                                    PSIZE_T min_working_set_size,
-                                    PSIZE_T max_working_set_size) {
+                                    SIZE_T* min_working_set_size,
+                                    SIZE_T* max_working_set_size) {
         if (GetProcessWorkingSetSize(proc_handle,
                                      min_working_set_size,
                                      max_working_set_size)) {
@@ -1297,7 +1297,7 @@ namespace YanLib::sys {
 
     bool proc::get_processor_system_cycle_time(USHORT group,
                                                PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION buffer,
-                                               PDWORD ret_len) {
+                                               DWORD* ret_len) {
         if (!GetProcessorSystemCycleTime(group,
                                          buffer,
                                          ret_len)) {
@@ -1322,7 +1322,7 @@ namespace YanLib::sys {
     bool proc::query_full_image_name(HANDLE proc_handle,
                                      DWORD flag,
                                      wchar_t *exe_name,
-                                     PDWORD size) {
+                                     DWORD* size) {
         if (!QueryFullProcessImageNameW(proc_handle,
                                         flag,
                                         exe_name,
@@ -1334,7 +1334,7 @@ namespace YanLib::sys {
     }
 
     bool proc::get_affinity_update_mode(HANDLE proc_handle,
-                                        LPDWORD flag) {
+                                        DWORD* flag) {
         if (!QueryProcessAffinityUpdateMode(proc_handle,
                                             flag)) {
             error_code = GetLastError();
@@ -1352,7 +1352,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::all_thread_cycle_time(HANDLE proc_handle, PULONG64 cycle_time) {
+    bool proc::all_thread_cycle_time(HANDLE proc_handle, ULONG64* cycle_time) {
         if (!QueryProcessCycleTime(proc_handle,
                                    cycle_time)) {
             error_code = GetLastError();

@@ -23,11 +23,11 @@ namespace YanLib::ui {
 
         static bool enum_display_devices(const wchar_t *device_name,
                                          DWORD device_index,
-                                         PDISPLAY_DEVICEW display_device,
+                                         DISPLAY_DEVICEW* display_device,
                                          DWORD flag);
 
         static bool enum_display_monitors(HDC dc_handle,
-                                          LPCRECT rect,
+                                          const RECT* rect,
                                           MONITORENUMPROC monitor_enum_proc,
                                           LPARAM data);
 
@@ -86,16 +86,16 @@ namespace YanLib::ui {
 
         static HMONITOR monitor_from_point(POINT point, DWORD flag);
 
-        static HMONITOR monitor_from_rect(LPCRECT rect, DWORD flag);
+        static HMONITOR monitor_from_rect(const RECT* rect, DWORD flag);
 
         static bool get_monitor_info(HMONITOR monitor_handle,
-                                     LPMONITORINFO monitor_info);
+                                     MONITORINFO* monitor_info);
 
         static bool logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
-                                                                  LPPOINT point);
+                                                                  POINT* point);
 
         static bool physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
-                                                                  LPPOINT point);
+                                                                  POINT* point);
     };
 }
 #endif //DISPLAY_H

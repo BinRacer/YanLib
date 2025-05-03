@@ -30,7 +30,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::is_touch_window(HWND hwnd, PULONG flag) {
+    bool touch::is_touch_window(HWND hwnd, ULONG* flag) {
         return IsTouchWindow(hwnd, flag);
     }
 
@@ -61,7 +61,7 @@ namespace YanLib::ui {
 
     bool touch::get_touch_input_info(HTOUCHINPUT touch_input_handle,
                                      UINT inputs_count,
-                                     PTOUCHINPUT inputs,
+                                     TOUCHINPUT* inputs,
                                      int cb_size) {
         if (!GetTouchInputInfo(touch_input_handle,
                                inputs_count,
@@ -137,7 +137,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_gesture_info(HGESTUREINFO gesture_info_handle,
-                                 PGESTUREINFO gesture_info) {
+                                 GESTUREINFO* gesture_info) {
         if (!GetGestureInfo(gesture_info_handle,
                             gesture_info)) {
             error_code = GetLastError();

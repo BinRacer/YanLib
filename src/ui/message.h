@@ -25,7 +25,7 @@ namespace YanLib::ui {
 
         ~message() = default;
 
-        bool get_message(LPMSG msg,
+        bool get_message(MSG* msg,
                          HWND hwnd,
                          UINT msg_filter_min,
                          UINT msg_filter_max);
@@ -40,7 +40,7 @@ namespace YanLib::ui {
 
         LONG get_message_time();
 
-        bool peek_message(LPMSG msg,
+        bool peek_message(MSG* msg,
                           HWND hwnd,
                           UINT msg_filter_min,
                           UINT msg_filter_max,
@@ -103,7 +103,7 @@ namespace YanLib::ui {
 
         LRESULT dispatch_message(const MSG *msg);
 
-        bool call_message_filter(LPMSG msg, int code);
+        bool call_message_filter(MSG* msg, int code);
 
         bool get_current_input_message_source(
             INPUT_MESSAGE_SOURCE *input_message_source);
@@ -112,29 +112,29 @@ namespace YanLib::ui {
 
         DWORD in_send_message(void *reserved);
 
-        bool is_dialog_message(HWND hwnd_dialog, LPMSG msg);
+        bool is_dialog_message(HWND hwnd_dialog, MSG* msg);
 
         bool is_wow64_message();
 
         long broadcast_system_message(DWORD flag,
-                                      LPDWORD info,
+                                      DWORD* info,
                                       UINT msg,
                                       WPARAM w_param,
                                       LPARAM l_param);
 
         long broadcast_system_message(DWORD flag,
-                                      LPDWORD info,
+                                      DWORD* info,
                                       UINT msg,
                                       WPARAM w_param,
                                       LPARAM l_param,
-                                      PBSMINFO bsm_info);
+                                      BSMINFO* bsm_info);
 
         bool change_window_message_filter(UINT message, DWORD flag);
 
         bool change_window_message_filter(HWND hwnd,
                                           UINT message,
                                           DWORD action,
-                                          PCHANGEFILTERSTRUCT change_filter_struct);
+                                          CHANGEFILTERSTRUCT* change_filter_struct);
 
         int message_box(HWND hwnd,
                         const wchar_t *text,

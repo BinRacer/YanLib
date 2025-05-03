@@ -34,7 +34,7 @@ namespace YanLib::mem {
 
     HANDLE mmap::create(const wchar_t *file_name,
                         const wchar_t *mmap_name,
-                        LPSECURITY_ATTRIBUTES file_mapping_attrs,
+                        SECURITY_ATTRIBUTES* file_mapping_attrs,
                         DWORD protect_flag,
                         DWORD max_high,
                         DWORD max_low) {
@@ -70,7 +70,7 @@ namespace YanLib::mem {
 
     HANDLE mmap::create(HANDLE file_handle,
                         const wchar_t *mmap_name,
-                        LPSECURITY_ATTRIBUTES file_mapping_attrs,
+                        SECURITY_ATTRIBUTES* file_mapping_attrs,
                         DWORD protect_flag,
                         DWORD max_high,
                         DWORD max_low) {

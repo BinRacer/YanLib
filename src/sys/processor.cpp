@@ -28,7 +28,7 @@ namespace YanLib::sys {
     }
 
     bool processor::logic_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer,
-                               PDWORD ret_len) {
+                               DWORD* ret_len) {
         if (!GetLogicalProcessorInformation(buffer, ret_len)) {
             error_code = GetLastError();
             return false;
@@ -38,7 +38,7 @@ namespace YanLib::sys {
 
     bool processor::logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
                                PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX buffer,
-                               PDWORD ret_len) {
+                               DWORD* ret_len) {
         if (!GetLogicalProcessorInformationEx(relationship_type, buffer, ret_len)) {
             error_code = GetLastError();
             return false;
@@ -59,8 +59,8 @@ namespace YanLib::sys {
         return GetMaximumProcessorGroupCount();
     }
 
-    bool processor::idle_cycle_time(PULONG buffer_length,
-                                    PULONG64 processor_idle_cycle_time) {
+    bool processor::idle_cycle_time(ULONG* buffer_length,
+                                    ULONG64* processor_idle_cycle_time) {
         if (!QueryIdleProcessorCycleTime(buffer_length,
                                          processor_idle_cycle_time)) {
             error_code = GetLastError();
@@ -70,8 +70,8 @@ namespace YanLib::sys {
     }
 
     bool processor::idle_cycle_time(USHORT group,
-                                    PULONG buffer_length,
-                                    PULONG64 processor_idle_cycle_time) {
+                                    ULONG* buffer_length,
+                                    ULONG64* processor_idle_cycle_time) {
         if (!QueryIdleProcessorCycleTimeEx(group,
                                            buffer_length,
                                            processor_idle_cycle_time)) {

@@ -313,7 +313,7 @@ namespace YanLib::io {
 
     bool http::query_option(DWORD option,
                             void *buffer,
-                            LPDWORD buffer_length) {
+                            DWORD* buffer_length) {
         if (!InternetQueryOptionW(request_handle,
                                   option,
                                   buffer,
@@ -456,8 +456,8 @@ namespace YanLib::io {
 
     // support http and https
     // call send_request_ex(), next must call end_request_ex()
-    bool http::send_request_ex(LPINTERNET_BUFFERSW buffers_in,
-                               LPINTERNET_BUFFERSW buffers_out,
+    bool http::send_request_ex(INTERNET_BUFFERSW* buffers_in,
+                               INTERNET_BUFFERSW* buffers_out,
                                DWORD flag,
                                DWORD_PTR context) {
         if (is_https) {
@@ -494,7 +494,7 @@ namespace YanLib::io {
     }
 
     // call send_request_ex(), next must call end_request_ex()
-    bool http::end_request_ex(LPINTERNET_BUFFERSW buffers_out,
+    bool http::end_request_ex(INTERNET_BUFFERSW* buffers_out,
                               DWORD flag,
                               DWORD_PTR context) {
         if (!HttpEndRequestW(request_handle, buffers_out, flag, context)) {
@@ -506,7 +506,7 @@ namespace YanLib::io {
 
     bool http::read(void *buf,
                     DWORD size,
-                    LPDWORD ret_size) {
+                    DWORD* ret_size) {
         if (!InternetReadFile(request_handle,
                               buf,
                               size,
@@ -537,7 +537,7 @@ namespace YanLib::io {
 
     bool http::write(const void *buf,
                      DWORD size,
-                     LPDWORD ret_size) {
+                     DWORD* ret_size) {
         if (!InternetWriteFile(request_handle,
                                buf,
                                size,

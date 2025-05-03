@@ -27,35 +27,35 @@ namespace YanLib::ui {
 
         static bool invert_rect(HDC dc_handle, const RECT *rect);
 
-        static bool set_rect(LPRECT rect,
+        static bool set_rect(RECT* rect,
                              int x_left,
                              int y_top,
                              int x_right,
                              int y_bottom);
 
-        static bool copy_rect(LPRECT rect_dst, const RECT *rect_src);
+        static bool copy_rect(RECT* rect_dst, const RECT *rect_src);
 
         static bool equal_rect(const RECT *rect1, const RECT *rect2);
 
-        static bool inflate_rect(LPRECT rect, int x, int y);
+        static bool inflate_rect(RECT* rect, int x, int y);
 
-        static bool intersect_rect(LPRECT rect_dst,
+        static bool intersect_rect(RECT* rect_dst,
                                    const RECT *rect_src1,
                                    const RECT *rect_src2);
 
         static bool is_rect_empty(const RECT *rect);
 
-        static bool offset_rect(LPRECT rect, int x, int y);
+        static bool offset_rect(RECT* rect, int x, int y);
 
         static bool point_in_rect(const RECT *rect, POINT point);
 
-        static bool set_rect_empty(LPRECT rect);
+        static bool set_rect_empty(RECT* rect);
 
-        static bool subtract_rect(LPRECT rect_dst,
+        static bool subtract_rect(RECT* rect_dst,
                                   const RECT *rect_src1,
                                   const RECT *rect_src2);
 
-        static bool union_rect(LPRECT rect_dst,
+        static bool union_rect(RECT* rect_dst,
                                const RECT *rect_src1,
                                const RECT *rect_src2);
 
@@ -69,7 +69,7 @@ namespace YanLib::ui {
                                         const RECT *rect_to);
 
         static bool get_update_rect(HWND hwnd,
-                                    LPRECT rect,
+                                    RECT* rect,
                                     bool is_erase);
     };
 }

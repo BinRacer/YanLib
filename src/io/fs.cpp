@@ -34,7 +34,7 @@ namespace YanLib::io {
     HANDLE fs::open(const wchar_t *file_name,
                     DWORD desired_access,
                     DWORD share_mode,
-                    LPSECURITY_ATTRIBUTES security_attrs,
+                    SECURITY_ATTRIBUTES* security_attrs,
                     DWORD creation_disposition,
                     DWORD flags_and_attrs,
                     HANDLE template_file) {
@@ -58,7 +58,7 @@ namespace YanLib::io {
     HANDLE fs::create(const wchar_t *file_name,
                       DWORD desired_access,
                       DWORD share_mode,
-                      LPSECURITY_ATTRIBUTES security_attrs,
+                      SECURITY_ATTRIBUTES* security_attrs,
                       DWORD creation_disposition,
                       DWORD flags_and_attrs,
                       HANDLE template_file) {
@@ -100,8 +100,8 @@ namespace YanLib::io {
     bool fs::read(HANDLE file_handle,
                   void *buf,
                   DWORD size,
-                  LPDWORD ret_size,
-                  LPOVERLAPPED overlapped) {
+                  DWORD* ret_size,
+                  OVERLAPPED* overlapped) {
         if (!ReadFile(file_handle,
                       buf,
                       size,
@@ -116,8 +116,8 @@ namespace YanLib::io {
     bool fs::read(HANDLE file_handle,
                   void *buf,
                   DWORD size,
-                  LPOVERLAPPED overlapped,
-                  LPOVERLAPPED_COMPLETION_ROUTINE completion_routine) {
+                  OVERLAPPED* overlapped,
+                  OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadFileEx(file_handle,
                         buf,
                         size,
@@ -132,8 +132,8 @@ namespace YanLib::io {
     bool fs::write(HANDLE file_handle,
                    const void *buf,
                    DWORD size,
-                   LPDWORD ret_size,
-                   LPOVERLAPPED overlapped) {
+                   DWORD* ret_size,
+                   OVERLAPPED* overlapped) {
         if (!WriteFile(file_handle,
                        buf,
                        size,
@@ -148,8 +148,8 @@ namespace YanLib::io {
     bool fs::write(HANDLE file_handle,
                    const void *buf,
                    DWORD size,
-                   LPOVERLAPPED overlapped,
-                   LPOVERLAPPED_COMPLETION_ROUTINE completion_routine) {
+                   OVERLAPPED* overlapped,
+                   OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!WriteFileEx(file_handle,
                          buf,
                          size,
@@ -401,7 +401,7 @@ namespace YanLib::io {
     bool fs::lock_async(HANDLE file_handle,
                         DWORD flag,
                         uint64_t range,
-                        LPOVERLAPPED overlapped,
+                        OVERLAPPED* overlapped,
                         DWORD reserved) {
         auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
         auto high = static_cast<DWORD>(range >> 32);
@@ -437,7 +437,7 @@ namespace YanLib::io {
 
     bool fs::unlock_async(HANDLE file_handle,
                           uint64_t range,
-                          LPOVERLAPPED overlapped,
+                          OVERLAPPED* overlapped,
                           DWORD reserved) {
         auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
         auto high = static_cast<DWORD>(range >> 32);
@@ -553,9 +553,9 @@ namespace YanLib::io {
                                 DWORD buffer_length,
                                 bool is_watch_subtree,
                                 DWORD notify_filter,
-                                LPDWORD bytes_returned,
-                                LPOVERLAPPED overlapped,
-                                LPOVERLAPPED_COMPLETION_ROUTINE completion_routine) {
+                                DWORD* bytes_returned,
+                                OVERLAPPED* overlapped,
+                                OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadDirectoryChangesW(dir_handle,
                                    buffer,
                                    buffer_length,
@@ -986,13 +986,13 @@ namespace YanLib::io {
     }
 
     bool fs::mkdir(const wchar_t *path_name,
-                   LPSECURITY_ATTRIBUTES
+                   SECURITY_ATTRIBUTES*
                    security_attrs) {
         return CreateDirectoryW(path_name, security_attrs);
     }
 
     bool fs::mkdir_all(const wchar_t *path_name,
-                       LPSECURITY_ATTRIBUTES security_attrs) {
+                       SECURITY_ATTRIBUTES* security_attrs) {
         std::wstring path(path_name);
         std::vector<std::wstring> dirs;
         std::wstring currentDir;

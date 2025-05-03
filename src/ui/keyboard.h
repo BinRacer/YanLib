@@ -80,13 +80,13 @@ namespace YanLib::ui {
         int to_ascii(UINT vk,
                      UINT scan_code,
                      const uint8_t *key_state,
-                     LPWORD ch,
+                     WORD* ch,
                      UINT flag);
 
         int to_ascii(UINT vk,
                      UINT scan_code,
                      const uint8_t *key_state,
-                     LPWORD ch,
+                     WORD* ch,
                      UINT flag,
                      HKL hkl);
 
@@ -113,39 +113,39 @@ namespace YanLib::ui {
 
         DWORD wait_for_input_idle(HANDLE proc_handle, DWORD milli_seconds);
 
-        LRESULT default_raw_input_proc(PRAWINPUT *raw_input,
+        LRESULT default_raw_input_proc(RAWINPUT* *raw_input,
                                        INT input,
                                        UINT cb_size_header);
 
         WORD get_rawinput_code_wparam(WPARAM w_param);
 
-        UINT get_raw_input_buffer(PRAWINPUT data,
-                                  PUINT cb_size,
+        UINT get_raw_input_buffer(RAWINPUT* data,
+                                  UINT* cb_size,
                                   UINT cb_size_header);
 
         UINT get_raw_input_data(HRAWINPUT raw_input,
                                 UINT command,
                                 void *data,
-                                PUINT cb_size,
+                                UINT* cb_size,
                                 UINT cb_size_header);
 
         UINT get_raw_input_device_info(HANDLE device_handle,
                                        UINT command,
                                        void *data,
-                                       PUINT cb_size);
+                                       UINT* cb_size);
 
-        UINT get_raw_input_device_list(PRAWINPUTDEVICELIST raw_input_device_list,
-                                       PUINT num_devices,
+        UINT get_raw_input_device_list(RAWINPUTDEVICELIST* raw_input_device_list,
+                                       UINT* num_devices,
                                        UINT cb_size);
 
-        UINT get_registered_raw_input_devices(PRAWINPUTDEVICE raw_input_devices,
-                                              PUINT num_devices,
+        UINT get_registered_raw_input_devices(RAWINPUTDEVICE* raw_input_devices,
+                                              UINT* num_devices,
                                               UINT cb_size);
 
 
-        PRAWINPUT next_raw_input_block(PRAWINPUT raw_input);
+        RAWINPUT* next_raw_input_block(RAWINPUT* raw_input);
 
-        bool register_raw_input_devices(PCRAWINPUTDEVICE raw_input_devices,
+        bool register_raw_input_devices(const RAWINPUTDEVICE* raw_input_devices,
                                         UINT num_devices,
                                         UINT cb_size);
 

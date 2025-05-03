@@ -77,7 +77,7 @@ namespace YanLib::io {
         bool read(HINTERNET file_handle,
                   void* buf,
                   DWORD size,
-                  LPDWORD ret_size);
+                  DWORD* ret_size);
 
         std::vector<uint8_t> read_bytes(HINTERNET file_handle,
                                         int32_t buffer_size = 1024);
@@ -85,7 +85,7 @@ namespace YanLib::io {
         bool write(HINTERNET file_handle,
                    const void* buf,
                    DWORD size,
-                   LPDWORD ret_size);
+                   DWORD* ret_size);
 
         DWORD write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec);
 

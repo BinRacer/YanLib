@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    HACCEL accelerator::create_accelerator_table(LPACCEL accel, int count) {
+    HACCEL accelerator::create_accelerator_table(ACCEL* accel, int count) {
         HACCEL result = CreateAcceleratorTableW(accel, count);
         if (!result) {
             error_code = GetLastError();
@@ -29,7 +29,7 @@ namespace YanLib::ui {
 
     int accelerator::translate_accelerator(HWND hwnd,
                                            HACCEL accel_handle,
-                                           LPMSG msg) {
+                                           MSG* msg) {
         int result = TranslateAcceleratorW(hwnd, accel_handle, msg);
         if (!result) {
             error_code = GetLastError();
@@ -38,7 +38,7 @@ namespace YanLib::ui {
     }
 
     int accelerator::copy_accelerator_table(HACCEL accel_handle_src,
-                                            LPACCEL accel_handle_dst,
+                                            ACCEL* accel_handle_dst,
                                             int accel_entries) {
         return CopyAcceleratorTableW(accel_handle_src,
                                      accel_handle_dst,

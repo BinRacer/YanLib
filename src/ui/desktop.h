@@ -30,7 +30,7 @@ namespace YanLib::ui {
                              ACCESS_MASK desired_access = DESKTOP_CREATEWINDOW |
                                                           DESKTOP_READOBJECTS |
                                                           DESKTOP_WRITEOBJECTS,
-                             LPSECURITY_ATTRIBUTES security_attrs = nullptr,
+                             SECURITY_ATTRIBUTES* security_attrs = nullptr,
                              ULONG heap_size = 1024);
 
         HDESK open_desktop(const wchar_t *desktop_name,
@@ -68,7 +68,7 @@ namespace YanLib::ui {
         HWINSTA create_window_station(const wchar_t *window_station_name,
                                       DWORD flag = 0,
                                       ACCESS_MASK desired_access = WINSTA_ALL_ACCESS,
-                                      LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                                      SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HWINSTA open_window_station(const wchar_t *window_station_name,
                                     bool is_inherit = false,
@@ -86,7 +86,7 @@ namespace YanLib::ui {
                                   int index,
                                   void *info,
                                   DWORD len,
-                                  LPDWORD ret_len);
+                                  DWORD* ret_len);
 
         bool set_user_object_information(HANDLE desktop_or_window_station_handle,
                                          int index,

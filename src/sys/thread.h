@@ -34,38 +34,38 @@ namespace YanLib::sys {
         HANDLE create(LPTHREAD_START_ROUTINE start_addr,
                       void *params,
                       size_t stack_size = 0,
-                      LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                      SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
                                    void *params,
                                    size_t stack_size = 0,
-                                   LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                                   SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
                                          void *params,
                                          size_t stack_size,
-                                         LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                                         SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE create_remote(HANDLE proc_handle,
                              LPTHREAD_START_ROUTINE start_addr,
                              void *params,
                              size_t stack_size = 0,
                              LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                             LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                             SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE create_remote_with_suspend(HANDLE proc_handle,
                                           LPTHREAD_START_ROUTINE start_addr,
                                           void *params,
                                           size_t stack_size = 0,
                                           LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                                          LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                                          SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE create_remote_with_stack_reserve(HANDLE proc_handle,
                                                 LPTHREAD_START_ROUTINE start_addr,
                                                 void *params,
                                                 size_t stack_size,
                                                 LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                                                LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                                                SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE curr_thread_handle();
 
@@ -104,7 +104,7 @@ namespace YanLib::sys {
         bool init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                         DWORD attr_count,
                                         DWORD flag,
-                                        PSIZE_T size);
+                                        SIZE_T* size);
 
         bool update_proc_thread_attr(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                      DWORD flag,
@@ -112,7 +112,7 @@ namespace YanLib::sys {
                                      void *value,
                                      size_t bytes_size,
                                      void *previous_value,
-                                     PSIZE_T ret_size);
+                                     SIZE_T* ret_size);
 
         void delete_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list);
 
@@ -159,10 +159,10 @@ namespace YanLib::sys {
                                 bool is_disable_priority_boost);
 
         bool time_statistics(HANDLE thread_handle,
-                             LPFILETIME creation_time,
-                             LPFILETIME exit_time,
-                             LPFILETIME kernel_time,
-                             LPFILETIME user_time);
+                             FILETIME* creation_time,
+                             FILETIME* exit_time,
+                             FILETIME* kernel_time,
+                             FILETIME* user_time);
 
         HRESULT get_description(HANDLE thread_handle,
                                 wchar_t **thread_description);
@@ -195,16 +195,16 @@ namespace YanLib::sys {
                       DWORD thread_information_size);
 
         bool query_idle_processor_cycle_time(USHORT group,
-                                             PULONG buffer_length,
-                                             PULONG64 processor_idle_cycle_time);
+                                             ULONG* buffer_length,
+                                             ULONG64* processor_idle_cycle_time);
 
         bool query_cycle_time(HANDLE thread_handle,
-                              PULONG64 cycle_time);
+                              ULONG64* cycle_time);
 
         DWORD_PTR set_affinity_mask(HANDLE thread_handle,
                                     DWORD_PTR thread_affinity_mask);
 
-        bool set_stack_guarantee(PULONG bytes_stack);
+        bool set_stack_guarantee(ULONG* bytes_stack);
 
         [[nodiscard]] DWORD err_code() const;
 

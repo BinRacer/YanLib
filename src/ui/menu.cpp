@@ -105,7 +105,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool menu::set_menu_info(HMENU menu_handle, LPCMENUINFO memu_info) {
+    bool menu::set_menu_info(HMENU menu_handle, const MENUINFO* memu_info) {
         if (!SetMenuInfo(menu_handle, memu_info)) {
             error_code = GetLastError();
             return false;
@@ -113,7 +113,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool menu::get_menu_info(HMENU menu_handle, LPMENUINFO memu_info) {
+    bool menu::get_menu_info(HMENU menu_handle, MENUINFO* memu_info) {
         if (!GetMenuInfo(menu_handle, memu_info)) {
             error_code = GetLastError();
             return false;
@@ -124,7 +124,7 @@ namespace YanLib::ui {
     bool menu::get_menu_bar_info(HWND hwnd,
                                  LONG id_object,
                                  LONG id_item,
-                                 PMENUBARINFO menu_bar_info) {
+                                 MENUBARINFO* menu_bar_info) {
         if (!GetMenuBarInfo(hwnd, id_object, id_item, menu_bar_info)) {
             error_code = GetLastError();
             return false;
@@ -191,7 +191,7 @@ namespace YanLib::ui {
     bool menu::insert_menu_item(HMENU menu_handle,
                                 UINT item,
                                 bool is_pos,
-                                LPCMENUITEMINFOW menu_item_info) {
+                                const MENUITEMINFOW* menu_item_info) {
         if (!InsertMenuItemW(menu_handle,
                              item,
                              is_pos ? TRUE : FALSE,
@@ -205,7 +205,7 @@ namespace YanLib::ui {
     bool menu::get_menu_item_info(HMENU menu_handle,
                                   UINT item,
                                   bool is_pos,
-                                  LPMENUITEMINFOW menu_item_info) {
+                                  MENUITEMINFOW* menu_item_info) {
         if (!GetMenuItemInfoW(menu_handle,
                               item,
                               is_pos ? TRUE : FALSE,
@@ -219,7 +219,7 @@ namespace YanLib::ui {
     bool menu::set_menu_item_info(HMENU menu_handle,
                                   UINT item,
                                   bool is_pos,
-                                  LPCMENUITEMINFOW menu_item_info) {
+                                  const MENUITEMINFOW* menu_item_info) {
         if (!SetMenuItemInfoW(menu_handle,
                               item,
                               is_pos ? TRUE : FALSE,
@@ -281,7 +281,7 @@ namespace YanLib::ui {
     bool menu::get_menu_item_rect(HWND hwnd,
                                   HMENU menu_handle,
                                   UINT item,
-                                  LPRECT rect) {
+                                  RECT* rect) {
         if (!GetMenuItemRect(hwnd,
                              menu_handle,
                              item,
@@ -376,7 +376,7 @@ namespace YanLib::ui {
                                 int x,
                                 int y,
                                 HWND hwnd,
-                                LPTPMPARAMS tpm_params) {
+                                TPMPARAMS* tpm_params) {
         if (!TrackPopupMenuEx(menu_handle,
                               flag,
                               x,

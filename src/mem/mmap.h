@@ -35,14 +35,14 @@ namespace YanLib::mem {
 
         HANDLE create(const wchar_t *file_name,
                       const wchar_t *mmap_name = nullptr,
-                      LPSECURITY_ATTRIBUTES file_mapping_attrs = nullptr,
+                      SECURITY_ATTRIBUTES* file_mapping_attrs = nullptr,
                       DWORD protect_flag = PAGE_READWRITE,
                       DWORD max_high = 0,
                       DWORD max_low = 0);
 
         HANDLE create(HANDLE file_handle = INVALID_HANDLE_VALUE,
                       const wchar_t *mmap_name = nullptr,
-                      LPSECURITY_ATTRIBUTES file_mapping_attrs = nullptr,
+                      SECURITY_ATTRIBUTES* file_mapping_attrs = nullptr,
                       DWORD protect_flag = PAGE_READWRITE,
                       DWORD max_high = 0,
                       DWORD max_low = 0);

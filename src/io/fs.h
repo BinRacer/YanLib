@@ -35,7 +35,7 @@ namespace YanLib::io {
         HANDLE open(const wchar_t *file_name,
                     DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
                     DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
-                    LPSECURITY_ATTRIBUTES security_attrs = nullptr,
+                    SECURITY_ATTRIBUTES *security_attrs = nullptr,
                     DWORD creation_disposition = OPEN_EXISTING,
                     DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                     HANDLE template_file = nullptr);
@@ -43,7 +43,7 @@ namespace YanLib::io {
         HANDLE create(const wchar_t *file_name,
                       DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
                       DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
-                      LPSECURITY_ATTRIBUTES security_attrs = nullptr,
+                      SECURITY_ATTRIBUTES *security_attrs = nullptr,
                       DWORD creation_disposition = CREATE_ALWAYS,
                       DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                       HANDLE template_file = nullptr);
@@ -53,26 +53,28 @@ namespace YanLib::io {
         bool read(HANDLE file_handle,
                   void *buf,
                   DWORD size,
-                  LPDWORD ret_size,
-                  LPOVERLAPPED overlapped = nullptr);
+                  DWORD* ret_size,
+                  OVERLAPPED *overlapped = nullptr);
+
+        typedef LPOVERLAPPED_COMPLETION_ROUTINE OVERLAPPED_COMPLETION_ROUTINE;
 
         bool read(HANDLE file_handle,
                   void *buf,
                   DWORD size,
-                  LPOVERLAPPED overlapped,
-                  LPOVERLAPPED_COMPLETION_ROUTINE completion_routine);
+                  OVERLAPPED *overlapped,
+                  OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
         bool write(HANDLE file_handle,
                    const void *buf,
                    DWORD size,
-                   LPDWORD ret_size,
-                   LPOVERLAPPED overlapped = nullptr);
+                   DWORD* ret_size,
+                   OVERLAPPED *overlapped = nullptr);
 
         bool write(HANDLE file_handle,
                    const void *buf,
                    DWORD size,
-                   LPOVERLAPPED overlapped,
-                   LPOVERLAPPED_COMPLETION_ROUTINE completion_routine);
+                   OVERLAPPED *overlapped,
+                   OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
 
         std::vector<uint8_t> read_bytes(HANDLE file_handle,
@@ -112,7 +114,7 @@ namespace YanLib::io {
         bool lock_async(HANDLE file_handle,
                         DWORD flag = LOCKFILE_EXCLUSIVE_LOCK,
                         uint64_t range = UINT64_MAX,
-                        LPOVERLAPPED overlapped = nullptr,
+                        OVERLAPPED *overlapped = nullptr,
                         DWORD reserved = 0);
 
         bool unlock(HANDLE file_handle,
@@ -121,7 +123,7 @@ namespace YanLib::io {
 
         bool unlock_async(HANDLE file_handle,
                           uint64_t range = UINT64_MAX,
-                          LPOVERLAPPED overlapped = nullptr,
+                          OVERLAPPED *overlapped = nullptr,
                           DWORD reserved = 0);
 
         bool is_exists(const wchar_t *path_name);
@@ -159,9 +161,9 @@ namespace YanLib::io {
                                 DWORD buffer_length,
                                 bool is_watch_subtree,
                                 DWORD notify_filter,
-                                LPDWORD bytes_returned,
-                                LPOVERLAPPED overlapped,
-                                LPOVERLAPPED_COMPLETION_ROUTINE completion_routine);
+                                DWORD* bytes_returned,
+                                OVERLAPPED *overlapped,
+                                OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
         DWORD file_type(HANDLE file_handle);
 
@@ -245,10 +247,10 @@ namespace YanLib::io {
         static bool is_dir(const wchar_t *path_name);
 
         static bool mkdir(const wchar_t *path_name,
-                          LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                          SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
         static bool mkdir_all(const wchar_t *path_name,
-                              LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                              SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
         static bool rm_dir(const wchar_t *path_name);
 

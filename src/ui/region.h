@@ -86,7 +86,7 @@ namespace YanLib::ui {
                                     int right,
                                     int bottom);
 
-        static int get_region_box(HRGN region_handle, LPRECT rect);
+        static int get_region_box(HRGN region_handle, RECT* rect);
 
         static int get_update_region(HWND hwnd, HRGN region_handle, bool is_erase);
 

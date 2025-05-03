@@ -36,17 +36,17 @@ namespace YanLib::io {
                 error_code = mmap.err_code();
                 break;
             }
-            _dos_header = static_cast<PIMAGE_DOS_HEADER>(addr);
+            _dos_header = static_cast<IMAGE_DOS_HEADER*>(addr);
             if (_dos_header->e_magic != IMAGE_DOS_SIGNATURE) {
                 break;
             }
-            _nt_headers = reinterpret_cast<PIMAGE_NT_HEADERS32>(
+            _nt_headers = reinterpret_cast<IMAGE_NT_HEADERS32*>(
                 static_cast<uint8_t *>(addr) +
                 _dos_header->e_lfanew);
             if (_nt_headers->Signature != IMAGE_NT_SIGNATURE) {
                 break;
             }
-            _section_header = reinterpret_cast<PIMAGE_SECTION_HEADER>(
+            _section_header = reinterpret_cast<IMAGE_SECTION_HEADER*>(
                 reinterpret_cast<uint8_t *>(_nt_headers) +
                 sizeof(IMAGE_NT_HEADERS32));
             if (_nt_headers->FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ||
@@ -292,7 +292,7 @@ namespace YanLib::io {
         if (!export_table) {
             return {};
         }
-        auto start_name_addr = reinterpret_cast<PDWORD>(
+        auto start_name_addr = reinterpret_cast<DWORD*>(
             reinterpret_cast<uint8_t *>(_dos_header) +
             rva_to_foa(export_table->AddressOfNames));
         std::vector<std::string> result;
@@ -413,7 +413,7 @@ namespace YanLib::io {
         if (offset == 0) {
             return {};
         }
-        auto import_table = reinterpret_cast<PIMAGE_IMPORT_DESCRIPTOR>(
+        auto import_table = reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR*>(
             reinterpret_cast<uint8_t *>(_dos_header) + offset);
         size_t count = 0;
         while (import_table->OriginalFirstThunk ||
@@ -532,7 +532,7 @@ namespace YanLib::io {
         if (offset == 0) {
             return {};
         }
-        auto thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA32>(
+        auto thunk_data = reinterpret_cast<IMAGE_THUNK_DATA32*>(
             reinterpret_cast<uint8_t *>(_dos_header) + offset);
         size_t count = 0;
         while (thunk_data->u1.AddressOfData != 0) {
@@ -578,7 +578,7 @@ namespace YanLib::io {
         std::vector<std::string> result;
         for (const auto &entry: thunk_datas) {
             if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG32)) {
-                auto func_name = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(
                     reinterpret_cast<uint8_t *>(_dos_header) +
                     rva_to_foa(entry.u1.AddressOfData));
                 result.push_back(reinterpret_cast<char *>(&func_name->Name));
@@ -597,7 +597,7 @@ namespace YanLib::io {
         std::vector<ImportTableFuncName> result;
         for (const auto &entry: thunk_datas) {
             if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG32)) {
-                auto func_name = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(
                     reinterpret_cast<uint8_t *>(_dos_header) +
                     rva_to_foa(entry.u1.AddressOfData));
                 ImportTableFuncName temp_func_name = {};
@@ -623,7 +623,7 @@ namespace YanLib::io {
         int is_all_ordinals = 0;
         for (int i = 0; i < thunk_datas.size(); i++) {
             if (!(thunk_datas[i].u1.AddressOfData & IMAGE_ORDINAL_FLAG32)) {
-                auto func_name_addr = reinterpret_cast<PIMAGE_IMPORT_BY_NAME>(
+                auto func_name_addr = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(
                     reinterpret_cast<uint8_t *>(_dos_header) +
                     rva_to_foa(thunk_datas[i].u1.AddressOfData));
                 func_name_addr->Hint = func_name[i].hint;
@@ -721,7 +721,7 @@ namespace YanLib::io {
         std::vector<std::string> result;
         for (const auto &entry: forwarder_chain) {
             size_t offset = rva_to_foa(entry.second);
-            auto original_thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA32>(
+            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA32*>(
                 reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (entry.first != static_cast<DWORD>(-1)) {
                 auto target_thunk_data = original_thunk_data[entry.first];
@@ -745,7 +745,7 @@ namespace YanLib::io {
         std::vector<ULONGLONG> result;
         for (const auto &entry: forwarder_chain) {
             size_t offset = rva_to_foa(entry.second);
-            auto original_thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA32>(
+            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA32*>(
                 reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (entry.first != static_cast<DWORD>(-1)) {
                 auto target_thunk_data = original_thunk_data[entry.first];
@@ -769,7 +769,7 @@ namespace YanLib::io {
         int is_no_forward = 0;
         for (int i = 0; i < forwarder_chain.size(); i++) {
             size_t offset = rva_to_foa(forwarder_chain[i].second);
-            auto original_thunk_data = reinterpret_cast<PIMAGE_THUNK_DATA32>(
+            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA32*>(
                 reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (forwarder_chain[i].first != static_cast<DWORD>(-1)) {
                 auto target_thunk_data =
@@ -797,14 +797,14 @@ namespace YanLib::io {
         if (offset == 0) {
             return {};
         }
-        auto relocation_table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+        auto relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
             reinterpret_cast<uint8_t *>(_dos_header) + offset);
         std::vector<RelocationTable> result;
         while (relocation_table->VirtualAddress) {
             RelocationTable relocation = {};
             relocation.virtual_address = relocation_table->VirtualAddress;
             relocation.size_of_block = relocation_table->SizeOfBlock;
-            auto item_addr = reinterpret_cast<PWORD>(
+            auto item_addr = reinterpret_cast<WORD*>(
                 reinterpret_cast<uint8_t *>(relocation_table) +
                 sizeof(IMAGE_BASE_RELOCATION));
             auto item_count = (relocation_table->SizeOfBlock -
@@ -816,7 +816,7 @@ namespace YanLib::io {
                      item_addr,
                      sizeof(WORD) * item_count);
             result.push_back(relocation);
-            relocation_table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+            relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
                 reinterpret_cast<uint8_t *>(relocation_table) +
                 relocation_table->SizeOfBlock);
         }
@@ -836,10 +836,10 @@ namespace YanLib::io {
         if (offset == 0) {
             return false;
         }
-        auto table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+        auto table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
             reinterpret_cast<uint8_t *>(_dos_header) + offset);
         for (const auto &entry: relocation_table) {
-            auto item_addr = reinterpret_cast<PWORD>(
+            auto item_addr = reinterpret_cast<WORD*>(
                 reinterpret_cast<uint8_t *>(table) +
                 sizeof(IMAGE_BASE_RELOCATION));
             auto item_count = (table->SizeOfBlock -
@@ -850,7 +850,7 @@ namespace YanLib::io {
                      sizeof(WORD) * item_count);
             table->VirtualAddress = entry.virtual_address;
             table->SizeOfBlock = entry.size_of_block;
-            table = reinterpret_cast<PIMAGE_BASE_RELOCATION>(
+            table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
                 reinterpret_cast<uint8_t *>(table) +
                 table->SizeOfBlock);
         }

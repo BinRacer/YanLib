@@ -26,7 +26,7 @@ namespace YanLib::sync {
 
         ~mutex();
 
-        bool create(LPSECURITY_ATTRIBUTES mutex_attrs = nullptr,
+        bool create(SECURITY_ATTRIBUTES* mutex_attrs = nullptr,
                     bool is_initial_owner = false,
                     const wchar_t *name = nullptr);
 

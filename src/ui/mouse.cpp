@@ -50,7 +50,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT mouse::send_input(UINT inputs_count, LPINPUT inputs, int cb_size) {
+    UINT mouse::send_input(UINT inputs_count, INPUT *inputs, int cb_size) {
         UINT result = SendInput(inputs_count, inputs, cb_size);
         if (!result) {
             error_code = GetLastError();
@@ -66,7 +66,7 @@ namespace YanLib::ui {
         mouse_event(flag, x, y, data, extra_info);
     }
 
-    bool mouse::track_mouse_event(LPTRACKMOUSEEVENT event_track) {
+    bool mouse::track_mouse_event(TRACKMOUSEEVENT* event_track) {
         if (!TrackMouseEvent(event_track)) {
             error_code = GetLastError();
             return false;
@@ -96,7 +96,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool mouse::get_last_input_info(PLASTINPUTINFO last_input_info) {
+    bool mouse::get_last_input_info(LASTINPUTINFO* last_input_info) {
         return GetLastInputInfo(last_input_info);
     }
 
@@ -275,8 +275,8 @@ namespace YanLib::ui {
     }
 
     int mouse::get_mouse_move_points(UINT cb_size,
-                                     LPMOUSEMOVEPOINT mouse_move_point,
-                                     LPMOUSEMOVEPOINT points_buf,
+                                     MOUSEMOVEPOINT *mouse_move_point,
+                                     MOUSEMOVEPOINT *points_buf,
                                      int points_count,
                                      DWORD resolution) {
         int result = GetMouseMovePointsEx(cb_size,

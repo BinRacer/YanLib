@@ -14,9 +14,9 @@ namespace YanLib::io {
         mem::mmap mmap = {};
         HANDLE mmap_handle = nullptr;
         void *addr = nullptr;
-        PIMAGE_DOS_HEADER _dos_header = nullptr;
-        PIMAGE_NT_HEADERS32 _nt_headers = nullptr;
-        PIMAGE_SECTION_HEADER _section_header = nullptr;
+        IMAGE_DOS_HEADER* _dos_header = nullptr;
+        IMAGE_NT_HEADERS32* _nt_headers = nullptr;
+        IMAGE_SECTION_HEADER* _section_header = nullptr;
         std::vector<IMAGE_DATA_DIRECTORY> _data_table_list = {};
         std::vector<IMAGE_SECTION_HEADER> _section_header_list = {};
         std::vector<std::string> _export_func_name = {};

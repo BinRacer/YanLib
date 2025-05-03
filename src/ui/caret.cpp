@@ -33,7 +33,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool caret::get_caret_pos(LPPOINT point) {
+    bool caret::get_caret_pos(POINT* point) {
         if (!GetCaretPos(point)) {
             error_code = GetLastError();
             return false;

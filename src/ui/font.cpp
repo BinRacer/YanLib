@@ -102,7 +102,7 @@ namespace YanLib::ui {
     }
 
     int font::enum_font_families(HDC dc_handle,
-                                 LPLOGFONTW log_font,
+                                 LOGFONTW* log_font,
                                  FONTENUMPROCW font_enum_proc,
                                  LPARAM l_param) {
         return EnumFontFamiliesExW(dc_handle,
@@ -124,7 +124,7 @@ namespace YanLib::ui {
         return GetFontLanguageInfo(dc_handle);
     }
 
-    DWORD font::get_font_unicode_ranges(HDC dc_handle, LPGLYPHSET glyph_set) {
+    DWORD font::get_font_unicode_ranges(HDC dc_handle, GLYPHSET* glyph_set) {
         return GetFontUnicodeRanges(dc_handle, glyph_set);
     }
 }

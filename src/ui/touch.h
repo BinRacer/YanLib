@@ -31,7 +31,7 @@ namespace YanLib::ui {
 
         bool unregister_touch_window(HWND hwnd);
 
-        bool is_touch_window(HWND hwnd, PULONG flag);
+        bool is_touch_window(HWND hwnd, ULONG* flag);
 
         HSYNTHETICPOINTERDEVICE create_synthetic_pointer_device(
             POINTER_INPUT_TYPE pointer_type,
@@ -44,7 +44,7 @@ namespace YanLib::ui {
 
         bool get_touch_input_info(HTOUCHINPUT touch_input_handle,
                                   UINT inputs_count,
-                                  PTOUCHINPUT inputs,
+                                  TOUCHINPUT* inputs,
                                   int cb_size);
 
         bool get_pointer_frame_touch_info(UINT32 pointer_id,
@@ -70,7 +70,7 @@ namespace YanLib::ui {
                                     uint8_t *extra_args_buf);
 
         bool get_gesture_info(HGESTUREINFO gesture_info_handle,
-                              PGESTUREINFO gesture_info);
+                              GESTUREINFO* gesture_info);
 
         bool close_gesture_info_handle(HGESTUREINFO gesture_info_handle);
 

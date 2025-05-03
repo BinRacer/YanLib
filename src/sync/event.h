@@ -26,7 +26,7 @@ namespace YanLib::sync {
 
         ~event();
 
-        bool create(LPSECURITY_ATTRIBUTES event_attrs = nullptr,
+        bool create(SECURITY_ATTRIBUTES* event_attrs = nullptr,
                     bool is_manual_reset = false,
                     bool is_initial_state = false,
                     const wchar_t *name = nullptr);

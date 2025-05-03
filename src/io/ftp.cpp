@@ -168,7 +168,7 @@ namespace YanLib::io {
     bool ftp::read(HINTERNET file_handle,
                    void *buf,
                    DWORD size,
-                   LPDWORD ret_size) {
+                   DWORD* ret_size) {
         if (!InternetReadFile(file_handle,
                               buf,
                               size,
@@ -201,7 +201,7 @@ namespace YanLib::io {
     bool ftp::write(HINTERNET file_handle,
                     const void *buf,
                     DWORD size,
-                    LPDWORD ret_size) {
+                    DWORD* ret_size) {
         if (!InternetWriteFile(file_handle,
                                buf,
                                size,

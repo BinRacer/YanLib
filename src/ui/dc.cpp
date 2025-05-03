@@ -71,7 +71,7 @@ namespace YanLib::ui {
         return SetDCBrushColor(dc_handle, color);
     }
 
-    bool dc::get_dc_org(HDC dc_handle, LPPOINT point) {
+    bool dc::get_dc_org(HDC dc_handle, POINT* point) {
         return GetDCOrgEx(dc_handle, point);
     }
 

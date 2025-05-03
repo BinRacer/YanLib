@@ -52,7 +52,7 @@ namespace YanLib::sys {
 
     HANDLE security::copy_token(HANDLE existing_token_handle,
                                 DWORD desired_access,
-                                LPSECURITY_ATTRIBUTES token_attrs,
+                                SECURITY_ATTRIBUTES* token_attrs,
                                 SECURITY_IMPERSONATION_LEVEL impersonation_level,
                                 TOKEN_TYPE token_type) {
         HANDLE token_handle = existing_token_handle

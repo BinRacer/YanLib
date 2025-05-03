@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    bool message::get_message(LPMSG msg,
+    bool message::get_message(MSG* msg,
                               HWND hwnd,
                               UINT msg_filter_min,
                               UINT msg_filter_max) {
@@ -43,7 +43,7 @@ namespace YanLib::ui {
         return GetMessageTime();
     }
 
-    bool message::peek_message(LPMSG msg,
+    bool message::peek_message(MSG* msg,
                                HWND hwnd,
                                UINT msg_filter_min,
                                UINT msg_filter_max,
@@ -205,7 +205,7 @@ namespace YanLib::ui {
         return DispatchMessageW(msg);
     }
 
-    bool message::call_message_filter(LPMSG msg, int code) {
+    bool message::call_message_filter(MSG* msg, int code) {
         return CallMsgFilterW(msg, code);
     }
 
@@ -226,7 +226,7 @@ namespace YanLib::ui {
         return InSendMessageEx(reserved);
     }
 
-    bool message::is_dialog_message(HWND hwnd_dialog, LPMSG msg) {
+    bool message::is_dialog_message(HWND hwnd_dialog, MSG* msg) {
         return IsDialogMessageW(hwnd_dialog, msg);
     }
 
@@ -235,7 +235,7 @@ namespace YanLib::ui {
     }
 
     long message::broadcast_system_message(DWORD flag,
-                                           LPDWORD info,
+                                           DWORD* info,
                                            UINT msg,
                                            WPARAM w_param,
                                            LPARAM l_param) {
@@ -251,11 +251,11 @@ namespace YanLib::ui {
     }
 
     long message::broadcast_system_message(DWORD flag,
-                                           LPDWORD info,
+                                           DWORD* info,
                                            UINT msg,
                                            WPARAM w_param,
                                            LPARAM l_param,
-                                           PBSMINFO bsm_info) {
+                                           BSMINFO* bsm_info) {
         long result = BroadcastSystemMessageExW(flag,
                                                 info,
                                                 msg,
@@ -280,7 +280,7 @@ namespace YanLib::ui {
     message::change_window_message_filter(HWND hwnd,
                                           UINT message,
                                           DWORD action,
-                                          PCHANGEFILTERSTRUCT change_filter_struct) {
+                                          CHANGEFILTERSTRUCT* change_filter_struct) {
         if (!ChangeWindowMessageFilterEx(hwnd,
                                          message,
                                          action,

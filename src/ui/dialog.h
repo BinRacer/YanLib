@@ -37,12 +37,12 @@ namespace YanLib::ui {
                               LPARAM init_param);
 
         INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
-                                       LPCDLGTEMPLATEW dialog_template,
+                                       const DLGTEMPLATE* dialog_template,
                                        HWND hwnd_parent,
                                        DLGPROC dialog_func);
 
         INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
-                                       LPCDLGTEMPLATEW dialog_template,
+                                       const DLGTEMPLATE* dialog_template,
                                        HWND hwnd_parent,
                                        DLGPROC dialog_func,
                                        LPARAM init_param);
@@ -59,12 +59,12 @@ namespace YanLib::ui {
                                     LPARAM init_param);
 
         HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                             LPCDLGTEMPLATEW dialog_template,
+                                             const DLGTEMPLATE* dialog_template,
                                              HWND hwnd_parent,
                                              DLGPROC dialog_func);
 
         HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                             LPCDLGTEMPLATEW dialog_template,
+                                             const DLGTEMPLATE* dialog_template,
                                              HWND hwnd_parent,
                                              DLGPROC dialog_func,
                                              LPARAM init_param);
@@ -150,7 +150,7 @@ namespace YanLib::ui {
             DIALOG_DPI_CHANGE_BEHAVIORS mask,
             DIALOG_DPI_CHANGE_BEHAVIORS values);
 
-        bool map_dialog_rect(HWND hwnd_dialog, LPRECT rect);
+        bool map_dialog_rect(HWND hwnd_dialog, RECT* rect);
 
         [[nodiscard]] DWORD err_code() const;
 

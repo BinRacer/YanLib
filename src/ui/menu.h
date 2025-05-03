@@ -61,14 +61,14 @@ namespace YanLib::ui {
 
         bool set_menu(HWND hwnd, HMENU menu_handle);
 
-        bool set_menu_info(HMENU menu_handle, LPCMENUINFO memu_info);
+        bool set_menu_info(HMENU menu_handle, const MENUINFO* memu_info);
 
-        bool get_menu_info(HMENU menu_handle, LPMENUINFO memu_info);
+        bool get_menu_info(HMENU menu_handle, MENUINFO* memu_info);
 
         bool get_menu_bar_info(HWND hwnd,
                                LONG id_object,
                                LONG id_item,
-                               PMENUBARINFO menu_bar_info);
+                               MENUBARINFO* menu_bar_info);
 
         UINT get_menu_state(HMENU menu_handle, UINT id, UINT flag);
 
@@ -95,17 +95,17 @@ namespace YanLib::ui {
         bool insert_menu_item(HMENU menu_handle,
                               UINT item,
                               bool is_pos,
-                              LPCMENUITEMINFOW menu_item_info);
+                              const MENUITEMINFOW* menu_item_info);
 
         bool get_menu_item_info(HMENU menu_handle,
                                 UINT item,
                                 bool is_pos,
-                                LPMENUITEMINFOW menu_item_info);
+                                MENUITEMINFOW* menu_item_info);
 
         bool set_menu_item_info(HMENU menu_handle,
                                 UINT item,
                                 bool is_pos,
-                                LPCMENUITEMINFOW menu_item_info);
+                                const MENUITEMINFOW* menu_item_info);
 
 
         UINT get_menu_default_item(HMENU menu_handle,
@@ -129,7 +129,7 @@ namespace YanLib::ui {
         bool get_menu_item_rect(HWND hwnd,
                                 HMENU menu_handle,
                                 UINT item,
-                                LPRECT rect);
+                                RECT* rect);
 
         BOOL set_menu_item_bitmaps(HMENU menu_handle,
                                    UINT position,
@@ -173,7 +173,7 @@ namespace YanLib::ui {
                               int x,
                               int y,
                               HWND hwnd,
-                              LPTPMPARAMS tpm_params);
+                              TPMPARAMS* tpm_params);
 
         [[nodiscard]] DWORD err_code() const;
 

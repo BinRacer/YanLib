@@ -75,11 +75,11 @@ namespace YanLib::ui {
 
         bool get_class_info(HINSTANCE instance_handle,
                             const wchar_t *class_name,
-                            LPWNDCLASSW wnd_class);
+                            WNDCLASSW* wnd_class);
 
         bool get_class_info(HINSTANCE instance_handle,
                             const wchar_t *class_name,
-                            LPWNDCLASSEXW wnd_class);
+                            WNDCLASSEXW* wnd_class);
 
         DWORD get_class_long(HWND hwnd, int index);
 
@@ -216,7 +216,7 @@ namespace YanLib::ui {
 
         int map_window_points(HWND hwnd_from,
                               HWND hwnd_to,
-                              LPPOINT point,
+                              POINT* point,
                               UINT count);
 
         bool close_window(HWND hwnd);
@@ -249,7 +249,7 @@ namespace YanLib::ui {
 
         bool flash_window(HWND hwnd, bool invert);
 
-        bool flash_window(PFLASHWINFO flash_info);
+        bool flash_window(FLASHWINFO* flash_info);
 
         HWND get_active_window();
 
@@ -310,7 +310,7 @@ namespace YanLib::ui {
                                          UINT32 size,
                                          const void *config);
 
-        bool get_window_info(HWND hwnd, PWINDOWINFO window_info);
+        bool get_window_info(HWND hwnd, WINDOWINFO* window_info);
 
         LONG get_window_long(HWND hwnd, int index);
 
@@ -334,16 +334,16 @@ namespace YanLib::ui {
         bool set_window_placement(HWND hwnd,
                                   const WINDOWPLACEMENT *window_placement);
 
-        bool get_window_rect(HWND hwnd, LPRECT rect);
+        bool get_window_rect(HWND hwnd, RECT* rect);
 
-        bool adjust_window_rect(LPRECT rect, DWORD style, bool menu);
+        bool adjust_window_rect(RECT* rect, DWORD style, bool menu);
 
-        bool adjust_window_rect(LPRECT rect,
+        bool adjust_window_rect(RECT* rect,
                                 DWORD style,
                                 bool menu,
                                 DWORD ext_style);
 
-        bool adjust_window_rect_for_dpi(LPRECT rect,
+        bool adjust_window_rect_for_dpi(RECT* rect,
                                         DWORD style,
                                         bool menu,
                                         DWORD ext_style,
@@ -355,7 +355,7 @@ namespace YanLib::ui {
                            HRGN hrgn,
                            bool is_redraw);
 
-        int get_window_rgn_box(HWND hwnd, LPRECT rect);
+        int get_window_rgn_box(HWND hwnd, RECT* rect);
 
         int get_window_text(HWND hwnd,
                             wchar_t *text,
@@ -367,7 +367,7 @@ namespace YanLib::ui {
         int get_window_text_length(HWND hwnd);
 
         DWORD get_window_thread_process_id(HWND hwnd,
-                                           LPDWORD pid);
+                                           DWORD* pid);
 
         WORD get_window_word(HWND hwnd, int index);
 
@@ -425,7 +425,7 @@ namespace YanLib::ui {
                           const RECT *rect_scroll,
                           const RECT *rect_clip,
                           HRGN hrgn_update,
-                          LPRECT rect_update,
+                          RECT* rect_update,
                           UINT flag);
 
         void switch_to_this_window(HWND hwnd, bool unknown = false);
@@ -451,15 +451,15 @@ namespace YanLib::ui {
                        const RECT *rect_scroll,
                        const RECT *rect_clip,
                        HRGN region_update_handle,
-                       LPRECT rect_update);
+                       RECT* rect_update);
 
         DWORD get_layout(HDC dc_handle);
 
         DWORD set_layout(HDC dc_handle, DWORD value);
 
-        bool get_client_rect(HWND hwnd, LPRECT rect);
+        bool get_client_rect(HWND hwnd, RECT* rect);
 
-        DWORD get_region_data(HRGN region_handle, DWORD size, LPRGNDATA buf);
+        DWORD get_region_data(HRGN region_handle, DWORD size, RGNDATA* buf);
 
         [[nodiscard]] DWORD err_code() const;
 

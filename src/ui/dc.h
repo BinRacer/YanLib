@@ -57,7 +57,7 @@ namespace YanLib::ui {
 
         static COLORREF set_dc_brush_color(HDC dc_handle, COLORREF color);
 
-        static bool get_dc_org(HDC dc_handle, LPPOINT point);
+        static bool get_dc_org(HDC dc_handle, POINT* point);
 
         static COLORREF get_dc_pen_color(HDC dc_handle);
 

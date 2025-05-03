@@ -46,7 +46,7 @@ namespace YanLib::ui {
                                         int desired_height,
                                         UINT flag);
 
-        HICON create_icon_indirect(PICONINFO icon_info);
+        HICON create_icon_indirect(ICONINFO* icon_info);
 
         HICON load_icon(HINSTANCE instance_handle, const wchar_t *icon_name);
 
@@ -66,9 +66,9 @@ namespace YanLib::ui {
 
         bool destroy_icon(HICON icon_handle);
 
-        bool get_icon_info(HICON icon_handle, PICONINFO icon_info);
+        bool get_icon_info(HICON icon_handle, ICONINFO* icon_info);
 
-        bool get_icon_info(HICON icon_handle, PICONINFOEXW icon_info);
+        bool get_icon_info(HICON icon_handle, ICONINFOEXW* icon_info);
 
         int lookup_icon_id_from_directory(uint8_t *res_buf, bool is_icon);
 

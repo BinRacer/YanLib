@@ -39,7 +39,7 @@ namespace YanLib::sys {
 
         HANDLE copy_token(HANDLE existing_token_handle = nullptr,
                           DWORD desired_access = MAXIMUM_ALLOWED,
-                          LPSECURITY_ATTRIBUTES token_attrs = nullptr,
+                          SECURITY_ATTRIBUTES* token_attrs = nullptr,
                           SECURITY_IMPERSONATION_LEVEL impersonation_level = SecurityIdentification,
                           TOKEN_TYPE token_type = TokenPrimary);
 

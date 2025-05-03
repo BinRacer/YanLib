@@ -26,7 +26,7 @@ namespace YanLib::sys {
     HANDLE thread::create(LPTHREAD_START_ROUTINE start_addr,
                           void *params,
                           size_t stack_size,
-                          LPSECURITY_ATTRIBUTES security_attrs) {
+                          SECURITY_ATTRIBUTES* security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
@@ -47,7 +47,7 @@ namespace YanLib::sys {
     HANDLE thread::create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
                                        void *params,
                                        size_t stack_size,
-                                       LPSECURITY_ATTRIBUTES security_attrs) {
+                                       SECURITY_ATTRIBUTES* security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
@@ -68,7 +68,7 @@ namespace YanLib::sys {
     HANDLE thread::create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
                                              void *params,
                                              size_t stack_size,
-                                             LPSECURITY_ATTRIBUTES security_attrs) {
+                                             SECURITY_ATTRIBUTES* security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
@@ -91,7 +91,7 @@ namespace YanLib::sys {
                                  void *params,
                                  size_t stack_size,
                                  LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                 LPSECURITY_ATTRIBUTES security_attrs) {
+                                 SECURITY_ATTRIBUTES* security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
                                                     security_attrs,
@@ -116,7 +116,7 @@ namespace YanLib::sys {
                                               void *params,
                                               size_t stack_size,
                                               LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                              LPSECURITY_ATTRIBUTES security_attrs) {
+                                              SECURITY_ATTRIBUTES* security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
                                                     security_attrs,
@@ -141,7 +141,7 @@ namespace YanLib::sys {
                                                     void *params,
                                                     size_t stack_size,
                                                     LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                                    LPSECURITY_ATTRIBUTES security_attrs) {
+                                                    SECURITY_ATTRIBUTES* security_attrs) {
         DWORD tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(proc_handle,
                                                     security_attrs,
@@ -280,7 +280,7 @@ namespace YanLib::sys {
     bool thread::init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                             DWORD attr_count,
                                             DWORD flag,
-                                            PSIZE_T size) {
+                                            SIZE_T* size) {
         if (!InitializeProcThreadAttributeList(attr_list,
                                                attr_count,
                                                flag,
@@ -297,7 +297,7 @@ namespace YanLib::sys {
                                          void *value,
                                          size_t bytes_size,
                                          void *previous_value,
-                                         PSIZE_T ret_size) {
+                                         SIZE_T* ret_size) {
         if (!UpdateProcThreadAttribute(attr_list,
                                        flag,
                                        attr,
@@ -464,10 +464,10 @@ namespace YanLib::sys {
     }
 
     bool thread::time_statistics(HANDLE thread_handle,
-                                 LPFILETIME creation_time,
-                                 LPFILETIME exit_time,
-                                 LPFILETIME kernel_time,
-                                 LPFILETIME user_time) {
+                                 FILETIME* creation_time,
+                                 FILETIME* exit_time,
+                                 FILETIME* kernel_time,
+                                 FILETIME* user_time) {
         if (!GetThreadTimes(thread_handle,
                             creation_time,
                             exit_time,
@@ -562,8 +562,8 @@ namespace YanLib::sys {
     }
 
     bool thread::query_idle_processor_cycle_time(USHORT group,
-                                                 PULONG buffer_length,
-                                                 PULONG64 processor_idle_cycle_time) {
+                                                 ULONG* buffer_length,
+                                                 ULONG64* processor_idle_cycle_time) {
         if (QueryIdleProcessorCycleTimeEx(group,
                                           buffer_length,
                                           processor_idle_cycle_time)) {
@@ -574,7 +574,7 @@ namespace YanLib::sys {
     }
 
     bool thread::query_cycle_time(HANDLE thread_handle,
-                                  PULONG64 cycle_time) {
+                                  ULONG64* cycle_time) {
         if (!QueryThreadCycleTime(thread_handle,
                                   cycle_time)) {
             error_code = GetLastError();
@@ -593,7 +593,7 @@ namespace YanLib::sys {
         return ret;
     }
 
-    bool thread::set_stack_guarantee(PULONG bytes_stack) {
+    bool thread::set_stack_guarantee(ULONG* bytes_stack) {
         if (!SetThreadStackGuarantee(bytes_stack)) {
             error_code = GetLastError();
             return false;

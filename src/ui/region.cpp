@@ -113,7 +113,7 @@ namespace YanLib::ui {
         return SetRectRgn(region_handle, left, top, right, bottom);
     }
 
-    int region::get_region_box(HRGN region_handle, LPRECT rect) {
+    int region::get_region_box(HRGN region_handle, RECT* rect) {
         return GetRgnBox(region_handle, rect);
     }
 

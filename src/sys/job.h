@@ -30,7 +30,7 @@ namespace YanLib::sys {
         ~job();
 
         HANDLE create(const wchar_t *job_name,
-                      LPSECURITY_ATTRIBUTES security_attrs = nullptr);
+                      SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE open(const wchar_t *job_name,
                     DWORD desired_access = JOB_ALL_ACCESS,
@@ -50,7 +50,7 @@ namespace YanLib::sys {
                       JOBOBJECTINFOCLASS job_object_info_class,
                       void *job_object_info,
                       DWORD job_object_info_len,
-                      LPDWORD ret_len);
+                      DWORD* ret_len);
 
         bool set_info(HANDLE job_handle,
                       JOBOBJECTINFOCLASS job_object_info_class,

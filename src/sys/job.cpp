@@ -17,7 +17,7 @@ namespace YanLib::sys {
     }
 
     HANDLE job::create(const wchar_t *job_name,
-                       LPSECURITY_ATTRIBUTES security_attrs) {
+                       SECURITY_ATTRIBUTES* security_attrs) {
         HANDLE job_handle = CreateJobObjectW(security_attrs, job_name);
         if (!job_handle) {
             error_code = GetLastError();
@@ -89,7 +89,7 @@ namespace YanLib::sys {
                        JOBOBJECTINFOCLASS job_object_info_class,
                        void *job_object_info,
                        DWORD job_object_info_len,
-                       LPDWORD ret_len) {
+                       DWORD* ret_len) {
         if (!QueryInformationJobObject(job_handle,
                                        job_object_info_class,
                                        job_object_info,

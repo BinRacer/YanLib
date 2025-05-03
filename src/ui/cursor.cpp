@@ -67,7 +67,7 @@ namespace YanLib::ui {
         return SetCursor(cursor_handle);
     }
 
-    bool cursor::get_cursor_info(PCURSORINFO cursor_info) {
+    bool cursor::get_cursor_info(CURSORINFO* cursor_info) {
         if (!GetCursorInfo(cursor_info)) {
             error_code = GetLastError();
             return false;
@@ -75,7 +75,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_cursor_pos(LPPOINT point) {
+    bool cursor::get_cursor_pos(POINT* point) {
         if (!GetCursorPos(point)) {
             error_code = GetLastError();
             return false;
@@ -91,7 +91,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_clip_cursor(LPRECT rect) {
+    bool cursor::get_clip_cursor(RECT* rect) {
         if (!GetClipCursor(rect)) {
             error_code = GetLastError();
             return false;
@@ -99,7 +99,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_physical_cursor_pos(LPPOINT point) {
+    bool cursor::get_physical_cursor_pos(POINT* point) {
         if (!GetPhysicalCursorPos(point)) {
             error_code = GetLastError();
             return false;

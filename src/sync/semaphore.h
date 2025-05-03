@@ -26,7 +26,7 @@ namespace YanLib::sync {
 
         ~semaphore();
 
-        bool create(LPSECURITY_ATTRIBUTES semaphore_attrs = nullptr,
+        bool create(SECURITY_ATTRIBUTES* semaphore_attrs = nullptr,
                     LONG initial_count = 1,
                     LONG maximum_count = 1,
                     const wchar_t *name = nullptr);
@@ -37,7 +37,7 @@ namespace YanLib::sync {
 
         bool wait(DWORD milli_seconds = INFINITE);
 
-        bool signal(LONG release_count = 1, LPLONG previous_count = nullptr);
+        bool signal(LONG release_count = 1, LONG* previous_count = nullptr);
 
         [[nodiscard]] DWORD err_code() const;
 

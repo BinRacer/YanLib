@@ -156,7 +156,7 @@ namespace YanLib::ui {
     int keyboard::to_ascii(UINT vk,
                            UINT scan_code,
                            const uint8_t *key_state,
-                           LPWORD ch,
+                           WORD* ch,
                            UINT flag) {
         return ToAscii(vk, scan_code, key_state, ch, flag);
     }
@@ -164,7 +164,7 @@ namespace YanLib::ui {
     int keyboard::to_ascii(UINT vk,
                            UINT scan_code,
                            const uint8_t *key_state,
-                           LPWORD ch,
+                           WORD* ch,
                            UINT flag,
                            HKL hkl) {
         return ToAsciiEx(vk,
@@ -231,7 +231,7 @@ namespace YanLib::ui {
         return WaitForInputIdle(proc_handle, milli_seconds);
     }
 
-    LRESULT keyboard::default_raw_input_proc(PRAWINPUT *raw_input,
+    LRESULT keyboard::default_raw_input_proc(RAWINPUT* *raw_input,
                                              INT input,
                                              UINT cb_size_header) {
         return DefRawInputProc(raw_input, input, cb_size_header);
@@ -241,8 +241,8 @@ namespace YanLib::ui {
         return GET_RAWINPUT_CODE_WPARAM(w_param);
     }
 
-    UINT keyboard::get_raw_input_buffer(PRAWINPUT data,
-                                        PUINT cb_size,
+    UINT keyboard::get_raw_input_buffer(RAWINPUT* data,
+                                        UINT* cb_size,
                                         UINT cb_size_header) {
         UINT result = GetRawInputBuffer(data, cb_size, cb_size_header);
         if (result == static_cast<UINT>(-1)) {
@@ -254,7 +254,7 @@ namespace YanLib::ui {
     UINT keyboard::get_raw_input_data(HRAWINPUT raw_input,
                                       UINT command,
                                       void *data,
-                                      PUINT cb_size,
+                                      UINT* cb_size,
                                       UINT cb_size_header) {
         return GetRawInputData(raw_input,
                                command,
@@ -266,7 +266,7 @@ namespace YanLib::ui {
     UINT keyboard::get_raw_input_device_info(HANDLE device_handle,
                                              UINT command,
                                              void *data,
-                                             PUINT cb_size) {
+                                             UINT* cb_size) {
         UINT result = GetRawInputDeviceInfoW(device_handle,
                                              command,
                                              data,
@@ -276,8 +276,8 @@ namespace YanLib::ui {
     }
 
     UINT
-    keyboard::get_raw_input_device_list(PRAWINPUTDEVICELIST raw_input_device_list,
-                                        PUINT num_devices,
+    keyboard::get_raw_input_device_list(RAWINPUTDEVICELIST* raw_input_device_list,
+                                        UINT* num_devices,
                                         UINT cb_size) {
         UINT result = GetRawInputDeviceList(raw_input_device_list,
                                             num_devices,
@@ -289,8 +289,8 @@ namespace YanLib::ui {
     }
 
     UINT
-    keyboard::get_registered_raw_input_devices(PRAWINPUTDEVICE raw_input_devices,
-                                               PUINT num_devices,
+    keyboard::get_registered_raw_input_devices(RAWINPUTDEVICE* raw_input_devices,
+                                               UINT* num_devices,
                                                UINT cb_size) {
         UINT result = GetRegisteredRawInputDevices(raw_input_devices,
                                                    num_devices,
@@ -301,12 +301,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    PRAWINPUT keyboard::next_raw_input_block(PRAWINPUT raw_input) {
+    RAWINPUT* keyboard::next_raw_input_block(RAWINPUT* raw_input) {
         typedef unsigned __int64 QWORD;
         return NEXTRAWINPUTBLOCK(raw_input);
     }
 
-    bool keyboard::register_raw_input_devices(PCRAWINPUTDEVICE raw_input_devices,
+    bool keyboard::register_raw_input_devices(const RAWINPUTDEVICE* raw_input_devices,
                                               UINT num_devices,
                                               UINT cb_size) {
         if (!RegisterRawInputDevices(raw_input_devices,

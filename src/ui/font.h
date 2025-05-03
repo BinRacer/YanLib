@@ -73,7 +73,7 @@ namespace YanLib::ui {
                                         DWORD font_type);
 
         static int enum_font_families(HDC dc_handle,
-                                      LPLOGFONTW log_font,
+                                      LOGFONTW* log_font,
                                       FONTENUMPROCW font_enum_proc,
                                       LPARAM l_param);
 
@@ -85,7 +85,7 @@ namespace YanLib::ui {
 
         static DWORD get_font_language_info(HDC dc_handle);
 
-        static DWORD get_font_unicode_ranges(HDC dc_handle, LPGLYPHSET glyph_set);
+        static DWORD get_font_unicode_ranges(HDC dc_handle, GLYPHSET* glyph_set);
     };
 }
 #endif //FONT_H

@@ -34,22 +34,22 @@ namespace YanLib::sys {
         void number(PPROCESSOR_NUMBER processor_number);
 
         bool logic_info(PSYSTEM_LOGICAL_PROCESSOR_INFORMATION buffer,
-                        PDWORD ret_len);
+                        DWORD* ret_len);
 
         bool logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
                         PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX buffer,
-                        PDWORD ret_len);
+                        DWORD* ret_len);
 
         DWORD max_count(WORD GroupNumber);
 
         WORD max_group_count();
 
-        bool idle_cycle_time(PULONG buffer_length,
-                             PULONG64 processor_idle_cycle_time);
+        bool idle_cycle_time(ULONG* buffer_length,
+                             ULONG64* processor_idle_cycle_time);
 
         bool idle_cycle_time(USHORT group,
-                             PULONG buffer_length,
-                             PULONG64 processor_idle_cycle_time);
+                             ULONG* buffer_length,
+                             ULONG64* processor_idle_cycle_time);
 
         [[nodiscard]] DWORD err_code() const;
 

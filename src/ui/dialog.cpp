@@ -38,7 +38,7 @@ namespace YanLib::ui {
     }
 
     INT_PTR dialog::create_dialog_indirect(HINSTANCE instance_handle,
-                                           LPCDLGTEMPLATEW dialog_template,
+                                           const DLGTEMPLATE* dialog_template,
                                            HWND hwnd_parent,
                                            DLGPROC dialog_func) {
         INT_PTR result = DialogBoxIndirectParamW(instance_handle,
@@ -53,7 +53,7 @@ namespace YanLib::ui {
     }
 
     INT_PTR dialog::create_dialog_indirect(HINSTANCE instance_handle,
-                                           LPCDLGTEMPLATEW dialog_template,
+                                           const DLGTEMPLATE* dialog_template,
                                            HWND hwnd_parent,
                                            DLGPROC dialog_func,
                                            LPARAM init_param) {
@@ -100,7 +100,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                                 LPCDLGTEMPLATEW dialog_template,
+                                                 const DLGTEMPLATE* dialog_template,
                                                  HWND hwnd_parent,
                                                  DLGPROC dialog_func) {
         HWND result = CreateDialogIndirectParamW(instance_handle,
@@ -115,7 +115,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                                 LPCDLGTEMPLATEW dialog_template,
+                                                 const DLGTEMPLATE* dialog_template,
                                                  HWND hwnd_parent,
                                                  DLGPROC dialog_func,
                                                  LPARAM init_param) {
@@ -368,7 +368,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool dialog::map_dialog_rect(HWND hwnd_dialog, LPRECT rect) {
+    bool dialog::map_dialog_rect(HWND hwnd_dialog, RECT* rect) {
         if (!MapDialogRect(hwnd_dialog, rect)) {
             error_code = GetLastError();
             return false;

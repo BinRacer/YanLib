@@ -26,7 +26,7 @@ namespace YanLib::sync {
 
         ~timer();
 
-        bool create(LPSECURITY_ATTRIBUTES timer_attrs = nullptr,
+        bool create(SECURITY_ATTRIBUTES* timer_attrs = nullptr,
                     bool is_manual_reset = false,
                     const wchar_t *timer_name = nullptr);
 

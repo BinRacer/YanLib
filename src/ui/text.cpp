@@ -1,0 +1,280 @@
+//
+// Created by forkernel on 2025/5/3.
+//
+
+#include "text.h"
+
+namespace YanLib::ui {
+    bool text::text_out(HDC dc_handle,
+                        int x,
+                        int y,
+                        const wchar_t *text,
+                        int cch_size) {
+        return TextOutW(dc_handle, x, y, text, cch_size);
+    }
+
+    bool text::ext_text_out(HDC dc_handle,
+                            int x,
+                            int y,
+                            UINT options,
+                            const RECT *rect,
+                            const wchar_t *text,
+                            int cch_size,
+                            const INT *dx) {
+        return ExtTextOutW(dc_handle, x, y, options, rect, text, cch_size, dx);
+    }
+
+    LONG text::tabbed_text_out(HDC dc_handle,
+                               int x,
+                               int y,
+                               const wchar_t *text,
+                               int cch_size,
+                               int tab_positions,
+                               const INT *tab_stop_positions,
+                               int tab_origin) {
+        return TabbedTextOutW(dc_handle,
+                              x,
+                              y,
+                              text,
+                              cch_size,
+                              tab_positions,
+                              tab_stop_positions,
+                              tab_origin);
+    }
+
+    bool text::poly_text_out(HDC dc_handle, const POLYTEXTW *poly_text, int num) {
+        return PolyTextOutW(dc_handle, poly_text, num);
+    }
+
+    int text::draw_text(HDC dc_handle,
+                        const wchar_t *text,
+                        int cch_size,
+                        LPRECT rect,
+                        UINT format) {
+        return DrawTextW(dc_handle, text, cch_size, rect, format);
+    }
+
+    int text::draw_text(HDC dc_handle,
+                        wchar_t *text,
+                        int cch_size,
+                        LPRECT rect,
+                        UINT format,
+                        LPDRAWTEXTPARAMS draw_text_param) {
+        return DrawTextExW(dc_handle, text, cch_size, rect, format, draw_text_param);
+    }
+
+    DWORD text::set_mapper_flags(HDC dc_handle, DWORD flag) {
+        return SetMapperFlags(dc_handle, flag);
+    }
+
+    bool text::set_text_justification(HDC dc_handle, int extra, int count) {
+        return SetTextJustification(dc_handle, extra, count);
+    }
+
+    bool text::get_aspect_ratio_filter(HDC dc_handle, LPSIZE size) {
+        return GetAspectRatioFilterEx(dc_handle, size);
+    }
+
+    bool text::get_char_width32(HDC dc_handle,
+                                UINT ch_first,
+                                UINT ch_last,
+                                LPINT buf) {
+        return GetCharWidth32W(dc_handle, ch_first, ch_last, buf);
+    }
+
+    bool text::get_char_width_float(HDC dc_handle,
+                                    UINT code_point_first,
+                                    UINT code_point_last,
+                                    PFLOAT buf) {
+        return GetCharWidthFloatW(dc_handle, code_point_first, code_point_last, buf);
+    }
+
+    bool text::get_char_width_index(HDC dc_handle,
+                                    UINT glyph_index_first,
+                                    UINT glyph_index_num,
+                                    LPWORD glyph_index_array,
+                                    LPINT widths) {
+        return GetCharWidthI(dc_handle,
+                             glyph_index_first,
+                             glyph_index_num,
+                             glyph_index_array,
+                             widths);
+    }
+
+    bool text::get_char_abc_widths(HDC dc_handle,
+                                   UINT ch_first,
+                                   UINT ch_last,
+                                   LPABC abc) {
+        return GetCharABCWidthsW(dc_handle, ch_first, ch_last, abc);
+    }
+
+    bool text::get_char_abc_widths_float(HDC dc_handle,
+                                         UINT code_point_first,
+                                         UINT code_point_last,
+                                         LPABCFLOAT abc_float) {
+        return GetCharABCWidthsFloatW(dc_handle,
+                                      code_point_first,
+                                      code_point_last,
+                                      abc_float);
+    }
+
+    bool text::get_char_abc_widths_index(HDC dc_handle,
+                                         UINT first_glyph_index,
+                                         UINT glyph_index_num,
+                                         LPWORD glyph_index_array,
+                                         LPABC abc) {
+        return GetCharABCWidthsI(dc_handle,
+                                 first_glyph_index,
+                                 glyph_index_num,
+                                 glyph_index_array,
+                                 abc);
+    }
+
+    DWORD text::get_char_placement(HDC dc_handle,
+                                   const wchar_t *text,
+                                   int cch_size,
+                                   int mex_extent,
+                                   LPGCP_RESULTSW results,
+                                   DWORD flag) {
+        return GetCharacterPlacementW(dc_handle,
+                                      text,
+                                      cch_size,
+                                      mex_extent,
+                                      results,
+                                      flag);
+    }
+
+    DWORD text::get_glyph_indices(HDC dc_handle,
+                                  const wchar_t *text,
+                                  int cch_size,
+                                  LPWORD glyph_index,
+                                  DWORD flag) {
+        return GetGlyphIndicesW(dc_handle, text, cch_size, glyph_index, flag);
+    }
+
+    DWORD text::get_glyph_outline(HDC dc_handle,
+                                  UINT ch,
+                                  UINT format,
+                                  LPGLYPHMETRICS glyph_metrics,
+                                  DWORD size,
+                                  void *buf,
+                                  const MAT2 *mat2) {
+        return GetGlyphOutlineW(dc_handle,
+                                ch,
+                                format,
+                                glyph_metrics,
+                                size,
+                                buf,
+                                mat2);
+    }
+
+    DWORD text::get_kerning_pairs(HDC dc_handle,
+                                  DWORD pairs,
+                                  LPKERNINGPAIR kern_pair) {
+        return GetKerningPairsW(dc_handle, pairs, kern_pair);
+    }
+
+    bool text::get_rasterizer_caps(LPRASTERIZER_STATUS rasterizer_status,
+                                   UINT size) {
+        return GetRasterizerCaps(rasterizer_status, size);
+    }
+
+    DWORD text::get_tabbed_text_extent(HDC dc_handle,
+                                       const wchar_t *text,
+                                       int cch_size,
+                                       int tab_positions,
+                                       const INT *tab_stop_positions) {
+        return GetTabbedTextExtentW(dc_handle,
+                                    text,
+                                    cch_size,
+                                    tab_positions,
+                                    tab_stop_positions);
+    }
+
+    UINT text::get_text_align(HDC dc_handle) {
+        return GetTextAlign(dc_handle);
+    }
+
+    UINT text::set_text_align(HDC dc_handle, UINT align) {
+        return SetTextAlign(dc_handle, align);
+    }
+
+    int text::get_text_character_extra(HDC dc_handle) {
+        return GetTextCharacterExtra(dc_handle);
+    }
+
+    int text::set_text_character_extra(HDC dc_handle, int extra) {
+        return SetTextCharacterExtra(dc_handle, extra);
+    }
+
+    COLORREF text::get_text_color(HDC dc_handle) {
+        return GetTextColor(dc_handle);
+    }
+
+    COLORREF text::set_text_color(HDC dc_handle, COLORREF color) {
+        return SetTextColor(dc_handle, color);
+    }
+
+    int text::get_text_face(HDC dc_handle, int cch_size, wchar_t *buf) {
+        return GetTextFaceW(dc_handle, cch_size, buf);
+    }
+
+    bool text::get_text_metrics(HDC dc_handle, LPTEXTMETRICW text_metric) {
+        return GetTextMetricsW(dc_handle, text_metric);
+    }
+
+    UINT text::get_outline_text_metrics(HDC dc_handle,
+                                        UINT size,
+                                        LPOUTLINETEXTMETRICW outline_text_metric) {
+        return GetOutlineTextMetricsW(dc_handle, size, outline_text_metric);
+    }
+
+    bool text::get_text_extent_point(HDC dc_handle,
+                                     const wchar_t *text,
+                                     int cch_size,
+                                     int max_extent,
+                                     LPINT fit,
+                                     LPINT dx,
+                                     LPSIZE size) {
+        return GetTextExtentExPointW(dc_handle,
+                                     text,
+                                     cch_size,
+                                     max_extent,
+                                     fit,
+                                     dx,
+                                     size);
+    }
+
+    bool text::get_text_extent_point32(HDC dc_handle,
+                                       const wchar_t *text,
+                                       int cch_size,
+                                       LPSIZE size) {
+        return GetTextExtentPoint32W(dc_handle, text, cch_size, size);
+    }
+
+    bool text::get_text_extent_point_index(HDC dc_handle,
+                                           LPWORD glyph_index_array,
+                                           int glyph_index_num,
+                                           int max_extent,
+                                           LPINT fit,
+                                           LPINT dx,
+                                           LPSIZE size) {
+        return GetTextExtentExPointI(dc_handle,
+                                     glyph_index_array,
+                                     glyph_index_num,
+                                     max_extent,
+                                     fit,
+                                     dx,
+                                     size);
+    }
+
+    bool text::get_text_extent_point_index(HDC dc_handle,
+                                           LPWORD glyph_index_array,
+                                           int glyph_index_num,
+                                           LPSIZE size) {
+        return GetTextExtentPointI(dc_handle,
+                                   glyph_index_array,
+                                   glyph_index_num,
+                                   size);
+    }
+}

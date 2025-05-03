@@ -43,75 +43,75 @@ namespace YanLib::sys {
 
         ~proc();
 
-        PROCESS_INFORMATION
-        create(const wchar_t *app_name,
-               wchar_t *cmdline = nullptr,
-               LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
-               LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-               bool is_inherit_handles = false,
-               DWORD create_flag = 0,
-               void *env = nullptr,
-               const wchar_t *curr_dir = nullptr);
+        PROCESS_INFORMATION create(
+            const wchar_t *app_name,
+            wchar_t *cmdline = nullptr,
+            LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+            LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+            bool is_inherit_handles = false,
+            DWORD create_flag = 0,
+            void *env = nullptr,
+            const wchar_t *curr_dir = nullptr);
 
-        PROCESS_INFORMATION
-        create_with_suspended(const wchar_t *app_name,
-                              wchar_t *cmdline = nullptr,
-                              LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
-                              LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                              bool is_inherit_handles = false,
-                              DWORD create_flag = NORMAL_PRIORITY_CLASS |
-                                                  CREATE_SUSPENDED,
-                              void *env = nullptr,
-                              const wchar_t *curr_dir = nullptr);
+        PROCESS_INFORMATION create_with_suspended(
+            const wchar_t *app_name,
+            wchar_t *cmdline = nullptr,
+            LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+            LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+            bool is_inherit_handles = false,
+            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                CREATE_SUSPENDED,
+            void *env = nullptr,
+            const wchar_t *curr_dir = nullptr);
 
-        PROCESS_INFORMATION
-        create_as_user(HANDLE token_handle,
-                       const wchar_t *app_name,
-                       wchar_t *cmdline = nullptr,
-                       LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
-                       LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                       bool is_inherit_handles = false,
-                       DWORD create_flag = NORMAL_PRIORITY_CLASS |
-                                           CREATE_UNICODE_ENVIRONMENT,
-                       void *env = nullptr,
-                       const wchar_t *curr_dir = nullptr);
+        PROCESS_INFORMATION create_as_user(
+            HANDLE token_handle,
+            const wchar_t *app_name,
+            wchar_t *cmdline = nullptr,
+            LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+            LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+            bool is_inherit_handles = false,
+            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                CREATE_UNICODE_ENVIRONMENT,
+            void *env = nullptr,
+            const wchar_t *curr_dir = nullptr);
 
 
-        PROCESS_INFORMATION
-        create_session_zero(const wchar_t *app_name,
-                            wchar_t *cmdline = nullptr,
-                            LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
-                            LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
-                            bool is_inherit_handles = false,
-                            DWORD create_flag = NORMAL_PRIORITY_CLASS |
-                                                CREATE_UNICODE_ENVIRONMENT |
-                                                CREATE_NEW_CONSOLE,
-                            void *env = nullptr,
-                            const wchar_t *curr_dir = nullptr);
+        PROCESS_INFORMATION create_session_zero(
+            const wchar_t *app_name,
+            wchar_t *cmdline = nullptr,
+            LPSECURITY_ATTRIBUTES proc_attrs = nullptr,
+            LPSECURITY_ATTRIBUTES thread_attrs = nullptr,
+            bool is_inherit_handles = false,
+            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                CREATE_UNICODE_ENVIRONMENT |
+                                CREATE_NEW_CONSOLE,
+            void *env = nullptr,
+            const wchar_t *curr_dir = nullptr);
 
-        PROCESS_INFORMATION
-        create_with_logon(const wchar_t *username,
-                          const wchar_t *domain,
-                          const wchar_t *password,
-                          const wchar_t *app_name,
-                          wchar_t *cmdline = nullptr,
-                          DWORD logon_flag = LOGON_WITH_PROFILE,
-                          DWORD create_flag = NORMAL_PRIORITY_CLASS |
-                                              CREATE_NEW_CONSOLE |
-                                              CREATE_UNICODE_ENVIRONMENT,
-                          void *env = nullptr,
-                          const wchar_t *curr_dir = nullptr);
+        PROCESS_INFORMATION create_with_logon(
+            const wchar_t *username,
+            const wchar_t *domain,
+            const wchar_t *password,
+            const wchar_t *app_name,
+            wchar_t *cmdline = nullptr,
+            DWORD logon_flag = LOGON_WITH_PROFILE,
+            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                CREATE_NEW_CONSOLE |
+                                CREATE_UNICODE_ENVIRONMENT,
+            void *env = nullptr,
+            const wchar_t *curr_dir = nullptr);
 
-        PROCESS_INFORMATION
-        create_with_token(HANDLE token_handle,
-                          const wchar_t *app_name,
-                          wchar_t *cmdline = nullptr,
-                          DWORD logon_flag = LOGON_WITH_PROFILE,
-                          DWORD create_flag = NORMAL_PRIORITY_CLASS |
-                                              CREATE_NEW_CONSOLE |
-                                              CREATE_UNICODE_ENVIRONMENT,
-                          void *env = nullptr,
-                          const wchar_t *curr_dir = nullptr);
+        PROCESS_INFORMATION create_with_token(
+            HANDLE token_handle,
+            const wchar_t *app_name,
+            wchar_t *cmdline = nullptr,
+            DWORD logon_flag = LOGON_WITH_PROFILE,
+            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+                                CREATE_NEW_CONSOLE |
+                                CREATE_UNICODE_ENVIRONMENT,
+            void *env = nullptr,
+            const wchar_t *curr_dir = nullptr);
 
         bool win_exec(const char *cmdline, UINT show_flag = SW_SHOWDEFAULT);
 

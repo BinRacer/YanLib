@@ -33,10 +33,10 @@ namespace YanLib::ui {
 
         bool is_touch_window(HWND hwnd, PULONG flag);
 
-        HSYNTHETICPOINTERDEVICE
-        create_synthetic_pointer_device(POINTER_INPUT_TYPE pointer_type,
-                                        ULONG max_count,
-                                        POINTER_FEEDBACK_MODE mode);
+        HSYNTHETICPOINTERDEVICE create_synthetic_pointer_device(
+            POINTER_INPUT_TYPE pointer_type,
+            ULONG max_count,
+            POINTER_FEEDBACK_MODE mode);
 
         void destroy_synthetic_pointer_device(HSYNTHETICPOINTERDEVICE device_handle);
 

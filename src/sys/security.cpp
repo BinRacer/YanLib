@@ -252,8 +252,8 @@ namespace YanLib::sys {
         return disable_privilege(pid, L"SeSecurityPrivilege");
     }
 
-    std::pair<TOKEN_ELEVATION_TYPE, bool>
-    security::check_proc_elevation(HANDLE proc_handle) {
+    std::pair<TOKEN_ELEVATION_TYPE, bool> security::check_proc_elevation(
+        HANDLE proc_handle) {
         HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
         helper::autoclean<HANDLE> token_handle(nullptr);
         helper::autoclean<HANDLE> filter_token_handle(nullptr);

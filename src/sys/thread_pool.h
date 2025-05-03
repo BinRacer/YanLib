@@ -103,32 +103,32 @@ namespace YanLib::sys {
         void wait_cleanup_member(bool is_cancel_pending = false,
                                  void *context = nullptr);
 
-        static bool
-        callback_maybe_run_long(PTP_CALLBACK_INSTANCE callback_instance);
+        static bool callback_maybe_run_long(
+            PTP_CALLBACK_INSTANCE callback_instance);
 
-        static void
-        detach_curr_thread_from_callback(PTP_CALLBACK_INSTANCE callback_instance);
+        static void detach_curr_thread_from_callback(
+            PTP_CALLBACK_INSTANCE callback_instance);
 
-        static void
-        free_library_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                           HMODULE dll);
+        static void free_library_when_callback_returns(
+            PTP_CALLBACK_INSTANCE callback_instance,
+            HMODULE dll);
 
-        static void
-        leave_critical_section_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                     PCRITICAL_SECTION critical_section);
+        static void leave_critical_section_when_callback_returns(
+            PTP_CALLBACK_INSTANCE callback_instance,
+            PCRITICAL_SECTION critical_section);
 
-        static void
-        release_mutex_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                            HANDLE mutex_handle);
+        static void release_mutex_when_callback_returns(
+            PTP_CALLBACK_INSTANCE callback_instance,
+            HANDLE mutex_handle);
 
-        static void
-        release_semaphore_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                HANDLE semaphore_handle,
-                                                DWORD count);
+        static void release_semaphore_when_callback_returns(
+            PTP_CALLBACK_INSTANCE callback_instance,
+            HANDLE semaphore_handle,
+            DWORD count);
 
-        static void
-        set_event_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                        HANDLE event_handle);
+        static void set_event_when_callback_returns(
+            PTP_CALLBACK_INSTANCE callback_instance,
+            HANDLE event_handle);
 
         [[nodiscard]] DWORD err_code() const;
 

@@ -251,44 +251,44 @@ namespace YanLib::sys {
                                            context);
     }
 
-    bool
-    thread_pool::callback_maybe_run_long(PTP_CALLBACK_INSTANCE callback_instance) {
+    bool thread_pool::callback_maybe_run_long(
+        PTP_CALLBACK_INSTANCE callback_instance) {
         return CallbackMayRunLong(callback_instance);
     }
 
-    void
-    thread_pool::detach_curr_thread_from_callback(PTP_CALLBACK_INSTANCE callback_instance) {
+    void thread_pool::detach_curr_thread_from_callback(
+        PTP_CALLBACK_INSTANCE callback_instance) {
         DisassociateCurrentThreadFromCallback(callback_instance);
     }
 
-    void
-    thread_pool::free_library_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                    HMODULE dll) {
+    void thread_pool::free_library_when_callback_returns(
+        PTP_CALLBACK_INSTANCE callback_instance,
+        HMODULE dll) {
         FreeLibraryWhenCallbackReturns(callback_instance, dll);
     }
 
-    void
-    thread_pool::leave_critical_section_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                              PCRITICAL_SECTION critical_section) {
+    void thread_pool::leave_critical_section_when_callback_returns(
+        PTP_CALLBACK_INSTANCE callback_instance,
+        PCRITICAL_SECTION critical_section) {
         LeaveCriticalSectionWhenCallbackReturns(callback_instance, critical_section);
     }
 
-    void
-    thread_pool::release_mutex_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                     HANDLE mutex_handle) {
+    void thread_pool::release_mutex_when_callback_returns(
+        PTP_CALLBACK_INSTANCE callback_instance,
+        HANDLE mutex_handle) {
         ReleaseMutexWhenCallbackReturns(callback_instance, mutex_handle);
     }
 
-    void
-    thread_pool::release_semaphore_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                         HANDLE semaphore_handle,
-                                                         DWORD count) {
+    void thread_pool::release_semaphore_when_callback_returns(
+        PTP_CALLBACK_INSTANCE callback_instance,
+        HANDLE semaphore_handle,
+        DWORD count) {
         ReleaseSemaphoreWhenCallbackReturns(callback_instance, semaphore_handle, count);
     }
 
-    void
-    thread_pool::set_event_when_callback_returns(PTP_CALLBACK_INSTANCE callback_instance,
-                                                 HANDLE event_handle) {
+    void thread_pool::set_event_when_callback_returns(
+        PTP_CALLBACK_INSTANCE callback_instance,
+        HANDLE event_handle) {
         SetEventWhenCallbackReturns(callback_instance, event_handle);
     }
 

@@ -95,8 +95,8 @@ namespace YanLib::sys {
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
         bool disable_sacl(DWORD pid);
 
-        std::pair<TOKEN_ELEVATION_TYPE, bool>
-        check_proc_elevation(HANDLE proc_handle = nullptr);
+        std::pair<TOKEN_ELEVATION_TYPE, bool> check_proc_elevation(
+            HANDLE proc_handle = nullptr);
 
         enum SecurityLevel {
             SECURITY_UNTRUSTED,

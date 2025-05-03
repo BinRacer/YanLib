@@ -150,6 +150,8 @@ add_library(YanLib STATIC
         src/ui/rect.h
         src/ui/region.cpp
         src/ui/region.h
+        src/ui/font.cpp
+        src/ui/font.h
 )
 
 target_include_directories(YanLib

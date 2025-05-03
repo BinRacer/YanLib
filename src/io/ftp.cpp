@@ -111,8 +111,12 @@ namespace YanLib::io {
         session_read_handle = InternetConnectW(internet_handle,
                                                _hostname,
                                                _port,
-                                               wcslen(_username) == 0 ? nullptr : _username,
-                                               wcslen(_password) == 0 ? nullptr : _password,
+                                               wcslen(_username) == 0
+                                                   ? nullptr
+                                                   : _username,
+                                               wcslen(_password) == 0
+                                                   ? nullptr
+                                                   : _password,
                                                service,
                                                flag,
                                                context);
@@ -123,8 +127,12 @@ namespace YanLib::io {
         session_upload_handle = InternetConnectW(internet_handle,
                                                  _hostname,
                                                  _port,
-                                                 wcslen(_username) == 0 ? nullptr : _username,
-                                                 wcslen(_password) == 0 ? nullptr : _password,
+                                                 wcslen(_username) == 0
+                                                     ? nullptr
+                                                     : _username,
+                                                 wcslen(_password) == 0
+                                                     ? nullptr
+                                                     : _password,
                                                  service,
                                                  flag,
                                                  context);
@@ -168,7 +176,7 @@ namespace YanLib::io {
     bool ftp::read(HINTERNET file_handle,
                    void *buf,
                    DWORD size,
-                   DWORD* ret_size) {
+                   DWORD *ret_size) {
         if (!InternetReadFile(file_handle,
                               buf,
                               size,
@@ -201,7 +209,7 @@ namespace YanLib::io {
     bool ftp::write(HINTERNET file_handle,
                     const void *buf,
                     DWORD size,
-                    DWORD* ret_size) {
+                    DWORD *ret_size) {
         if (!InternetWriteFile(file_handle,
                                buf,
                                size,
@@ -239,7 +247,9 @@ namespace YanLib::io {
     std::wstring ftp::pwd() {
         wchar_t current_dir[MAX_PATH];
         DWORD buffer_size = MAX_PATH;
-        if (!FtpGetCurrentDirectoryW(session_read_handle, current_dir, &buffer_size)) {
+        if (!FtpGetCurrentDirectoryW(session_read_handle,
+                                     current_dir,
+                                     &buffer_size)) {
             error_code = GetLastError();
             return {};
         }
@@ -334,9 +344,13 @@ namespace YanLib::io {
             if (wcscmp(find_file_data.cFileName, L".") != 0 &&
                 wcscmp(find_file_data.cFileName, L"..") != 0) {
                 if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    dirs.push_back(base_path + slash + find_file_data.cFileName);
+                    dirs.push_back(base_path +
+                                   slash +
+                                   find_file_data.cFileName);
                 } else {
-                    files.push_back(base_path + slash + find_file_data.cFileName);
+                    files.push_back(base_path +
+                                    slash +
+                                    find_file_data.cFileName);
                 }
             }
         } while (InternetFindNextFileW(find_handle, &find_file_data));
@@ -398,7 +412,9 @@ namespace YanLib::io {
                                 buffer,
                                 buffer_size,
                                 &bytes_read) && bytes_read > 0) {
-            result.insert(result.end(), buffer, buffer + bytes_read);
+            result.insert(result.end(),
+                          buffer,
+                          buffer + bytes_read);
         }
         delete[] buffer;
         result.shrink_to_fit();

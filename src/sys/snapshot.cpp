@@ -164,8 +164,9 @@ namespace YanLib::sys {
         cleanup();
         THREADENTRY32 te = {sizeof(THREADENTRY32)};
         do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD,
-                                                       pid);
+            snapshot_handle =
+                    CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD,
+                                             pid);
             if (snapshot_handle == INVALID_HANDLE_VALUE) {
                 error_code = GetLastError();
                 break;
@@ -239,8 +240,9 @@ namespace YanLib::sys {
         cleanup();
         MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
         do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
-                                                       pid);
+            snapshot_handle =
+                    CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
+                                             pid);
             if (snapshot_handle == INVALID_HANDLE_VALUE) {
                 error_code = GetLastError();
                 break;
@@ -270,8 +272,9 @@ namespace YanLib::sys {
         cleanup();
         MODULEENTRY32W me = {sizeof(MODULEENTRY32W)};
         do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
-                                                       pid);
+            snapshot_handle =
+                    CreateToolhelp32Snapshot(TH32CS_SNAPMODULE,
+                                             pid);
             if (snapshot_handle == INVALID_HANDLE_VALUE) {
                 error_code = GetLastError();
                 break;
@@ -333,8 +336,9 @@ namespace YanLib::sys {
         cleanup();
         HEAPLIST32 he = {sizeof(HEAPLIST32)};
         do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
-                                                       pid);
+            snapshot_handle =
+                    CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
+                                             pid);
             if (snapshot_handle == INVALID_HANDLE_VALUE) {
                 error_code = GetLastError();
                 break;
@@ -364,8 +368,9 @@ namespace YanLib::sys {
         cleanup();
         HEAPLIST32 he = {sizeof(HEAPLIST32)};
         do {
-            snapshot_handle = CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
-                                                       pid);
+            snapshot_handle =
+                    CreateToolhelp32Snapshot(TH32CS_SNAPHEAPLIST,
+                                             pid);
             if (snapshot_handle == INVALID_HANDLE_VALUE) {
                 error_code = GetLastError();
                 break;
@@ -417,7 +422,9 @@ namespace YanLib::sys {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
-            if (!Heap32First(&he, heap_list.th32ProcessID, heap_list.th32HeapID)) {
+            if (!Heap32First(&he,
+                             heap_list.th32ProcessID,
+                             heap_list.th32HeapID)) {
                 error_code = GetLastError();
                 break;
             }
@@ -455,7 +462,9 @@ namespace YanLib::sys {
                 break;
             }
             for (auto heaplist: heaplists) {
-                if (!Heap32First(&he, heaplist.th32ProcessID, heaplist.th32HeapID)) {
+                if (!Heap32First(&he,
+                                 heaplist.th32ProcessID,
+                                 heaplist.th32HeapID)) {
                     error_code = GetLastError();
                     break;
                 }
@@ -473,7 +482,9 @@ namespace YanLib::sys {
                                    DWORD desired_access,
                                    bool is_inherit_handle) {
         HANDLE proc_handle = OpenProcess(desired_access,
-                                         is_inherit_handle ? TRUE : FALSE,
+                                         is_inherit_handle
+                                             ? TRUE
+                                             : FALSE,
                                          pid);
         if (!proc_handle) {
             error_code = GetLastError();
@@ -512,7 +523,8 @@ namespace YanLib::sys {
                 break;
             }
             if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
-                address <= static_cast<uint8_t *>(mbi.AllocationBase) + mbi.RegionSize) {
+                address <= static_cast<uint8_t *>(
+                    mbi.AllocationBase) + mbi.RegionSize) {
                 return true;
             }
         }
@@ -543,7 +555,8 @@ namespace YanLib::sys {
                 break;
             }
             if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
-                address <= static_cast<uint8_t *>(mbi.AllocationBase) + mbi.RegionSize) {
+                address <= static_cast<uint8_t *>(
+                    mbi.AllocationBase) + mbi.RegionSize) {
                 return true;
             }
         }

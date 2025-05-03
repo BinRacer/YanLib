@@ -313,7 +313,7 @@ namespace YanLib::io {
 
     bool http::query_option(DWORD option,
                             void *buffer,
-                            DWORD* buffer_length) {
+                            DWORD *buffer_length) {
         if (!InternetQueryOptionW(request_handle,
                                   option,
                                   buffer,
@@ -327,7 +327,10 @@ namespace YanLib::io {
     bool http::set_option(DWORD option,
                           void *buffer,
                           DWORD buffer_length) {
-        if (!InternetSetOptionW(request_handle, option, buffer, buffer_length)) {
+        if (!InternetSetOptionW(request_handle,
+                                option,
+                                buffer,
+                                buffer_length)) {
             error_code = GetLastError();
             return false;
         }
@@ -357,8 +360,12 @@ namespace YanLib::io {
         connect_handle = InternetConnectW(internet_handle,
                                           hostname,
                                           port,
-                                          wcslen(username) == 0 ? nullptr : username,
-                                          wcslen(password) == 0 ? nullptr : password,
+                                          wcslen(username) == 0
+                                              ? nullptr
+                                              : username,
+                                          wcslen(password) == 0
+                                              ? nullptr
+                                              : password,
                                           service,
                                           flag,
                                           context);
@@ -456,8 +463,8 @@ namespace YanLib::io {
 
     // support http and https
     // call send_request_ex(), next must call end_request_ex()
-    bool http::send_request_ex(INTERNET_BUFFERSW* buffers_in,
-                               INTERNET_BUFFERSW* buffers_out,
+    bool http::send_request_ex(INTERNET_BUFFERSW *buffers_in,
+                               INTERNET_BUFFERSW *buffers_out,
                                DWORD flag,
                                DWORD_PTR context) {
         if (is_https) {
@@ -494,7 +501,7 @@ namespace YanLib::io {
     }
 
     // call send_request_ex(), next must call end_request_ex()
-    bool http::end_request_ex(INTERNET_BUFFERSW* buffers_out,
+    bool http::end_request_ex(INTERNET_BUFFERSW *buffers_out,
                               DWORD flag,
                               DWORD_PTR context) {
         if (!HttpEndRequestW(request_handle, buffers_out, flag, context)) {
@@ -506,7 +513,7 @@ namespace YanLib::io {
 
     bool http::read(void *buf,
                     DWORD size,
-                    DWORD* ret_size) {
+                    DWORD *ret_size) {
         if (!InternetReadFile(request_handle,
                               buf,
                               size,
@@ -537,7 +544,7 @@ namespace YanLib::io {
 
     bool http::write(const void *buf,
                      DWORD size,
-                     DWORD* ret_size) {
+                     DWORD *ret_size) {
         if (!InternetWriteFile(request_handle,
                                buf,
                                size,
@@ -582,13 +589,16 @@ namespace YanLib::io {
             }
 
             content_length = client.get_content_length();
-            if (content_length <= 0 || content_length >= 5 * 1024 * 1024) {
+            if (content_length <= 0 ||
+                content_length >= 5 * 1024 * 1024) {
                 break;
             }
 
             std::string body(content_length, '\0');
             DWORD bytes_read = 0;
-            if (!client.read(body.data(), content_length, &bytes_read)) {
+            if (!client.read(body.data(),
+                             content_length,
+                             &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
@@ -628,7 +638,9 @@ namespace YanLib::io {
 
             std::vector<uint8_t> body(content_length, '\0');
             DWORD bytes_read = 0;
-            if (!client.read(body.data(), content_length, &bytes_read)) {
+            if (!client.read(body.data(),
+                             content_length,
+                             &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
@@ -680,7 +692,10 @@ namespace YanLib::io {
                     break;
                 }
                 if (bytes_read <= 0) break;
-                if (!file.write(file_handle, buf, bytes_read, &bytes_written)) {
+                if (!file.write(file_handle,
+                                buf,
+                                bytes_read,
+                                &bytes_written)) {
                     error = file.err_code();
                     break;
                 }
@@ -722,7 +737,10 @@ namespace YanLib::io {
             INTERNET_BUFFERSW buffers_in = {};
             buffers_in.dwStructSize = sizeof(INTERNET_BUFFERSW);
             buffers_in.dwBufferTotal = file.size(file_handle);
-            if (!client.send_request_ex(&buffers_in, nullptr, 0, 0)) {
+            if (!client.send_request_ex(&buffers_in,
+                                        nullptr,
+                                        0,
+                                        0)) {
                 break;
             }
 
@@ -732,7 +750,10 @@ namespace YanLib::io {
             DWORD bytes_read = 0;
             DWORD bytes_written = 0;
             do {
-                if (!file.read(file_handle, buf, bytes_read, &bytes_read)) {
+                if (!file.read(file_handle,
+                               buf,
+                               bytes_read,
+                               &bytes_read)) {
                     error = file.err_code();
                     break;
                 }

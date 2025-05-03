@@ -12,9 +12,9 @@
 namespace YanLib::sys {
     class thread_pool {
     private:
-        TP_POOL* pool = nullptr;
+        TP_POOL *pool = nullptr;
         TP_CALLBACK_ENVIRON env = {};
-        TP_CLEANUP_GROUP* group = nullptr;
+        TP_CLEANUP_GROUP *group = nullptr;
         std::vector<TP_WORK *> tasks = {};
         std::vector<TP_TIMER *> timers = {};
         std::vector<TP_IO *> ios = {};
@@ -48,7 +48,8 @@ namespace YanLib::sys {
 
         void keep_dll(HMODULE dll);
 
-        void set_priority(TP_CALLBACK_PRIORITY priority = TP_CALLBACK_PRIORITY_NORMAL);
+        void set_priority(TP_CALLBACK_PRIORITY priority =
+                TP_CALLBACK_PRIORITY_NORMAL);
 
         bool get_stack_info(TP_POOL_STACK_INFORMATION *stack_info);
 

@@ -49,7 +49,7 @@ namespace YanLib::io {
         bool add_header(const wchar_t *headers,
                         DWORD headers_length = -1);
 
-        bool add_header(const std::string& headers);
+        bool add_header(const std::string &headers);
 
         bool add_header(std::wstring headers);
 
@@ -61,20 +61,24 @@ namespace YanLib::io {
 
         bool add_headers(std::vector<std::wstring> &vec);
 
-        [[nodiscard]] std::unordered_map<std::string, std::string> get_headers() const;
+        [[nodiscard]]
+        std::unordered_map<std::string, std::string> get_headers() const;
 
-        [[nodiscard]] std::unordered_map<std::wstring, std::wstring> get_headers_wide() const;
+        [[nodiscard]]
+        std::unordered_map<std::wstring, std::wstring> get_headers_wide() const;
 
-        [[nodiscard]] std::vector<std::string> get_headers_vec() const;
+        [[nodiscard]]
+        std::vector<std::string> get_headers_vec() const;
 
-        [[nodiscard]] std::vector<std::wstring> get_headers_vec_wide() const;
+        [[nodiscard]]
+        std::vector<std::wstring> get_headers_vec_wide() const;
 
         bool query_option(DWORD option,
-                          void* buffer,
-                          DWORD* buffer_length);
+                          void *buffer,
+                          DWORD *buffer_length);
 
         bool set_option(DWORD option,
-                        void* buffer,
+                        void *buffer,
                         DWORD buffer_length);
 
         bool open(const wchar_t *agent_name = L"MiniCurl/0.1",
@@ -104,27 +108,27 @@ namespace YanLib::io {
 
         bool send_request(const wchar_t *headers = nullptr,
                           DWORD headers_length = 0,
-                          void* optional = nullptr,
+                          void *optional = nullptr,
                           DWORD optional_length = 0);
 
-        bool send_request_ex(INTERNET_BUFFERSW* buffers_in,
-                             INTERNET_BUFFERSW* buffers_out = nullptr,
+        bool send_request_ex(INTERNET_BUFFERSW *buffers_in,
+                             INTERNET_BUFFERSW *buffers_out = nullptr,
                              DWORD flag = 0,
                              DWORD_PTR context = 0);
 
-        bool end_request_ex(INTERNET_BUFFERSW* buffers_out = nullptr,
+        bool end_request_ex(INTERNET_BUFFERSW *buffers_out = nullptr,
                             DWORD flag = 0,
                             DWORD_PTR context = 0);
 
-        bool read(void* buf,
+        bool read(void *buf,
                   DWORD size,
-                  DWORD* ret_size);
+                  DWORD *ret_size);
 
         std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
-        bool write(const void* buf,
+        bool write(const void *buf,
                    DWORD size,
-                   DWORD* ret_size);
+                   DWORD *ret_size);
 
         DWORD write_bytes(std::vector<uint8_t> &vec);
 

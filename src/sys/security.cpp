@@ -50,11 +50,12 @@ namespace YanLib::sys {
         return token;
     }
 
-    HANDLE security::copy_token(HANDLE existing_token_handle,
-                                DWORD desired_access,
-                                SECURITY_ATTRIBUTES* token_attrs,
-                                SECURITY_IMPERSONATION_LEVEL impersonation_level,
-                                TOKEN_TYPE token_type) {
+    HANDLE security::copy_token(
+        HANDLE existing_token_handle,
+        DWORD desired_access,
+        SECURITY_ATTRIBUTES *token_attrs,
+        SECURITY_IMPERSONATION_LEVEL impersonation_level,
+        TOKEN_TYPE token_type) {
         HANDLE token_handle = existing_token_handle
                                   ? existing_token_handle
                                   : curr_session_token();
@@ -90,8 +91,9 @@ namespace YanLib::sys {
         return env;
     }
 
-    SECURITY_ATTRIBUTES security::create_attrs(bool is_inherit,
-                                               PSECURITY_DESCRIPTOR security_descriptor) {
+    SECURITY_ATTRIBUTES security::create_attrs(
+        bool is_inherit,
+        PSECURITY_DESCRIPTOR security_descriptor) {
         SECURITY_ATTRIBUTES attrs;
         attrs.nLength = sizeof(SECURITY_ATTRIBUTES);
         attrs.bInheritHandle = is_inherit ? TRUE : FALSE;
@@ -100,19 +102,24 @@ namespace YanLib::sys {
     }
 
     SECURITY_DESCRIPTOR security::create_descriptor(bool is_dacl_present,
-                                                    ACL* acl,
+                                                    ACL *acl,
                                                     bool is_dacl_defaulted) {
         SECURITY_DESCRIPTOR sd;
         do {
-            if (!InitializeSecurityDescriptor(&sd,
-                                              SECURITY_DESCRIPTOR_REVISION)) {
+            if (!InitializeSecurityDescriptor(
+                &sd,
+                SECURITY_DESCRIPTOR_REVISION)) {
                 error_code = GetLastError();
                 break;
             }
             if (!SetSecurityDescriptorDacl(&sd,
-                                           is_dacl_present ? TRUE : FALSE,
+                                           is_dacl_present
+                                               ? TRUE
+                                               : FALSE,
                                            acl,
-                                           is_dacl_defaulted ? TRUE : FALSE)) {
+                                           is_dacl_defaulted
+                                               ? TRUE
+                                               : FALSE)) {
                 error_code = GetLastError();
                 break;
             }
@@ -267,11 +274,12 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            if (!GetTokenInformation(token_handle,
-                                     TokenElevationType,
-                                     &token_type,
-                                     sizeof(TOKEN_ELEVATION_TYPE),
-                                     &size)) {
+            if (!GetTokenInformation(
+                token_handle,
+                TokenElevationType,
+                &token_type,
+                sizeof(TOKEN_ELEVATION_TYPE),
+                &size)) {
                 error_code = GetLastError();
                 break;
             }
@@ -296,7 +304,9 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            if (!CheckTokenMembership(filter_token_handle, &admin_sid, &is_admin)) {
+            if (!CheckTokenMembership(filter_token_handle,
+                                      &admin_sid,
+                                      &is_admin)) {
                 error_code = GetLastError();
                 break;
             }
@@ -309,7 +319,9 @@ namespace YanLib::sys {
         security::ResourceLevel,
         security::SystemPolicy>
     security::check_proc_integrity_level(HANDLE proc_handle) {
-        HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
+        HANDLE process_handle = proc_handle
+                                    ? proc_handle
+                                    : GetCurrentProcess();
         helper::autoclean<HANDLE> token_handle(nullptr);
         SecurityLevel security_level = SECURITY_UNKNOWN;
         TokenPolicy token_policy = TOKEN_UNKNOWN;
@@ -334,7 +346,8 @@ namespace YanLib::sys {
                 }
             }
             std::vector<uint8_t> buf(size, '\0');
-            auto token_info = reinterpret_cast<TOKEN_MANDATORY_LABEL*>(buf.data());
+            auto token_info =
+                    reinterpret_cast<TOKEN_MANDATORY_LABEL *>(buf.data());
             if (!GetTokenInformation(token_handle,
                                      TokenIntegrityLevel,
                                      token_info,
@@ -343,13 +356,15 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            auto auth_count = GetSidSubAuthorityCount(token_info->Label.Sid);
+            auto auth_count =
+                    GetSidSubAuthorityCount(token_info->Label.Sid);
             error_code = GetLastError();
             if (error_code != ERROR_SUCCESS) {
                 break;
             }
-            auto integrity_level = GetSidSubAuthority(token_info->Label.Sid,
-                                                      *auth_count - 1);
+            auto integrity_level =
+                    GetSidSubAuthority(token_info->Label.Sid,
+                                       *auth_count - 1);
             error_code = GetLastError();
             if (error_code != ERROR_SUCCESS) {
                 break;
@@ -399,7 +414,7 @@ namespace YanLib::sys {
                 token_policy = TOKEN_NEW_PROCESS_MIN;
             }
 
-            ACL* sacl = nullptr;
+            ACL *sacl = nullptr;
             PSECURITY_DESCRIPTOR sd = nullptr;
             DWORD ret = ERROR_SUCCESS;
             ret = GetSecurityInfo(process_handle,
@@ -423,7 +438,9 @@ namespace YanLib::sys {
             if (sacl->AceCount <= 0) {
                 break;
             }
-            if (!GetAce(sacl, 0, reinterpret_cast<void **>(&ace))) {
+            if (!GetAce(sacl,
+                        0,
+                        reinterpret_cast<void **>(&ace))) {
                 error_code = GetLastError();
                 break;
             }
@@ -462,16 +479,17 @@ namespace YanLib::sys {
 
             if (resource_policy == 0) {
                 system_policy = SYSTEM_ZERO;
-            } else if ((resource_policy & TOKEN_MANDATORY_POLICY_VALID_MASK) == 0) {
+            } else if ((resource_policy & TOKEN_MANDATORY_POLICY_VALID_MASK)
+                       == 0) {
                 system_policy = SYSTEM_UNKNOWN;
-            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_READ_UP) ==
-                       SYSTEM_MANDATORY_LABEL_NO_READ_UP) {
+            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_READ_UP)
+                       == SYSTEM_MANDATORY_LABEL_NO_READ_UP) {
                 system_policy = SYSTEM_NO_READ_UP;
-            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) ==
-                       SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) {
+            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_WRITE_UP)
+                       == SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) {
                 system_policy = SYSTEM_NO_WRITE_UP;
-            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) ==
-                       SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) {
+            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP)
+                       == SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) {
                 system_policy = SYSTEM_NO_NO_EXECUTE_UP;
             }
         } while (false);

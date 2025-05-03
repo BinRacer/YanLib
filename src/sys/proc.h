@@ -28,7 +28,7 @@ namespace YanLib::sys {
                                     PROCESSINFOCLASS proc_info_class,
                                     void *proc_info,
                                     ULONG proc_info_len,
-                                    ULONG* ret_len);
+                                    ULONG *ret_len);
 
     public:
         proc(const proc &other) = delete;
@@ -46,8 +46,8 @@ namespace YanLib::sys {
         PROCESS_INFORMATION create(
             const wchar_t *app_name,
             wchar_t *cmdline = nullptr,
-            SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-            SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+            SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+            SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             DWORD create_flag = 0,
             void *env = nullptr,
@@ -56,8 +56,8 @@ namespace YanLib::sys {
         PROCESS_INFORMATION create_with_suspended(
             const wchar_t *app_name,
             wchar_t *cmdline = nullptr,
-            SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-            SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+            SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+            SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_SUSPENDED,
@@ -68,8 +68,8 @@ namespace YanLib::sys {
             HANDLE token_handle,
             const wchar_t *app_name,
             wchar_t *cmdline = nullptr,
-            SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-            SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+            SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+            SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_UNICODE_ENVIRONMENT,
@@ -80,8 +80,8 @@ namespace YanLib::sys {
         PROCESS_INFORMATION create_session_zero(
             const wchar_t *app_name,
             wchar_t *cmdline = nullptr,
-            SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-            SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+            SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+            SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             DWORD create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_UNICODE_ENVIRONMENT |
@@ -182,14 +182,14 @@ namespace YanLib::sys {
                             void *addr,
                             size_t size,
                             DWORD new_protect_flag,
-                            DWORD* old_protect_flag);
+                            DWORD *old_protect_flag);
 
         bool query_mem(HANDLE proc_handle,
                        const void *address,
-                       MEMORY_BASIC_INFORMATION* buffer,
+                       MEMORY_BASIC_INFORMATION *buffer,
                        size_t len);
 
-        bool global_mem_status(MEMORYSTATUSEX* buffer);
+        bool global_mem_status(MEMORYSTATUSEX *buffer);
 
         bool read(HANDLE proc_handle,
                   const void *base_addr,
@@ -278,11 +278,11 @@ namespace YanLib::sys {
 
         bool get_module_info(HANDLE proc_handle,
                              HMODULE module_handle,
-                             MODULEINFO* mod_info,
+                             MODULEINFO *mod_info,
                              DWORD mod_info_size);
 
-        bool logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buf,
-                                    DWORD* ret_len);
+        bool logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buf,
+                                    DWORD *ret_len);
 
         bool get_affinity_mask(HANDLE proc_handle,
                                PDWORD_PTR proc_affinity_mask,
@@ -292,11 +292,11 @@ namespace YanLib::sys {
                                DWORD_PTR proc_affinity_mask);
 
         bool get_group_affinity(HANDLE proc_handle,
-                                USHORT* group_count,
-                                USHORT* group_array);
+                                USHORT *group_count,
+                                USHORT *group_array);
 
         bool io_counters(HANDLE proc_handle,
-                         IO_COUNTERS* io_counters);
+                         IO_COUNTERS *io_counters);
 
         bool get_mitigation_policy(HANDLE proc_handle,
                                    PROCESS_MITIGATION_POLICY mitigation_policy,
@@ -312,31 +312,32 @@ namespace YanLib::sys {
         bool set_priority_boost(HANDLE proc_handle,
                                 bool is_disable_priority_boost);
 
-        bool get_shutdown_params(DWORD* level,
-                                 DWORD* flag);
+        bool get_shutdown_params(DWORD *level,
+                                 DWORD *flag);
 
         bool set_shutdown_params(DWORD level,
                                  DWORD flag);
 
         bool time_statistics(HANDLE proc_handle,
-                             FILETIME* creation_time,
-                             FILETIME* exit_time,
-                             FILETIME* kernel_time,
-                             FILETIME* user_time);
+                             FILETIME *creation_time,
+                             FILETIME *exit_time,
+                             FILETIME *kernel_time,
+                             FILETIME *user_time);
 
         DWORD system_version(DWORD pid);
 
         bool get_working_set_size(HANDLE proc_handle,
-                                  SIZE_T* min_working_set_size,
-                                  SIZE_T* max_working_set_size);
+                                  SIZE_T *min_working_set_size,
+                                  SIZE_T *max_working_set_size);
 
         bool set_working_set_size(HANDLE proc_handle,
                                   size_t min_working_set_size,
                                   size_t max_working_set_size);
 
-        bool get_processor_system_cycle_time(USHORT group,
-                                             SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION* buffer,
-                                             DWORD* ret_len);
+        bool get_processor_system_cycle_time(
+            USHORT group,
+            SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION *buffer,
+            DWORD *ret_len);
 
         bool is_microsoft_store_app(HANDLE proc_handle);
 
@@ -345,16 +346,16 @@ namespace YanLib::sys {
         bool query_full_image_name(HANDLE proc_handle,
                                    DWORD flag,
                                    wchar_t *exe_name,
-                                   DWORD* size);
+                                   DWORD *size);
 
         bool get_affinity_update_mode(HANDLE proc_handle,
-                                      DWORD* flag);
+                                      DWORD *flag);
 
         bool set_affinity_update_mode(HANDLE proc_handle,
                                       DWORD flag);
 
         bool all_thread_cycle_time(HANDLE proc_handle,
-                                   ULONG64* cycle_time);
+                                   ULONG64 *cycle_time);
 
         bool set_restriction_exemption(bool is_enable_exemption);
 

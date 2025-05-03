@@ -73,7 +73,8 @@ namespace YanLib::sys {
         return false;
     }
 
-    void thread_pool::set_cleanup_group(PTP_CLEANUP_GROUP_CANCEL_CALLBACK cgc_callback) {
+    void thread_pool::set_cleanup_group(
+        PTP_CLEANUP_GROUP_CANCEL_CALLBACK cgc_callback) {
         if (group) {
             CloseThreadpoolCleanupGroup(group);
         }
@@ -99,7 +100,7 @@ namespace YanLib::sys {
         SetThreadpoolCallbackPriority(&env, priority);
     }
 
-    bool thread_pool::get_stack_info(TP_POOL_STACK_INFORMATION* stack_info) {
+    bool thread_pool::get_stack_info(TP_POOL_STACK_INFORMATION *stack_info) {
         if (!QueryThreadpoolStackInformation(pool, stack_info)) {
             error_code = GetLastError();
             return false;
@@ -107,7 +108,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool thread_pool::set_stack_info(TP_POOL_STACK_INFORMATION* stack_info) {
+    bool thread_pool::set_stack_info(TP_POOL_STACK_INFORMATION *stack_info) {
         if (!SetThreadpoolStackInformation(pool, stack_info)) {
             error_code = GetLastError();
             return false;
@@ -130,11 +131,12 @@ namespace YanLib::sys {
         return true;
     }
 
-    TP_WORK* thread_pool::create_task(PTP_WORK_CALLBACK work_callback, void *context) {
+    TP_WORK *thread_pool::create_task(PTP_WORK_CALLBACK work_callback,
+                                      void *context) {
         if (!pool) {
             return nullptr;
         }
-        TP_WORK* task = CreateThreadpoolWork(work_callback, context, &env);
+        TP_WORK *task = CreateThreadpoolWork(work_callback, context, &env);
         if (!task) {
             error_code = GetLastError();
             return nullptr;
@@ -145,21 +147,21 @@ namespace YanLib::sys {
         return task;
     }
 
-    void thread_pool::submit_task(TP_WORK* work) {
+    void thread_pool::submit_task(TP_WORK *work) {
         SubmitThreadpoolWork(work);
     }
 
-    void thread_pool::wait_task(TP_WORK* work, bool is_cancel_pending) {
+    void thread_pool::wait_task(TP_WORK *work, bool is_cancel_pending) {
         WaitForThreadpoolWorkCallbacks(work,
                                        is_cancel_pending ? TRUE : FALSE);
     }
 
-    TP_TIMER* thread_pool::create_timer_task(PTP_TIMER_CALLBACK timer_callback,
+    TP_TIMER *thread_pool::create_timer_task(PTP_TIMER_CALLBACK timer_callback,
                                              void *context) {
         if (!pool) {
             return nullptr;
         }
-        TP_TIMER* timer = CreateThreadpoolTimer(timer_callback, context, &env);
+        TP_TIMER *timer = CreateThreadpoolTimer(timer_callback, context, &env);
         if (!timer) {
             error_code = GetLastError();
             return nullptr;
@@ -170,8 +172,8 @@ namespace YanLib::sys {
         return timer;
     }
 
-    bool thread_pool::submit_timer_task(TP_TIMER* timer,
-                                        FILETIME* due_time,
+    bool thread_pool::submit_timer_task(TP_TIMER *timer,
+                                        FILETIME *due_time,
                                         DWORD ms_period,
                                         DWORD window_length) {
         return SetThreadpoolTimerEx(timer,
@@ -180,22 +182,26 @@ namespace YanLib::sys {
                                     window_length);
     }
 
-    bool thread_pool::is_timer_set(TP_TIMER* timer) {
+    bool thread_pool::is_timer_set(TP_TIMER *timer) {
         return IsThreadpoolTimerSet(timer);
     }
 
-    void thread_pool::wait_timer_task(TP_TIMER* timer, bool is_cancel_pending) {
+    void thread_pool::wait_timer_task(TP_TIMER *timer,
+                                      bool is_cancel_pending) {
         WaitForThreadpoolTimerCallbacks(timer,
                                         is_cancel_pending ? TRUE : FALSE);
     }
 
-    TP_IO* thread_pool::create_io_task(HANDLE file_handle,
+    TP_IO *thread_pool::create_io_task(HANDLE file_handle,
                                        PTP_WIN32_IO_CALLBACK io_callback,
                                        void *context) {
         if (!pool || file_handle == INVALID_HANDLE_VALUE) {
             return nullptr;
         }
-        TP_IO* io = CreateThreadpoolIo(file_handle, io_callback, context, &env);
+        TP_IO *io = CreateThreadpoolIo(file_handle,
+                                       io_callback,
+                                       context,
+                                       &env);
         if (!io) {
             error_code = GetLastError();
             return nullptr;
@@ -206,25 +212,25 @@ namespace YanLib::sys {
         return io;
     }
 
-    void thread_pool::submit_io_task(TP_IO* io) {
+    void thread_pool::submit_io_task(TP_IO *io) {
         StartThreadpoolIo(io);
     }
 
-    void thread_pool::cancel_io_task(TP_IO* io) {
+    void thread_pool::cancel_io_task(TP_IO *io) {
         CancelThreadpoolIo(io);
     }
 
-    void thread_pool::wait_io_task(TP_IO* io, bool is_cancel_pending) {
+    void thread_pool::wait_io_task(TP_IO *io, bool is_cancel_pending) {
         WaitForThreadpoolIoCallbacks(io,
                                      is_cancel_pending ? TRUE : FALSE);
     }
 
-    TP_WAIT* thread_pool::create_wait_task(PTP_WAIT_CALLBACK wait_callback,
+    TP_WAIT *thread_pool::create_wait_task(PTP_WAIT_CALLBACK wait_callback,
                                            void *context) {
         if (!pool) {
             return nullptr;
         }
-        TP_WAIT* waiter = CreateThreadpoolWait(wait_callback, context, &env);
+        TP_WAIT *waiter = CreateThreadpoolWait(wait_callback, context, &env);
         if (!waiter) {
             error_code = GetLastError();
             return nullptr;
@@ -235,11 +241,13 @@ namespace YanLib::sys {
         return waiter;
     }
 
-    void thread_pool::submit_wait_task(TP_WAIT* wait, HANDLE h, FILETIME* timeout) {
+    void thread_pool::submit_wait_task(TP_WAIT *wait,
+                                       HANDLE h,
+                                       FILETIME *timeout) {
         SetThreadpoolWait(wait, h, timeout);
     }
 
-    void thread_pool::wait_wait_task(TP_WAIT* wait, bool is_cancel_pending) {
+    void thread_pool::wait_wait_task(TP_WAIT *wait, bool is_cancel_pending) {
         WaitForThreadpoolWaitCallbacks(wait,
                                        is_cancel_pending ? TRUE : FALSE);
     }
@@ -252,42 +260,45 @@ namespace YanLib::sys {
     }
 
     bool thread_pool::callback_maybe_run_long(
-        TP_CALLBACK_INSTANCE* callback_instance) {
+        TP_CALLBACK_INSTANCE *callback_instance) {
         return CallbackMayRunLong(callback_instance);
     }
 
     void thread_pool::detach_curr_thread_from_callback(
-        TP_CALLBACK_INSTANCE* callback_instance) {
+        TP_CALLBACK_INSTANCE *callback_instance) {
         DisassociateCurrentThreadFromCallback(callback_instance);
     }
 
     void thread_pool::free_library_when_callback_returns(
-        TP_CALLBACK_INSTANCE* callback_instance,
+        TP_CALLBACK_INSTANCE *callback_instance,
         HMODULE dll) {
         FreeLibraryWhenCallbackReturns(callback_instance, dll);
     }
 
     void thread_pool::leave_critical_section_when_callback_returns(
-        TP_CALLBACK_INSTANCE* callback_instance,
-        CRITICAL_SECTION* critical_section) {
-        LeaveCriticalSectionWhenCallbackReturns(callback_instance, critical_section);
+        TP_CALLBACK_INSTANCE *callback_instance,
+        CRITICAL_SECTION *critical_section) {
+        LeaveCriticalSectionWhenCallbackReturns(callback_instance,
+                                                critical_section);
     }
 
     void thread_pool::release_mutex_when_callback_returns(
-        TP_CALLBACK_INSTANCE* callback_instance,
+        TP_CALLBACK_INSTANCE *callback_instance,
         HANDLE mutex_handle) {
         ReleaseMutexWhenCallbackReturns(callback_instance, mutex_handle);
     }
 
     void thread_pool::release_semaphore_when_callback_returns(
-        TP_CALLBACK_INSTANCE* callback_instance,
+        TP_CALLBACK_INSTANCE *callback_instance,
         HANDLE semaphore_handle,
         DWORD count) {
-        ReleaseSemaphoreWhenCallbackReturns(callback_instance, semaphore_handle, count);
+        ReleaseSemaphoreWhenCallbackReturns(callback_instance,
+                                            semaphore_handle,
+                                            count);
     }
 
     void thread_pool::set_event_when_callback_returns(
-        TP_CALLBACK_INSTANCE* callback_instance,
+        TP_CALLBACK_INSTANCE *callback_instance,
         HANDLE event_handle) {
         SetEventWhenCallbackReturns(callback_instance, event_handle);
     }

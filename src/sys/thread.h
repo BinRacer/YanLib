@@ -31,41 +31,47 @@ namespace YanLib::sys {
 
         ~thread();
 
-        HANDLE create(LPTHREAD_START_ROUTINE start_addr,
-                      void *params,
-                      size_t stack_size = 0,
-                      SECURITY_ATTRIBUTES* security_attrs = nullptr);
+        HANDLE create(
+            LPTHREAD_START_ROUTINE start_addr,
+            void *params,
+            size_t stack_size = 0,
+            SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
-        HANDLE create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
-                                   void *params,
-                                   size_t stack_size = 0,
-                                   SECURITY_ATTRIBUTES* security_attrs = nullptr);
+        HANDLE create_with_suspend(
+            LPTHREAD_START_ROUTINE start_addr,
+            void *params,
+            size_t stack_size = 0,
+            SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
-        HANDLE create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                         void *params,
-                                         size_t stack_size,
-                                         SECURITY_ATTRIBUTES* security_attrs = nullptr);
+        HANDLE create_with_stack_reserve(
+            LPTHREAD_START_ROUTINE start_addr,
+            void *params,
+            size_t stack_size,
+            SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
-        HANDLE create_remote(HANDLE proc_handle,
-                             LPTHREAD_START_ROUTINE start_addr,
-                             void *params,
-                             size_t stack_size = 0,
-                             LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                             SECURITY_ATTRIBUTES* security_attrs = nullptr);
+        HANDLE create_remote(
+            HANDLE proc_handle,
+            LPTHREAD_START_ROUTINE start_addr,
+            void *params,
+            size_t stack_size = 0,
+            LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
+            SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
-        HANDLE create_remote_with_suspend(HANDLE proc_handle,
-                                          LPTHREAD_START_ROUTINE start_addr,
-                                          void *params,
-                                          size_t stack_size = 0,
-                                          LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                                          SECURITY_ATTRIBUTES* security_attrs = nullptr);
+        HANDLE create_remote_with_suspend(
+            HANDLE proc_handle,
+            LPTHREAD_START_ROUTINE start_addr,
+            void *params,
+            size_t stack_size = 0,
+            LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
+            SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
-        HANDLE create_remote_with_stack_reserve(HANDLE proc_handle,
-                                                LPTHREAD_START_ROUTINE start_addr,
-                                                void *params,
-                                                size_t stack_size,
-                                                LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                                                SECURITY_ATTRIBUTES* security_attrs = nullptr);
+        HANDLE create_remote_with_stack_reserve(
+            HANDLE proc_handle,
+            LPTHREAD_START_ROUTINE start_addr,
+            void *params,
+            size_t stack_size,
+            LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
+            SECURITY_ATTRIBUTES *security_attrs = nullptr);
 
         HANDLE curr_thread_handle();
 
@@ -75,9 +81,10 @@ namespace YanLib::sys {
 
         DWORD curr_process_id();
 
-        HANDLE tid_to_handle(DWORD thread_id,
-                             DWORD desired_access = THREAD_ALL_ACCESS,
-                             bool is_inherit_handle = false);
+        HANDLE tid_to_handle(
+            DWORD thread_id,
+            DWORD desired_access = THREAD_ALL_ACCESS,
+            bool is_inherit_handle = false);
 
         DWORD handle_to_tid(HANDLE thread_handle);
 
@@ -95,34 +102,40 @@ namespace YanLib::sys {
 
         bool tls_set(DWORD tls_index, void *tls_value);
 
-        DWORD wait_for_input_idle(HANDLE proc_handle, DWORD milli_seconds);
+        DWORD wait_for_input_idle(HANDLE proc_handle,
+                                  DWORD milli_seconds);
 
         bool attach_thread_input(DWORD id_attach,
                                  DWORD id_attach_to,
                                  bool is_attach);
 
-        bool init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                        DWORD attr_count,
-                                        DWORD flag,
-                                        SIZE_T* size);
+        bool init_proc_thread_attr_list(
+            LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+            DWORD attr_count,
+            DWORD flag,
+            SIZE_T *size);
 
-        bool update_proc_thread_attr(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                     DWORD flag,
-                                     DWORD_PTR attr,
-                                     void *value,
-                                     size_t bytes_size,
-                                     void *previous_value,
-                                     SIZE_T* ret_size);
+        bool update_proc_thread_attr(
+            LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
+            DWORD flag,
+            DWORD_PTR attr,
+            void *value,
+            size_t bytes_size,
+            void *previous_value,
+            SIZE_T *ret_size);
 
-        void delete_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list);
+        void delete_proc_thread_attr_list(
+            LPPROC_THREAD_ATTRIBUTE_LIST attr_list);
 
         DWORD suspend(HANDLE thread_handle);
 
         DWORD resume(HANDLE thread_handle);
 
-        bool wait(HANDLE thread_handle, DWORD milli_seconds = INFINITE);
+        bool wait(HANDLE thread_handle,
+                  DWORD milli_seconds = INFINITE);
 
-        bool wait_all(bool is_wait_all = true, DWORD milli_seconds = INFINITE);
+        bool wait_all(bool is_wait_all = true,
+                      DWORD milli_seconds = INFINITE);
 
         void sleep(DWORD milli_seconds);
 
@@ -159,10 +172,10 @@ namespace YanLib::sys {
                                 bool is_disable_priority_boost);
 
         bool time_statistics(HANDLE thread_handle,
-                             FILETIME* creation_time,
-                             FILETIME* exit_time,
-                             FILETIME* kernel_time,
-                             FILETIME* user_time);
+                             FILETIME *creation_time,
+                             FILETIME *exit_time,
+                             FILETIME *kernel_time,
+                             FILETIME *user_time);
 
         HRESULT get_description(HANDLE thread_handle,
                                 wchar_t **thread_description);
@@ -171,18 +184,20 @@ namespace YanLib::sys {
                                 const wchar_t *thread_description);
 
         bool get_group_affinity(HANDLE thread_handle,
-                                GROUP_AFFINITY* group_affinity);
+                                GROUP_AFFINITY *group_affinity);
 
-        bool set_group_affinity(HANDLE thread_handle,
-                                const GROUP_AFFINITY *group_affinity,
-                                GROUP_AFFINITY* previous_group_affinity);
+        bool set_group_affinity(
+            HANDLE thread_handle,
+            const GROUP_AFFINITY *group_affinity,
+            GROUP_AFFINITY *previous_group_affinity);
 
         bool get_ideal_processor(HANDLE thread_handle,
-                                 PROCESSOR_NUMBER* ideal_processor);
+                                 PROCESSOR_NUMBER *ideal_processor);
 
-        bool set_ideal_processor(HANDLE thread_handle,
-                                 PROCESSOR_NUMBER* ideal_processor,
-                                 PROCESSOR_NUMBER* previous_ideal_processor);
+        bool set_ideal_processor(
+            HANDLE thread_handle,
+            PROCESSOR_NUMBER *ideal_processor,
+            PROCESSOR_NUMBER *previous_ideal_processor);
 
         bool get_info(HANDLE thread_handle,
                       THREAD_INFORMATION_CLASS thread_info_class,
@@ -194,17 +209,18 @@ namespace YanLib::sys {
                       void *thread_info,
                       DWORD thread_information_size);
 
-        bool query_idle_processor_cycle_time(USHORT group,
-                                             ULONG* buffer_length,
-                                             ULONG64* processor_idle_cycle_time);
+        bool query_idle_processor_cycle_time(
+            USHORT group,
+            ULONG *buffer_length,
+            ULONG64 *processor_idle_cycle_time);
 
         bool query_cycle_time(HANDLE thread_handle,
-                              ULONG64* cycle_time);
+                              ULONG64 *cycle_time);
 
         DWORD_PTR set_affinity_mask(HANDLE thread_handle,
                                     DWORD_PTR thread_affinity_mask);
 
-        bool set_stack_guarantee(ULONG* bytes_stack);
+        bool set_stack_guarantee(ULONG *bytes_stack);
 
         [[nodiscard]] DWORD err_code() const;
 

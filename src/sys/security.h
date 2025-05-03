@@ -37,20 +37,23 @@ namespace YanLib::sys {
 
         HANDLE curr_session_token(ULONG session_id = 0);
 
-        HANDLE copy_token(HANDLE existing_token_handle = nullptr,
-                          DWORD desired_access = MAXIMUM_ALLOWED,
-                          SECURITY_ATTRIBUTES* token_attrs = nullptr,
-                          SECURITY_IMPERSONATION_LEVEL impersonation_level = SecurityIdentification,
-                          TOKEN_TYPE token_type = TokenPrimary);
+        HANDLE copy_token(
+            HANDLE existing_token_handle = nullptr,
+            DWORD desired_access = MAXIMUM_ALLOWED,
+            SECURITY_ATTRIBUTES *token_attrs = nullptr,
+            SECURITY_IMPERSONATION_LEVEL impersonation_level
+                    = SecurityIdentification,
+            TOKEN_TYPE token_type = TokenPrimary);
 
         void *create_env_block(HANDLE token_handle,
                                bool is_inherit = false);
 
-        SECURITY_ATTRIBUTES create_attrs(bool is_inherit = true,
-                                         PSECURITY_DESCRIPTOR security_descriptor = nullptr);
+        SECURITY_ATTRIBUTES create_attrs(
+            bool is_inherit = true,
+            PSECURITY_DESCRIPTOR security_descriptor = nullptr);
 
         SECURITY_DESCRIPTOR create_descriptor(bool is_dacl_present = true,
-                                              ACL* acl = nullptr,
+                                              ACL *acl = nullptr,
                                               bool is_dacl_defaulted = false);
 
         bool is_valid_descriptor(PSECURITY_DESCRIPTOR security_descriptor);

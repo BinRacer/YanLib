@@ -46,12 +46,12 @@ namespace YanLib::ui {
                           int x3, int y3,
                           int x4, int y4);
 
-        static bool polygon(HDC dc_handle, const POINT *point, int num);
+        static bool poly_gon(HDC dc_handle, const POINT *point, int num);
 
-        static bool poly_polygon(HDC dc_handle,
-                                 const POINT *point,
-                                 const INT *num_array,
-                                 int num);
+        static bool poly_poly_gon(HDC dc_handle,
+                                  const POINT *point,
+                                  const INT *num_array,
+                                  int num);
 
         static bool pie(HDC dc_handle,
                         int left, int top,

@@ -46,11 +46,11 @@ namespace YanLib::ui {
                      x4, y4);
     }
 
-    bool shape::polygon(HDC dc_handle, const POINT *point, int num) {
+    bool shape::poly_gon(HDC dc_handle, const POINT *point, int num) {
         return Polygon(dc_handle, point, num);
     }
 
-    bool shape::poly_polygon(HDC dc_handle,
+    bool shape::poly_poly_gon(HDC dc_handle,
                              const POINT *point,
                              const INT *num_array,
                              int num) {

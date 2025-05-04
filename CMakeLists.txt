@@ -160,6 +160,8 @@ add_library(YanLib STATIC
         src/ui/clip.h
         src/ui/palette.cpp
         src/ui/palette.h
+        src/ui/coordinate.cpp
+        src/ui/coordinate.h
 )
 
 target_include_directories(YanLib

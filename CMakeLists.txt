@@ -174,6 +174,8 @@ add_library(YanLib STATIC
         src/ui/gdi/bezier.h
         src/ui/gdi/pen.cpp
         src/ui/gdi/pen.h
+        src/ui/gdi/path.cpp
+        src/ui/gdi/path.h
 )
 
 target_include_directories(YanLib

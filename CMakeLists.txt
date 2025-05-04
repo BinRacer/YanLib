@@ -158,6 +158,8 @@ add_library(YanLib STATIC
         src/ui/brush.h
         src/ui/clip.cpp
         src/ui/clip.h
+        src/ui/palette.cpp
+        src/ui/palette.h
 )
 
 target_include_directories(YanLib

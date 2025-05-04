@@ -166,6 +166,8 @@ add_library(YanLib STATIC
         src/ui/gdi/shape.h
         src/ui/gdi/line.cpp
         src/ui/gdi/line.h
+        src/ui/gdi/pen.cpp
+        src/ui/gdi/pen.h
 )
 
 target_include_directories(YanLib

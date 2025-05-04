@@ -4,6 +4,7 @@
 
 #ifndef BITMAP_H
 #define BITMAP_H
+#include <utility>
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
@@ -38,27 +39,28 @@ namespace YanLib::ui::gdi {
                                         const BITMAPINFO *bitmap_info,
                                         UINT usage);
 
-        // need to call GetLastError() to get error details
-        static HBITMAP create_dib_section(HDC dc_handle,
-                                          const BITMAPINFO *bitmap_info,
-                                          UINT usage,
-                                          void **bits,
-                                          HANDLE section_handle,
-                                          DWORD offset);
+        // std::pair<result, error_code>
+        static std::pair<HBITMAP, DWORD> create_dib_section(
+            HDC dc_handle,
+            const BITMAPINFO *bitmap_info,
+            UINT usage,
+            void **bits,
+            HANDLE section_handle,
+            DWORD offset);
 
         static HBITMAP load_bitmap(HINSTANCE hinstance_handle,
                                    const wchar_t *bitmap_name);
 
-        // need to call GetLastError() to get error details
-        static bool bit_blt(HDC dc_handle_dst,
-                            int x,
-                            int y,
-                            int width,
-                            int height,
-                            HDC dc_handle_src,
-                            int x1,
-                            int y1,
-                            DWORD rop);
+        // std::pair<result, error_code>
+        static std::pair<bool, DWORD> bit_blt(HDC dc_handle_dst,
+                                              int x,
+                                              int y,
+                                              int width,
+                                              int height,
+                                              HDC dc_handle_src,
+                                              int x1,
+                                              int y1,
+                                              DWORD rop);
 
         static bool plg_blt(HDC dc_handle_dst,
                             const POINT *point,

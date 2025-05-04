@@ -39,6 +39,40 @@ namespace YanLib::ui::gdi {
         return DeleteDC(dc_handle);
     }
 
+    std::pair<bool, DWORD> dc::scroll_dc(HDC dc_handle,
+                                         int x,
+                                         int y,
+                                         const RECT *rect_scroll,
+                                         const RECT *rect_clip,
+                                         HRGN region_update_handle,
+                                         RECT *rect_update) {
+        DWORD error_code = 0;
+        if (!ScrollDC(dc_handle,
+                      x,
+                      y,
+                      rect_scroll,
+                      rect_clip,
+                      region_update_handle,
+                      rect_update)) {
+            error_code = GetLastError();
+            return std::make_pair(false, error_code);
+        }
+        return std::make_pair(true, error_code);
+    }
+
+    std::pair<DWORD, DWORD> dc::get_layout(HDC dc_handle) {
+        DWORD result = GetLayout(dc_handle);
+        DWORD error_code = 0;
+        if (result == GDI_ERROR) {
+            error_code = GetLastError();
+        }
+        return std::make_pair(result, error_code);
+    }
+
+    DWORD dc::set_layout(HDC dc_handle, DWORD value) {
+        return SetLayout(dc_handle, value);
+    }
+
     HDC dc::get_window_dc(HWND hwnd) {
         return GetWindowDC(hwnd);
     }

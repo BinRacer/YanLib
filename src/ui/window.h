@@ -75,11 +75,11 @@ namespace YanLib::ui {
 
         bool get_class_info(HINSTANCE instance_handle,
                             const wchar_t *class_name,
-                            WNDCLASSW* wnd_class);
+                            WNDCLASSW *wnd_class);
 
         bool get_class_info(HINSTANCE instance_handle,
                             const wchar_t *class_name,
-                            WNDCLASSEXW* wnd_class);
+                            WNDCLASSEXW *wnd_class);
 
         DWORD get_class_long(HWND hwnd, int index);
 
@@ -216,7 +216,7 @@ namespace YanLib::ui {
 
         int map_window_points(HWND hwnd_from,
                               HWND hwnd_to,
-                              POINT* point,
+                              POINT *point,
                               UINT count);
 
         bool close_window(HWND hwnd);
@@ -249,7 +249,7 @@ namespace YanLib::ui {
 
         bool flash_window(HWND hwnd, bool invert);
 
-        bool flash_window(FLASHWINFO* flash_info);
+        bool flash_window(FLASHWINFO *flash_info);
 
         HWND get_active_window();
 
@@ -310,7 +310,7 @@ namespace YanLib::ui {
                                          UINT32 size,
                                          const void *config);
 
-        bool get_window_info(HWND hwnd, WINDOWINFO* window_info);
+        bool get_window_info(HWND hwnd, WINDOWINFO *window_info);
 
         LONG get_window_long(HWND hwnd, int index);
 
@@ -334,28 +334,28 @@ namespace YanLib::ui {
         bool set_window_placement(HWND hwnd,
                                   const WINDOWPLACEMENT *window_placement);
 
-        bool get_window_rect(HWND hwnd, RECT* rect);
+        bool get_window_rect(HWND hwnd, RECT *rect);
 
-        bool adjust_window_rect(RECT* rect, DWORD style, bool menu);
+        bool adjust_window_rect(RECT *rect, DWORD style, bool menu);
 
-        bool adjust_window_rect(RECT* rect,
+        bool adjust_window_rect(RECT *rect,
                                 DWORD style,
                                 bool menu,
                                 DWORD ext_style);
 
-        bool adjust_window_rect_for_dpi(RECT* rect,
+        bool adjust_window_rect_for_dpi(RECT *rect,
                                         DWORD style,
                                         bool menu,
                                         DWORD ext_style,
                                         UINT dpi);
 
-        int get_window_rgn(HWND hwnd, HRGN hrgn);
+        int get_window_region(HWND hwnd, HRGN region_handle);
 
-        int set_window_rgn(HWND hwnd,
-                           HRGN hrgn,
-                           bool is_redraw);
+        int set_window_region(HWND hwnd,
+                              HRGN region_handle,
+                              bool is_redraw);
 
-        int get_window_rgn_box(HWND hwnd, RECT* rect);
+        int get_window_region_box(HWND hwnd, RECT *rect);
 
         int get_window_text(HWND hwnd,
                             wchar_t *text,
@@ -367,7 +367,7 @@ namespace YanLib::ui {
         int get_window_text_length(HWND hwnd);
 
         DWORD get_window_thread_process_id(HWND hwnd,
-                                           DWORD* pid);
+                                           DWORD *pid);
 
         WORD get_window_word(HWND hwnd, int index);
 
@@ -410,7 +410,7 @@ namespace YanLib::ui {
 
         bool redraw_window(HWND hwnd,
                            const RECT *rect,
-                           HRGN hrgn,
+                           HRGN region_handle,
                            UINT flag);
 
         bool scroll_window(HWND hwnd,
@@ -424,8 +424,8 @@ namespace YanLib::ui {
                           int dy,
                           const RECT *rect_scroll,
                           const RECT *rect_clip,
-                          HRGN hrgn_update,
-                          RECT* rect_update,
+                          HRGN region_handle_update,
+                          RECT *rect_update,
                           UINT flag);
 
         void switch_to_this_window(HWND hwnd, bool unknown = false);
@@ -444,22 +444,6 @@ namespace YanLib::ui {
         bool restore_window(HWND hwnd);
 
         bool is_window_minimize(HWND hwnd);
-
-        bool scroll_dc(HDC dc_handle,
-                       int x,
-                       int y,
-                       const RECT *rect_scroll,
-                       const RECT *rect_clip,
-                       HRGN region_update_handle,
-                       RECT* rect_update);
-
-        DWORD get_layout(HDC dc_handle);
-
-        DWORD set_layout(HDC dc_handle, DWORD value);
-
-        bool get_client_rect(HWND hwnd, RECT* rect);
-
-        DWORD get_region_data(HRGN region_handle, DWORD size, RGNDATA* buf);
 
         [[nodiscard]] DWORD err_code() const;
 

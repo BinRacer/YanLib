@@ -819,15 +819,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    int window::get_window_rgn(HWND hwnd, HRGN hrgn) {
+    int window::get_window_region(HWND hwnd, HRGN hrgn) {
         return GetWindowRgn(hwnd, hrgn);
     }
 
-    int window::set_window_rgn(HWND hwnd, HRGN hrgn, bool is_redraw) {
-        return SetWindowRgn(hwnd, hrgn, is_redraw ? TRUE : FALSE);
+    int window::set_window_region(HWND hwnd, HRGN region_handle, bool is_redraw) {
+        return SetWindowRgn(hwnd, region_handle, is_redraw ? TRUE : FALSE);
     }
 
-    int window::get_window_rgn_box(HWND hwnd, RECT* rect) {
+    int window::get_window_region_box(HWND hwnd, RECT* rect) {
         return GetWindowRgnBox(hwnd, rect);
     }
 
@@ -972,11 +972,11 @@ namespace YanLib::ui {
 
     bool window::redraw_window(HWND hwnd,
                                const RECT *rect,
-                               HRGN hrgn,
+                               HRGN region_handle,
                                UINT flag) {
         return RedrawWindow(hwnd,
                             rect,
-                            hrgn,
+                            region_handle,
                             flag);
     }
 
@@ -997,7 +997,7 @@ namespace YanLib::ui {
                               int dy,
                               const RECT *rect_scroll,
                               const RECT *rect_clip,
-                              HRGN hrgn_update,
+                              HRGN region_handle_update,
                               RECT* rect_update,
                               UINT flag) {
         int result = ScrollWindowEx(hwnd,
@@ -1005,7 +1005,7 @@ namespace YanLib::ui {
                                     dy,
                                     rect_scroll,
                                     rect_clip,
-                                    hrgn_update,
+                                    region_handle_update,
                                     rect_update,
                                     flag);
         if (!result) {
@@ -1054,54 +1054,6 @@ namespace YanLib::ui {
 
     bool window::is_window_minimize(HWND hwnd) {
         return IsIconic(hwnd);
-    }
-
-    bool window::scroll_dc(HDC dc_handle,
-                           int x,
-                           int y,
-                           const RECT *rect_scroll,
-                           const RECT *rect_clip,
-                           HRGN region_update_handle,
-                           RECT* rect_update) {
-        if (!ScrollDC(dc_handle,
-                      x,
-                      y,
-                      rect_scroll,
-                      rect_clip,
-                      region_update_handle,
-                      rect_update)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    DWORD window::get_layout(HDC dc_handle) {
-        DWORD result = GetLayout(dc_handle);
-        if (result == GDI_ERROR) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
-    DWORD window::set_layout(HDC dc_handle, DWORD value) {
-        return SetLayout(dc_handle, value);
-    }
-
-    bool window::get_client_rect(HWND hwnd, RECT* rect) {
-        if (!GetClientRect(hwnd, rect)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    DWORD window::get_region_data(HRGN region_handle, DWORD size, RGNDATA* buf) {
-        DWORD result = GetRegionData(region_handle, size, buf);
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
     }
 
     DWORD window::err_code() const {

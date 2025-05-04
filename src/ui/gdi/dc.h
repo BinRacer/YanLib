@@ -4,6 +4,7 @@
 
 #ifndef DC_H
 #define DC_H
+#include <utility>
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
@@ -41,6 +42,20 @@ namespace YanLib::ui::gdi {
 
         static bool delete_dc(HDC dc_handle);
 
+        // std::pair<result, error_code>
+        static std::pair<bool, DWORD> scroll_dc(HDC dc_handle,
+                                         int x,
+                                         int y,
+                                         const RECT *rect_scroll,
+                                         const RECT *rect_clip,
+                                         HRGN region_update_handle,
+                                         RECT *rect_update);
+
+        // std::pair<result, error_code>
+        static std::pair<DWORD, DWORD> get_layout(HDC dc_handle);
+
+        static DWORD set_layout(HDC dc_handle, DWORD value);
+
         static HDC get_window_dc(HWND hwnd);
 
         static HWND window_from_dc(HDC dc_handle);
@@ -57,7 +72,7 @@ namespace YanLib::ui::gdi {
 
         static COLORREF set_dc_brush_color(HDC dc_handle, COLORREF color);
 
-        static bool get_dc_org(HDC dc_handle, POINT* point);
+        static bool get_dc_org(HDC dc_handle, POINT *point);
 
         static COLORREF get_dc_pen_color(HDC dc_handle);
 

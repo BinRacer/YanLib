@@ -35,18 +35,24 @@ namespace YanLib::ui::gdi {
                               usage);
     }
 
-    HBITMAP bitmap::create_dib_section(HDC dc_handle,
-                                       const BITMAPINFO *bitmap_info,
-                                       UINT usage,
-                                       void **bits,
-                                       HANDLE section_handle,
-                                       DWORD offset) {
-        return CreateDIBSection(dc_handle,
-                                bitmap_info,
-                                usage,
-                                bits,
-                                section_handle,
-                                offset);
+    std::pair<HBITMAP, DWORD> bitmap::create_dib_section(
+        HDC dc_handle,
+        const BITMAPINFO *bitmap_info,
+        UINT usage,
+        void **bits,
+        HANDLE section_handle,
+        DWORD offset) {
+        HBITMAP result = CreateDIBSection(dc_handle,
+                                          bitmap_info,
+                                          usage,
+                                          bits,
+                                          section_handle,
+                                          offset);
+        DWORD error_code = 0;
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return std::make_pair(result, error_code);
     }
 
     HBITMAP bitmap::load_bitmap(HINSTANCE hinstance_handle,
@@ -54,24 +60,29 @@ namespace YanLib::ui::gdi {
         return LoadBitmapW(hinstance_handle, bitmap_name);
     }
 
-    bool bitmap::bit_blt(HDC dc_handle_dst,
-                         int x,
-                         int y,
-                         int width,
-                         int height,
-                         HDC dc_handle_src,
-                         int x1,
-                         int y1,
-                         DWORD rop) {
-        return BitBlt(dc_handle_dst,
-                      x,
-                      y,
-                      width,
-                      height,
-                      dc_handle_src,
-                      x1,
-                      y1,
-                      rop);
+    std::pair<bool, DWORD> bitmap::bit_blt(HDC dc_handle_dst,
+                                           int x,
+                                           int y,
+                                           int width,
+                                           int height,
+                                           HDC dc_handle_src,
+                                           int x1,
+                                           int y1,
+                                           DWORD rop) {
+        DWORD error_code = 0;
+        if (!BitBlt(dc_handle_dst,
+                    x,
+                    y,
+                    width,
+                    height,
+                    dc_handle_src,
+                    x1,
+                    y1,
+                    rop)) {
+            error_code = GetLastError();
+            return std::make_pair(false, error_code);
+        }
+        return std::make_pair(true, error_code);
     }
 
     bool bitmap::plg_blt(HDC dc_handle_dst,

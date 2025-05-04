@@ -4,6 +4,7 @@
 
 #ifndef COORDINATE_H
 #define COORDINATE_H
+#include <utility>
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
@@ -69,11 +70,11 @@ namespace YanLib::ui::gdi {
 
         static bool set_world_transform(HDC dc_handle, const XFORM *xfrom);
 
-        // need to call GetLastError() to get error details
-        static int map_window_points(HWND hwnd_from,
-                                     HWND hwnd_to,
-                                     POINT *point,
-                                     UINT num);
+        // std::pair<result, error_code>
+        static std::pair<int, DWORD> map_window_points(HWND hwnd_from,
+                                                       HWND hwnd_to,
+                                                       POINT *point,
+                                                       UINT num);
 
         static bool modify_world_transform(HDC dc_handle,
                                            const XFORM *xfrom,

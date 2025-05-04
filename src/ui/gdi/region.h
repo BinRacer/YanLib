@@ -4,6 +4,7 @@
 
 #ifndef REGION_H
 #define REGION_H
+#include <utility>
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
@@ -86,7 +87,7 @@ namespace YanLib::ui::gdi {
                                     int right,
                                     int bottom);
 
-        static int get_region_box(HRGN region_handle, RECT* rect);
+        static int get_region_box(HRGN region_handle, RECT *rect);
 
         static int get_update_region(HWND hwnd, HRGN region_handle, bool is_erase);
 
@@ -95,6 +96,11 @@ namespace YanLib::ui::gdi {
         static bool invalidate_region(HWND hwnd, HRGN region_handle, bool is_erase);
 
         static int exclude_update_region(HDC dc_handle, HWND hwnd);
+
+        // std::pair<result, error_code>
+        static std::pair<DWORD, DWORD> get_region_data(HRGN region_handle,
+                                                       DWORD size,
+                                                       RGNDATA *buf);
     };
 }
 #endif //REGION_H

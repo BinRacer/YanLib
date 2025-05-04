@@ -132,4 +132,15 @@ namespace YanLib::ui::gdi {
     int region::exclude_update_region(HDC dc_handle, HWND hwnd) {
         return ExcludeUpdateRgn(dc_handle, hwnd);
     }
+
+    std::pair<DWORD, DWORD> region::get_region_data(HRGN region_handle,
+                                                    DWORD size,
+                                                    RGNDATA *buf) {
+        DWORD result = GetRegionData(region_handle, size, buf);
+        DWORD error_code = 0;
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return std::make_pair(result, error_code);
+    }
 }

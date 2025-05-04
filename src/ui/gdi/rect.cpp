@@ -89,4 +89,13 @@ namespace YanLib::ui::gdi {
     bool rect::get_update_rect(HWND hwnd, RECT *rect, bool is_erase) {
         return GetUpdateRect(hwnd, rect, is_erase);
     }
+
+    std::pair<bool, DWORD> rect::get_client_rect(HWND hwnd, RECT *rect) {
+        DWORD error_code = 0;
+        if (!GetClientRect(hwnd, rect)) {
+            error_code = GetLastError();
+            return std::make_pair(false, error_code);
+        }
+        return std::make_pair(true, error_code);
+    }
 }

@@ -146,6 +146,20 @@ namespace YanLib::ui {
                           rop);
     }
 
+    bool bitmap::pat_blt(HDC dc_handle,
+                         int x,
+                         int y,
+                         int width,
+                         int height,
+                         DWORD rop) {
+        return PatBlt(dc_handle,
+                      x,
+                      y,
+                      width,
+                      height,
+                      rop);
+    }
+
     bool bitmap::transparent_blt(HDC dc_handle_dst,
                                  int x_dst,
                                  int y_dst,
@@ -171,7 +185,7 @@ namespace YanLib::ui {
     }
 
     bool bitmap::gradient_fill(HDC dc_handle,
-                               TRIVERTEX* vertex,
+                               TRIVERTEX *vertex,
                                ULONG vertex_num,
                                void *mesh,
                                ULONG mesh_num,
@@ -248,14 +262,14 @@ namespace YanLib::ui {
                           blend_function);
     }
 
-    bool bitmap::get_bitmap_dimension(HBITMAP bitmap_handle, SIZE* size) {
+    bool bitmap::get_bitmap_dimension(HBITMAP bitmap_handle, SIZE *size) {
         return GetBitmapDimensionEx(bitmap_handle, size);
     }
 
     bool bitmap::set_bitmap_dimension(HBITMAP bitmap_handle,
                                       int width,
                                       int height,
-                                      SIZE* size) {
+                                      SIZE *size) {
         return SetBitmapDimensionEx(bitmap_handle, width, height, size);
     }
 
@@ -278,7 +292,7 @@ namespace YanLib::ui {
                             UINT start_line,
                             UINT line_num,
                             void *bits,
-                            BITMAPINFO* bitmap_info,
+                            BITMAPINFO *bitmap_info,
                             UINT usage) {
         return GetDIBits(dc_handle,
                          bitmap_handle,

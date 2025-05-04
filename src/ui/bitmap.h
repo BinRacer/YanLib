@@ -96,6 +96,13 @@ namespace YanLib::ui {
                                 int height_src,
                                 DWORD rop);
 
+        static bool pat_blt(HDC dc_handle,
+                            int x,
+                            int y,
+                            int width,
+                            int height,
+                            DWORD rop);
+
         static bool transparent_blt(HDC dc_handle_dst,
                                     int x_dst,
                                     int y_dst,
@@ -109,7 +116,7 @@ namespace YanLib::ui {
                                     UINT transparent);
 
         static bool gradient_fill(HDC dc_handle,
-                                  TRIVERTEX* vertex,
+                                  TRIVERTEX *vertex,
                                   ULONG vertex_num,
                                   void *mesh,
                                   ULONG mesh_num,
@@ -147,12 +154,12 @@ namespace YanLib::ui {
                                 int height_src,
                                 BLENDFUNCTION blend_function);
 
-        static bool get_bitmap_dimension(HBITMAP bitmap_handle, SIZE* size);
+        static bool get_bitmap_dimension(HBITMAP bitmap_handle, SIZE *size);
 
         static bool set_bitmap_dimension(HBITMAP bitmap_handle,
                                          int width,
                                          int height,
-                                         SIZE* size);
+                                         SIZE *size);
 
         static UINT get_dib_color_table(HDC dc_handle,
                                         UINT start_index,
@@ -169,7 +176,7 @@ namespace YanLib::ui {
                                UINT start_line,
                                UINT line_num,
                                void *bits,
-                               BITMAPINFO* bitmap_info,
+                               BITMAPINFO *bitmap_info,
                                UINT usage);
 
         static int set_di_bits(HDC dc_handle,

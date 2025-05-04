@@ -154,6 +154,8 @@ add_library(YanLib STATIC
         src/ui/font.h
         src/ui/text.cpp
         src/ui/text.h
+        src/ui/brush.cpp
+        src/ui/brush.h
 )
 
 target_include_directories(YanLib

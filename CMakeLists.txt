@@ -164,6 +164,8 @@ add_library(YanLib STATIC
         src/ui/coordinate.h
         src/ui/shape.cpp
         src/ui/shape.h
+        src/ui/line.cpp
+        src/ui/line.h
 )
 
 target_include_directories(YanLib

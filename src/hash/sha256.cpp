@@ -148,7 +148,7 @@ namespace YanLib::hash {
                     size_t block_size = (total_size - offset) > BLOCKSIZE
                                             ? BLOCKSIZE
                                             : total_size - offset;
-                    BYTE *block_ptr = data_bytes.data() + offset;
+                    uint8_t *block_ptr = data_bytes.data() + offset;
                     if (!CryptHashData(crypt_hash_handle,
                                        block_ptr,
                                        static_cast<DWORD>(block_size),

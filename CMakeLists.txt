@@ -144,6 +144,8 @@ add_library(YanLib STATIC
         src/ui/gdi/bitmap.h
         src/ui/gdi/display.cpp
         src/ui/gdi/display.h
+        src/ui/gdi/monitor.cpp
+        src/ui/gdi/monitor.h
         src/ui/gdi/dc.cpp
         src/ui/gdi/dc.h
         src/ui/gdi/rect.cpp
@@ -166,6 +168,10 @@ add_library(YanLib STATIC
         src/ui/gdi/shape.h
         src/ui/gdi/line.cpp
         src/ui/gdi/line.h
+        src/ui/gdi/arc.cpp
+        src/ui/gdi/arc.h
+        src/ui/gdi/bezier.cpp
+        src/ui/gdi/bezier.h
         src/ui/gdi/pen.cpp
         src/ui/gdi/pen.h
 )

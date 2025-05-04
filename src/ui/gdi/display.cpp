@@ -15,13 +15,6 @@ namespace YanLib::ui::gdi {
                                    flag);
     }
 
-    bool display::enum_display_monitors(HDC dc_handle,
-                                        const RECT *rect,
-                                        MONITORENUMPROC monitor_enum_proc,
-                                        LPARAM data) {
-        return EnumDisplayMonitors(dc_handle, rect, monitor_enum_proc, data);
-    }
-
     bool display::enum_display_settings(const wchar_t *device_name,
                                         DWORD mode,
                                         DEVMODEW *device_mode) {
@@ -120,28 +113,5 @@ namespace YanLib::ui::gdi {
                                         hwnd,
                                         flag,
                                         l_param);
-    }
-
-    HMONITOR display::monitor_from_point(POINT point, DWORD flag) {
-        return MonitorFromPoint(point, flag);
-    }
-
-    HMONITOR display::monitor_from_rect(const RECT *rect, DWORD flag) {
-        return MonitorFromRect(rect, flag);
-    }
-
-    bool display::get_monitor_info(HMONITOR monitor_handle,
-                                   MONITORINFO *monitor_info) {
-        return GetMonitorInfoW(monitor_handle, monitor_info);
-    }
-
-    bool display::logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
-                                                                POINT *point) {
-        return LogicalToPhysicalPointForPerMonitorDPI(hwnd, point);
-    }
-
-    bool display::physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
-                                                                POINT *point) {
-        return PhysicalToLogicalPointForPerMonitorDPI(hwnd, point);
     }
 }

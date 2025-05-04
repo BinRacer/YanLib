@@ -40,11 +40,13 @@ namespace YanLib::ui {
     }
 
     bool clip::rect_visible(HDC dc_handle, const RECT *rect) {
-        return RectVisible(dc_handle, rect);
+        int is_ok = RectVisible(dc_handle, rect);
+        return is_ok == TRUE || is_ok == 2;
     }
 
     bool clip::point_visible(HDC dc_handle, int x, int y) {
-        return PtVisible(dc_handle, x, y);
+        int is_ok = PtVisible(dc_handle, x, y);
+        return is_ok == TRUE;
     }
 
     int clip::get_clip_box(HDC dc_handle, RECT *rect) {

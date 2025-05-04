@@ -6,7 +6,7 @@
 #define BRUSH_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class brush {
     public:
         brush(const brush &other) = delete;

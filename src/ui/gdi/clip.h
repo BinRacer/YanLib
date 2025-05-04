@@ -6,7 +6,7 @@
 #define CLIP_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class clip {
     public:
         clip(const clip &other) = delete;

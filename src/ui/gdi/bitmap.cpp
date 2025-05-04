@@ -4,7 +4,7 @@
 
 #include "bitmap.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     HBITMAP bitmap::create_bitmap(int width,
                                   int height,
                                   UINT planes,

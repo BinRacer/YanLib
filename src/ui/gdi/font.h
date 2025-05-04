@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class font {
     public:
         font(const font &other) = delete;

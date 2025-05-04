@@ -6,7 +6,7 @@
 #define TEXT_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class text {
     public:
         text(const text &other) = delete;

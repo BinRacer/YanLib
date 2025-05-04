@@ -6,7 +6,7 @@
 #define DC_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class dc {
     public:
         dc(const dc &other) = delete;

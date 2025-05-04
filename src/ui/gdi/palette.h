@@ -6,7 +6,7 @@
 #define PALETTE_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class palette {
     public:
         palette(const palette &other) = delete;

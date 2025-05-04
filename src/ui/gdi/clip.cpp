@@ -4,9 +4,7 @@
 
 #include "clip.h"
 
-#include "brush.h"
-
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     bool clip::select_clip_path(HDC dc_handle, int mode) {
         return SelectClipPath(dc_handle, mode);
     }

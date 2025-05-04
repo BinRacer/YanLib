@@ -7,7 +7,7 @@
 #include <cstdint>
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class line {
     public:
         line(const line &other) = delete;

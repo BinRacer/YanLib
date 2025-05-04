@@ -4,10 +4,10 @@
 
 #include "display.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     bool display::enum_display_devices(const wchar_t *device_name,
                                        DWORD device_index,
-                                       DISPLAY_DEVICEW* display_device,
+                                       DISPLAY_DEVICEW *display_device,
                                        DWORD flag) {
         return EnumDisplayDevicesW(device_name,
                                    device_index,
@@ -16,7 +16,7 @@ namespace YanLib::ui {
     }
 
     bool display::enum_display_monitors(HDC dc_handle,
-                                        const RECT* rect,
+                                        const RECT *rect,
                                         MONITORENUMPROC monitor_enum_proc,
                                         LPARAM data) {
         return EnumDisplayMonitors(dc_handle, rect, monitor_enum_proc, data);
@@ -126,22 +126,22 @@ namespace YanLib::ui {
         return MonitorFromPoint(point, flag);
     }
 
-    HMONITOR display::monitor_from_rect(const RECT* rect, DWORD flag) {
+    HMONITOR display::monitor_from_rect(const RECT *rect, DWORD flag) {
         return MonitorFromRect(rect, flag);
     }
 
     bool display::get_monitor_info(HMONITOR monitor_handle,
-                                   MONITORINFO* monitor_info) {
+                                   MONITORINFO *monitor_info) {
         return GetMonitorInfoW(monitor_handle, monitor_info);
     }
 
     bool display::logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
-                                                                POINT* point) {
+                                                                POINT *point) {
         return LogicalToPhysicalPointForPerMonitorDPI(hwnd, point);
     }
 
     bool display::physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
-                                                                POINT* point) {
+                                                                POINT *point) {
         return PhysicalToLogicalPointForPerMonitorDPI(hwnd, point);
     }
 }

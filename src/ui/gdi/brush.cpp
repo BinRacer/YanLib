@@ -4,7 +4,7 @@
 
 #include "brush.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     HBRUSH brush::create_solid_brush(COLORREF color) {
         return CreateSolidBrush(color);
     }

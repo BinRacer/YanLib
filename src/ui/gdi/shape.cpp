@@ -4,9 +4,7 @@
 
 #include "shape.h"
 
-#include "dc.h"
-
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     bool shape::rectangle(HDC dc_handle, int left, int top, int right, int bottom) {
         return Rectangle(dc_handle, left, top, right, bottom);
     }
@@ -51,9 +49,9 @@ namespace YanLib::ui {
     }
 
     bool shape::poly_poly_gon(HDC dc_handle,
-                             const POINT *point,
-                             const INT *num_array,
-                             int num) {
+                              const POINT *point,
+                              const INT *num_array,
+                              int num) {
         return PolyPolygon(dc_handle, point, num_array, num);
     }
 

@@ -6,7 +6,7 @@
 #define RECT_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class rect {
     public:
         rect(const rect &other) = delete;

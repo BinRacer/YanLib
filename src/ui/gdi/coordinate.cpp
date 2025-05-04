@@ -4,7 +4,7 @@
 
 #include "coordinate.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     bool coordinate::client_to_screen(HWND hwnd, POINT *point) {
         return ClientToScreen(hwnd, point);
     }

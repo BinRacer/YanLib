@@ -6,7 +6,7 @@
 #define REGION_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class region {
     public:
         region(const region &other) = delete;

@@ -4,7 +4,7 @@
 
 #include "dc.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     HDC dc::create_dc(const wchar_t *driver_name,
                       const wchar_t *device_name,
                       const wchar_t *port,
@@ -71,7 +71,7 @@ namespace YanLib::ui {
         return SetDCBrushColor(dc_handle, color);
     }
 
-    bool dc::get_dc_org(HDC dc_handle, POINT* point) {
+    bool dc::get_dc_org(HDC dc_handle, POINT *point) {
         return GetDCOrgEx(dc_handle, point);
     }
 

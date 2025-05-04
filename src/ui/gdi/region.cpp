@@ -4,7 +4,7 @@
 
 #include "region.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     HRGN region::create_rect_region(int x1, int y1, int x2, int y2) {
         return CreateRectRgn(x1, y1, x2, y2);
     }
@@ -113,7 +113,7 @@ namespace YanLib::ui {
         return SetRectRgn(region_handle, left, top, right, bottom);
     }
 
-    int region::get_region_box(HRGN region_handle, RECT* rect) {
+    int region::get_region_box(HRGN region_handle, RECT *rect) {
         return GetRgnBox(region_handle, rect);
     }
 

@@ -6,7 +6,7 @@
 #define COORDINATE_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class coordinate {
     public:
         coordinate(const coordinate &other) = delete;

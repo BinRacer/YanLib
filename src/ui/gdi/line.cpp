@@ -4,7 +4,7 @@
 
 #include "line.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     bool line::line_to(HDC dc_handle, int x, int y) {
         return LineTo(dc_handle, x, y);
     }

@@ -6,7 +6,7 @@
 #define DISPLAY_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class display {
     public:
         display(const display &other) = delete;

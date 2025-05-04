@@ -4,7 +4,7 @@
 
 #include "text.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     bool text::text_out(HDC dc_handle,
                         int x,
                         int y,
@@ -85,7 +85,7 @@ namespace YanLib::ui {
     bool text::get_char_width_float(HDC dc_handle,
                                     UINT code_point_first,
                                     UINT code_point_last,
-                                    FLOAT* buf) {
+                                    FLOAT *buf) {
         return GetCharWidthFloatW(dc_handle, code_point_first, code_point_last, buf);
     }
 
@@ -170,11 +170,11 @@ namespace YanLib::ui {
 
     DWORD text::get_kerning_pairs(HDC dc_handle,
                                   DWORD pairs,
-                                  KERNINGPAIR* kern_pair) {
+                                  KERNINGPAIR *kern_pair) {
         return GetKerningPairsW(dc_handle, pairs, kern_pair);
     }
 
-    bool text::get_rasterizer_caps(RASTERIZER_STATUS* rasterizer_status,
+    bool text::get_rasterizer_caps(RASTERIZER_STATUS *rasterizer_status,
                                    UINT size) {
         return GetRasterizerCaps(rasterizer_status, size);
     }
@@ -219,7 +219,7 @@ namespace YanLib::ui {
         return GetTextFaceW(dc_handle, cch_size, buf);
     }
 
-    bool text::get_text_metrics(HDC dc_handle, TEXTMETRICW* text_metric) {
+    bool text::get_text_metrics(HDC dc_handle, TEXTMETRICW *text_metric) {
         return GetTextMetricsW(dc_handle, text_metric);
     }
 

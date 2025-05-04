@@ -6,7 +6,7 @@
 #define BITMAP_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class bitmap {
     public:
         bitmap(const bitmap &other) = delete;

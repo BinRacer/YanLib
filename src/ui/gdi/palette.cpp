@@ -4,7 +4,7 @@
 
 #include "palette.h"
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     HPALETTE palette::create_palette(const LOGPALETTE *log_palette) {
         return CreatePalette(log_palette);
     }

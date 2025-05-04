@@ -6,7 +6,7 @@
 #define SHAPE_H
 #include <Windows.h>
 
-namespace YanLib::ui {
+namespace YanLib::ui::gdi {
     class shape {
     public:
         shape(const shape &other) = delete;

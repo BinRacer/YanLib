@@ -126,8 +126,6 @@ add_library(YanLib STATIC
         src/ui/cursor.h
         src/ui/caret.cpp
         src/ui/caret.h
-        src/ui/bitmap.cpp
-        src/ui/bitmap.h
         src/ui/image.cpp
         src/ui/image.h
         src/ui/clipboard.cpp
@@ -142,30 +140,32 @@ add_library(YanLib STATIC
         src/ui/touch.h
         src/ui/accelerator.cpp
         src/ui/accelerator.h
-        src/ui/display.cpp
-        src/ui/display.h
-        src/ui/dc.cpp
-        src/ui/dc.h
-        src/ui/rect.cpp
-        src/ui/rect.h
-        src/ui/region.cpp
-        src/ui/region.h
-        src/ui/font.cpp
-        src/ui/font.h
-        src/ui/text.cpp
-        src/ui/text.h
-        src/ui/brush.cpp
-        src/ui/brush.h
-        src/ui/clip.cpp
-        src/ui/clip.h
-        src/ui/palette.cpp
-        src/ui/palette.h
-        src/ui/coordinate.cpp
-        src/ui/coordinate.h
-        src/ui/shape.cpp
-        src/ui/shape.h
-        src/ui/line.cpp
-        src/ui/line.h
+        src/ui/gdi/bitmap.cpp
+        src/ui/gdi/bitmap.h
+        src/ui/gdi/display.cpp
+        src/ui/gdi/display.h
+        src/ui/gdi/dc.cpp
+        src/ui/gdi/dc.h
+        src/ui/gdi/rect.cpp
+        src/ui/gdi/rect.h
+        src/ui/gdi/region.cpp
+        src/ui/gdi/region.h
+        src/ui/gdi/font.cpp
+        src/ui/gdi/font.h
+        src/ui/gdi/text.cpp
+        src/ui/gdi/text.h
+        src/ui/gdi/brush.cpp
+        src/ui/gdi/brush.h
+        src/ui/gdi/clip.cpp
+        src/ui/gdi/clip.h
+        src/ui/gdi/palette.cpp
+        src/ui/gdi/palette.h
+        src/ui/gdi/coordinate.cpp
+        src/ui/gdi/coordinate.h
+        src/ui/gdi/shape.cpp
+        src/ui/gdi/shape.h
+        src/ui/gdi/line.cpp
+        src/ui/gdi/line.h
 )
 
 target_include_directories(YanLib

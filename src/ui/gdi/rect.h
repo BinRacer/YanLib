@@ -69,6 +69,16 @@ namespace YanLib::ui::gdi {
                                         const RECT *rect_from,
                                         const RECT *rect_to);
 
+        static bool draw_focus_rect(HDC dc_handle, const RECT *rect);
+
+        static unsigned int get_bounds_rect(HDC dc_handle,
+                                            RECT *rect,
+                                            unsigned int flag);
+
+        static unsigned int set_bounds_rect(HDC dc_handle,
+                                            const RECT *rect,
+                                            unsigned int flag);
+
         static bool get_update_rect(HWND hwnd,
                                     RECT *rect,
                                     bool is_erase);

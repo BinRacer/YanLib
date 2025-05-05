@@ -86,6 +86,22 @@ namespace YanLib::ui::gdi {
         return DrawAnimatedRects(hwnd, animate_id, rect_from, rect_to);
     }
 
+    bool rect::draw_focus_rect(HDC dc_handle, const RECT *rect) {
+        return DrawFocusRect(dc_handle, rect);
+    }
+
+    unsigned int rect::get_bounds_rect(HDC dc_handle,
+                                       RECT *rect,
+                                       unsigned int flag) {
+        return GetBoundsRect(dc_handle, rect, flag);
+    }
+
+    unsigned int rect::set_bounds_rect(HDC dc_handle,
+                                       const RECT *rect,
+                                       unsigned int flag) {
+        return SetBoundsRect(dc_handle, rect, flag);
+    }
+
     bool rect::get_update_rect(HWND hwnd, RECT *rect, bool is_erase) {
         return GetUpdateRect(hwnd, rect, is_erase);
     }

@@ -46,13 +46,6 @@ namespace YanLib::ui::gdi {
                                int height,
                                unsigned int flag);
 
-        static bool draw_animated_rect(HWND hwnd,
-                                       int animate_id,
-                                       const RECT *rect_from,
-                                       const RECT *rect_to);
-
-        static bool draw_focus_rect(HDC dc_handle, const RECT *rect);
-
         static bool draw_frame_control(HDC hdc,
                                        RECT *rect,
                                        unsigned int type,
@@ -70,54 +63,9 @@ namespace YanLib::ui::gdi {
 
         static int set_background_mode(HDC dc_handle, int mode);
 
-        static unsigned int get_bounds_rect(HDC dc_handle,
-                                            RECT *rect,
-                                            unsigned int flag);
-
-        static unsigned int set_bounds_rect(HDC dc_handle,
-                                            const RECT *rect,
-                                            unsigned int flag);
-
         static int get_rop2(HDC dc_handle);
 
         static int set_rop2(HDC dc_handle, int mode);
-
-        static int get_window_region(HWND hwnd, HRGN region_handle);
-
-        static int set_window_region(HWND hwnd, HRGN region_handle, bool redraw);
-
-        static bool validate_rect(HWND hwnd, const RECT *rect);
-
-        static bool invalidate_rect(HWND hwnd, const RECT *rect, bool is_erase);
-
-        static bool validate_region(HWND hwnd, HRGN region_handle);
-
-        static bool invalidate_region(HWND hwnd, HRGN region_handle, bool is_erase);
-
-        static bool lock_window_update(HWND hwnd);
-
-        static bool update_window(HWND hwnd);
-
-        static bool redraw_window(HWND hwnd,
-                                  const RECT *rect,
-                                  HRGN region_handle,
-                                  unsigned int flag);
-
-        static HDC get_window_dc(HWND hwnd);
-
-        static HWND window_from_dc(HDC dc_handle);
-
-        static bool paint_desktop(HDC dc_handle);
-
-        static bool get_update_rect(HWND hwnd, RECT *rect, bool is_erase);
-
-        static int get_update_region(HWND hwnd,
-                                     HRGN region_handle,
-                                     bool is_erase);
-
-        static int exclude_update_region(HDC dc_handle, HWND hwnd);
-
-        static int get_window_region_box(HWND hwnd, RECT *rect);
 
         static bool gray_string(HDC dc_handle,
                                 HBRUSH brush_handle,

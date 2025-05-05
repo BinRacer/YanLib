@@ -49,17 +49,6 @@ namespace YanLib::ui::gdi {
                           flag);
     }
 
-    bool paint::draw_animated_rect(HWND hwnd,
-                                   int animate_id,
-                                   const RECT *rect_from,
-                                   const RECT *rect_to) {
-        return DrawAnimatedRects(hwnd, animate_id, rect_from, rect_to);
-    }
-
-    bool paint::draw_focus_rect(HDC dc_handle, const RECT *rect) {
-        return DrawFocusRect(dc_handle, rect);
-    }
-
     bool paint::draw_frame_control(HDC hdc,
                                    RECT *rect,
                                    unsigned int type,
@@ -91,87 +80,12 @@ namespace YanLib::ui::gdi {
         return SetBkMode(dc_handle, mode);
     }
 
-    unsigned int paint::get_bounds_rect(HDC dc_handle, RECT *rect, unsigned int flag) {
-        return GetBoundsRect(dc_handle, rect, flag);
-    }
-
-    unsigned int paint::set_bounds_rect(HDC dc_handle, const RECT *rect, unsigned int flag) {
-        return SetBoundsRect(dc_handle, rect, flag);
-    }
-
     int paint::get_rop2(HDC dc_handle) {
         return GetROP2(dc_handle);
     }
 
     int paint::set_rop2(HDC dc_handle, int mode) {
         return SetROP2(dc_handle, mode);
-    }
-
-    int paint::get_window_region(HWND hwnd, HRGN region_handle) {
-        return GetWindowRgn(hwnd, region_handle);
-    }
-
-    int paint::set_window_region(HWND hwnd, HRGN region_handle, bool redraw) {
-        return SetWindowRgn(hwnd, region_handle, redraw ? TRUE : FALSE);
-    }
-
-    bool paint::validate_rect(HWND hwnd, const RECT *rect) {
-        return ValidateRect(hwnd, rect);
-    }
-
-    bool paint::invalidate_rect(HWND hwnd, const RECT *rect, bool is_erase) {
-        return InvalidateRect(hwnd, rect, is_erase ? TRUE : FALSE);
-    }
-
-    bool paint::validate_region(HWND hwnd, HRGN region_handle) {
-        return ValidateRgn(hwnd, region_handle);
-    }
-
-    bool paint::invalidate_region(HWND hwnd, HRGN region_handle, bool is_erase) {
-        return InvalidateRgn(hwnd, region_handle, is_erase ? TRUE : FALSE);
-    }
-
-    bool paint::lock_window_update(HWND hwnd) {
-        return LockWindowUpdate(hwnd);
-    }
-
-    bool paint::update_window(HWND hwnd) {
-        return UpdateWindow(hwnd);
-    }
-
-    bool paint::redraw_window(HWND hwnd,
-                              const RECT *rect,
-                              HRGN region_handle,
-                              unsigned int flag) {
-        return RedrawWindow(hwnd, rect, region_handle, flag);
-    }
-
-    HDC paint::get_window_dc(HWND hwnd) {
-        return GetWindowDC(hwnd);
-    }
-
-    HWND paint::window_from_dc(HDC dc_handle) {
-        return WindowFromDC(dc_handle);
-    }
-
-    bool paint::paint_desktop(HDC dc_handle) {
-        return PaintDesktop(dc_handle);
-    }
-
-    bool paint::get_update_rect(HWND hwnd, RECT *rect, bool is_erase) {
-        return GetUpdateRect(hwnd, rect, is_erase ? TRUE : FALSE);
-    }
-
-    int paint::get_update_region(HWND hwnd, HRGN region_handle, bool is_erase) {
-        return GetUpdateRgn(hwnd, region_handle, is_erase ? TRUE : FALSE);
-    }
-
-    int paint::exclude_update_region(HDC dc_handle, HWND hwnd) {
-        return ExcludeUpdateRgn(dc_handle, hwnd);
-    }
-
-    int paint::get_window_region_box(HWND hwnd, RECT *rect) {
-        return GetWindowRgnBox(hwnd, rect);
     }
 
     bool paint::gray_string(HDC dc_handle,

@@ -180,6 +180,8 @@ add_library(YanLib STATIC
         src/ui/gdi/meta.h
         src/ui/gdi/paint.cpp
         src/ui/gdi/paint.h
+        src/ui/scroll.cpp
+        src/ui/scroll.h
 )
 
 target_include_directories(YanLib

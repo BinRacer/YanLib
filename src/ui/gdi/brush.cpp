@@ -40,4 +40,20 @@ namespace YanLib::ui::gdi {
     COLORREF brush::set_dc_brush_color(HDC dc_handle, COLORREF color) {
         return SetDCBrushColor(dc_handle, color);
     }
+
+    DWORD brush::get_sys_color(int index) {
+        return GetSysColor(index);
+    }
+
+    std::pair<bool, unsigned long> brush::set_sys_colors(
+        int ele_num,
+        const INT *ele_array,
+        const COLORREF *rgb_values) {
+        unsigned long error_code = 0;
+        if (!SetSysColors(ele_num, ele_array, rgb_values)) {
+            error_code = GetLastError();
+            return std::make_pair(false, error_code);
+        }
+        return std::make_pair(true, error_code);
+    }
 }

@@ -4,6 +4,7 @@
 
 #ifndef BRUSH_H
 #define BRUSH_H
+#include <utility>
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
@@ -29,7 +30,8 @@ namespace YanLib::ui::gdi {
 
         static HBRUSH create_brush_indirect(const LOGBRUSH *log_brush);
 
-        static HBRUSH create_dib_pattern_brush_pt(const void *packed_dib, unsigned int usage);
+        static HBRUSH create_dib_pattern_brush_pt(const void *packed_dib,
+                                                  unsigned int usage);
 
         static bool get_brush_org(HDC dc_handle, POINT *point);
 
@@ -38,6 +40,14 @@ namespace YanLib::ui::gdi {
         static HBRUSH get_sys_color_brush(int index);
 
         static COLORREF set_dc_brush_color(HDC dc_handle, COLORREF color);
+
+        static DWORD get_sys_color(int index);
+
+        // std::pair<result, error_code>
+        static std::pair<bool, unsigned long> set_sys_colors(
+            int ele_num,
+            const INT *ele_array,
+            const COLORREF *rgb_values);
     };
 }
 #endif //BRUSH_H

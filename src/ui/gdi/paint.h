@@ -4,6 +4,7 @@
 
 #ifndef PAINT_H
 #define PAINT_H
+#include <utility>
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
@@ -76,6 +77,11 @@ namespace YanLib::ui::gdi {
                                 int y,
                                 int width,
                                 int height);
+
+        static std::pair<int, unsigned long> load_string(HINSTANCE instance_handle,
+                                                         UINT id,
+                                                         wchar_t *buf,
+                                                         int cch_size);
 
         static bool gdi_flush();
     };

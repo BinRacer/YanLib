@@ -97,6 +97,10 @@ namespace YanLib::ui {
         return true;
     }
 
+    HMENU menu::get_menu(HWND hwnd) {
+        return GetMenu(hwnd);
+    }
+
     bool menu::set_menu(HWND hwnd, HMENU menu_handle) {
         if (!SetMenu(hwnd, menu_handle)) {
             error_code = GetLastError();

@@ -108,6 +108,15 @@ namespace YanLib::ui::gdi {
                            height);
     }
 
+    std::pair<int, unsigned long> paint::load_string(HINSTANCE instance_handle,
+                                                     UINT id,
+                                                     wchar_t *buf,
+                                                     int cch_size) {
+        int result = LoadStringW(instance_handle, id, buf, cch_size);
+        unsigned long error_code = GetLastError();
+        return std::make_pair(result, error_code);
+    }
+
     bool paint::gdi_flush() {
         return GdiFlush();
     }

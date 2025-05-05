@@ -59,6 +59,8 @@ namespace YanLib::ui {
                          UINT_PTR id_new_item,
                          const wchar_t *new_item);
 
+        HMENU get_menu(HWND hwnd);
+
         bool set_menu(HWND hwnd, HMENU menu_handle);
 
         bool set_menu_info(HMENU menu_handle, const MENUINFO *memu_info);

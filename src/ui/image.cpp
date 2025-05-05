@@ -10,7 +10,7 @@ namespace YanLib::ui {
                                const wchar_t *image_name,
                                int cx,
                                int cy,
-                               UINT load) {
+                               unsigned int load) {
         HBITMAP bitmap = static_cast<HBITMAP>(LoadImageW(instance_handle,
                                                          image_name,
                                                          IMAGE_BITMAP,
@@ -27,7 +27,7 @@ namespace YanLib::ui {
                            const wchar_t *image_name,
                            int cx,
                            int cy,
-                           UINT load) {
+                           unsigned int load) {
         HICON icon = static_cast<HICON>(LoadImageW(instance_handle,
                                                    image_name,
                                                    IMAGE_ICON,
@@ -44,7 +44,7 @@ namespace YanLib::ui {
                                const wchar_t *image_name,
                                int cx,
                                int cy,
-                               UINT load) {
+                               unsigned int load) {
         HCURSOR cursor = static_cast<HCURSOR>(LoadImageW(instance_handle,
                                                          image_name,
                                                          IMAGE_CURSOR,
@@ -60,7 +60,7 @@ namespace YanLib::ui {
     HBITMAP image::copy_bitmap(HBITMAP bitmap_handle,
                                int cx,
                                int cy,
-                               UINT flag) {
+                               unsigned int flag) {
         HBITMAP result = static_cast<HBITMAP>(CopyImage(bitmap_handle,
                                                         IMAGE_BITMAP,
                                                         cx,
@@ -75,7 +75,7 @@ namespace YanLib::ui {
     HICON image::copy_icon(HICON icon_handle,
                            int cx,
                            int cy,
-                           UINT flag) {
+                           unsigned int flag) {
         HICON result = static_cast<HICON>(CopyImage(icon_handle,
                                                     IMAGE_ICON,
                                                     cx,
@@ -90,7 +90,7 @@ namespace YanLib::ui {
     HCURSOR image::copy_cursor(HCURSOR cursor_handle,
                                int cx,
                                int cy,
-                               UINT flag) {
+                               unsigned int flag) {
         HCURSOR result = static_cast<HCURSOR>(CopyImage(cursor_handle,
                                                         IMAGE_CURSOR,
                                                         cx,
@@ -122,7 +122,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD image::err_code() const {
+    unsigned long image::err_code() const {
         return error_code;
     }
 

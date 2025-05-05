@@ -22,23 +22,23 @@ namespace YanLib::ui::gdi {
         ~display() = default;
 
         static bool enum_display_devices(const wchar_t *device_name,
-                                         DWORD device_index,
+                                         unsigned long device_index,
                                          DISPLAY_DEVICEW* display_device,
-                                         DWORD flag);
+                                         unsigned long flag);
 
         static bool enum_display_settings(const wchar_t *device_name,
-                                          DWORD mode,
+                                          unsigned long mode,
                                           DEVMODEW *device_mode);
 
         static bool enum_display_settings(const wchar_t *device_name,
-                                          DWORD mode,
+                                          unsigned long mode,
                                           DEVMODEW *device_mode,
-                                          DWORD flag);
+                                          unsigned long flag);
 
-        static LONG display_config_get_device_info(
+        static long display_config_get_device_info(
             DISPLAYCONFIG_DEVICE_INFO_HEADER *request_packet);
 
-        static LONG display_config_set_device_info(
+        static long display_config_set_device_info(
             DISPLAYCONFIG_DEVICE_INFO_HEADER *request_packet);
 
         static bool get_display_auto_rotation_preferences(
@@ -48,35 +48,35 @@ namespace YanLib::ui::gdi {
             ORIENTATION_PREFERENCE orientation);
 
         static bool get_display_auto_rotation_preferences_by_pid(
-            DWORD pid,
+            unsigned long pid,
             ORIENTATION_PREFERENCE *orientation);
 
-        static LONG get_display_config_buffer_sizes(
-            UINT32 flag,
-            UINT32 *num_path_array_elements,
-            UINT32 *num_mode_info_array_elements);
+        static long get_display_config_buffer_sizes(
+            unsigned int flag,
+            unsigned int *num_path_array_elements,
+            unsigned int *num_mode_info_array_elements);
 
-        static LONG get_display_config(
-            UINT32 flag,
-            UINT32 *num_path_array_elements,
+        static long get_display_config(
+            unsigned int flag,
+            unsigned int *num_path_array_elements,
             DISPLAYCONFIG_PATH_INFO *path_array,
-            UINT32 *num_mode_info_array_elements,
+            unsigned int *num_mode_info_array_elements,
             DISPLAYCONFIG_MODE_INFO *mode_info_array,
             DISPLAYCONFIG_TOPOLOGY_ID *current_topology_id);
 
-        static LONG set_display_config(
-            UINT32 num_path_array_elements,
+        static long set_display_config(
+            unsigned int num_path_array_elements,
             DISPLAYCONFIG_PATH_INFO *path_array,
-            UINT32 num_mode_info_array_elements,
+            unsigned int num_mode_info_array_elements,
             DISPLAYCONFIG_MODE_INFO *mode_info_array,
-            UINT32 flag);
+            unsigned int flag);
 
-        static LONG change_display_settings(DEVMODEW *device_mode, DWORD flag);
+        static long change_display_settings(DEVMODEW *device_mode, unsigned long flag);
 
-        static LONG change_display_settings(const wchar_t *device_name,
+        static long change_display_settings(const wchar_t *device_name,
                                             DEVMODEW *device_mode,
                                             HWND hwnd,
-                                            DWORD flag,
+                                            unsigned long flag,
                                             void *l_param);
     };
 }

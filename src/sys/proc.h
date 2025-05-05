@@ -22,13 +22,13 @@ namespace YanLib::sys {
         sync::rwlock proc_info_rwlock = {};
         sync::rwlock proc_handle_rwlock = {};
         wchar_t *curr_proc_env = nullptr;
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
         NTSTATUS nt_query_info_proc(HANDLE proc_handle,
                                     PROCESSINFOCLASS proc_info_class,
                                     void *proc_info,
-                                    ULONG proc_info_len,
-                                    ULONG *ret_len);
+                                    unsigned long proc_info_len,
+                                    unsigned long *ret_len);
 
     public:
         proc(const proc &other) = delete;
@@ -49,7 +49,7 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *proc_attrs = nullptr,
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
-            DWORD create_flag = 0,
+            unsigned long create_flag = 0,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
@@ -59,7 +59,7 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *proc_attrs = nullptr,
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
-            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+            unsigned long create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_SUSPENDED,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
@@ -71,7 +71,7 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *proc_attrs = nullptr,
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
-            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+            unsigned long create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_UNICODE_ENVIRONMENT,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
@@ -83,7 +83,7 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *proc_attrs = nullptr,
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
-            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+            unsigned long create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_UNICODE_ENVIRONMENT |
                                 CREATE_NEW_CONSOLE,
             void *env = nullptr,
@@ -95,8 +95,8 @@ namespace YanLib::sys {
             const wchar_t *password,
             const wchar_t *app_name,
             wchar_t *cmdline = nullptr,
-            DWORD logon_flag = LOGON_WITH_PROFILE,
-            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+            unsigned long logon_flag = LOGON_WITH_PROFILE,
+            unsigned long create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_NEW_CONSOLE |
                                 CREATE_UNICODE_ENVIRONMENT,
             void *env = nullptr,
@@ -106,19 +106,19 @@ namespace YanLib::sys {
             HANDLE token_handle,
             const wchar_t *app_name,
             wchar_t *cmdline = nullptr,
-            DWORD logon_flag = LOGON_WITH_PROFILE,
-            DWORD create_flag = NORMAL_PRIORITY_CLASS |
+            unsigned long logon_flag = LOGON_WITH_PROFILE,
+            unsigned long create_flag = NORMAL_PRIORITY_CLASS |
                                 CREATE_NEW_CONSOLE |
                                 CREATE_UNICODE_ENVIRONMENT,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
-        bool win_exec(const char *cmdline, UINT show_flag = SW_SHOWDEFAULT);
+        bool win_exec(const char *cmdline, unsigned int show_flag = SW_SHOWDEFAULT);
 
         bool shell_exec(const wchar_t *file_name,
                         const wchar_t *params = nullptr,
                         const wchar_t *dir = nullptr,
-                        INT show_flag = SW_SHOWDEFAULT,
+                        int show_flag = SW_SHOWDEFAULT,
                         HWND hwnd = nullptr,
                         const wchar_t *operation = nullptr);
 
@@ -129,7 +129,7 @@ namespace YanLib::sys {
                        const wchar_t *app_name,
                        const wchar_t *cmdline);
 
-        bool wait_child(HANDLE child_proc_handle, DWORD milli_seconds = INFINITE);
+        bool wait_child(HANDLE child_proc_handle, unsigned long milli_seconds = INFINITE);
 
         bool resume_child(HANDLE child_thread_handle);
 
@@ -137,52 +137,52 @@ namespace YanLib::sys {
 
         HANDLE proc_handle();
 
-        DWORD thread_id();
+        unsigned long thread_id();
 
-        DWORD proc_id();
+        unsigned long proc_id();
 
-        HANDLE pid_to_handle(DWORD pid,
-                             DWORD desired_access = PROCESS_ALL_ACCESS,
+        HANDLE pid_to_handle(unsigned long pid,
+                             unsigned long desired_access = PROCESS_ALL_ACCESS,
                              bool is_inherit_handle = false);
 
-        DWORD handle_to_pid(HANDLE proc_handle);
+        unsigned long handle_to_pid(HANDLE proc_handle);
 
 
-        bool kill(HANDLE proc_handle, UINT exit_code);
+        bool kill(HANDLE proc_handle, unsigned int exit_code);
 
-        void exit(UINT exit_code);
+        void exit(unsigned int exit_code);
 
-        DWORD exit_status(HANDLE proc_handle);
+        unsigned long exit_status(HANDLE proc_handle);
 
         STARTUPINFOW startup_info();
 
         void *malloc(HANDLE proc_handle,
                      size_t size,
                      void *addr = nullptr,
-                     DWORD allocate_flag = MEM_COMMIT | MEM_RESERVE,
-                     DWORD protect_flag = PAGE_READWRITE);
+                     unsigned long allocate_flag = MEM_COMMIT | MEM_RESERVE,
+                     unsigned long protect_flag = PAGE_READWRITE);
 
         bool free(HANDLE proc_handle,
                   void *addr,
                   size_t size = 0,
-                  DWORD free_type = MEM_RELEASE);
+                  unsigned long free_type = MEM_RELEASE);
 
         void *malloc_reserve(HANDLE proc_handle,
                              size_t size,
                              void *addr = nullptr,
-                             DWORD allocate_type = MEM_RESERVE,
-                             DWORD protect_flag = PAGE_READWRITE);
+                             unsigned long allocate_type = MEM_RESERVE,
+                             unsigned long protect_flag = PAGE_READWRITE);
 
         bool free_reserve(HANDLE proc_handle,
                           void *addr,
                           size_t size,
-                          DWORD free_type = MEM_DECOMMIT);
+                          unsigned long free_type = MEM_DECOMMIT);
 
         bool mem_guard_attr(HANDLE proc_handle,
                             void *addr,
                             size_t size,
-                            DWORD new_protect_flag,
-                            DWORD *old_protect_flag);
+                            unsigned long new_protect_flag,
+                            unsigned long *old_protect_flag);
 
         bool query_mem(HANDLE proc_handle,
                        const void *address,
@@ -225,17 +225,17 @@ namespace YanLib::sys {
 
         std::wstring cmdline_wide(HANDLE proc_handle);
 
-        std::string cmdline(DWORD pid);
+        std::string cmdline(unsigned long pid);
 
-        std::wstring cmdline_wide(DWORD pid);
+        std::wstring cmdline_wide(unsigned long pid);
 
         std::string owner(HANDLE proc_handle);
 
         std::wstring owner_wide(HANDLE proc_handle);
 
-        std::string owner(DWORD pid);
+        std::string owner(unsigned long pid);
 
-        std::wstring owner_wide(DWORD pid);
+        std::wstring owner_wide(unsigned long pid);
 
         std::string image_name(HANDLE proc_handle = nullptr);
 
@@ -245,55 +245,55 @@ namespace YanLib::sys {
 
         void *image_base(HANDLE proc_handle);
 
-        void *image_base(DWORD pid);
+        void *image_base(unsigned long pid);
 
-        DWORD get_priority(HANDLE proc_handle);
+        unsigned long get_priority(HANDLE proc_handle);
 
-        bool set_priority(HANDLE proc_handle, DWORD priority);
+        bool set_priority(HANDLE proc_handle, unsigned long priority);
 
         int get_thread_priority(HANDLE thread_handle);
 
         bool set_thread_priority(HANDLE thread_handle, int priority);
 
-        DWORD handle_count(HANDLE proc_handle);
+        unsigned long handle_count(HANDLE proc_handle);
 
-        DWORD gui_handle_count(HANDLE proc_handle,
-                               DWORD flag = GR_GDIOBJECTS);
+        unsigned long gui_handle_count(HANDLE proc_handle,
+                               unsigned long flag = GR_GDIOBJECTS);
 
-        DWORD processor_num();
+        unsigned long processor_num();
 
         bool get_info(HANDLE proc_handle,
                       PROCESS_INFORMATION_CLASS proc_info_class,
                       void *proc_info,
-                      DWORD proc_info_size);
+                      unsigned long proc_info_size);
 
         bool set_info(HANDLE proc_handle,
                       PROCESS_INFORMATION_CLASS proc_info_class,
                       void *proc_info,
-                      DWORD proc_info_size);
+                      unsigned long proc_info_size);
 
         bool get_mem_info(HANDLE proc_handle,
                           PPROCESS_MEMORY_COUNTERS mem_counters,
-                          DWORD mem_counters_size);
+                          unsigned long mem_counters_size);
 
         bool get_module_info(HANDLE proc_handle,
                              HMODULE module_handle,
                              MODULEINFO *mod_info,
-                             DWORD mod_info_size);
+                             unsigned long mod_info_size);
 
         bool logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buf,
-                                    DWORD *ret_len);
+                                    unsigned long *ret_len);
 
         bool get_affinity_mask(HANDLE proc_handle,
-                               PDWORD_PTR proc_affinity_mask,
-                               PDWORD_PTR system_affinity_mask);
+                               DWORD_PTR* proc_affinity_mask,
+                               DWORD_PTR* system_affinity_mask);
 
         bool set_affinity_mask(HANDLE proc_handle,
                                DWORD_PTR proc_affinity_mask);
 
         bool get_group_affinity(HANDLE proc_handle,
-                                USHORT *group_count,
-                                USHORT *group_array);
+                                unsigned short *group_count,
+                                unsigned short *group_array);
 
         bool io_counters(HANDLE proc_handle,
                          IO_COUNTERS *io_counters);
@@ -312,11 +312,11 @@ namespace YanLib::sys {
         bool set_priority_boost(HANDLE proc_handle,
                                 bool is_disable_priority_boost);
 
-        bool get_shutdown_params(DWORD *level,
-                                 DWORD *flag);
+        bool get_shutdown_params(unsigned long *level,
+                                 unsigned long *flag);
 
-        bool set_shutdown_params(DWORD level,
-                                 DWORD flag);
+        bool set_shutdown_params(unsigned long level,
+                                 unsigned long flag);
 
         bool time_statistics(HANDLE proc_handle,
                              FILETIME *creation_time,
@@ -324,7 +324,7 @@ namespace YanLib::sys {
                              FILETIME *kernel_time,
                              FILETIME *user_time);
 
-        DWORD system_version(DWORD pid);
+        unsigned long system_version(unsigned long pid);
 
         bool get_working_set_size(HANDLE proc_handle,
                                   SIZE_T *min_working_set_size,
@@ -335,31 +335,31 @@ namespace YanLib::sys {
                                   size_t max_working_set_size);
 
         bool get_processor_system_cycle_time(
-            USHORT group,
+            unsigned short group,
             SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION *buffer,
-            DWORD *ret_len);
+            unsigned long *ret_len);
 
         bool is_microsoft_store_app(HANDLE proc_handle);
 
         bool is_exe_search_path(const wchar_t *exe_name);
 
         bool query_full_image_name(HANDLE proc_handle,
-                                   DWORD flag,
+                                   unsigned long flag,
                                    wchar_t *exe_name,
-                                   DWORD *size);
+                                   unsigned long *size);
 
         bool get_affinity_update_mode(HANDLE proc_handle,
-                                      DWORD *flag);
+                                      unsigned long *flag);
 
         bool set_affinity_update_mode(HANDLE proc_handle,
-                                      DWORD flag);
+                                      unsigned long flag);
 
         bool all_thread_cycle_time(HANDLE proc_handle,
-                                   ULONG64 *cycle_time);
+                                   unsigned long long *cycle_time);
 
         bool set_restriction_exemption(bool is_enable_exemption);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

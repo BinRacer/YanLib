@@ -125,7 +125,7 @@ namespace YanLib::io {
     }
 
     std::string tcp_client::read_string_to_end() {
-        constexpr DWORD buffer_size = 4096;
+        constexpr unsigned long buffer_size = 4096;
         char *buf = new char[buffer_size];
         memset(buf, 0, buffer_size);
         std::string raw_data;

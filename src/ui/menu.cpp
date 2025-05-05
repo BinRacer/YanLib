@@ -39,7 +39,7 @@ namespace YanLib::ui {
     }
 
     bool menu::append_menu(HMENU menu_handle,
-                           UINT flag,
+                           unsigned int flag,
                            UINT_PTR id_new_item,
                            const wchar_t *new_item) {
         if (!AppendMenuW(menu_handle, flag, id_new_item, new_item)) {
@@ -50,8 +50,8 @@ namespace YanLib::ui {
     }
 
     bool menu::insert_menu(HMENU menu_handle,
-                           UINT position,
-                           UINT flag,
+                           unsigned int position,
+                           unsigned int flag,
                            UINT_PTR id_new_item,
                            const wchar_t *new_item) {
         if (!InsertMenuW(menu_handle,
@@ -65,7 +65,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool menu::remove_menu(HMENU menu_handle, UINT position, UINT flag) {
+    bool menu::remove_menu(HMENU menu_handle, unsigned int position, unsigned int flag) {
         if (!RemoveMenu(menu_handle, position, flag)) {
             error_code = GetLastError();
             return false;
@@ -73,7 +73,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool menu::delete_menu(HMENU menu_handle, UINT position, UINT flag) {
+    bool menu::delete_menu(HMENU menu_handle, unsigned int position, unsigned int flag) {
         if (!DeleteMenu(menu_handle, position, flag)) {
             error_code = GetLastError();
             return false;
@@ -82,8 +82,8 @@ namespace YanLib::ui {
     }
 
     bool menu::modify_menu(HMENU menu_handle,
-                           UINT position,
-                           UINT flag,
+                           unsigned int position,
+                           unsigned int flag,
                            UINT_PTR id_new_item,
                            const wchar_t *new_item) {
         if (!ModifyMenuW(menu_handle,
@@ -122,8 +122,8 @@ namespace YanLib::ui {
     }
 
     bool menu::get_menu_bar_info(HWND hwnd,
-                                 LONG id_object,
-                                 LONG id_item,
+                                 long id_object,
+                                 long id_item,
                                  MENUBARINFO* menu_bar_info) {
         if (!GetMenuBarInfo(hwnd, id_object, id_item, menu_bar_info)) {
             error_code = GetLastError();
@@ -132,15 +132,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT menu::get_menu_state(HMENU menu_handle, UINT id, UINT flag) {
+    unsigned int menu::get_menu_state(HMENU menu_handle, unsigned int id, unsigned int flag) {
         return GetMenuState(menu_handle, id, flag);
     }
 
     int menu::get_menu_string(HMENU menu_handle,
-                              UINT id_item,
+                              unsigned int id_item,
                               wchar_t *text,
                               int cch_max,
-                              UINT flag) {
+                              unsigned int flag) {
         return GetMenuStringW(menu_handle,
                               id_item,
                               text,
@@ -156,7 +156,7 @@ namespace YanLib::ui {
         return GetSystemMenu(hwnd, revert ? TRUE : FALSE);
     }
 
-    LONG menu::get_menu_check_mark_dimensions() {
+    long menu::get_menu_check_mark_dimensions() {
         return GetMenuCheckMarkDimensions();
     }
 
@@ -189,7 +189,7 @@ namespace YanLib::ui {
     }
 
     bool menu::insert_menu_item(HMENU menu_handle,
-                                UINT item,
+                                unsigned int item,
                                 bool is_pos,
                                 const MENUITEMINFOW* menu_item_info) {
         if (!InsertMenuItemW(menu_handle,
@@ -203,7 +203,7 @@ namespace YanLib::ui {
     }
 
     bool menu::get_menu_item_info(HMENU menu_handle,
-                                  UINT item,
+                                  unsigned int item,
                                   bool is_pos,
                                   MENUITEMINFOW* menu_item_info) {
         if (!GetMenuItemInfoW(menu_handle,
@@ -217,7 +217,7 @@ namespace YanLib::ui {
     }
 
     bool menu::set_menu_item_info(HMENU menu_handle,
-                                  UINT item,
+                                  unsigned int item,
                                   bool is_pos,
                                   const MENUITEMINFOW* menu_item_info) {
         if (!SetMenuItemInfoW(menu_handle,
@@ -230,20 +230,20 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT menu::get_menu_default_item(HMENU menu_handle,
+    unsigned int menu::get_menu_default_item(HMENU menu_handle,
                                      bool is_pos,
-                                     UINT flag) {
-        UINT result = GetMenuDefaultItem(menu_handle,
+                                     unsigned int flag) {
+        unsigned int result = GetMenuDefaultItem(menu_handle,
                                          is_pos ? TRUE : FALSE,
                                          flag);
-        if (result == static_cast<UINT>(-1)) {
+        if (result == static_cast<unsigned int>(-1)) {
             error_code = GetLastError();
         }
         return result;
     }
 
     bool menu::set_menu_default_item(HMENU menu_handle,
-                                     UINT item,
+                                     unsigned int item,
                                      bool is_pos) {
         if (!SetMenuDefaultItem(menu_handle,
                                 item,
@@ -254,11 +254,11 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD menu::get_menu_context_help_id(HMENU menu_handle) {
+    unsigned long menu::get_menu_context_help_id(HMENU menu_handle) {
         return GetMenuContextHelpId(menu_handle);
     }
 
-    bool menu::set_menu_context_help_id(HMENU menu_handle, DWORD param) {
+    bool menu::set_menu_context_help_id(HMENU menu_handle, unsigned long param) {
         if (!SetMenuContextHelpId(menu_handle, param)) {
             error_code = GetLastError();
             return false;
@@ -274,13 +274,13 @@ namespace YanLib::ui {
         return result;
     }
 
-    UINT menu::get_menu_item_id(HMENU menu_handle, int pos) {
+    unsigned int menu::get_menu_item_id(HMENU menu_handle, int pos) {
         return GetMenuItemID(menu_handle, pos);
     }
 
     bool menu::get_menu_item_rect(HWND hwnd,
                                   HMENU menu_handle,
-                                  UINT item,
+                                  unsigned int item,
                                   RECT* rect) {
         if (!GetMenuItemRect(hwnd,
                              menu_handle,
@@ -293,8 +293,8 @@ namespace YanLib::ui {
     }
 
     BOOL menu::set_menu_item_bitmaps(HMENU menu_handle,
-                                     UINT position,
-                                     UINT flag,
+                                     unsigned int position,
+                                     unsigned int flag,
                                      HBITMAP bitmap_unchecked_handle,
                                      HBITMAP bitmap_checked_handle) {
         if (!SetMenuItemBitmaps(menu_handle,
@@ -319,25 +319,25 @@ namespace YanLib::ui {
 
     bool menu::hilite_menu_item(HWND hwnd,
                                 HMENU menu_handle,
-                                UINT id_hilite_item,
-                                UINT hilite) {
+                                unsigned int id_hilite_item,
+                                unsigned int hilite) {
         return HiliteMenuItem(hwnd,
                               menu_handle,
                               id_hilite_item,
                               hilite);
     }
 
-    DWORD menu::check_menu_item(HMENU menu_handle,
-                                UINT id_check_item,
-                                UINT check) {
+    unsigned long menu::check_menu_item(HMENU menu_handle,
+                                unsigned int id_check_item,
+                                unsigned int check) {
         return CheckMenuItem(menu_handle, id_check_item, check);
     }
 
     bool menu::check_menu_radio_item(HMENU menu_handle,
-                                     UINT first,
-                                     UINT last,
-                                     UINT check,
-                                     UINT flag) {
+                                     unsigned int first,
+                                     unsigned int last,
+                                     unsigned int check,
+                                     unsigned int flag) {
         if (!CheckMenuRadioItem(menu_handle, first, last, check, flag)) {
             error_code = GetLastError();
             return false;
@@ -346,13 +346,13 @@ namespace YanLib::ui {
     }
 
     int menu::enable_menu_item(HMENU menu_handle,
-                               UINT id_enable_item,
-                               UINT enable) {
+                               unsigned int id_enable_item,
+                               unsigned int enable) {
         return EnableMenuItem(menu_handle, id_enable_item, enable);
     }
 
     bool menu::track_popup_menu(HMENU menu_handle,
-                                UINT flag,
+                                unsigned int flag,
                                 int x,
                                 int y,
                                 int reserved,
@@ -372,7 +372,7 @@ namespace YanLib::ui {
     }
 
     bool menu::track_popup_menu(HMENU menu_handle,
-                                UINT flag,
+                                unsigned int flag,
                                 int x,
                                 int y,
                                 HWND hwnd,
@@ -389,7 +389,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD menu::err_code() const {
+    unsigned long menu::err_code() const {
         return error_code;
     }
 

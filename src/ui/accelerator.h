@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class accelerator {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         accelerator(const accelerator &other) = delete;
@@ -38,7 +38,7 @@ namespace YanLib::ui {
                                    ACCEL* accel_handle_dst,
                                    int accel_entries);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

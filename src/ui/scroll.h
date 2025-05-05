@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class scroll {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         scroll(const scroll &other) = delete;
@@ -25,14 +25,14 @@ namespace YanLib::ui {
 
         ~scroll() = default;
 
-        bool enable_scroll_bar(HWND hwnd, UINT scroll_type, UINT arrow_type);
+        bool enable_scroll_bar(HWND hwnd, unsigned int scroll_type, unsigned int arrow_type);
 
         bool show_scroll_bar(HWND hwnd, int scroll_type);
 
         bool hide_scroll_bar(HWND hwnd, int scroll_type);
 
         bool get_scroll_bar_info(HWND hwnd,
-                                 LONG object_id,
+                                 long object_id,
                                  SCROLLBARINFO *scroll_bar_info);
 
         bool get_scroll_info(HWND hwnd, int scroll_type, SCROLLINFO *scroll_info);
@@ -51,16 +51,16 @@ namespace YanLib::ui {
 
         bool get_scroll_range(HWND hwnd,
                               int scroll_type,
-                              INT *min_pos,
-                              INT *max_pos);
+                              int *min_pos,
+                              int *max_pos);
 
         bool set_scroll_range(HWND hwnd,
                               int scroll_type,
-                              INT min_pos,
-                              INT max_pos,
+                              int min_pos,
+                              int max_pos,
                               bool is_redraw);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

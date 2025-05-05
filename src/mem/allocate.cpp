@@ -82,7 +82,7 @@ namespace YanLib::mem {
         return malloc(new_size);
     }
 
-    DWORD allocate::err_code() const {
+    unsigned long allocate::err_code() const {
         return error_code;
     }
 

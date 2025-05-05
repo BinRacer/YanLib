@@ -18,7 +18,7 @@ namespace YanLib::hash {
         std::wstring file_name;
         bool is_file;
         bool is_done = false;
-        DWORD error_code;
+        unsigned long error_code;
 
         static std::string format_hex_fast(const std::vector<uint8_t> &data);
 
@@ -57,7 +57,7 @@ namespace YanLib::hash {
 
         std::wstring hash_wstring();
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

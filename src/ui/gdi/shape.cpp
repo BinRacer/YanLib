@@ -50,7 +50,7 @@ namespace YanLib::ui::gdi {
 
     bool shape::poly_poly_gon(HDC dc_handle,
                               const POINT *point,
-                              const INT *num_array,
+                              const int *num_array,
                               int num) {
         return PolyPolygon(dc_handle, point, num_array, num);
     }

@@ -16,14 +16,14 @@ namespace YanLib::ui::gdi {
     bool paint::draw_caption(HWND hwnd,
                              HDC dc_handle,
                              const RECT *rect,
-                             UINT flag) {
+                             unsigned int flag) {
         return DrawCaption(hwnd, dc_handle, rect, flag);
     }
 
     bool paint::draw_edge(HDC dc_handle,
                           RECT *rect,
-                          UINT edge,
-                          UINT flag) {
+                          unsigned int edge,
+                          unsigned int flag) {
         return DrawEdge(dc_handle, rect, edge, flag);
     }
 
@@ -36,7 +36,7 @@ namespace YanLib::ui::gdi {
                            int y,
                            int width,
                            int height,
-                           UINT flag) {
+                           unsigned int flag) {
         return DrawStateW(dc_handle,
                           brush_handle,
                           draw_state_proc,
@@ -62,16 +62,16 @@ namespace YanLib::ui::gdi {
 
     bool paint::draw_frame_control(HDC hdc,
                                    RECT *rect,
-                                   UINT type,
-                                   UINT state) {
+                                   unsigned int type,
+                                   unsigned int state) {
         return DrawFrameControl(hdc, rect, type, state);
     }
 
-    DWORD paint::gdi_get_batch_limit() {
+    unsigned long paint::gdi_get_batch_limit() {
         return GdiGetBatchLimit();
     }
 
-    DWORD paint::gdi_set_batch_limit(DWORD limit) {
+    unsigned long paint::gdi_set_batch_limit(unsigned long limit) {
         return GdiSetBatchLimit(limit);
     }
 
@@ -91,11 +91,11 @@ namespace YanLib::ui::gdi {
         return SetBkMode(dc_handle, mode);
     }
 
-    UINT paint::get_bounds_rect(HDC dc_handle, RECT *rect, UINT flag) {
+    unsigned int paint::get_bounds_rect(HDC dc_handle, RECT *rect, unsigned int flag) {
         return GetBoundsRect(dc_handle, rect, flag);
     }
 
-    UINT paint::set_bounds_rect(HDC dc_handle, const RECT *rect, UINT flag) {
+    unsigned int paint::set_bounds_rect(HDC dc_handle, const RECT *rect, unsigned int flag) {
         return SetBoundsRect(dc_handle, rect, flag);
     }
 
@@ -142,7 +142,7 @@ namespace YanLib::ui::gdi {
     bool paint::redraw_window(HWND hwnd,
                               const RECT *rect,
                               HRGN region_handle,
-                              UINT flag) {
+                              unsigned int flag) {
         return RedrawWindow(hwnd, rect, region_handle, flag);
     }
 

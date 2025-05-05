@@ -13,11 +13,11 @@ namespace YanLib::sync {
         InitializeCriticalSection(&critical_section);
     }
 
-    void fence::init_with_spin(DWORD spin_count) {
+    void fence::init_with_spin(unsigned long spin_count) {
         InitializeCriticalSectionAndSpinCount(&critical_section, spin_count);
     }
 
-    DWORD fence::set_spin_count(DWORD spin_count) {
+    unsigned long fence::set_spin_count(unsigned long spin_count) {
         return SetCriticalSectionSpinCount(&critical_section, spin_count);
     }
 

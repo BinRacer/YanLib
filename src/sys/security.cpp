@@ -33,12 +33,12 @@ namespace YanLib::sys {
         }
     }
 
-    DWORD security::curr_session_id() const {
+    unsigned long security::curr_session_id() const {
         return WTSGetActiveConsoleSessionId();
     }
 
-    HANDLE security::curr_session_token(ULONG session_id) {
-        ULONG id = (session_id == 0) ? curr_session_id() : session_id;
+    HANDLE security::curr_session_token(unsigned long session_id) {
+        unsigned long id = (session_id == 0) ? curr_session_id() : session_id;
         HANDLE token;
         if (!WTSQueryUserToken(id, &token)) {
             error_code = GetLastError();
@@ -52,7 +52,7 @@ namespace YanLib::sys {
 
     HANDLE security::copy_token(
         HANDLE existing_token_handle,
-        DWORD desired_access,
+        unsigned long desired_access,
         SECURITY_ATTRIBUTES *token_attrs,
         SECURITY_IMPERSONATION_LEVEL impersonation_level,
         TOKEN_TYPE token_type) {
@@ -197,7 +197,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool security::enable_privilege(DWORD pid, const wchar_t *privilege) {
+    bool security::enable_privilege(unsigned long pid, const wchar_t *privilege) {
         do {
             helper::autoclean<HANDLE> proc_handle(nullptr);
             proc_handle = OpenProcess(PROCESS_ALL_ACCESS,
@@ -212,7 +212,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool security::disable_privilege(DWORD pid, const wchar_t *privilege) {
+    bool security::disable_privilege(unsigned long pid, const wchar_t *privilege) {
         do {
             helper::autoclean<HANDLE> proc_handle(nullptr);
             proc_handle = OpenProcess(PROCESS_ALL_ACCESS,
@@ -235,11 +235,11 @@ namespace YanLib::sys {
         return disable_privilege(proc_handle, L"SeDebugPrivilege");
     }
 
-    bool security::enable_debug(DWORD pid) {
+    bool security::enable_debug(unsigned long pid) {
         return enable_privilege(pid, L"SeDebugPrivilege");
     }
 
-    bool security::disable_debug(DWORD pid) {
+    bool security::disable_debug(unsigned long pid) {
         return disable_privilege(pid, L"SeDebugPrivilege");
     }
 
@@ -251,11 +251,11 @@ namespace YanLib::sys {
         return disable_privilege(proc_handle, L"SeSecurityPrivilege");
     }
 
-    bool security::enable_sacl(DWORD pid) {
+    bool security::enable_sacl(unsigned long pid) {
         return enable_privilege(pid, L"SeSecurityPrivilege");
     }
 
-    bool security::disable_sacl(DWORD pid) {
+    bool security::disable_sacl(unsigned long pid) {
         return disable_privilege(pid, L"SeSecurityPrivilege");
     }
 
@@ -266,7 +266,7 @@ namespace YanLib::sys {
         helper::autoclean<HANDLE> filter_token_handle(nullptr);
         TOKEN_ELEVATION_TYPE token_type = TokenElevationTypeDefault;
         int is_admin = 0;
-        DWORD size = 0;
+        unsigned long size = 0;
         do {
             if (!OpenProcessToken(process_handle,
                                   TOKEN_QUERY,
@@ -334,7 +334,7 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            DWORD size = 0;
+            unsigned long size = 0;
             if (!GetTokenInformation(token_handle,
                                      TokenIntegrityLevel,
                                      nullptr,
@@ -395,8 +395,8 @@ namespace YanLib::sys {
                     security_level = SECURITY_UNKNOWN;
             }
 
-            size = sizeof(DWORD);
-            DWORD policy = TOKEN_MANDATORY_POLICY_OFF;
+            size = sizeof(unsigned long);
+            unsigned long policy = TOKEN_MANDATORY_POLICY_OFF;
             if (!GetTokenInformation(token_handle,
                                      TokenMandatoryPolicy,
                                      &policy,
@@ -416,7 +416,7 @@ namespace YanLib::sys {
 
             ACL *sacl = nullptr;
             PSECURITY_DESCRIPTOR sd = nullptr;
-            DWORD ret = ERROR_SUCCESS;
+            unsigned long ret = ERROR_SUCCESS;
             ret = GetSecurityInfo(process_handle,
                                   SE_KERNEL_OBJECT,
                                   LABEL_SECURITY_INFORMATION,
@@ -432,8 +432,8 @@ namespace YanLib::sys {
             if (!sacl) {
                 break;
             }
-            DWORD resource = 0;
-            DWORD resource_policy = 0;
+            unsigned long resource = 0;
+            unsigned long resource_policy = 0;
             SYSTEM_MANDATORY_LABEL_ACE *ace = nullptr;
             if (sacl->AceCount <= 0) {
                 break;
@@ -499,7 +499,7 @@ namespace YanLib::sys {
                                system_policy);
     }
 
-    DWORD security::err_code() const {
+    unsigned long security::err_code() const {
         return error_code;
     }
 

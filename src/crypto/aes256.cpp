@@ -68,7 +68,7 @@ namespace YanLib::crypto {
     }
 
     bool aes256::remove_pkcs7_padding(std::vector<uint8_t> &data,
-                                      DWORD ret_len) {
+                                      unsigned long ret_len) {
         do {
             if (data.empty() || ret_len < 1 || ret_len > data.size()) {
                 break;
@@ -77,7 +77,7 @@ namespace YanLib::crypto {
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
-            for (DWORD i = ret_len - pad_len; i < ret_len; i++) {
+            for (unsigned long i = ret_len - pad_len; i < ret_len; i++) {
                 if (data[i] != pad_len) {
                     return false;
                 }
@@ -102,7 +102,7 @@ namespace YanLib::crypto {
     }
 
     bool aes256::remove_iso10126_padding(std::vector<uint8_t> &data,
-                                         DWORD ret_len) {
+                                         unsigned long ret_len) {
         do {
             if (data.empty() || ret_len < 1 || ret_len > data.size()) {
                 break;
@@ -128,7 +128,7 @@ namespace YanLib::crypto {
     }
 
     bool aes256::remove_ansix923_padding(std::vector<uint8_t> &data,
-                                         DWORD ret_len) {
+                                         unsigned long ret_len) {
         do {
             if (data.empty() || ret_len < 1 || ret_len > data.size()) {
                 break;
@@ -137,7 +137,7 @@ namespace YanLib::crypto {
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
-            for (DWORD i = ret_len - pad_len; i < ret_len - 1; i++) {
+            for (unsigned long i = ret_len - pad_len; i < ret_len - 1; i++) {
                 if (data[i] != 0) {
                     return false;
                 }
@@ -173,7 +173,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            DWORD aes_mode = 0;
+            unsigned long aes_mode = 0;
             switch (mode) {
                 case MODE_CBC:
                     aes_mode = CRYPT_MODE_CBC;
@@ -233,8 +233,8 @@ namespace YanLib::crypto {
                 default:
                     make_pkcs7_padding(data_bytes);
             }
-            DWORD data_size = data_bytes.size();
-            DWORD raw_size = data_bytes.size();
+            unsigned long data_size = data_bytes.size();
+            unsigned long raw_size = data_bytes.size();
             if (!CryptEncrypt(crypt_key_handle,
                               0,
                               FALSE,
@@ -269,7 +269,7 @@ namespace YanLib::crypto {
     bool aes256::decode_process(std::vector<uint8_t> &data_bytes,
                                 AES_PADDING padding) {
         do {
-            DWORD data_size = data_bytes.size();
+            unsigned long data_size = data_bytes.size();
             if (!CryptDecrypt(crypt_key_handle,
                               0,
                               FALSE,
@@ -513,7 +513,7 @@ namespace YanLib::crypto {
         return helper::convert::str_to_wstr(hex_string());
     }
 
-    DWORD aes256::err_code() const {
+    unsigned long aes256::err_code() const {
         return error_code;
     }
 

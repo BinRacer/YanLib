@@ -15,7 +15,7 @@ namespace YanLib::io {
     private:
         std::vector<HANDLE> file_handles = {};
         sync::rwlock rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
         static inline void remove_tail_slash(std::wstring &path);
 
@@ -33,46 +33,46 @@ namespace YanLib::io {
         ~fs();
 
         HANDLE open(const wchar_t *file_name,
-                    DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
-                    DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
+                    unsigned long desired_access = GENERIC_READ | GENERIC_WRITE,
+                    unsigned long share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
                     SECURITY_ATTRIBUTES *security_attrs = nullptr,
-                    DWORD creation_disposition = OPEN_EXISTING,
-                    DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
+                    unsigned long creation_disposition = OPEN_EXISTING,
+                    unsigned long flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                     HANDLE template_file = nullptr);
 
         HANDLE create(const wchar_t *file_name,
-                      DWORD desired_access = GENERIC_READ | GENERIC_WRITE,
-                      DWORD share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
+                      unsigned long desired_access = GENERIC_READ | GENERIC_WRITE,
+                      unsigned long share_mode = FILE_SHARE_READ | FILE_SHARE_WRITE,
                       SECURITY_ATTRIBUTES *security_attrs = nullptr,
-                      DWORD creation_disposition = CREATE_ALWAYS,
-                      DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
+                      unsigned long creation_disposition = CREATE_ALWAYS,
+                      unsigned long flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                       HANDLE template_file = nullptr);
 
         HANDLE touch(const wchar_t *file_name);
 
         bool read(HANDLE file_handle,
                   void *buf,
-                  DWORD size,
-                  DWORD* ret_size,
+                  unsigned long size,
+                  unsigned long* ret_size,
                   OVERLAPPED *overlapped = nullptr);
 
         typedef LPOVERLAPPED_COMPLETION_ROUTINE OVERLAPPED_COMPLETION_ROUTINE;
 
         bool read(HANDLE file_handle,
                   void *buf,
-                  DWORD size,
+                  unsigned long size,
                   OVERLAPPED *overlapped,
                   OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
         bool write(HANDLE file_handle,
                    const void *buf,
-                   DWORD size,
-                   DWORD* ret_size,
+                   unsigned long size,
+                   unsigned long* ret_size,
                    OVERLAPPED *overlapped = nullptr);
 
         bool write(HANDLE file_handle,
                    const void *buf,
-                   DWORD size,
+                   unsigned long size,
                    OVERLAPPED *overlapped,
                    OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
@@ -92,18 +92,18 @@ namespace YanLib::io {
 
         std::wstring read_wstring_to_end(HANDLE file_handle);
 
-        DWORD write_bytes(HANDLE file_handle,
+        unsigned long write_bytes(HANDLE file_handle,
                           const std::vector<uint8_t> &vec);
 
-        DWORD write_string(HANDLE file_handle,
+        unsigned long write_string(HANDLE file_handle,
                            const std::string &str);
 
-        DWORD write_wstring(HANDLE file_handle,
+        unsigned long write_wstring(HANDLE file_handle,
                             const std::wstring &wstr);
 
         int64_t seek(HANDLE file_handle,
                      int64_t offset,
-                     DWORD move_method = FILE_CURRENT);
+                     unsigned long move_method = FILE_CURRENT);
 
         bool truncate(HANDLE file_handle);
 
@@ -112,10 +112,10 @@ namespace YanLib::io {
                   uint64_t range = UINT64_MAX);
 
         bool lock_async(HANDLE file_handle,
-                        DWORD flag = LOCKFILE_EXCLUSIVE_LOCK,
+                        unsigned long flag = LOCKFILE_EXCLUSIVE_LOCK,
                         uint64_t range = UINT64_MAX,
                         OVERLAPPED *overlapped = nullptr,
-                        DWORD reserved = 0);
+                        unsigned long reserved = 0);
 
         bool unlock(HANDLE file_handle,
                     uint64_t offset = 0,
@@ -124,56 +124,56 @@ namespace YanLib::io {
         bool unlock_async(HANDLE file_handle,
                           uint64_t range = UINT64_MAX,
                           OVERLAPPED *overlapped = nullptr,
-                          DWORD reserved = 0);
+                          unsigned long reserved = 0);
 
         bool is_exists(const wchar_t *path_name);
 
         bool get_info(HANDLE file_handle,
                       FILE_INFO_BY_HANDLE_CLASS file_info_class,
                       void *file_info,
-                      DWORD file_info_size);
+                      unsigned long file_info_size);
 
         bool set_info(HANDLE file_handle,
                       FILE_INFO_BY_HANDLE_CLASS file_info_class,
                       void *file_info,
-                      DWORD file_info_size);
+                      unsigned long file_info_size);
 
         bool set_io_overlapped_range(HANDLE file_handle,
                                      uint8_t *overlapped_range_start,
-                                     ULONG length);
+                                     unsigned long length);
 
         struct VolumeInfo {
             wchar_t volume_name[MAX_PATH + 1];
             wchar_t file_system_name[MAX_PATH + 1];
-            DWORD serial_number;
-            DWORD file_system_flag;
+            unsigned long serial_number;
+            unsigned long file_system_flag;
         };
 
         bool get_volume_info(HANDLE file_handle, VolumeInfo *volume_info);
 
         std::wstring get_final_path_name(HANDLE file_handle,
-                                         DWORD flag = FILE_NAME_NORMALIZED);
+                                         unsigned long flag = FILE_NAME_NORMALIZED);
 
         bool is_short_name_enabled(HANDLE file_handle);
 
         bool monitor_dir_change(HANDLE dir_handle,
                                 void *buffer,
-                                DWORD buffer_length,
+                                unsigned long buffer_length,
                                 bool is_watch_subtree,
-                                DWORD notify_filter,
-                                DWORD* bytes_returned,
+                                unsigned long notify_filter,
+                                unsigned long* bytes_returned,
                                 OVERLAPPED *overlapped,
                                 OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 
-        DWORD file_type(HANDLE file_handle);
+        unsigned long file_type(HANDLE file_handle);
 
         int64_t size(HANDLE file_handle);
 
-        DWORD get_attr(const wchar_t *file_name);
+        unsigned long get_attr(const wchar_t *file_name);
 
-        bool set_attr(const wchar_t *file_name, DWORD attr);
+        bool set_attr(const wchar_t *file_name, unsigned long attr);
 
-        UINT get_drive_type(const wchar_t *path_name);
+        unsigned int get_drive_type(const wchar_t *path_name);
 
         std::wstring get_volume_path_name(const wchar_t *file_name);
 
@@ -189,7 +189,7 @@ namespace YanLib::io {
 
         std::wstring get_temp_file_name(const wchar_t *path_name,
                                         const wchar_t *prefix = nullptr,
-                                        UINT unique = 0);
+                                        unsigned int unique = 0);
 
         std::wstring get_short_path_name(const wchar_t *long_path);
 
@@ -197,7 +197,7 @@ namespace YanLib::io {
 
         std::wstring get_logical_drive_strings();
 
-        DWORD get_logica_drives();
+        unsigned long get_logica_drives();
 
         std::wstring get_full_path_name(const wchar_t *file_name);
 
@@ -205,10 +205,10 @@ namespace YanLib::io {
                                  DISK_SPACE_INFORMATION *disk_space_info);
 
         struct DiskFreeSpace4 {
-            DWORD sectors_per_cluster;
-            DWORD bytes_per_sector;
-            DWORD number_of_free_clusters;
-            DWORD total_number_of_clusters;
+            unsigned long sectors_per_cluster;
+            unsigned long bytes_per_sector;
+            unsigned long number_of_free_clusters;
+            unsigned long total_number_of_clusters;
         };
 
         bool get_disk_free_space(const wchar_t *root_path_name,
@@ -231,7 +231,7 @@ namespace YanLib::io {
 
         bool control_dos_device(const wchar_t *device_name,
                                 const wchar_t *target_path,
-                                DWORD flag);
+                                unsigned long flag);
 
         static std::vector<std::wstring> ls_volume_name();
 
@@ -281,7 +281,7 @@ namespace YanLib::io {
         static bool replace(const wchar_t *existing_file_name,
                             const wchar_t *new_file_name);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

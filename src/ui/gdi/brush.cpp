@@ -21,7 +21,7 @@ namespace YanLib::ui::gdi {
         return CreateBrushIndirect(log_brush);
     }
 
-    HBRUSH brush::create_dib_pattern_brush_pt(const void *packed_dib, UINT usage) {
+    HBRUSH brush::create_dib_pattern_brush_pt(const void *packed_dib, unsigned int usage) {
         return CreateDIBPatternBrushPt(packed_dib, usage);
     }
 

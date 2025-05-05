@@ -33,27 +33,27 @@ namespace YanLib::ui::gdi {
 
         static COLORREF get_nearest_color(HDC dc_handle, COLORREF color);
 
-        static UINT get_nearest_palette_index(HPALETTE palette_handle,
+        static unsigned int get_nearest_palette_index(HPALETTE palette_handle,
                                               COLORREF color);
 
-        static UINT get_palette_entries(HPALETTE palette_handle,
-                                        UINT start,
-                                        UINT entry_count,
+        static unsigned int get_palette_entries(HPALETTE palette_handle,
+                                        unsigned int start,
+                                        unsigned int entry_count,
                                         PALETTEENTRY *palette_entry);
 
-        static UINT set_palette_entries(HPALETTE palette_handle,
-                                        UINT start,
-                                        UINT entry_count,
+        static unsigned int set_palette_entries(HPALETTE palette_handle,
+                                        unsigned int start,
+                                        unsigned int entry_count,
                                         const PALETTEENTRY *palette_entry);
 
-        static UINT get_system_palette_entries(HDC dc_handle,
-                                               UINT start,
-                                               UINT entry_count,
+        static unsigned int get_system_palette_entries(HDC dc_handle,
+                                               unsigned int start,
+                                               unsigned int entry_count,
                                                PALETTEENTRY *palette_entry);
 
-        static UINT get_system_palette_use(HDC dc_handle);
+        static unsigned int get_system_palette_use(HDC dc_handle);
 
-        static UINT set_system_palette_use(HDC dc_handle, UINT use);
+        static unsigned int set_system_palette_use(HDC dc_handle, unsigned int use);
 
         static HPALETTE select_palette(HDC dc_handle,
                                        HPALETTE palette_handle,
@@ -64,13 +64,13 @@ namespace YanLib::ui::gdi {
         static bool update_colors(HDC dc_handle);
 
         static bool animate_palette(HPALETTE palette_handle,
-                                    UINT start,
-                                    UINT entry_count,
+                                    unsigned int start,
+                                    unsigned int entry_count,
                                     const PALETTEENTRY *palette_entry);
 
-        static UINT realize_palette(HDC dc_handle);
+        static unsigned int realize_palette(HDC dc_handle);
 
-        static bool resize_palette(HPALETTE palette_handle, UINT num);
+        static bool resize_palette(HPALETTE palette_handle, unsigned int num);
     };
 }
 #endif //PALETTE_H

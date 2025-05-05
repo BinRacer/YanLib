@@ -31,7 +31,7 @@ namespace YanLib::crypto {
         HCRYPTKEY crypt_key_handle = 0;
         std::vector<uint8_t> pub_key{};
         std::vector<uint8_t> priv_key{};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
         void cleanup();
 
@@ -80,7 +80,7 @@ namespace YanLib::crypto {
 
         [[nodiscard]] std::string priv_pem() const;
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

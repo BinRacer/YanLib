@@ -16,7 +16,7 @@ namespace YanLib::sys {
         void *env = nullptr;
         std::vector<HANDLE> token_handles = {};
         sync::rwlock rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
         void cleanup();
 
@@ -33,13 +33,13 @@ namespace YanLib::sys {
 
         ~security();
 
-        [[nodiscard]] DWORD curr_session_id() const;
+        [[nodiscard]] unsigned long curr_session_id() const;
 
-        HANDLE curr_session_token(ULONG session_id = 0);
+        HANDLE curr_session_token(unsigned long session_id = 0);
 
         HANDLE copy_token(
             HANDLE existing_token_handle = nullptr,
-            DWORD desired_access = MAXIMUM_ALLOWED,
+            unsigned long desired_access = MAXIMUM_ALLOWED,
             SECURITY_ATTRIBUTES *token_attrs = nullptr,
             SECURITY_IMPERSONATION_LEVEL impersonation_level
                     = SecurityIdentification,
@@ -67,11 +67,11 @@ namespace YanLib::sys {
                                const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool enable_privilege(DWORD pid,
+        bool enable_privilege(unsigned long pid,
                               const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool disable_privilege(DWORD pid,
+        bool disable_privilege(unsigned long pid,
                                const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
@@ -81,10 +81,10 @@ namespace YanLib::sys {
         bool disable_debug(HANDLE proc_handle);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool enable_debug(DWORD pid);
+        bool enable_debug(unsigned long pid);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
-        bool disable_debug(DWORD pid);
+        bool disable_debug(unsigned long pid);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
         bool enable_sacl(HANDLE proc_handle);
@@ -93,10 +93,10 @@ namespace YanLib::sys {
         bool disable_sacl(HANDLE proc_handle);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        bool enable_sacl(DWORD pid);
+        bool enable_sacl(unsigned long pid);
 
         // SE_SECURITY_NAME = TEXT("SeSecurityPrivilege")
-        bool disable_sacl(DWORD pid);
+        bool disable_sacl(unsigned long pid);
 
         std::pair<TOKEN_ELEVATION_TYPE, bool> check_proc_elevation(
             HANDLE proc_handle = nullptr);
@@ -144,7 +144,7 @@ namespace YanLib::sys {
             SystemPolicy>
         check_proc_integrity_level(HANDLE proc_handle = nullptr);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

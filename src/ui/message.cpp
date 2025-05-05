@@ -8,8 +8,8 @@
 namespace YanLib::ui {
     bool message::get_message(MSG* msg,
                               HWND hwnd,
-                              UINT msg_filter_min,
-                              UINT msg_filter_max) {
+                              unsigned int msg_filter_min,
+                              unsigned int msg_filter_max) {
         int result = GetMessageW(msg,
                                  hwnd,
                                  msg_filter_min,
@@ -30,24 +30,24 @@ namespace YanLib::ui {
     }
 
     POINTS message::get_message_pos() {
-        DWORD result = GetMessagePos();
+        unsigned long result = GetMessagePos();
         return MAKEPOINTS(result);
     }
 
     POINTS message::get_unpredicted_message_pos() {
-        DWORD result = GetUnpredictedMessagePos();
+        unsigned long result = GetUnpredictedMessagePos();
         return MAKEPOINTS(result);
     }
 
-    LONG message::get_message_time() {
+    long message::get_message_time() {
         return GetMessageTime();
     }
 
     bool message::peek_message(MSG* msg,
                                HWND hwnd,
-                               UINT msg_filter_min,
-                               UINT msg_filter_max,
-                               UINT remove_msg) {
+                               unsigned int msg_filter_min,
+                               unsigned int msg_filter_max,
+                               unsigned int remove_msg) {
         return PeekMessageW(msg,
                             hwnd,
                             msg_filter_min,
@@ -56,7 +56,7 @@ namespace YanLib::ui {
     }
 
     bool message::post_message(HWND hwnd,
-                               UINT msg,
+                               unsigned int msg,
                                WPARAM w_param,
                                LPARAM l_param) {
         if (!PostMessageW(hwnd,
@@ -73,8 +73,8 @@ namespace YanLib::ui {
         PostQuitMessage(exit_code);
     }
 
-    bool message::post_thread_message(DWORD tid,
-                                      UINT msg,
+    bool message::post_thread_message(unsigned long tid,
+                                      unsigned int msg,
                                       WPARAM w_param,
                                       LPARAM l_param) {
         if (!PostThreadMessageW(tid,
@@ -87,7 +87,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool message::message_beep(UINT type) {
+    bool message::message_beep(unsigned int type) {
         if (!MessageBeep(type)) {
             error_code = GetLastError();
             return false;
@@ -96,8 +96,8 @@ namespace YanLib::ui {
     }
 
 
-    UINT message::register_window_message(const wchar_t *message) {
-        UINT result = RegisterWindowMessageW(message);
+    unsigned int message::register_window_message(const wchar_t *message) {
+        unsigned int result = RegisterWindowMessageW(message);
         if (!result) {
             error_code = GetLastError();
         }
@@ -110,7 +110,7 @@ namespace YanLib::ui {
 
     LRESULT message::send_dialog_item_message(HWND hwnd_dialog,
                                               int id_dialog_item,
-                                              UINT msg,
+                                              unsigned int msg,
                                               WPARAM w_param,
                                               LPARAM l_param) {
         return SendDlgItemMessageW(hwnd_dialog,
@@ -121,7 +121,7 @@ namespace YanLib::ui {
     }
 
     LRESULT message::send_message(HWND hwnd,
-                                  UINT msg,
+                                  unsigned int msg,
                                   WPARAM w_param,
                                   LPARAM l_param) {
         return SendMessageW(hwnd,
@@ -131,7 +131,7 @@ namespace YanLib::ui {
     }
 
     bool message::send_message_callback(HWND hwnd,
-                                        UINT msg,
+                                        unsigned int msg,
                                         WPARAM w_param,
                                         LPARAM l_param,
                                         SENDASYNCPROC result_callback,
@@ -149,12 +149,12 @@ namespace YanLib::ui {
     }
 
     LRESULT message::send_message_timeout(HWND hwnd,
-                                          UINT msg,
+                                          unsigned int msg,
                                           WPARAM w_param,
                                           LPARAM l_param,
-                                          UINT flag,
-                                          UINT timeout,
-                                          PDWORD_PTR result) {
+                                          unsigned int flag,
+                                          unsigned int timeout,
+                                          DWORD_PTR* result) {
         SetLastError(ERROR_SUCCESS);
         LRESULT ret = SendMessageTimeoutW(hwnd,
                                           msg,
@@ -168,7 +168,7 @@ namespace YanLib::ui {
     }
 
     bool message::send_notify_message(HWND hwnd,
-                                      UINT msg,
+                                      unsigned int msg,
                                       WPARAM w_param,
                                       LPARAM l_param) {
         if (!SendNotifyMessageW(hwnd,
@@ -181,7 +181,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool message::skip_pointer_frame_messages(UINT32 pointer_id) {
+    bool message::skip_pointer_frame_messages(unsigned int pointer_id) {
         if (!SkipPointerFrameMessages(pointer_id)) {
             error_code = GetLastError();
             return false;
@@ -222,7 +222,7 @@ namespace YanLib::ui {
         return InSendMessage();
     }
 
-    DWORD message::in_send_message(void *reserved) {
+    unsigned long message::in_send_message(void *reserved) {
         return InSendMessageEx(reserved);
     }
 
@@ -234,9 +234,9 @@ namespace YanLib::ui {
         return IsWow64Message();
     }
 
-    long message::broadcast_system_message(DWORD flag,
-                                           DWORD* info,
-                                           UINT msg,
+    long message::broadcast_system_message(unsigned long flag,
+                                           unsigned long* info,
+                                           unsigned int msg,
                                            WPARAM w_param,
                                            LPARAM l_param) {
         long result = BroadcastSystemMessageW(flag,
@@ -250,9 +250,9 @@ namespace YanLib::ui {
         return result;
     }
 
-    long message::broadcast_system_message(DWORD flag,
-                                           DWORD* info,
-                                           UINT msg,
+    long message::broadcast_system_message(unsigned long flag,
+                                           unsigned long* info,
+                                           unsigned int msg,
                                            WPARAM w_param,
                                            LPARAM l_param,
                                            BSMINFO* bsm_info) {
@@ -268,7 +268,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool message::change_window_message_filter(UINT message, DWORD flag) {
+    bool message::change_window_message_filter(unsigned int message, unsigned long flag) {
         if (!ChangeWindowMessageFilter(message, flag)) {
             error_code = GetLastError();
             return false;
@@ -278,8 +278,8 @@ namespace YanLib::ui {
 
     bool
     message::change_window_message_filter(HWND hwnd,
-                                          UINT message,
-                                          DWORD action,
+                                          unsigned int message,
+                                          unsigned long action,
                                           CHANGEFILTERSTRUCT* change_filter_struct) {
         if (!ChangeWindowMessageFilterEx(hwnd,
                                          message,
@@ -294,7 +294,7 @@ namespace YanLib::ui {
     int message::message_box(HWND hwnd,
                              const wchar_t *text,
                              const wchar_t *caption,
-                             UINT type) {
+                             unsigned int type) {
         int result = MessageBoxW(hwnd,
                                  text,
                                  caption,
@@ -308,8 +308,8 @@ namespace YanLib::ui {
     int message::message_box(HWND hwnd,
                              const wchar_t *text,
                              const wchar_t *caption,
-                             UINT type,
-                             WORD language_id) {
+                             unsigned int type,
+                             unsigned short language_id) {
         int result = MessageBoxExW(hwnd,
                                    text,
                                    caption,
@@ -326,7 +326,7 @@ namespace YanLib::ui {
     }
 
 
-    DWORD message::err_code() const {
+    unsigned long message::err_code() const {
         return error_code;
     }
 

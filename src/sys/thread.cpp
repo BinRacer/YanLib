@@ -27,7 +27,7 @@ namespace YanLib::sys {
                           void *params,
                           size_t stack_size,
                           SECURITY_ATTRIBUTES *security_attrs) {
-        DWORD tid = 0;
+        unsigned long tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
                                             start_addr,
@@ -49,7 +49,7 @@ namespace YanLib::sys {
                                        void *params,
                                        size_t stack_size,
                                        SECURITY_ATTRIBUTES *security_attrs) {
-        DWORD tid = 0;
+        unsigned long tid = 0;
         HANDLE thread_handle = CreateThread(security_attrs,
                                             stack_size,
                                             start_addr,
@@ -72,7 +72,7 @@ namespace YanLib::sys {
         void *params,
         size_t stack_size,
         SECURITY_ATTRIBUTES *security_attrs) {
-        DWORD tid = 0;
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateThread(security_attrs,
                              stack_size,
@@ -97,7 +97,7 @@ namespace YanLib::sys {
                                  size_t stack_size,
                                  LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                  SECURITY_ATTRIBUTES *security_attrs) {
-        DWORD tid = 0;
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateRemoteThreadEx(proc_handle,
                                      security_attrs,
@@ -125,7 +125,7 @@ namespace YanLib::sys {
         size_t stack_size,
         LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
         SECURITY_ATTRIBUTES *security_attrs) {
-        DWORD tid = 0;
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateRemoteThreadEx(proc_handle,
                                      security_attrs,
@@ -153,7 +153,7 @@ namespace YanLib::sys {
         size_t stack_size,
         LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
         SECURITY_ATTRIBUTES *security_attrs) {
-        DWORD tid = 0;
+        unsigned long tid = 0;
         HANDLE thread_handle = CreateRemoteThreadEx(
             proc_handle,
             security_attrs,
@@ -182,16 +182,16 @@ namespace YanLib::sys {
         return GetCurrentProcess();
     }
 
-    DWORD thread::curr_thread_id() {
+    unsigned long thread::curr_thread_id() {
         return GetCurrentThreadId();
     }
 
-    DWORD thread::curr_process_id() {
+    unsigned long thread::curr_process_id() {
         return GetCurrentProcessId();
     }
 
-    HANDLE thread::tid_to_handle(DWORD thread_id,
-                                 DWORD desired_access,
+    HANDLE thread::tid_to_handle(unsigned long thread_id,
+                                 unsigned long desired_access,
                                  bool is_inherit_handle) {
         HANDLE thread_handle = OpenThread(desired_access,
                                           is_inherit_handle
@@ -208,16 +208,16 @@ namespace YanLib::sys {
         return thread_handle;
     }
 
-    DWORD thread::handle_to_tid(HANDLE thread_handle) {
-        DWORD thread_id = GetThreadId(thread_handle);
+    unsigned long thread::handle_to_tid(HANDLE thread_handle) {
+        unsigned long thread_id = GetThreadId(thread_handle);
         if (!thread_handle) {
             error_code = GetLastError();
         }
         return thread_id;
     }
 
-    DWORD thread::handle_to_pid(HANDLE thread_handle) {
-        DWORD pid = GetProcessIdOfThread(thread_handle);
+    unsigned long thread::handle_to_pid(HANDLE thread_handle) {
+        unsigned long pid = GetProcessIdOfThread(thread_handle);
         if (!pid) {
             error_code = GetLastError();
         }
@@ -234,8 +234,8 @@ namespace YanLib::sys {
         return thread_handles;
     }
 
-    std::vector<DWORD> thread::thread_ids() {
-        std::vector<DWORD> thread_ids;
+    std::vector<unsigned long> thread::thread_ids() {
+        std::vector<unsigned long> thread_ids;
         thread_record_rwlock.read_lock();
         for (auto [key, value]: thread_records) {
             thread_ids.push_back(key);
@@ -244,15 +244,15 @@ namespace YanLib::sys {
         return thread_ids;
     }
 
-    DWORD thread::tls_alloc() {
-        DWORD tls_index = TlsAlloc();
+    unsigned long thread::tls_alloc() {
+        unsigned long tls_index = TlsAlloc();
         if (tls_index == TLS_OUT_OF_INDEXES) {
             error_code = GetLastError();
         }
         return tls_index;
     }
 
-    bool thread::tls_free(DWORD tls_index) {
+    bool thread::tls_free(unsigned long tls_index) {
         if (!TlsFree(tls_index)) {
             error_code = GetLastError();
             return false;
@@ -260,7 +260,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    void *thread::tls_get(DWORD tls_index) {
+    void *thread::tls_get(unsigned long tls_index) {
         void *tls_value = TlsGetValue(tls_index);
         if (!tls_value) {
             error_code = GetLastError();
@@ -268,7 +268,7 @@ namespace YanLib::sys {
         return tls_value;
     }
 
-    bool thread::tls_set(DWORD tls_index, void *tls_value) {
+    bool thread::tls_set(unsigned long tls_index, void *tls_value) {
         if (!TlsSetValue(tls_index, tls_value)) {
             error_code = GetLastError();
             return false;
@@ -276,13 +276,13 @@ namespace YanLib::sys {
         return true;
     }
 
-    DWORD thread::wait_for_input_idle(HANDLE proc_handle,
-                                      DWORD milli_seconds) {
+    unsigned long thread::wait_for_input_idle(HANDLE proc_handle,
+                                      unsigned long milli_seconds) {
         return WaitForInputIdle(proc_handle, milli_seconds);
     }
 
-    bool thread::attach_thread_input(DWORD id_attach,
-                                     DWORD id_attach_to,
+    bool thread::attach_thread_input(unsigned long id_attach,
+                                     unsigned long id_attach_to,
                                      bool is_attach) {
         if (!AttachThreadInput(id_attach,
                                id_attach_to,
@@ -295,8 +295,8 @@ namespace YanLib::sys {
 
     bool thread::init_proc_thread_attr_list(
         LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-        DWORD attr_count,
-        DWORD flag,
+        unsigned long attr_count,
+        unsigned long flag,
         SIZE_T *size) {
         if (!InitializeProcThreadAttributeList(attr_list,
                                                attr_count,
@@ -310,7 +310,7 @@ namespace YanLib::sys {
 
     bool thread::update_proc_thread_attr(
         LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-        DWORD flag,
+        unsigned long flag,
         DWORD_PTR attr,
         void *value,
         size_t bytes_size,
@@ -334,33 +334,33 @@ namespace YanLib::sys {
         DeleteProcThreadAttributeList(attr_list);
     }
 
-    DWORD thread::suspend(HANDLE thread_handle) {
-        DWORD ret = SuspendThread(thread_handle);
-        if (ret == static_cast<DWORD>(-1)) {
+    unsigned long thread::suspend(HANDLE thread_handle) {
+        unsigned long ret = SuspendThread(thread_handle);
+        if (ret == static_cast<unsigned long>(-1)) {
             error_code = GetLastError();
         }
         return ret;
     }
 
-    DWORD thread::resume(HANDLE thread_handle) {
-        DWORD ret = ResumeThread(thread_handle);
-        if (ret == static_cast<DWORD>(-1)) {
+    unsigned long thread::resume(HANDLE thread_handle) {
+        unsigned long ret = ResumeThread(thread_handle);
+        if (ret == static_cast<unsigned long>(-1)) {
             error_code = GetLastError();
         }
         return ret;
     }
 
-    bool thread::wait(HANDLE thread_handle, DWORD milli_seconds) {
-        DWORD ret = WaitForSingleObject(thread_handle, milli_seconds);
+    bool thread::wait(HANDLE thread_handle, unsigned long milli_seconds) {
+        unsigned long ret = WaitForSingleObject(thread_handle, milli_seconds);
         if (ret == WAIT_OBJECT_0) {
             return true;
         }
         return false;
     }
 
-    bool thread::wait_all(bool is_wait_all, DWORD milli_seconds) {
+    bool thread::wait_all(bool is_wait_all, unsigned long milli_seconds) {
         std::vector<HANDLE> thread_handles = thread::thread_handles();
-        DWORD ret = WaitForMultipleObjects(thread_handles.size(),
+        unsigned long ret = WaitForMultipleObjects(thread_handles.size(),
                                            thread_handles.data(),
                                            is_wait_all ? TRUE : FALSE,
                                            milli_seconds);
@@ -371,11 +371,11 @@ namespace YanLib::sys {
         return false;
     }
 
-    void thread::sleep(DWORD milli_seconds) {
+    void thread::sleep(unsigned long milli_seconds) {
         Sleep(milli_seconds);
     }
 
-    DWORD thread::sleep(DWORD milli_seconds, bool alertable) {
+    unsigned long thread::sleep(unsigned long milli_seconds, bool alertable) {
         return SleepEx(milli_seconds, alertable ? TRUE : FALSE);
     }
 
@@ -383,7 +383,7 @@ namespace YanLib::sys {
         return SwitchToThread();
     }
 
-    bool thread::kill(HANDLE thread_handle, DWORD exit_code) {
+    bool thread::kill(HANDLE thread_handle, unsigned long exit_code) {
         if (!TerminateThread(thread_handle, exit_code)) {
             error_code = GetLastError();
             return false;
@@ -391,19 +391,19 @@ namespace YanLib::sys {
         return true;
     }
 
-    void thread::kill_all(DWORD exit_code) {
+    void thread::kill_all(unsigned long exit_code) {
         thread_record_rwlock.read_lock();
         for (auto [key, value]: thread_records) {
             TerminateThread(value, exit_code);
         }
     }
 
-    void thread::exit(DWORD exit_code) {
+    void thread::exit(unsigned long exit_code) {
         ExitThread(exit_code);
     }
 
-    DWORD thread::exit_status(HANDLE thread_handle) {
-        DWORD exit_code = 0;
+    unsigned long thread::exit_status(HANDLE thread_handle) {
+        unsigned long exit_code = 0;
         if (!GetExitCodeThread(thread_handle, &exit_code)) {
             error_code = GetLastError();
         }
@@ -413,7 +413,7 @@ namespace YanLib::sys {
     bool thread::thread_info(HANDLE thread_handle,
                              THREAD_INFORMATION_CLASS thread_info_class,
                              void *thread_info,
-                             DWORD thread_info_size) {
+                             unsigned long thread_info_size) {
         if (!get_info(thread_handle,
                       thread_info_class,
                       thread_info,
@@ -448,15 +448,15 @@ namespace YanLib::sys {
         return true;
     }
 
-    DWORD thread::get_proc_priority(HANDLE proc_handle) {
-        DWORD priority = GetPriorityClass(proc_handle);
+    unsigned long thread::get_proc_priority(HANDLE proc_handle) {
+        unsigned long priority = GetPriorityClass(proc_handle);
         if (!priority) {
             error_code = GetLastError();
         }
         return priority;
     }
 
-    bool thread::set_proc_priority(HANDLE proc_handle, DWORD priority) {
+    bool thread::set_proc_priority(HANDLE proc_handle, unsigned long priority) {
         if (!SetPriorityClass(proc_handle, priority)) {
             error_code = GetLastError();
             return false;
@@ -560,7 +560,7 @@ namespace YanLib::sys {
     bool thread::get_info(HANDLE thread_handle,
                           THREAD_INFORMATION_CLASS thread_info_class,
                           void *thread_info,
-                          DWORD thread_information_size) {
+                          unsigned long thread_information_size) {
         if (!GetThreadInformation(thread_handle,
                                   thread_info_class,
                                   thread_info,
@@ -574,7 +574,7 @@ namespace YanLib::sys {
     bool thread::set_info(HANDLE thread_handle,
                           THREAD_INFORMATION_CLASS thread_info_class,
                           void *thread_info,
-                          DWORD thread_information_size) {
+                          unsigned long thread_information_size) {
         if (!SetThreadInformation(thread_handle,
                                   thread_info_class,
                                   thread_info,
@@ -586,9 +586,9 @@ namespace YanLib::sys {
     }
 
     bool thread::query_idle_processor_cycle_time(
-        USHORT group,
-        ULONG *buffer_length,
-        ULONG64 *processor_idle_cycle_time) {
+        unsigned short group,
+        unsigned long *buffer_length,
+        unsigned long long *processor_idle_cycle_time) {
         if (QueryIdleProcessorCycleTimeEx(group,
                                           buffer_length,
                                           processor_idle_cycle_time)) {
@@ -599,7 +599,7 @@ namespace YanLib::sys {
     }
 
     bool thread::query_cycle_time(HANDLE thread_handle,
-                                  ULONG64 *cycle_time) {
+                                  unsigned long long *cycle_time) {
         if (!QueryThreadCycleTime(thread_handle,
                                   cycle_time)) {
             error_code = GetLastError();
@@ -618,7 +618,7 @@ namespace YanLib::sys {
         return ret;
     }
 
-    bool thread::set_stack_guarantee(ULONG *bytes_stack) {
+    bool thread::set_stack_guarantee(unsigned long *bytes_stack) {
         if (!SetThreadStackGuarantee(bytes_stack)) {
             error_code = GetLastError();
             return false;
@@ -626,7 +626,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    DWORD thread::err_code() const {
+    unsigned long thread::err_code() const {
         return error_code;
     }
 

@@ -10,7 +10,7 @@
 namespace YanLib::sys {
     class processor {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         processor(const processor &other) = delete;
@@ -25,33 +25,33 @@ namespace YanLib::sys {
 
         ~processor() = default;
 
-        DWORD active_count(WORD group_number = ALL_PROCESSOR_GROUPS);
+        unsigned long active_count(unsigned short group_number = ALL_PROCESSOR_GROUPS);
 
-        WORD active_group_count();
+        unsigned short active_group_count();
 
-        DWORD number();
+        unsigned long number();
 
         void number(PROCESSOR_NUMBER* processor_number);
 
         bool logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buffer,
-                        DWORD* ret_len);
+                        unsigned long* ret_len);
 
         bool logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
                         SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* buffer,
-                        DWORD* ret_len);
+                        unsigned long* ret_len);
 
-        DWORD max_count(WORD GroupNumber);
+        unsigned long max_count(unsigned short GroupNumber);
 
-        WORD max_group_count();
+        unsigned short max_group_count();
 
-        bool idle_cycle_time(ULONG* buffer_length,
-                             ULONG64* processor_idle_cycle_time);
+        bool idle_cycle_time(unsigned long* buffer_length,
+                             unsigned long long* processor_idle_cycle_time);
 
-        bool idle_cycle_time(USHORT group,
-                             ULONG* buffer_length,
-                             ULONG64* processor_idle_cycle_time);
+        bool idle_cycle_time(unsigned short group,
+                             unsigned long* buffer_length,
+                             unsigned long long* processor_idle_cycle_time);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

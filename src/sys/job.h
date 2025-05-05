@@ -14,7 +14,7 @@ namespace YanLib::sys {
     private:
         std::vector<HANDLE> job_handles = {};
         sync::rwlock rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         job(const job &other) = delete;
@@ -33,14 +33,14 @@ namespace YanLib::sys {
                       SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
         HANDLE open(const wchar_t *job_name,
-                    DWORD desired_access = JOB_ALL_ACCESS,
+                    unsigned long desired_access = JOB_ALL_ACCESS,
                     bool is_inherit_handle = false);
 
         bool add(HANDLE job_handle, HANDLE proc_handle);
 
         bool contains(HANDLE job_handle, HANDLE proc_handle);
 
-        bool kill(HANDLE job_handle, UINT exit_code);
+        bool kill(HANDLE job_handle, unsigned int exit_code);
 
         bool grant_access(HANDLE job_handle, HANDLE user_handle);
 
@@ -49,15 +49,15 @@ namespace YanLib::sys {
         bool get_info(HANDLE job_handle,
                       JOBOBJECTINFOCLASS job_object_info_class,
                       void *job_object_info,
-                      DWORD job_object_info_len,
-                      DWORD* ret_len);
+                      unsigned long job_object_info_len,
+                      unsigned long* ret_len);
 
         bool set_info(HANDLE job_handle,
                       JOBOBJECTINFOCLASS job_object_info_class,
                       void *job_object_info,
-                      DWORD job_object_info_len);
+                      unsigned long job_object_info_len);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

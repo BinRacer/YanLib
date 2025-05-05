@@ -234,7 +234,7 @@ namespace YanLib::io {
 
     std::string udp_server::read_string_to_end(std::string &client_ip,
                                                uint16_t &client_port) {
-        constexpr DWORD buffer_size = 4096;
+        constexpr unsigned long buffer_size = 4096;
         char *buf = new char[buffer_size];
         memset(buf, 0, buffer_size);
         std::string raw_data;

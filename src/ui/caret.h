@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class caret {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         caret(const caret &other) = delete;
@@ -27,9 +27,9 @@ namespace YanLib::ui {
 
         bool create_caret(HWND hwnd, HBITMAP bitmap_handle, int width, int height);
 
-        UINT get_caret_blink_time();
+        unsigned int get_caret_blink_time();
 
-        bool set_caret_blink_time(UINT milli_second);
+        bool set_caret_blink_time(unsigned int milli_second);
 
         bool get_caret_pos(POINT* point);
 
@@ -41,7 +41,7 @@ namespace YanLib::ui {
 
         bool destroy_caret();
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

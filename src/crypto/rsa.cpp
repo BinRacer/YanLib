@@ -52,7 +52,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            DWORD publen = 0;
+            unsigned long publen = 0;
             if (!CryptExportKey(crypt_key_handle,
                                 0,
                                 PUBLICKEYBLOB,
@@ -72,7 +72,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            DWORD privlen = 0;
+            unsigned long privlen = 0;
             if (!CryptExportKey(crypt_key_handle,
                                 0,
                                 PRIVATEKEYBLOB,
@@ -122,8 +122,8 @@ namespace YanLib::crypto {
                 break;
             }
             std::vector<uint8_t> encode_data(data.begin(), data.end());
-            DWORD data_size = data.size();
-            DWORD raw_size = data.size();
+            unsigned long data_size = data.size();
+            unsigned long raw_size = data.size();
             if (!CryptEncrypt(crypt_key_handle,
                               0,
                               TRUE,
@@ -177,7 +177,7 @@ namespace YanLib::crypto {
                 break;
             }
             std::vector<uint8_t> decode_data(data.begin(), data.end());
-            DWORD data_size = data.size();
+            unsigned long data_size = data.size();
             if (!CryptDecrypt(crypt_key_handle,
                               0,
                               TRUE,
@@ -284,7 +284,7 @@ namespace YanLib::crypto {
         return privkey;
     }
 
-    DWORD rsa::err_code() const {
+    unsigned long rsa::err_code() const {
         return error_code;
     }
 

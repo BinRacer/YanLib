@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    bool scroll::enable_scroll_bar(HWND hwnd, UINT scroll_type, UINT arrow_type) {
+    bool scroll::enable_scroll_bar(HWND hwnd, unsigned int scroll_type, unsigned int arrow_type) {
         if (!EnableScrollBar(hwnd, scroll_type, arrow_type)) {
             error_code = GetLastError();
             return false;
@@ -31,7 +31,7 @@ namespace YanLib::ui {
     }
 
     bool scroll::get_scroll_bar_info(HWND hwnd,
-                                     LONG object_id,
+                                     long object_id,
                                      SCROLLBARINFO *scroll_bar_info) {
         if (!GetScrollBarInfo(hwnd, object_id, scroll_bar_info)) {
             error_code = GetLastError();
@@ -84,8 +84,8 @@ namespace YanLib::ui {
 
     bool scroll::get_scroll_range(HWND hwnd,
                                   int scroll_type,
-                                  INT *min_pos,
-                                  INT *max_pos) {
+                                  int *min_pos,
+                                  int *max_pos) {
         if (!GetScrollRange(hwnd, scroll_type, min_pos, max_pos)) {
             error_code = GetLastError();
             return false;
@@ -95,8 +95,8 @@ namespace YanLib::ui {
 
     bool scroll::set_scroll_range(HWND hwnd,
                                   int scroll_type,
-                                  INT min_pos,
-                                  INT max_pos,
+                                  int min_pos,
+                                  int max_pos,
                                   bool is_redraw) {
         if (!SetScrollRange(hwnd,
                             scroll_type,
@@ -109,7 +109,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD scroll::err_code() const {
+    unsigned long scroll::err_code() const {
         return error_code;
     }
 

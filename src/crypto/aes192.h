@@ -33,11 +33,11 @@ namespace YanLib::crypto {
         HCRYPTKEY crypt_key_handle;
         std::vector<uint8_t> data_bytes;
         bool is_done = false;
-        DWORD error_code;
+        unsigned long error_code;
 
         struct KeyBlob {
             BLOBHEADER header;
-            DWORD key_size;
+            unsigned long key_size;
             uint8_t key[24];
         };
 
@@ -50,17 +50,17 @@ namespace YanLib::crypto {
         static void make_pkcs7_padding(std::vector<uint8_t> &data);
 
         static bool remove_pkcs7_padding(std::vector<uint8_t> &data,
-                                         DWORD ret_len);
+                                         unsigned long ret_len);
 
         static void make_iso10126_padding(std::vector<uint8_t> &data);
 
         static bool remove_iso10126_padding(std::vector<uint8_t> &data,
-                                            DWORD ret_len);
+                                            unsigned long ret_len);
 
         static void make_ansix923_padding(std::vector<uint8_t> &data);
 
         static bool remove_ansix923_padding(std::vector<uint8_t> &data,
-                                            DWORD ret_len);
+                                            unsigned long ret_len);
 
         bool pre_process(const std::vector<uint8_t> &key_bytes,
                          const std::vector<uint8_t> &iv,
@@ -121,7 +121,7 @@ namespace YanLib::crypto {
 
         [[nodiscard]] std::wstring hex_wstring() const;
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

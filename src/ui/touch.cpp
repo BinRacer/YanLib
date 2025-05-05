@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    bool touch::register_touch_hit_testing_window(HWND hwnd, ULONG value) {
+    bool touch::register_touch_hit_testing_window(HWND hwnd, unsigned long value) {
         if (!RegisterTouchHitTestingWindow(hwnd, value)) {
             error_code = GetLastError();
             return false;
@@ -14,7 +14,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::register_touch_window(HWND hwnd, ULONG flag) {
+    bool touch::register_touch_window(HWND hwnd, unsigned long flag) {
         if (!RegisterTouchWindow(hwnd, flag)) {
             error_code = GetLastError();
             return false;
@@ -30,13 +30,13 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::is_touch_window(HWND hwnd, ULONG* flag) {
+    bool touch::is_touch_window(HWND hwnd, unsigned long* flag) {
         return IsTouchWindow(hwnd, flag);
     }
 
     HSYNTHETICPOINTERDEVICE touch::create_synthetic_pointer_device(
         POINTER_INPUT_TYPE pointer_type,
-        ULONG max_count,
+        unsigned long max_count,
         POINTER_FEEDBACK_MODE mode) {
         HSYNTHETICPOINTERDEVICE result =
                 CreateSyntheticPointerDevice(pointer_type, max_count, mode);
@@ -60,7 +60,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_touch_input_info(HTOUCHINPUT touch_input_handle,
-                                     UINT inputs_count,
+                                     unsigned int inputs_count,
                                      TOUCHINPUT* inputs,
                                      int cb_size) {
         if (!GetTouchInputInfo(touch_input_handle,
@@ -73,8 +73,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::get_pointer_frame_touch_info(UINT32 pointer_id,
-                                             UINT32 *pointer_count,
+    bool touch::get_pointer_frame_touch_info(unsigned int pointer_id,
+                                             unsigned int *pointer_count,
                                              POINTER_TOUCH_INFO *touch_info) {
         if (!GetPointerFrameTouchInfo(pointer_id,
                                       pointer_count,
@@ -85,9 +85,9 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::get_pointer_frame_touch_info_history(UINT32 pointer_id,
-                                                     UINT32 *entries_count,
-                                                     UINT32 *pointer_count,
+    bool touch::get_pointer_frame_touch_info_history(unsigned int pointer_id,
+                                                     unsigned int *entries_count,
+                                                     unsigned int *pointer_count,
                                                      POINTER_TOUCH_INFO *touch_info) {
         if (!GetPointerFrameTouchInfoHistory(pointer_id,
                                              entries_count,
@@ -99,7 +99,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::get_pointer_touch_info(UINT32 pointer_id,
+    bool touch::get_pointer_touch_info(unsigned int pointer_id,
                                        POINTER_TOUCH_INFO *touch_info) {
         if (!GetPointerTouchInfo(pointer_id, touch_info)) {
             error_code = GetLastError();
@@ -108,8 +108,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::get_pointer_touch_info_history(UINT32 pointer_id,
-                                               UINT32 *entries_count,
+    bool touch::get_pointer_touch_info_history(unsigned int pointer_id,
+                                               unsigned int *entries_count,
                                                POINTER_TOUCH_INFO *touch_info) {
         if (!GetPointerTouchInfoHistory(pointer_id,
                                         entries_count,
@@ -120,12 +120,12 @@ namespace YanLib::ui {
         return true;
     }
 
-    WORD touch::get_pointer_id_wparam(WPARAM w_param) {
+    unsigned short touch::get_pointer_id_wparam(WPARAM w_param) {
         return GET_POINTERID_WPARAM(w_param);
     }
 
     bool touch::get_gesture_extra_args(HGESTUREINFO gesture_info_handle,
-                                       UINT extra_args_size,
+                                       unsigned int extra_args_size,
                                        uint8_t *extra_args_buf) {
         if (!GetGestureExtraArgs(gesture_info_handle,
                                  extra_args_size,
@@ -154,7 +154,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::initialize_touch_injection(UINT32 max_count, DWORD mode) {
+    bool touch::initialize_touch_injection(unsigned int max_count, unsigned long mode) {
         if (!InitializeTouchInjection(max_count, mode)) {
             error_code = GetLastError();
             return false;
@@ -164,7 +164,7 @@ namespace YanLib::ui {
 
     bool touch::inject_synthetic_pointer_input(HSYNTHETICPOINTERDEVICE device_handle,
                                                const POINTER_TYPE_INFO *pointer_info,
-                                               UINT32 count) {
+                                               unsigned int count) {
         if (!InjectSyntheticPointerInput(device_handle,
                                          pointer_info,
                                          count)) {
@@ -174,7 +174,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::inject_touch_input(UINT32 count, const POINTER_TOUCH_INFO *contacts) {
+    bool touch::inject_touch_input(unsigned int count, const POINTER_TOUCH_INFO *contacts) {
         if (!InjectTouchInput(count, contacts)) {
             error_code = GetLastError();
             return false;
@@ -193,7 +193,7 @@ namespace YanLib::ui {
     }
 
     bool touch::evaluate_proximity_to_polygon(
-        UINT32 num_vertices,
+        unsigned int num_vertices,
         const POINT *control_polygon,
         const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
         TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval) {
@@ -220,7 +220,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    LONG touch::touch_coord_to_pixel(LONG coordinate) {
+    long touch::touch_coord_to_pixel(long coordinate) {
         return TOUCH_COORD_TO_PIXEL(coordinate);
     }
 
@@ -232,7 +232,7 @@ namespace YanLib::ui {
         return GID_ROTATE_ANGLE_FROM_ARGUMENT(param);
     }
 
-    DWORD touch::err_code() const {
+    unsigned long touch::err_code() const {
         return error_code;
     }
 

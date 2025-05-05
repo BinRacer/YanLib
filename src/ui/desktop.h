@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class desktop {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         desktop(const desktop &other) = delete;
@@ -26,20 +26,20 @@ namespace YanLib::ui {
         ~desktop() = default;
 
         HDESK create_desktop(const wchar_t *desktop_name,
-                             DWORD flag = 0,
+                             unsigned long flag = 0,
                              ACCESS_MASK desired_access = DESKTOP_CREATEWINDOW |
                                                           DESKTOP_READOBJECTS |
                                                           DESKTOP_WRITEOBJECTS,
                              SECURITY_ATTRIBUTES* security_attrs = nullptr,
-                             ULONG heap_size = 1024);
+                             unsigned long heap_size = 1024);
 
         HDESK open_desktop(const wchar_t *desktop_name,
-                           DWORD flag = 0,
+                           unsigned long flag = 0,
                            bool is_inherit = false,
                            ACCESS_MASK desired_access = DESKTOP_READOBJECTS |
                                                         DESKTOP_WRITEOBJECTS);
 
-        HDESK open_input_desktop(DWORD flag = 0,
+        HDESK open_input_desktop(unsigned long flag = 0,
                                  bool is_inherit = false,
                                  ACCESS_MASK desired_access = DESKTOP_READOBJECTS |
                                                               DESKTOP_WRITEOBJECTS);
@@ -57,7 +57,7 @@ namespace YanLib::ui {
 
         HWND get_desktop_window();
 
-        HDESK get_thread_desktop(DWORD tid);
+        HDESK get_thread_desktop(unsigned long tid);
 
         bool set_thread_desktop(HDESK desktop_handle);
 
@@ -66,7 +66,7 @@ namespace YanLib::ui {
         bool switch_desktop(HDESK desktop_handle);
 
         HWINSTA create_window_station(const wchar_t *window_station_name,
-                                      DWORD flag = 0,
+                                      unsigned long flag = 0,
                                       ACCESS_MASK desired_access = WINSTA_ALL_ACCESS,
                                       SECURITY_ATTRIBUTES* security_attrs = nullptr);
 
@@ -85,15 +85,15 @@ namespace YanLib::ui {
         bool get_user_object_info(HANDLE desktop_or_window_station_handle,
                                   int index,
                                   void *info,
-                                  DWORD len,
-                                  DWORD* ret_len);
+                                  unsigned long len,
+                                  unsigned long* ret_len);
 
         bool set_user_object_information(HANDLE desktop_or_window_station_handle,
                                          int index,
                                          void *info,
-                                         DWORD len);
+                                         unsigned long len);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

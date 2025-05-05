@@ -95,19 +95,19 @@ namespace YanLib::ui::gdi {
         return SetWorldTransform(dc_handle, xfrom);
     }
 
-    std::pair<int, DWORD> coordinate::map_window_points(HWND hwnd_from,
+    std::pair<int, unsigned long> coordinate::map_window_points(HWND hwnd_from,
                                                         HWND hwnd_to,
                                                         POINT *point,
-                                                        UINT num) {
+                                                        unsigned int num) {
         SetLastError(0);
-        DWORD result = MapWindowPoints(hwnd_from, hwnd_to, point, num);
-        DWORD error_code = GetLastError();
+        unsigned long result = MapWindowPoints(hwnd_from, hwnd_to, point, num);
+        unsigned long error_code = GetLastError();
         return std::make_pair(result, error_code);
     }
 
     bool coordinate::modify_world_transform(HDC dc_handle,
                                             const XFORM *xfrom,
-                                            DWORD mode) {
+                                            unsigned long mode) {
         return ModifyWorldTransform(dc_handle, xfrom, mode);
     }
 

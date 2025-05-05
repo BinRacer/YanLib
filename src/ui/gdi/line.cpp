@@ -27,18 +27,18 @@ namespace YanLib::ui::gdi {
         return MoveToEx(dc_handle, x, y, point);
     }
 
-    bool line::poly_line(HDC dc_handle, const POINT *point, DWORD num) {
+    bool line::poly_line(HDC dc_handle, const POINT *point, unsigned long num) {
         return Polyline(dc_handle, point, num);
     }
 
-    bool line::poly_line_to(HDC dc_handle, const POINT *point, DWORD num) {
+    bool line::poly_line_to(HDC dc_handle, const POINT *point, unsigned long num) {
         return PolylineTo(dc_handle, point, num);
     }
 
     bool line::poly_poly_line(HDC dc_handle,
                               const POINT *point,
-                              const DWORD *num_array,
-                              DWORD num) {
+                              const unsigned long *num_array,
+                              unsigned long num) {
         return PolyPolyline(dc_handle,
                             point,
                             num_array,

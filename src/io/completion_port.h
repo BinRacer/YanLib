@@ -12,7 +12,7 @@ namespace YanLib::io {
     private:
         HANDLE iocp = nullptr;
         int max_concurrent_threads = 0;
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
         completion_port() = default;
 
@@ -38,18 +38,18 @@ namespace YanLib::io {
                               ULONG_PTR completion_key);
 
         bool post_status(ULONG_PTR completion_key,
-                         DWORD num_bytes = 0,
+                         unsigned long num_bytes = 0,
                          OVERLAPPED* overlapped = nullptr);
 
         bool get_status(ULONG_PTR *completion_key,
-                        DWORD* num_bytes,
+                        unsigned long* num_bytes,
                         OVERLAPPED* *overlapped,
-                        DWORD milli_seconds = INFINITE);
+                        unsigned long milli_seconds = INFINITE);
 
         bool get_status(OVERLAPPED_ENTRY* completion_port_entries,
-                        ULONG count,
-                        ULONG* num_entries_removed,
-                        DWORD milli_seconds = INFINITE,
+                        unsigned long count,
+                        unsigned long* num_entries_removed,
+                        unsigned long milli_seconds = INFINITE,
                         bool alertable = false);
 
         bool cancel(HANDLE file_handle);
@@ -59,28 +59,28 @@ namespace YanLib::io {
         bool cancel_sync_io(HANDLE thread_handle);
 
         bool device_io_control(HANDLE device_handle,
-                               DWORD io_control_code,
+                               unsigned long io_control_code,
                                void *in_buffer,
-                               DWORD in_buffer_size,
+                               unsigned long in_buffer_size,
                                void *out_buffer,
-                               DWORD out_buffer_size,
-                               DWORD* bytes_returned,
+                               unsigned long out_buffer_size,
+                               unsigned long* bytes_returned,
                                OVERLAPPED* overlapped);
 
         bool get_overlapped_result(HANDLE file_handle,
                                    OVERLAPPED* overlapped,
-                                   DWORD* number_of_bytes_transferred,
+                                   unsigned long* number_of_bytes_transferred,
                                    bool is_wait);
 
         bool get_overlapped_result(HANDLE file_handle,
                                    OVERLAPPED* overlapped,
-                                   DWORD* number_of_bytes_transferred,
-                                   DWORD milli_seconds,
+                                   unsigned long* number_of_bytes_transferred,
+                                   unsigned long milli_seconds,
                                    bool is_wait);
 
         bool close();
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

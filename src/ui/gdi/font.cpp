@@ -6,7 +6,7 @@
 
 namespace YanLib::ui::gdi {
     HFONT font::create_font(const wchar_t *face_name,
-                            DWORD charset,
+                            unsigned long charset,
                             int height,
                             int width,
                             int escapement,
@@ -15,10 +15,10 @@ namespace YanLib::ui::gdi {
                             bool is_italic,
                             bool is_underline,
                             bool is_strike_out,
-                            DWORD out_precision,
-                            DWORD clip_precision,
-                            DWORD quality,
-                            DWORD pitch_and_family) {
+                            unsigned long out_precision,
+                            unsigned long clip_precision,
+                            unsigned long quality,
+                            unsigned long pitch_and_family) {
         return CreateFontW(height,
                            width,
                            escapement,
@@ -41,11 +41,11 @@ namespace YanLib::ui::gdi {
 
     LOGFONTW font::make_log_font(const wchar_t *face_name,
                                  uint8_t char_set,
-                                 LONG height,
-                                 LONG width,
-                                 LONG escapement,
-                                 LONG orientation,
-                                 LONG weight,
+                                 long height,
+                                 long width,
+                                 long escapement,
+                                 long orientation,
+                                 long weight,
                                  bool is_italic,
                                  bool is_underline,
                                  bool is_strike_out,
@@ -75,9 +75,9 @@ namespace YanLib::ui::gdi {
     }
 
     HANDLE font::add_font_mem_resource(void *file_view,
-                                       DWORD size,
+                                       unsigned long size,
                                        void *resrved,
-                                       DWORD *num_fonts) {
+                                       unsigned long *num_fonts) {
         return AddFontMemResourceEx(file_view, size, resrved, num_fonts);
     }
 
@@ -93,11 +93,11 @@ namespace YanLib::ui::gdi {
         return RemoveFontResourceW(font_file_name);
     }
 
-    int font::add_font_resource(const wchar_t *font_file_name, DWORD font_type) {
+    int font::add_font_resource(const wchar_t *font_file_name, unsigned long font_type) {
         return AddFontResourceExW(font_file_name, font_type, nullptr);
     }
 
-    int font::remove_font_resource(const wchar_t *font_file_name, DWORD font_type) {
+    int font::remove_font_resource(const wchar_t *font_file_name, unsigned long font_type) {
         return RemoveFontResourceExW(font_file_name, font_type, nullptr);
     }
 
@@ -112,19 +112,19 @@ namespace YanLib::ui::gdi {
                                    0);
     }
 
-    DWORD font::get_font_data(HDC dc_handle,
-                              DWORD table,
-                              DWORD offset,
+    unsigned long font::get_font_data(HDC dc_handle,
+                              unsigned long table,
+                              unsigned long offset,
                               void *buf,
-                              DWORD size) {
+                              unsigned long size) {
         return GetFontData(dc_handle, table, offset, buf, size);
     }
 
-    DWORD font::get_font_language_info(HDC dc_handle) {
+    unsigned long font::get_font_language_info(HDC dc_handle) {
         return GetFontLanguageInfo(dc_handle);
     }
 
-    DWORD font::get_font_unicode_ranges(HDC dc_handle, GLYPHSET *glyph_set) {
+    unsigned long font::get_font_unicode_ranges(HDC dc_handle, GLYPHSET *glyph_set) {
         return GetFontUnicodeRanges(dc_handle, glyph_set);
     }
 }

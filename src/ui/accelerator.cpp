@@ -45,7 +45,7 @@ namespace YanLib::ui {
                                      accel_entries);
     }
 
-    DWORD accelerator::err_code() const {
+    unsigned long accelerator::err_code() const {
         return error_code;
     }
 

@@ -17,15 +17,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT caret::get_caret_blink_time() {
-        UINT result = GetCaretBlinkTime();
+    unsigned int caret::get_caret_blink_time() {
+        unsigned int result = GetCaretBlinkTime();
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    bool caret::set_caret_blink_time(UINT milli_second) {
+    bool caret::set_caret_blink_time(unsigned int milli_second) {
         if (!SetCaretBlinkTime(milli_second)) {
             error_code = GetLastError();
             return false;
@@ -73,7 +73,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD caret::err_code() const {
+    unsigned long caret::err_code() const {
         return error_code;
     }
 

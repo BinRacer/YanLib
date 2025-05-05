@@ -27,7 +27,7 @@ namespace YanLib::sync {
     }
 
     bool timer::open(const wchar_t *timer_name,
-                     DWORD desired_access,
+                     unsigned long desired_access,
                      bool is_inherit_handle) {
         timer_handle = OpenWaitableTimerW(desired_access,
                                           is_inherit_handle ? TRUE : FALSE,
@@ -37,7 +37,7 @@ namespace YanLib::sync {
     }
 
     bool timer::set_timer(const LARGE_INTEGER *due_time,
-                          LONG period,
+                          long period,
                           PTIMERAPCROUTINE pfn_completion_routine,
                           void *arg_to_completion_routine,
                           bool is_resume) {
@@ -82,9 +82,9 @@ namespace YanLib::sync {
         return false;
     }
 
-    bool timer::wait(DWORD milli_seconds) {
+    bool timer::wait(unsigned long milli_seconds) {
         if (timer_handle) {
-            DWORD ret = WaitForSingleObject(timer_handle, milli_seconds);
+            unsigned long ret = WaitForSingleObject(timer_handle, milli_seconds);
             if (ret == WAIT_FAILED) {
                 error_code = GetLastError();
             } else {
@@ -94,7 +94,7 @@ namespace YanLib::sync {
         return error_code == WAIT_OBJECT_0;
     }
 
-    DWORD timer::err_code() const {
+    unsigned long timer::err_code() const {
         return error_code;
     }
 

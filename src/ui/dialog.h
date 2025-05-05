@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class dialog {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         dialog(const dialog &other) = delete;
@@ -71,10 +71,10 @@ namespace YanLib::ui {
 
         bool end_dialog(HWND hwnd_dialog, INT_PTR result);
 
-        bool check_dialog_button(HWND hwnd_dialog, int id_button, UINT check);
+        bool check_dialog_button(HWND hwnd_dialog, int id_button, unsigned int check);
 
         LRESULT default_dialog_proc(HWND hwnd_dialog,
-                                    UINT msg,
+                                    unsigned int msg,
                                     WPARAM w_param,
                                     LPARAM l_param);
 
@@ -82,13 +82,13 @@ namespace YanLib::ui {
                             wchar_t *path_spec,
                             int id_listbox,
                             int id_static_path,
-                            UINT file_type);
+                            unsigned int file_type);
 
         int dialog_dir_list_combobox(HWND hwnd_dialog,
                                      wchar_t *path_spec,
                                      int id_combobox,
                                      int id_static_path,
-                                     UINT filetype);
+                                     unsigned int filetype);
 
         bool dialog_dir_select_combobox(HWND hwnd_dialog,
                                         wchar_t *text,
@@ -104,16 +104,16 @@ namespace YanLib::ui {
 
         HWND get_dialog_item(HWND hwnd_dialog, int id_dialog_item);
 
-        std::pair<UINT, bool> get_dialog_item_int(HWND hwnd_dialog,
+        std::pair<unsigned int, bool> get_dialog_item_int(HWND hwnd_dialog,
                                                   int id_dialog_item,
                                                   bool is_signed);
 
         bool set_dialog_item_int(HWND hwnd_dialog,
                                  int id_dialog_item,
-                                 UINT value,
+                                 unsigned int value,
                                  bool is_signed);
 
-        UINT get_dialog_item_text(HWND hwnd_dialog,
+        unsigned int get_dialog_item_text(HWND hwnd_dialog,
                                   int id_dialog_item,
                                   wchar_t *text,
                                   int cch_max);
@@ -130,7 +130,7 @@ namespace YanLib::ui {
                                       HWND hwnd_ctrl,
                                       bool previous);
 
-        UINT is_dialog_button_checked(HWND hwnd_dialog, int id_button);
+        unsigned int is_dialog_button_checked(HWND hwnd_dialog, int id_button);
 
         long get_dialog_base_units();
 
@@ -152,7 +152,7 @@ namespace YanLib::ui {
 
         bool map_dialog_rect(HWND hwnd_dialog, RECT* rect);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

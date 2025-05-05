@@ -27,7 +27,7 @@ namespace YanLib::sync {
         LeaveCriticalSection(&critical_section);
     }
 
-    bool condVarCS::sleep(DWORD milli_seconds) {
+    bool condVarCS::sleep(unsigned long milli_seconds) {
         return SleepConditionVariableCS(&condition_variable,
                                         &critical_section,
                                         milli_seconds);
@@ -75,7 +75,7 @@ namespace sync {
         ReleaseSRWLockExclusive(&rw_lock);
     }
 
-    bool condVarSRW::sleep(DWORD milli_seconds, ULONG flag) {
+    bool condVarSRW::sleep(unsigned long milli_seconds, unsigned long flag) {
         return SleepConditionVariableSRW(&condition_variable,
                                          &rw_lock,
                                          milli_seconds,

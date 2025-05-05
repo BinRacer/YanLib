@@ -11,7 +11,7 @@ namespace YanLib::sync {
     class barrier {
     private:
         SYNCHRONIZATION_BARRIER synchronization_barrier{};
-        DWORD error_code;
+        unsigned long error_code;
 
     public:
         barrier(const barrier &other) = delete;
@@ -24,18 +24,18 @@ namespace YanLib::sync {
 
         barrier() = delete;
 
-        explicit barrier(LONG total_threads, LONG spin_count = -1);
+        explicit barrier(long total_threads, long spin_count = -1);
 
         ~barrier();
 
-        bool enter(DWORD flag = SYNCHRONIZATION_BARRIER_FLAGS_BLOCK_ONLY);
+        bool enter(unsigned long flag = SYNCHRONIZATION_BARRIER_FLAGS_BLOCK_ONLY);
 
-        bool wait(DWORD count,
+        bool wait(unsigned long count,
                   const HANDLE *handles,
                   bool wait_all = false,
-                  DWORD milli_seconds = INFINITE);
+                  unsigned long milli_seconds = INFINITE);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

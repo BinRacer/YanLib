@@ -29,7 +29,7 @@ namespace YanLib::sync {
     }
 
     bool event::open(const wchar_t *name,
-                     DWORD desired_access,
+                     unsigned long desired_access,
                      bool is_inherit_handle) {
         event_handle = OpenEventW(desired_access,
                                   is_inherit_handle ? TRUE : FALSE,
@@ -54,9 +54,9 @@ namespace YanLib::sync {
         return false;
     }
 
-    bool event::wait(DWORD milli_seconds) {
+    bool event::wait(unsigned long milli_seconds) {
         if (event_handle) {
-            DWORD ret = WaitForSingleObject(event_handle, milli_seconds);
+            unsigned long ret = WaitForSingleObject(event_handle, milli_seconds);
             if (ret == WAIT_FAILED) {
                 error_code = GetLastError();
             } else {
@@ -66,7 +66,7 @@ namespace YanLib::sync {
         return error_code == WAIT_OBJECT_0;
     }
 
-    DWORD event::err_code() const {
+    unsigned long event::err_code() const {
         return error_code;
     }
 

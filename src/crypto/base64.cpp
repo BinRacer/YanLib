@@ -123,11 +123,11 @@ namespace YanLib::crypto {
         if (!input_handle || !output_handle) {
             return false;
         }
-        const DWORD buffer_size = input.size(input_handle);
+        const unsigned long buffer_size = input.size(input_handle);
         uint8_t *buf = new uint8_t[buffer_size];
         memset(buf, 0, buffer_size);
-        DWORD bytes_read = 0;
-        DWORD bytes_written = 0;
+        unsigned long bytes_read = 0;
+        unsigned long bytes_written = 0;
         do {
             if (!input.read(input_handle, buf, buffer_size, &bytes_read)) {
                 break;
@@ -153,11 +153,11 @@ namespace YanLib::crypto {
         if (!input_handle || !output_handle) {
             return false;
         }
-        const DWORD buffer_size = input.size(input_handle);
+        const unsigned long buffer_size = input.size(input_handle);
         uint8_t *buf = new uint8_t[buffer_size];
         memset(buf, 0, buffer_size);
-        DWORD bytes_read = 0;
-        DWORD bytes_written = 0;
+        unsigned long bytes_read = 0;
+        unsigned long bytes_written = 0;
         do {
             if (!input.read(input_handle, buf, buffer_size, &bytes_read)) {
                 break;

@@ -29,7 +29,7 @@ namespace YanLib::ui::gdi {
 
         static HBRUSH create_brush_indirect(const LOGBRUSH *log_brush);
 
-        static HBRUSH create_dib_pattern_brush_pt(const void *packed_dib, UINT usage);
+        static HBRUSH create_dib_pattern_brush_pt(const void *packed_dib, unsigned int usage);
 
         static bool get_brush_org(HDC dc_handle, POINT *point);
 

@@ -32,11 +32,11 @@ namespace YanLib::io {
     }
 
     HANDLE fs::open(const wchar_t *file_name,
-                    DWORD desired_access,
-                    DWORD share_mode,
+                    unsigned long desired_access,
+                    unsigned long share_mode,
                     SECURITY_ATTRIBUTES* security_attrs,
-                    DWORD creation_disposition,
-                    DWORD flags_and_attrs,
+                    unsigned long creation_disposition,
+                    unsigned long flags_and_attrs,
                     HANDLE template_file) {
         HANDLE file_handle = CreateFileW(file_name,
                                          desired_access,
@@ -56,11 +56,11 @@ namespace YanLib::io {
     }
 
     HANDLE fs::create(const wchar_t *file_name,
-                      DWORD desired_access,
-                      DWORD share_mode,
+                      unsigned long desired_access,
+                      unsigned long share_mode,
                       SECURITY_ATTRIBUTES* security_attrs,
-                      DWORD creation_disposition,
-                      DWORD flags_and_attrs,
+                      unsigned long creation_disposition,
+                      unsigned long flags_and_attrs,
                       HANDLE template_file) {
         HANDLE file_handle = CreateFileW(file_name,
                                          desired_access,
@@ -99,8 +99,8 @@ namespace YanLib::io {
 
     bool fs::read(HANDLE file_handle,
                   void *buf,
-                  DWORD size,
-                  DWORD* ret_size,
+                  unsigned long size,
+                  unsigned long* ret_size,
                   OVERLAPPED* overlapped) {
         if (!ReadFile(file_handle,
                       buf,
@@ -115,7 +115,7 @@ namespace YanLib::io {
 
     bool fs::read(HANDLE file_handle,
                   void *buf,
-                  DWORD size,
+                  unsigned long size,
                   OVERLAPPED* overlapped,
                   OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadFileEx(file_handle,
@@ -131,8 +131,8 @@ namespace YanLib::io {
 
     bool fs::write(HANDLE file_handle,
                    const void *buf,
-                   DWORD size,
-                   DWORD* ret_size,
+                   unsigned long size,
+                   unsigned long* ret_size,
                    OVERLAPPED* overlapped) {
         if (!WriteFile(file_handle,
                        buf,
@@ -147,7 +147,7 @@ namespace YanLib::io {
 
     bool fs::write(HANDLE file_handle,
                    const void *buf,
-                   DWORD size,
+                   unsigned long size,
                    OVERLAPPED* overlapped,
                    OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!WriteFileEx(file_handle,
@@ -167,7 +167,7 @@ namespace YanLib::io {
             buffer_size = 1;
         }
         std::vector<uint8_t> raw_data(buffer_size, '\0');
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         if (ReadFile(
                 file_handle,
                 raw_data.data(),
@@ -188,7 +188,7 @@ namespace YanLib::io {
             buffer_size = 1;
         }
         std::string raw_data(buffer_size, '\0');
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         if (ReadFile(
                 file_handle,
                 raw_data.data(),
@@ -209,7 +209,7 @@ namespace YanLib::io {
             buffer_size = 1;
         }
         std::wstring raw_data(buffer_size, L'\0');
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         if (ReadFile(
                 file_handle,
                 raw_data.data(),
@@ -225,12 +225,12 @@ namespace YanLib::io {
     }
 
     std::vector<uint8_t> fs::read_bytes_to_end(HANDLE file_handle) {
-        constexpr DWORD buffer_size = 4096;
+        constexpr unsigned long buffer_size = 4096;
         uint8_t *buf = new uint8_t[buffer_size];
         memset(buf, 0, buffer_size);
         std::vector<uint8_t> raw_data;
         raw_data.reserve(buffer_size);
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         bool ret = false;
         do {
             ret = ReadFile(
@@ -253,12 +253,12 @@ namespace YanLib::io {
     }
 
     std::string fs::read_string_to_end(HANDLE file_handle) {
-        constexpr DWORD buffer_size = 4096;
+        constexpr unsigned long buffer_size = 4096;
         char *buf = new char[buffer_size];
         memset(buf, 0, buffer_size);
         std::string raw_data;
         raw_data.reserve(buffer_size);
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         bool ret = false;
         do {
             ret = ReadFile(
@@ -281,12 +281,12 @@ namespace YanLib::io {
     }
 
     std::wstring fs::read_wstring_to_end(HANDLE file_handle) {
-        constexpr DWORD buffer_size = 2048;
+        constexpr unsigned long buffer_size = 2048;
         wchar_t *buf = new wchar_t[buffer_size];
         memset(buf, 0, buffer_size * sizeof(wchar_t));
         std::wstring raw_data;
         raw_data.reserve(buffer_size);
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         bool ret = false;
         do {
             ret = ReadFile(
@@ -308,12 +308,12 @@ namespace YanLib::io {
         return raw_data;
     }
 
-    DWORD fs::write_bytes(HANDLE file_handle,
+    unsigned long fs::write_bytes(HANDLE file_handle,
                           const std::vector<uint8_t> &vec) {
         if (vec.empty()) {
             return 0;
         }
-        DWORD bytes_written = 0;
+        unsigned long bytes_written = 0;
         if (!WriteFile(file_handle,
                        vec.data(),
                        vec.size(),
@@ -324,12 +324,12 @@ namespace YanLib::io {
         return bytes_written;
     }
 
-    DWORD fs::write_string(HANDLE file_handle,
+    unsigned long fs::write_string(HANDLE file_handle,
                            const std::string &str) {
         if (str.empty()) {
             return 0;
         }
-        DWORD bytes_written = 0;
+        unsigned long bytes_written = 0;
         if (!WriteFile(file_handle,
                        str.data(),
                        str.size(),
@@ -340,12 +340,12 @@ namespace YanLib::io {
         return bytes_written;
     }
 
-    DWORD fs::write_wstring(HANDLE file_handle,
+    unsigned long fs::write_wstring(HANDLE file_handle,
                             const std::wstring &wstr) {
         if (wstr.empty()) {
             return 0;
         }
-        DWORD bytes_written = 0;
+        unsigned long bytes_written = 0;
         if (!WriteFile(file_handle,
                        wstr.data(),
                        wstr.size() * sizeof(wchar_t),
@@ -358,7 +358,7 @@ namespace YanLib::io {
 
     int64_t fs::seek(HANDLE file_handle,
                      int64_t offset,
-                     DWORD move_method) {
+                     unsigned long move_method) {
         LARGE_INTEGER move = {};
         move.QuadPart = offset;
         LARGE_INTEGER new_pos = {};
@@ -383,10 +383,10 @@ namespace YanLib::io {
     bool fs::lock(HANDLE file_handle,
                   uint64_t offset,
                   uint64_t range) {
-        auto offset_low = static_cast<DWORD>(offset & 0xFFFFFFFF);
-        auto offset_high = static_cast<DWORD>(offset >> 32);
-        auto range_low = static_cast<DWORD>(range & 0xFFFFFFFF);
-        auto range_high = static_cast<DWORD>(range >> 32);
+        auto offset_low = static_cast<unsigned long>(offset & 0xFFFFFFFF);
+        auto offset_high = static_cast<unsigned long>(offset >> 32);
+        auto range_low = static_cast<unsigned long>(range & 0xFFFFFFFF);
+        auto range_high = static_cast<unsigned long>(range >> 32);
         if (!LockFile(file_handle,
                       offset_low,
                       offset_high,
@@ -399,12 +399,12 @@ namespace YanLib::io {
     }
 
     bool fs::lock_async(HANDLE file_handle,
-                        DWORD flag,
+                        unsigned long flag,
                         uint64_t range,
                         OVERLAPPED* overlapped,
-                        DWORD reserved) {
-        auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
-        auto high = static_cast<DWORD>(range >> 32);
+                        unsigned long reserved) {
+        auto low = static_cast<unsigned long>(range & 0xFFFFFFFF);
+        auto high = static_cast<unsigned long>(range >> 32);
         if (!LockFileEx(file_handle,
                         flag,
                         reserved,
@@ -420,10 +420,10 @@ namespace YanLib::io {
     bool fs::unlock(HANDLE file_handle,
                     uint64_t offset,
                     uint64_t range) {
-        auto offset_low = static_cast<DWORD>(offset & 0xFFFFFFFF);
-        auto offset_high = static_cast<DWORD>(offset >> 32);
-        auto range_low = static_cast<DWORD>(range & 0xFFFFFFFF);
-        auto range_high = static_cast<DWORD>(range >> 32);
+        auto offset_low = static_cast<unsigned long>(offset & 0xFFFFFFFF);
+        auto offset_high = static_cast<unsigned long>(offset >> 32);
+        auto range_low = static_cast<unsigned long>(range & 0xFFFFFFFF);
+        auto range_high = static_cast<unsigned long>(range >> 32);
         if (!UnlockFile(file_handle,
                         offset_low,
                         offset_high,
@@ -438,9 +438,9 @@ namespace YanLib::io {
     bool fs::unlock_async(HANDLE file_handle,
                           uint64_t range,
                           OVERLAPPED* overlapped,
-                          DWORD reserved) {
-        auto low = static_cast<DWORD>(range & 0xFFFFFFFF);
-        auto high = static_cast<DWORD>(range >> 32);
+                          unsigned long reserved) {
+        auto low = static_cast<unsigned long>(range & 0xFFFFFFFF);
+        auto high = static_cast<unsigned long>(range >> 32);
         if (!UnlockFileEx(file_handle,
                           reserved,
                           low,
@@ -463,7 +463,7 @@ namespace YanLib::io {
     bool fs::get_info(HANDLE file_handle,
                       FILE_INFO_BY_HANDLE_CLASS file_info_class,
                       void *file_info,
-                      DWORD file_info_size) {
+                      unsigned long file_info_size) {
         if (!GetFileInformationByHandleEx(file_handle,
                                           file_info_class,
                                           file_info,
@@ -477,7 +477,7 @@ namespace YanLib::io {
     bool fs::set_info(HANDLE file_handle,
                       FILE_INFO_BY_HANDLE_CLASS file_info_class,
                       void *file_info,
-                      DWORD file_info_size) {
+                      unsigned long file_info_size) {
         if (!SetFileInformationByHandle(file_handle,
                                         file_info_class,
                                         file_info,
@@ -490,7 +490,7 @@ namespace YanLib::io {
 
     bool fs::set_io_overlapped_range(HANDLE file_handle,
                                      uint8_t *overlapped_range_start,
-                                     ULONG length) {
+                                     unsigned long length) {
         if (!SetFileIoOverlappedRange(file_handle,
                                       overlapped_range_start,
                                       length)) {
@@ -503,7 +503,7 @@ namespace YanLib::io {
     bool fs::get_volume_info(HANDLE file_handle,
                              VolumeInfo *volume_info) {
         memset(volume_info, 0, size(volume_info));
-        DWORD size = 0;
+        unsigned long size = 0;
         if (!GetVolumeInformationByHandleW(file_handle,
                                            volume_info->volume_name,
                                            MAX_PATH,
@@ -519,8 +519,8 @@ namespace YanLib::io {
     }
 
     std::wstring fs::get_final_path_name(HANDLE file_handle,
-                                         DWORD flag) {
-        DWORD size = GetFinalPathNameByHandleW(file_handle,
+                                         unsigned long flag) {
+        unsigned long size = GetFinalPathNameByHandleW(file_handle,
                                                nullptr,
                                                0,
                                                flag);
@@ -550,10 +550,10 @@ namespace YanLib::io {
 
     bool fs::monitor_dir_change(HANDLE dir_handle,
                                 void *buffer,
-                                DWORD buffer_length,
+                                unsigned long buffer_length,
                                 bool is_watch_subtree,
-                                DWORD notify_filter,
-                                DWORD* bytes_returned,
+                                unsigned long notify_filter,
+                                unsigned long* bytes_returned,
                                 OVERLAPPED* overlapped,
                                 OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadDirectoryChangesW(dir_handle,
@@ -570,8 +570,8 @@ namespace YanLib::io {
         return true;
     }
 
-    DWORD fs::file_type(HANDLE file_handle) {
-        DWORD ret = GetFileType(file_handle);
+    unsigned long fs::file_type(HANDLE file_handle) {
+        unsigned long ret = GetFileType(file_handle);
         if (ret == FILE_TYPE_UNKNOWN) {
             error_code = GetLastError();
         }
@@ -586,8 +586,8 @@ namespace YanLib::io {
         return file_size.QuadPart;
     }
 
-    DWORD fs::get_attr(const wchar_t *file_name) {
-        DWORD attr = GetFileAttributesW(file_name);
+    unsigned long fs::get_attr(const wchar_t *file_name) {
+        unsigned long attr = GetFileAttributesW(file_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
             return 0;
@@ -595,7 +595,7 @@ namespace YanLib::io {
         return attr;
     }
 
-    bool fs::set_attr(const wchar_t *file_name, DWORD attr) {
+    bool fs::set_attr(const wchar_t *file_name, unsigned long attr) {
         if (!SetFileAttributesW(file_name, attr)) {
             error_code = GetLastError();
             return false;
@@ -603,7 +603,7 @@ namespace YanLib::io {
         return true;
     }
 
-    UINT fs::get_drive_type(const wchar_t *path_name) {
+    unsigned int fs::get_drive_type(const wchar_t *path_name) {
         return GetDriveTypeW(path_name);
     }
 
@@ -623,7 +623,7 @@ namespace YanLib::io {
 
     std::wstring fs::get_volume_path_names_for_volume_name(
         const wchar_t *volume_name) {
-        DWORD size = 0;
+        unsigned long size = 0;
         if (!GetVolumePathNamesForVolumeNameW(volume_name,
                                               nullptr,
                                               0,
@@ -672,7 +672,7 @@ namespace YanLib::io {
 
     std::wstring fs::get_temp_path() {
         std::wstring buffer(MAX_PATH + 1, L'\0');
-        DWORD size = GetTempPathW(MAX_PATH,
+        unsigned long size = GetTempPathW(MAX_PATH,
                                   buffer.data());
         if (!size) {
             error_code = GetLastError();
@@ -687,7 +687,7 @@ namespace YanLib::io {
 
     std::wstring fs::get_temp_file_name(const wchar_t *path_name,
                                         const wchar_t *prefix,
-                                        UINT unique) {
+                                        unsigned int unique) {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         if (!GetTempFileNameW(path_name,
                               prefix,
@@ -702,7 +702,7 @@ namespace YanLib::io {
     }
 
     std::wstring fs::get_short_path_name(const wchar_t *long_path) {
-        DWORD size = GetShortPathNameW(long_path,
+        unsigned long size = GetShortPathNameW(long_path,
                                        nullptr,
                                        0);
         std::wstring buffer(size, L'\0');
@@ -721,7 +721,7 @@ namespace YanLib::io {
     }
 
     std::wstring fs::get_long_path_name(const wchar_t *short_path) {
-        DWORD size = GetLongPathNameW(short_path,
+        unsigned long size = GetLongPathNameW(short_path,
                                       nullptr,
                                       0);
         std::wstring buffer(size, L'\0');
@@ -740,7 +740,7 @@ namespace YanLib::io {
     }
 
     std::wstring fs::get_logical_drive_strings() {
-        DWORD size = GetLogicalDriveStringsW(0,
+        unsigned long size = GetLogicalDriveStringsW(0,
                                              nullptr);
         std::wstring buffer(size, L'\0');
         size = GetLogicalDriveStringsW(buffer.size(),
@@ -756,12 +756,12 @@ namespace YanLib::io {
         return buffer;
     }
 
-    DWORD fs::get_logica_drives() {
+    unsigned long fs::get_logica_drives() {
         return GetLogicalDrives();
     }
 
     std::wstring fs::get_full_path_name(const wchar_t *file_name) {
-        DWORD size = GetFullPathNameW(file_name,
+        unsigned long size = GetFullPathNameW(file_name,
                                       0,
                                       nullptr,
                                       nullptr);
@@ -826,8 +826,8 @@ namespace YanLib::io {
     }
 
     int64_t fs::get_compressed_file_size(const wchar_t *file_name) {
-        DWORD high = 0;
-        DWORD low = GetCompressedFileSizeW(file_name, &high);
+        unsigned long high = 0;
+        unsigned long low = GetCompressedFileSizeW(file_name, &high);
         if (low == INVALID_FILE_SIZE) {
             error_code = GetLastError();
             if (error_code != NO_ERROR) {
@@ -840,7 +840,7 @@ namespace YanLib::io {
     std::wstring fs::get_dos_device(const wchar_t *device_name) {
         size_t buff_size = MAX_PATH;
         std::wstring buffer(buff_size + 1, L'\0');
-        DWORD size = QueryDosDeviceW(device_name,
+        unsigned long size = QueryDosDeviceW(device_name,
                                      buffer.data(),
                                      MAX_PATH);
         while (!size) {
@@ -863,7 +863,7 @@ namespace YanLib::io {
     std::vector<std::wstring> fs::get_dos_device() {
         size_t buff_size = 4096;
         std::wstring buffer(buff_size, L'\0');
-        DWORD size = QueryDosDeviceW(nullptr,
+        unsigned long size = QueryDosDeviceW(nullptr,
                                      buffer.data(),
                                      buff_size - 1);
         while (!size) {
@@ -896,7 +896,7 @@ namespace YanLib::io {
 
     bool fs::control_dos_device(const wchar_t *device_name,
                                 const wchar_t *target_path,
-                                DWORD flag) {
+                                unsigned long flag) {
         if (!DefineDosDeviceW(flag,
                               device_name,
                               target_path)) {
@@ -974,13 +974,13 @@ namespace YanLib::io {
     }
 
     bool fs::is_file(const wchar_t *file_name) {
-        const DWORD attr = GetFileAttributesW(file_name);
+        const unsigned long attr = GetFileAttributesW(file_name);
         return (attr != INVALID_FILE_ATTRIBUTES) &&
                (!(attr & FILE_ATTRIBUTE_DIRECTORY));
     }
 
     bool fs::is_dir(const wchar_t *path_name) {
-        const DWORD attr = GetFileAttributesW(path_name);
+        const unsigned long attr = GetFileAttributesW(path_name);
         return (attr != INVALID_FILE_ATTRIBUTES) &&
                (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
@@ -1243,7 +1243,7 @@ namespace YanLib::io {
                            MOVEFILE_WRITE_THROUGH);
     }
 
-    DWORD fs::err_code() const {
+    unsigned long fs::err_code() const {
         return error_code;
     }
 

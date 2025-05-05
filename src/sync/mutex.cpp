@@ -27,7 +27,7 @@ namespace YanLib::sync {
     }
 
     bool mutex::open(const wchar_t *name,
-                     DWORD desired_access,
+                     unsigned long desired_access,
                      bool is_inherit_handle) {
         mutex_handle = OpenMutexW(desired_access,
                                   is_inherit_handle ? TRUE : FALSE,
@@ -36,9 +36,9 @@ namespace YanLib::sync {
         return mutex_handle != nullptr;
     }
 
-    bool mutex::lock(DWORD milli_seconds) {
+    bool mutex::lock(unsigned long milli_seconds) {
         if (mutex_handle) {
-            DWORD ret = WaitForSingleObject(mutex_handle, milli_seconds);
+            unsigned long ret = WaitForSingleObject(mutex_handle, milli_seconds);
             if (ret == WAIT_FAILED) {
                 error_code = GetLastError();
             } else {
@@ -56,7 +56,7 @@ namespace YanLib::sync {
         return false;
     }
 
-    DWORD mutex::err_code() const {
+    unsigned long mutex::err_code() const {
         return error_code;
     }
 

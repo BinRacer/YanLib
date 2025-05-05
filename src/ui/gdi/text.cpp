@@ -16,21 +16,21 @@ namespace YanLib::ui::gdi {
     bool text::ext_text_out(HDC dc_handle,
                             int x,
                             int y,
-                            UINT options,
+                            unsigned int options,
                             const RECT *rect,
                             const wchar_t *text,
                             int cch_size,
-                            const INT *dx) {
+                            const int *dx) {
         return ExtTextOutW(dc_handle, x, y, options, rect, text, cch_size, dx);
     }
 
-    LONG text::tabbed_text_out(HDC dc_handle,
+    long text::tabbed_text_out(HDC dc_handle,
                                int x,
                                int y,
                                const wchar_t *text,
                                int cch_size,
                                int tab_positions,
-                               const INT *tab_stop_positions,
+                               const int *tab_stop_positions,
                                int tab_origin) {
         return TabbedTextOutW(dc_handle,
                               x,
@@ -50,7 +50,7 @@ namespace YanLib::ui::gdi {
                         const wchar_t *text,
                         int cch_size,
                         RECT *rect,
-                        UINT format) {
+                        unsigned int format) {
         return DrawTextW(dc_handle, text, cch_size, rect, format);
     }
 
@@ -58,12 +58,12 @@ namespace YanLib::ui::gdi {
                         wchar_t *text,
                         int cch_size,
                         RECT *rect,
-                        UINT format,
+                        unsigned int format,
                         DRAWTEXTPARAMS *draw_text_param) {
         return DrawTextExW(dc_handle, text, cch_size, rect, format, draw_text_param);
     }
 
-    DWORD text::set_mapper_flags(HDC dc_handle, DWORD flag) {
+    unsigned long text::set_mapper_flags(HDC dc_handle, unsigned long flag) {
         return SetMapperFlags(dc_handle, flag);
     }
 
@@ -76,24 +76,24 @@ namespace YanLib::ui::gdi {
     }
 
     bool text::get_char_width32(HDC dc_handle,
-                                UINT ch_first,
-                                UINT ch_last,
-                                INT *buf) {
+                                unsigned int ch_first,
+                                unsigned int ch_last,
+                                int *buf) {
         return GetCharWidth32W(dc_handle, ch_first, ch_last, buf);
     }
 
     bool text::get_char_width_float(HDC dc_handle,
-                                    UINT code_point_first,
-                                    UINT code_point_last,
+                                    unsigned int code_point_first,
+                                    unsigned int code_point_last,
                                     FLOAT *buf) {
         return GetCharWidthFloatW(dc_handle, code_point_first, code_point_last, buf);
     }
 
     bool text::get_char_width_index(HDC dc_handle,
-                                    UINT glyph_index_first,
-                                    UINT glyph_index_num,
-                                    WORD *glyph_index_array,
-                                    INT *widths) {
+                                    unsigned int glyph_index_first,
+                                    unsigned int glyph_index_num,
+                                    unsigned short *glyph_index_array,
+                                    int *widths) {
         return GetCharWidthI(dc_handle,
                              glyph_index_first,
                              glyph_index_num,
@@ -102,15 +102,15 @@ namespace YanLib::ui::gdi {
     }
 
     bool text::get_char_abc_widths(HDC dc_handle,
-                                   UINT ch_first,
-                                   UINT ch_last,
+                                   unsigned int ch_first,
+                                   unsigned int ch_last,
                                    ABC *abc) {
         return GetCharABCWidthsW(dc_handle, ch_first, ch_last, abc);
     }
 
     bool text::get_char_abc_widths_float(HDC dc_handle,
-                                         UINT code_point_first,
-                                         UINT code_point_last,
+                                         unsigned int code_point_first,
+                                         unsigned int code_point_last,
                                          ABCFLOAT *abc_float) {
         return GetCharABCWidthsFloatW(dc_handle,
                                       code_point_first,
@@ -119,9 +119,9 @@ namespace YanLib::ui::gdi {
     }
 
     bool text::get_char_abc_widths_index(HDC dc_handle,
-                                         UINT first_glyph_index,
-                                         UINT glyph_index_num,
-                                         WORD *glyph_index_array,
+                                         unsigned int first_glyph_index,
+                                         unsigned int glyph_index_num,
+                                         unsigned short *glyph_index_array,
                                          ABC *abc) {
         return GetCharABCWidthsI(dc_handle,
                                  first_glyph_index,
@@ -130,12 +130,12 @@ namespace YanLib::ui::gdi {
                                  abc);
     }
 
-    DWORD text::get_char_placement(HDC dc_handle,
+    unsigned long text::get_char_placement(HDC dc_handle,
                                    const wchar_t *text,
                                    int cch_size,
                                    int mex_extent,
                                    GCP_RESULTSW *results,
-                                   DWORD flag) {
+                                   unsigned long flag) {
         return GetCharacterPlacementW(dc_handle,
                                       text,
                                       cch_size,
@@ -144,19 +144,19 @@ namespace YanLib::ui::gdi {
                                       flag);
     }
 
-    DWORD text::get_glyph_indices(HDC dc_handle,
+    unsigned long text::get_glyph_indices(HDC dc_handle,
                                   const wchar_t *text,
                                   int cch_size,
-                                  WORD *glyph_index,
-                                  DWORD flag) {
+                                  unsigned short *glyph_index,
+                                  unsigned long flag) {
         return GetGlyphIndicesW(dc_handle, text, cch_size, glyph_index, flag);
     }
 
-    DWORD text::get_glyph_outline(HDC dc_handle,
-                                  UINT ch,
-                                  UINT format,
+    unsigned long text::get_glyph_outline(HDC dc_handle,
+                                  unsigned int ch,
+                                  unsigned int format,
                                   GLYPHMETRICS *glyph_metrics,
-                                  DWORD size,
+                                  unsigned long size,
                                   void *buf,
                                   const MAT2 *mat2) {
         return GetGlyphOutlineW(dc_handle,
@@ -168,22 +168,22 @@ namespace YanLib::ui::gdi {
                                 mat2);
     }
 
-    DWORD text::get_kerning_pairs(HDC dc_handle,
-                                  DWORD pairs,
+    unsigned long text::get_kerning_pairs(HDC dc_handle,
+                                  unsigned long pairs,
                                   KERNINGPAIR *kern_pair) {
         return GetKerningPairsW(dc_handle, pairs, kern_pair);
     }
 
     bool text::get_rasterizer_caps(RASTERIZER_STATUS *rasterizer_status,
-                                   UINT size) {
+                                   unsigned int size) {
         return GetRasterizerCaps(rasterizer_status, size);
     }
 
-    DWORD text::get_tabbed_text_extent(HDC dc_handle,
+    unsigned long text::get_tabbed_text_extent(HDC dc_handle,
                                        const wchar_t *text,
                                        int cch_size,
                                        int tab_positions,
-                                       const INT *tab_stop_positions) {
+                                       const int *tab_stop_positions) {
         return GetTabbedTextExtentW(dc_handle,
                                     text,
                                     cch_size,
@@ -191,11 +191,11 @@ namespace YanLib::ui::gdi {
                                     tab_stop_positions);
     }
 
-    UINT text::get_text_align(HDC dc_handle) {
+    unsigned int text::get_text_align(HDC dc_handle) {
         return GetTextAlign(dc_handle);
     }
 
-    UINT text::set_text_align(HDC dc_handle, UINT align) {
+    unsigned int text::set_text_align(HDC dc_handle, unsigned int align) {
         return SetTextAlign(dc_handle, align);
     }
 
@@ -223,8 +223,8 @@ namespace YanLib::ui::gdi {
         return GetTextMetricsW(dc_handle, text_metric);
     }
 
-    UINT text::get_outline_text_metrics(HDC dc_handle,
-                                        UINT size,
+    unsigned int text::get_outline_text_metrics(HDC dc_handle,
+                                        unsigned int size,
                                         OUTLINETEXTMETRICW *outline_text_metric) {
         return GetOutlineTextMetricsW(dc_handle, size, outline_text_metric);
     }
@@ -233,8 +233,8 @@ namespace YanLib::ui::gdi {
                                      const wchar_t *text,
                                      int cch_size,
                                      int max_extent,
-                                     INT *fit,
-                                     INT *dx,
+                                     int *fit,
+                                     int *dx,
                                      SIZE *size) {
         return GetTextExtentExPointW(dc_handle,
                                      text,
@@ -253,11 +253,11 @@ namespace YanLib::ui::gdi {
     }
 
     bool text::get_text_extent_point_index(HDC dc_handle,
-                                           WORD *glyph_index_array,
+                                           unsigned short *glyph_index_array,
                                            int glyph_index_num,
                                            int max_extent,
-                                           INT *fit,
-                                           INT *dx,
+                                           int *fit,
+                                           int *dx,
                                            SIZE *size) {
         return GetTextExtentExPointI(dc_handle,
                                      glyph_index_array,
@@ -269,7 +269,7 @@ namespace YanLib::ui::gdi {
     }
 
     bool text::get_text_extent_point_index(HDC dc_handle,
-                                           WORD *glyph_index_array,
+                                           unsigned short *glyph_index_array,
                                            int glyph_index_num,
                                            SIZE *size) {
         return GetTextExtentPointI(dc_handle,

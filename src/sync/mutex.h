@@ -11,7 +11,7 @@ namespace YanLib::sync {
     class mutex {
     private:
         HANDLE mutex_handle;
-        DWORD error_code;
+        unsigned long error_code;
 
     public:
         mutex(const mutex &other) = delete;
@@ -31,14 +31,14 @@ namespace YanLib::sync {
                     const wchar_t *name = nullptr);
 
         bool open(const wchar_t *name,
-                  DWORD desired_access = MUTEX_ALL_ACCESS,
+                  unsigned long desired_access = MUTEX_ALL_ACCESS,
                   bool is_inherit_handle = false);
 
-        bool lock(DWORD milli_seconds = INFINITE);
+        bool lock(unsigned long milli_seconds = INFINITE);
 
         bool unlock();
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

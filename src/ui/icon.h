@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class icon {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         icon(const icon &other) = delete;
@@ -34,17 +34,17 @@ namespace YanLib::ui {
                           const uint8_t *xor_bits);
 
         HICON create_icon_from_resource(uint8_t *res_buf,
-                                        DWORD res_size,
+                                        unsigned long res_size,
                                         bool is_icon,
-                                        DWORD version);
+                                        unsigned long version);
 
         HICON create_icon_from_resource(uint8_t *res_buf,
-                                        DWORD res_size,
+                                        unsigned long res_size,
                                         bool is_icon,
-                                        DWORD version,
+                                        unsigned long version,
                                         int desired_width,
                                         int desired_height,
-                                        UINT flag);
+                                        unsigned int flag);
 
         HICON create_icon_indirect(ICONINFO* icon_info);
 
@@ -60,9 +60,9 @@ namespace YanLib::ui {
                        HICON icon_handle,
                        int cx_width,
                        int cy_width,
-                       UINT step_if_ani_cur,
+                       unsigned int step_if_ani_cur,
                        HBRUSH hbr_flicker_free_draw,
-                       UINT flag);
+                       unsigned int flag);
 
         bool destroy_icon(HICON icon_handle);
 
@@ -76,18 +76,18 @@ namespace YanLib::ui {
                                           bool is_icon,
                                           int desired_width,
                                           int desired_height,
-                                          UINT flag);
+                                          unsigned int flag);
 
-        UINT private_extract_icons(const wchar_t *file_name,
+        unsigned int private_extract_icons(const wchar_t *file_name,
                                    int icon_index,
                                    int icon_width,
                                    int icon_height,
                                    HICON *icon_handle,
-                                   UINT *icon_id,
-                                   UINT icon_count,
-                                   UINT flag);
+                                   unsigned int *icon_id,
+                                   unsigned int icon_count,
+                                   unsigned int flag);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

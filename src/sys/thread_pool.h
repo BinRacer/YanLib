@@ -23,7 +23,7 @@ namespace YanLib::sys {
         sync::rwlock timers_rwlock = {};
         sync::rwlock ios_rwlock = {};
         sync::rwlock waiters_rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
         void cleanup();
 
@@ -40,7 +40,7 @@ namespace YanLib::sys {
 
         ~thread_pool();
 
-        bool create(DWORD min, DWORD max);
+        bool create(unsigned long min, unsigned long max);
 
         void set_cleanup_group(PTP_CLEANUP_GROUP_CANCEL_CALLBACK cgc_callback);
 
@@ -72,8 +72,8 @@ namespace YanLib::sys {
 
         bool submit_timer_task(TP_TIMER *timer,
                                FILETIME *due_time,
-                               DWORD ms_period,
-                               DWORD window_length = 0);
+                               unsigned long ms_period,
+                               unsigned long window_length = 0);
 
         bool is_timer_set(TP_TIMER *timer);
 
@@ -125,13 +125,13 @@ namespace YanLib::sys {
         static void release_semaphore_when_callback_returns(
             TP_CALLBACK_INSTANCE *callback_instance,
             HANDLE semaphore_handle,
-            DWORD count);
+            unsigned long count);
 
         static void set_event_when_callback_returns(
             TP_CALLBACK_INSTANCE *callback_instance,
             HANDLE event_handle);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

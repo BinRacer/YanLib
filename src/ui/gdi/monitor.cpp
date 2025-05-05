@@ -12,11 +12,11 @@ namespace YanLib::ui::gdi {
         return EnumDisplayMonitors(dc_handle, rect, monitor_enum_proc, data);
     }
 
-    HMONITOR monitor::monitor_from_point(POINT point, DWORD flag) {
+    HMONITOR monitor::monitor_from_point(POINT point, unsigned long flag) {
         return MonitorFromPoint(point, flag);
     }
 
-    HMONITOR monitor::monitor_from_rect(const RECT *rect, DWORD flag) {
+    HMONITOR monitor::monitor_from_rect(const RECT *rect, unsigned long flag) {
         return MonitorFromRect(rect, flag);
     }
 

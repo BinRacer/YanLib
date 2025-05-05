@@ -18,7 +18,7 @@ namespace YanLib::mem {
         sync::rwlock file_rwlock = {};
         sync::rwlock mmap_rwlock = {};
         sync::rwlock addr_rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         mmap(const mmap &other) = delete;
@@ -36,25 +36,25 @@ namespace YanLib::mem {
         HANDLE create(const wchar_t *file_name,
                       const wchar_t *mmap_name = nullptr,
                       SECURITY_ATTRIBUTES* file_mapping_attrs = nullptr,
-                      DWORD protect_flag = PAGE_READWRITE,
-                      DWORD max_high = 0,
-                      DWORD max_low = 0);
+                      unsigned long protect_flag = PAGE_READWRITE,
+                      unsigned long max_high = 0,
+                      unsigned long max_low = 0);
 
         HANDLE create(HANDLE file_handle = INVALID_HANDLE_VALUE,
                       const wchar_t *mmap_name = nullptr,
                       SECURITY_ATTRIBUTES* file_mapping_attrs = nullptr,
-                      DWORD protect_flag = PAGE_READWRITE,
-                      DWORD max_high = 0,
-                      DWORD max_low = 0);
+                      unsigned long protect_flag = PAGE_READWRITE,
+                      unsigned long max_high = 0,
+                      unsigned long max_low = 0);
 
         HANDLE open(const wchar_t *mmap_name,
-                    DWORD desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
+                    unsigned long desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
                     bool is_inherit_handle = false);
 
         void *mmap_file(HANDLE mmap_handle,
-                        DWORD desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
-                        DWORD file_offset_high = 0,
-                        DWORD file_offset_low = 0,
+                        unsigned long desired_access = FILE_MAP_READ | FILE_MAP_WRITE,
+                        unsigned long file_offset_high = 0,
+                        unsigned long file_offset_low = 0,
                         SIZE_T size = 0);
 
         bool unmap_file(void *addr);
@@ -69,7 +69,7 @@ namespace YanLib::mem {
                    int64_t size,
                    uint64_t offset = 0) const;
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

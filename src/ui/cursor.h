@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class cursor {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         cursor(const cursor &other) = delete;
@@ -57,15 +57,15 @@ namespace YanLib::ui {
 
         bool set_physical_cursor_pos(int x, int y);
 
-        bool get_pointer_cursor_id(UINT32 pointer_id, UINT32 *cursor_id);
+        bool get_pointer_cursor_id(unsigned int pointer_id, unsigned int *cursor_id);
 
         bool get_pointer_device_cursors(HANDLE device_handle,
-                                        UINT32 *cursor_count,
+                                        unsigned int *cursor_count,
                                         POINTER_DEVICE_CURSOR_INFO *device_cursors);
 
-        bool set_system_cursor(HCURSOR cursor_handle, DWORD id);
+        bool set_system_cursor(HCURSOR cursor_handle, unsigned long id);
 
-        UINT set_thread_cursor_creation_scaling(UINT cursor_dpi);
+        unsigned int set_thread_cursor_creation_scaling(unsigned int cursor_dpi);
 
         int show_cursor();
 
@@ -73,7 +73,7 @@ namespace YanLib::ui {
 
         bool destroy_cursor(HCURSOR cursor_handle);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

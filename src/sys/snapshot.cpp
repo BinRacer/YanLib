@@ -18,7 +18,7 @@ namespace YanLib::sys {
         }
     }
 
-    std::vector<PROCESSENTRY32W> snapshot::ls_procs(DWORD pid) {
+    std::vector<PROCESSENTRY32W> snapshot::ls_procs(unsigned long pid) {
         if (!procs.empty()) {
             return procs;
         }
@@ -43,7 +43,7 @@ namespace YanLib::sys {
         return procs;
     }
 
-    std::unordered_set<DWORD> snapshot::ls_pids(DWORD pid) {
+    std::unordered_set<unsigned long> snapshot::ls_pids(unsigned long pid) {
         if (!pids.empty()) {
             return pids;
         }
@@ -79,14 +79,14 @@ namespace YanLib::sys {
         pids.clear();
     }
 
-    bool snapshot::pid_exists(DWORD pid) {
+    bool snapshot::pid_exists(unsigned long pid) {
         if (pids.empty()) {
             ls_pids();
         }
         return pids.find(pid) != pids.end();
     }
 
-    DWORD snapshot::get_ppid(DWORD pid) {
+    unsigned long snapshot::get_ppid(unsigned long pid) {
         if (procs.empty()) {
             ls_procs();
         }
@@ -98,7 +98,7 @@ namespace YanLib::sys {
         return 0;
     }
 
-    PROCESSENTRY32W snapshot::find_proc(DWORD pid) {
+    PROCESSENTRY32W snapshot::find_proc(unsigned long pid) {
         if (procs.empty()) {
             ls_procs();
         }
@@ -126,7 +126,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<THREADENTRY32> snapshot::ls_threads(DWORD pid) {
+    std::vector<THREADENTRY32> snapshot::ls_threads(unsigned long pid) {
         if (!threads.empty()) {
             return threads;
         }
@@ -151,7 +151,7 @@ namespace YanLib::sys {
         return threads;
     }
 
-    std::unordered_set<DWORD> snapshot::ls_thread_ids(DWORD pid) {
+    std::unordered_set<unsigned long> snapshot::ls_thread_ids(unsigned long pid) {
         if (!thread_ids.empty()) {
             return thread_ids;
         }
@@ -188,14 +188,14 @@ namespace YanLib::sys {
         thread_ids.clear();
     }
 
-    bool snapshot::tid_exists(DWORD tid) {
+    bool snapshot::tid_exists(unsigned long tid) {
         if (thread_ids.empty()) {
             ls_thread_ids();
         }
         return thread_ids.find(tid) != thread_ids.end();
     }
 
-    DWORD snapshot::tid_to_pid(DWORD tid) {
+    unsigned long snapshot::tid_to_pid(unsigned long tid) {
         if (threads.empty()) {
             ls_threads();
         }
@@ -207,7 +207,7 @@ namespace YanLib::sys {
         return 0;
     }
 
-    THREADENTRY32 snapshot::find_thread(DWORD tid) {
+    THREADENTRY32 snapshot::find_thread(unsigned long tid) {
         if (threads.empty()) {
             ls_threads();
         }
@@ -219,7 +219,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<THREADENTRY32> snapshot::find_threads(DWORD pid) {
+    std::vector<THREADENTRY32> snapshot::find_threads(unsigned long pid) {
         if (threads.empty()) {
             ls_threads();
         }
@@ -233,7 +233,7 @@ namespace YanLib::sys {
     }
 
 
-    std::vector<MODULEENTRY32W> snapshot::ls_modules(DWORD pid) {
+    std::vector<MODULEENTRY32W> snapshot::ls_modules(unsigned long pid) {
         if (!modules.empty()) {
             return modules;
         }
@@ -259,7 +259,7 @@ namespace YanLib::sys {
         return modules;
     }
 
-    std::unordered_set<HMODULE> snapshot::ls_module_handles(DWORD pid) {
+    std::unordered_set<HMODULE> snapshot::ls_module_handles(unsigned long pid) {
         if (!module_handles.empty()) {
             return module_handles;
         }
@@ -329,7 +329,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<HEAPLIST32> snapshot::ls_heaps(DWORD pid) {
+    std::vector<HEAPLIST32> snapshot::ls_heaps(unsigned long pid) {
         if (!heaps.empty()) {
             return heaps;
         }
@@ -355,7 +355,7 @@ namespace YanLib::sys {
         return heaps;
     }
 
-    std::unordered_set<ULONG_PTR> snapshot::ls_heap_ids(DWORD pid) {
+    std::unordered_set<ULONG_PTR> snapshot::ls_heap_ids(unsigned long pid) {
         if (!heap_ids.empty()) {
             return heap_ids;
         }
@@ -404,7 +404,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<HEAPLIST32> snapshot::find_heaps(DWORD pid) {
+    std::vector<HEAPLIST32> snapshot::find_heaps(unsigned long pid) {
         if (heaps.empty()) {
             ls_heaps();
         }
@@ -453,7 +453,7 @@ namespace YanLib::sys {
         return result;
     }
 
-    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(DWORD pid) {
+    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(unsigned long pid) {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
@@ -478,8 +478,8 @@ namespace YanLib::sys {
     }
 
 
-    HANDLE snapshot::pid_to_handle(DWORD pid,
-                                   DWORD desired_access,
+    HANDLE snapshot::pid_to_handle(unsigned long pid,
+                                   unsigned long desired_access,
                                    bool is_inherit_handle) {
         HANDLE proc_handle = OpenProcess(desired_access,
                                          is_inherit_handle
@@ -492,8 +492,8 @@ namespace YanLib::sys {
         return proc_handle;
     }
 
-    DWORD snapshot::handle_to_pid(HANDLE proc_handle) {
-        DWORD pid = GetProcessId(proc_handle);
+    unsigned long snapshot::handle_to_pid(HANDLE proc_handle) {
+        unsigned long pid = GetProcessId(proc_handle);
         if (!pid) {
             error_code = GetLastError();
         }
@@ -505,7 +505,7 @@ namespace YanLib::sys {
         if (!proc_handle) {
             return false;
         }
-        const DWORD pid = handle_to_pid(proc_handle);
+        const unsigned long pid = handle_to_pid(proc_handle);
         if (!pid) {
             return false;
         }
@@ -531,7 +531,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool snapshot::is_heap(DWORD pid, void *address) {
+    bool snapshot::is_heap(unsigned long pid, void *address) {
         HANDLE proc_handle = nullptr;
         if (GetCurrentProcessId() == pid) {
             proc_handle = GetCurrentProcess();
@@ -563,7 +563,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    DWORD snapshot::err_code() const {
+    unsigned long snapshot::err_code() const {
         return error_code;
     }
 

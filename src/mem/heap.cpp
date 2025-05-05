@@ -22,7 +22,7 @@ namespace YanLib::mem {
         }
     }
 
-    HANDLE heap::create(DWORD options,
+    HANDLE heap::create(unsigned long options,
                         size_t initial_size,
                         size_t maximum_size) {
         HANDLE heap_handle = HeapCreate(options,
@@ -117,7 +117,7 @@ namespace YanLib::mem {
         return true;
     }
 
-    DWORD heap::err_code() const {
+    unsigned long heap::err_code() const {
         return error_code;
     }
 

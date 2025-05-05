@@ -11,7 +11,7 @@ namespace YanLib::sync {
     class event {
     private:
         HANDLE event_handle;
-        DWORD error_code;
+        unsigned long error_code;
 
     public:
         event(const event &other) = delete;
@@ -32,16 +32,16 @@ namespace YanLib::sync {
                     const wchar_t *name = nullptr);
 
         bool open(const wchar_t *name,
-                  DWORD desired_access = EVENT_ALL_ACCESS,
+                  unsigned long desired_access = EVENT_ALL_ACCESS,
                   bool is_inherit_handle = false);
 
         bool on();
 
         bool off();
 
-        bool wait(DWORD milli_seconds = INFINITE);
+        bool wait(unsigned long milli_seconds = INFINITE);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

@@ -74,7 +74,7 @@ namespace YanLib::ui::gdi {
                                     bool is_erase);
 
         // std::pair<result, error_code>
-        static std::pair<bool, DWORD> get_client_rect(HWND hwnd, RECT *rect);
+        static std::pair<bool, unsigned long> get_client_rect(HWND hwnd, RECT *rect);
     };
 }
 #endif //RECT_H

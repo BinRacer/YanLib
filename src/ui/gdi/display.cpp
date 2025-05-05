@@ -6,9 +6,9 @@
 
 namespace YanLib::ui::gdi {
     bool display::enum_display_devices(const wchar_t *device_name,
-                                       DWORD device_index,
+                                       unsigned long device_index,
                                        DISPLAY_DEVICEW *display_device,
-                                       DWORD flag) {
+                                       unsigned long flag) {
         return EnumDisplayDevicesW(device_name,
                                    device_index,
                                    display_device,
@@ -16,27 +16,27 @@ namespace YanLib::ui::gdi {
     }
 
     bool display::enum_display_settings(const wchar_t *device_name,
-                                        DWORD mode,
+                                        unsigned long mode,
                                         DEVMODEW *device_mode) {
         return EnumDisplaySettingsW(device_name, mode, device_mode);
     }
 
     bool display::enum_display_settings(const wchar_t *device_name,
-                                        DWORD mode,
+                                        unsigned long mode,
                                         DEVMODEW *device_mode,
-                                        DWORD flag) {
+                                        unsigned long flag) {
         return EnumDisplaySettingsExW(device_name,
                                       mode,
                                       device_mode,
                                       flag);
     }
 
-    LONG display::display_config_get_device_info(
+    long display::display_config_get_device_info(
         DISPLAYCONFIG_DEVICE_INFO_HEADER *request_packet) {
         return DisplayConfigGetDeviceInfo(request_packet);
     }
 
-    LONG display::display_config_set_device_info(
+    long display::display_config_set_device_info(
         DISPLAYCONFIG_DEVICE_INFO_HEADER *request_packet) {
         return DisplayConfigSetDeviceInfo(request_packet);
     }
@@ -52,7 +52,7 @@ namespace YanLib::ui::gdi {
     }
 
     bool display::get_display_auto_rotation_preferences_by_pid(
-        DWORD pid, ORIENTATION_PREFERENCE *orientation) {
+        unsigned long pid, ORIENTATION_PREFERENCE *orientation) {
         int is_ok = 0;
         if (!GetDisplayAutoRotationPreferencesByProcessId(pid,
                                                           orientation,
@@ -62,20 +62,20 @@ namespace YanLib::ui::gdi {
         return is_ok;
     }
 
-    LONG display::get_display_config_buffer_sizes(
-        UINT32 flag,
-        UINT32 *num_path_array_elements,
-        UINT32 *num_mode_info_array_elements) {
+    long display::get_display_config_buffer_sizes(
+        unsigned int flag,
+        unsigned int *num_path_array_elements,
+        unsigned int *num_mode_info_array_elements) {
         return GetDisplayConfigBufferSizes(flag,
                                            num_path_array_elements,
                                            num_mode_info_array_elements);
     }
 
-    LONG display::get_display_config(
-        UINT32 flag,
-        UINT32 *num_path_array_elements,
+    long display::get_display_config(
+        unsigned int flag,
+        unsigned int *num_path_array_elements,
         DISPLAYCONFIG_PATH_INFO *path_array,
-        UINT32 *num_mode_info_array_elements,
+        unsigned int *num_mode_info_array_elements,
         DISPLAYCONFIG_MODE_INFO *mode_info_array,
         DISPLAYCONFIG_TOPOLOGY_ID *current_topology_id) {
         return QueryDisplayConfig(flag,
@@ -86,12 +86,12 @@ namespace YanLib::ui::gdi {
                                   current_topology_id);
     }
 
-    LONG display::set_display_config(
-        UINT32 num_path_array_elements,
+    long display::set_display_config(
+        unsigned int num_path_array_elements,
         DISPLAYCONFIG_PATH_INFO *path_array,
-        UINT32 num_mode_info_array_elements,
+        unsigned int num_mode_info_array_elements,
         DISPLAYCONFIG_MODE_INFO *mode_info_array,
-        UINT32 flag) {
+        unsigned int flag) {
         return SetDisplayConfig(num_path_array_elements,
                                 path_array,
                                 num_mode_info_array_elements,
@@ -99,14 +99,14 @@ namespace YanLib::ui::gdi {
                                 flag);
     }
 
-    LONG display::change_display_settings(DEVMODEW *device_mode, DWORD flag) {
+    long display::change_display_settings(DEVMODEW *device_mode, unsigned long flag) {
         return ChangeDisplaySettingsW(device_mode, flag);
     }
 
-    LONG display::change_display_settings(const wchar_t *device_name,
+    long display::change_display_settings(const wchar_t *device_name,
                                           DEVMODEW *device_mode,
                                           HWND hwnd,
-                                          DWORD flag,
+                                          unsigned long flag,
                                           void *l_param) {
         return ChangeDisplaySettingsExW(device_name,
                                         device_mode,

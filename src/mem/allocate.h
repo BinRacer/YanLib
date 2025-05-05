@@ -14,7 +14,7 @@ namespace YanLib::mem {
     private:
         std::list<void *> mem_list = {};
         sync::rwlock rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         allocate(const allocate &other) = delete;
@@ -39,7 +39,7 @@ namespace YanLib::mem {
 
         void *realloc(void *old_addr, size_t new_size);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class image {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         image(const image &other) = delete;
@@ -29,34 +29,34 @@ namespace YanLib::ui {
                             const wchar_t *image_name,
                             int cx,
                             int cy,
-                            UINT load);
+                            unsigned int load);
 
         HICON load_icon(HINSTANCE instance_handle,
                         const wchar_t *image_name,
                         int cx,
                         int cy,
-                        UINT load);
+                        unsigned int load);
 
         HCURSOR load_cursor(HINSTANCE instance_handle,
                             const wchar_t *image_name,
                             int cx,
                             int cy,
-                            UINT load);
+                            unsigned int load);
 
         HBITMAP copy_bitmap(HBITMAP bitmap_handle,
                             int cx,
                             int cy,
-                            UINT flag);
+                            unsigned int flag);
 
         HICON copy_icon(HICON icon_handle,
                         int cx,
                         int cy,
-                        UINT flag);
+                        unsigned int flag);
 
         HCURSOR copy_cursor(HCURSOR cursor_handle,
                             int cx,
                             int cy,
-                            UINT flag);
+                            unsigned int flag);
 
         bool close_bitmap(HBITMAP bitmap_handle);
 
@@ -64,7 +64,7 @@ namespace YanLib::ui {
 
         bool close_cursor(HCURSOR cursor_handle);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

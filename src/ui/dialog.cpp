@@ -140,7 +140,7 @@ namespace YanLib::ui {
 
     bool dialog::check_dialog_button(HWND hwnd_dialog,
                                      int id_button,
-                                     UINT check) {
+                                     unsigned int check) {
         if (!CheckDlgButton(hwnd_dialog,
                             id_button,
                             check)) {
@@ -151,7 +151,7 @@ namespace YanLib::ui {
     }
 
     LRESULT dialog::default_dialog_proc(HWND hwnd_dialog,
-                                        UINT msg,
+                                        unsigned int msg,
                                         WPARAM w_param,
                                         LPARAM l_param) {
         return DefDlgProcW(hwnd_dialog,
@@ -164,7 +164,7 @@ namespace YanLib::ui {
                                 wchar_t *path_spec,
                                 int id_listbox,
                                 int id_static_path,
-                                UINT file_type) {
+                                unsigned int file_type) {
         int result = DlgDirListW(hwnd_dialog,
                                  path_spec,
                                  id_listbox,
@@ -180,7 +180,7 @@ namespace YanLib::ui {
                                          wchar_t *path_spec,
                                          int id_combobox,
                                          int id_static_path,
-                                         UINT filetype) {
+                                         unsigned int filetype) {
         int result = DlgDirListComboBoxW(hwnd_dialog,
                                          path_spec,
                                          id_combobox,
@@ -236,11 +236,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    std::pair<UINT, bool> dialog::get_dialog_item_int(HWND hwnd_dialog,
+    std::pair<unsigned int, bool> dialog::get_dialog_item_int(HWND hwnd_dialog,
                                                       int id_dialog_item,
                                                       bool is_signed) {
         int is_translated = 0;
-        UINT result = GetDlgItemInt(hwnd_dialog,
+        unsigned int result = GetDlgItemInt(hwnd_dialog,
                                     id_dialog_item,
                                     &is_translated,
                                     is_signed ? TRUE : FALSE);
@@ -252,7 +252,7 @@ namespace YanLib::ui {
 
     bool dialog::set_dialog_item_int(HWND hwnd_dialog,
                                      int id_dialog_item,
-                                     UINT value,
+                                     unsigned int value,
                                      bool is_signed) {
         if (!SetDlgItemInt(hwnd_dialog,
                            id_dialog_item,
@@ -264,11 +264,11 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT dialog::get_dialog_item_text(HWND hwnd_dialog,
+    unsigned int dialog::get_dialog_item_text(HWND hwnd_dialog,
                                       int id_dialog_item,
                                       wchar_t *text,
                                       int cch_max) {
-        UINT result = GetDlgItemTextW(hwnd_dialog,
+        unsigned int result = GetDlgItemTextW(hwnd_dialog,
                                       id_dialog_item,
                                       text,
                                       cch_max);
@@ -314,7 +314,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    UINT dialog::is_dialog_button_checked(HWND hwnd_dialog, int id_button) {
+    unsigned int dialog::is_dialog_button_checked(HWND hwnd_dialog, int id_button) {
         return IsDlgButtonChecked(hwnd_dialog, id_button);
     }
 
@@ -376,7 +376,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD dialog::err_code() const {
+    unsigned long dialog::err_code() const {
         return error_code;
     }
 

@@ -27,7 +27,7 @@ namespace YanLib::ui::gdi {
         return GetDC(hwnd);
     }
 
-    HDC dc::get_dc(HWND hwnd, HRGN region_clip_handle, DWORD flag) {
+    HDC dc::get_dc(HWND hwnd, HRGN region_clip_handle, unsigned long flag) {
         return GetDCEx(hwnd, region_clip_handle, flag);
     }
 
@@ -39,14 +39,14 @@ namespace YanLib::ui::gdi {
         return DeleteDC(dc_handle);
     }
 
-    std::pair<bool, DWORD> dc::scroll_dc(HDC dc_handle,
+    std::pair<bool, unsigned long> dc::scroll_dc(HDC dc_handle,
                                          int x,
                                          int y,
                                          const RECT *rect_scroll,
                                          const RECT *rect_clip,
                                          HRGN region_update_handle,
                                          RECT *rect_update) {
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
         if (!ScrollDC(dc_handle,
                       x,
                       y,
@@ -60,16 +60,16 @@ namespace YanLib::ui::gdi {
         return std::make_pair(true, error_code);
     }
 
-    std::pair<DWORD, DWORD> dc::get_layout(HDC dc_handle) {
-        DWORD result = GetLayout(dc_handle);
-        DWORD error_code = 0;
+    std::pair<unsigned long, unsigned long> dc::get_layout(HDC dc_handle) {
+        unsigned long result = GetLayout(dc_handle);
+        unsigned long error_code = 0;
         if (result == GDI_ERROR) {
             error_code = GetLastError();
         }
         return std::make_pair(result, error_code);
     }
 
-    DWORD dc::set_layout(HDC dc_handle, DWORD value) {
+    unsigned long dc::set_layout(HDC dc_handle, unsigned long value) {
         return SetLayout(dc_handle, value);
     }
 
@@ -121,7 +121,7 @@ namespace YanLib::ui::gdi {
         return GetObjectW(gdi_handle, size, buf);
     }
 
-    DWORD dc::get_object_type(HGDIOBJ gdi_obj_handle) {
+    unsigned long dc::get_object_type(HGDIOBJ gdi_obj_handle) {
         return GetObjectType(gdi_obj_handle);
     }
 
@@ -129,7 +129,7 @@ namespace YanLib::ui::gdi {
         return GetStockObject(type);
     }
 
-    HGDIOBJ dc::get_current_object(HDC dc_handle, UINT type) {
+    HGDIOBJ dc::get_current_object(HDC dc_handle, unsigned int type) {
         return GetCurrentObject(dc_handle, type);
     }
 
@@ -151,7 +151,7 @@ namespace YanLib::ui::gdi {
 
     int dc::device_capabilities(const wchar_t *device_name,
                                 const wchar_t *port,
-                                WORD capability,
+                                unsigned short capability,
                                 wchar_t *output,
                                 const DEVMODEW *device_mode) {
         return DeviceCapabilitiesW(device_name,

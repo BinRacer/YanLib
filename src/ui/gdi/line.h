@@ -33,14 +33,14 @@ namespace YanLib::ui::gdi {
 
         static bool move_to(HDC dc_handle, int x, int y, POINT *point);
 
-        static bool poly_line(HDC dc_handle, const POINT *point, DWORD num);
+        static bool poly_line(HDC dc_handle, const POINT *point, unsigned long num);
 
-        static bool poly_line_to(HDC dc_handle, const POINT *point, DWORD num);
+        static bool poly_line_to(HDC dc_handle, const POINT *point, unsigned long num);
 
         static bool poly_poly_line(HDC dc_handle,
                                    const POINT *point,
-                                   const DWORD *num_array,
-                                   DWORD num);
+                                   const unsigned long *num_array,
+                                   unsigned long num);
 
         static bool poly_draw(HDC dc_handle,
                               const POINT *point,

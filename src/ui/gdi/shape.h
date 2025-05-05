@@ -50,7 +50,7 @@ namespace YanLib::ui::gdi {
 
         static bool poly_poly_gon(HDC dc_handle,
                                   const POINT *point,
-                                  const INT *num_array,
+                                  const int *num_array,
                                   int num);
 
         static bool pie(HDC dc_handle,

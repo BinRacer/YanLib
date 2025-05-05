@@ -23,7 +23,7 @@ namespace YanLib::sys {
                         void *params,
                         size_t commit,
                         size_t reserve,
-                        DWORD flag) {
+                        unsigned long flag) {
         void *addr = CreateFiberEx(commit,
                                    reserve,
                                    flag,
@@ -39,15 +39,15 @@ namespace YanLib::sys {
         return addr;
     }
 
-    DWORD fiber::fls_alloc(PFLS_CALLBACK_FUNCTION callback) {
-        DWORD index = FlsAlloc(callback);
+    unsigned long fiber::fls_alloc(PFLS_CALLBACK_FUNCTION callback) {
+        unsigned long index = FlsAlloc(callback);
         if (index == FLS_OUT_OF_INDEXES) {
             error_code = GetLastError();
         }
         return index;
     }
 
-    bool fiber::fls_free(DWORD index) {
+    bool fiber::fls_free(unsigned long index) {
         if (!FlsFree(index)) {
             error_code = GetLastError();
             return false;
@@ -55,7 +55,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    void *fiber::fls_get_value(DWORD index) {
+    void *fiber::fls_get_value(unsigned long index) {
         void *value = FlsGetValue(index);
         if (!value) {
             error_code = GetLastError();
@@ -63,7 +63,7 @@ namespace YanLib::sys {
         return value;
     }
 
-    bool fiber::fls_set_value(DWORD index, void *value) {
+    bool fiber::fls_set_value(unsigned long index, void *value) {
         if (!FlsSetValue(index, value)) {
             error_code = GetLastError();
             return false;
@@ -90,7 +90,7 @@ namespace YanLib::sys {
         fiber_lock.read_lock();
     }
 
-    void *fiber::thread_to_fiber(void *params, DWORD flag) {
+    void *fiber::thread_to_fiber(void *params, unsigned long flag) {
         void *addr = ConvertThreadToFiberEx(params, flag);
         if (!addr) {
             error_code = GetLastError();
@@ -123,7 +123,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    DWORD fiber::err_code() const {
+    unsigned long fiber::err_code() const {
         return error_code;
     }
 

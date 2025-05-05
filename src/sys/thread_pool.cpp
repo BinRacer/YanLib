@@ -51,7 +51,7 @@ namespace YanLib::sys {
         memset(&env, 0, sizeof(env));
     }
 
-    bool thread_pool::create(DWORD min, DWORD max) {
+    bool thread_pool::create(unsigned long min, unsigned long max) {
         if (!pool) {
             cleanup();
         }
@@ -174,8 +174,8 @@ namespace YanLib::sys {
 
     bool thread_pool::submit_timer_task(TP_TIMER *timer,
                                         FILETIME *due_time,
-                                        DWORD ms_period,
-                                        DWORD window_length) {
+                                        unsigned long ms_period,
+                                        unsigned long window_length) {
         return SetThreadpoolTimerEx(timer,
                                     due_time,
                                     window_length,
@@ -291,7 +291,7 @@ namespace YanLib::sys {
     void thread_pool::release_semaphore_when_callback_returns(
         TP_CALLBACK_INSTANCE *callback_instance,
         HANDLE semaphore_handle,
-        DWORD count) {
+        unsigned long count) {
         ReleaseSemaphoreWhenCallbackReturns(callback_instance,
                                             semaphore_handle,
                                             count);
@@ -303,7 +303,7 @@ namespace YanLib::sys {
         SetEventWhenCallbackReturns(callback_instance, event_handle);
     }
 
-    DWORD thread_pool::err_code() const {
+    unsigned long thread_pool::err_code() const {
         return error_code;
     }
 

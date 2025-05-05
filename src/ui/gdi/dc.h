@@ -36,14 +36,14 @@ namespace YanLib::ui::gdi {
 
         static HDC get_dc(HWND hwnd);
 
-        static HDC get_dc(HWND hwnd, HRGN region_clip_handle, DWORD flag);
+        static HDC get_dc(HWND hwnd, HRGN region_clip_handle, unsigned long flag);
 
         static int release_dc(HWND hwnd, HDC dc_handle);
 
         static bool delete_dc(HDC dc_handle);
 
         // std::pair<result, error_code>
-        static std::pair<bool, DWORD> scroll_dc(HDC dc_handle,
+        static std::pair<bool, unsigned long> scroll_dc(HDC dc_handle,
                                          int x,
                                          int y,
                                          const RECT *rect_scroll,
@@ -52,9 +52,9 @@ namespace YanLib::ui::gdi {
                                          RECT *rect_update);
 
         // std::pair<result, error_code>
-        static std::pair<DWORD, DWORD> get_layout(HDC dc_handle);
+        static std::pair<unsigned long, unsigned long> get_layout(HDC dc_handle);
 
-        static DWORD set_layout(HDC dc_handle, DWORD value);
+        static unsigned long set_layout(HDC dc_handle, unsigned long value);
 
         static HDC get_window_dc(HWND hwnd);
 
@@ -80,11 +80,11 @@ namespace YanLib::ui::gdi {
 
         static int get_object(HANDLE gdi_handle, int size, void *buf);
 
-        static DWORD get_object_type(HGDIOBJ gdi_obj_handle);
+        static unsigned long get_object_type(HGDIOBJ gdi_obj_handle);
 
         static HGDIOBJ get_stock_object(int type);
 
-        static HGDIOBJ get_current_object(HDC dc_handle, UINT type);
+        static HGDIOBJ get_current_object(HDC dc_handle, unsigned int type);
 
         static HGDIOBJ select_object(HDC dc_handle, HGDIOBJ gdi_obj_handle);
 
@@ -99,7 +99,7 @@ namespace YanLib::ui::gdi {
 
         static int device_capabilities(const wchar_t *device_name,
                                        const wchar_t *port,
-                                       WORD capability,
+                                       unsigned short capability,
                                        wchar_t *output,
                                        const DEVMODEW *device_mode);
 

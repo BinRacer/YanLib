@@ -152,7 +152,7 @@ namespace YanLib::hash {
                     uint8_t *block_ptr = data_bytes.data() + offset;
                     if (!CryptHashData(crypt_hash_handle,
                                        block_ptr,
-                                       static_cast<DWORD>(block_size),
+                                       static_cast<unsigned long>(block_size),
                                        0)) {
                         error_code = GetLastError();
                         is_error = true;
@@ -196,8 +196,8 @@ namespace YanLib::hash {
 
     bool sha1::post_process() {
         do {
-            DWORD len = 0;
-            DWORD data_len = sizeof(DWORD);
+            unsigned long len = 0;
+            unsigned long data_len = sizeof(unsigned long);
             if (!CryptGetHashParam(crypt_hash_handle,
                                    HP_HASHSIZE,
                                    reinterpret_cast<uint8_t *>(&len),
@@ -240,7 +240,7 @@ namespace YanLib::hash {
         return helper::convert::str_to_wstr(hash_string());
     }
 
-    DWORD sha1::err_code() const {
+    unsigned long sha1::err_code() const {
         return error_code;
     }
 

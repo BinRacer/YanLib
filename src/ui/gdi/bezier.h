@@ -22,9 +22,9 @@ namespace YanLib::ui::gdi {
 
         ~bezier() = default;
 
-        static bool poly_bezier(HDC dc_handle, const POINT *point, DWORD num);
+        static bool poly_bezier(HDC dc_handle, const POINT *point, unsigned long num);
 
-        static bool poly_bezier_to(HDC dc_handle, const POINT *point, DWORD num);
+        static bool poly_bezier_to(HDC dc_handle, const POINT *point, unsigned long num);
 
         static bool poly_draw(HDC dc_handle,
                               const POINT *point,

@@ -28,12 +28,12 @@ namespace YanLib::ui::gdi {
         static bool draw_caption(HWND hwnd,
                                  HDC dc_handle,
                                  const RECT *rect,
-                                 UINT flag);
+                                 unsigned int flag);
 
         static bool draw_edge(HDC dc_handle,
                               RECT *rect,
-                              UINT edge,
-                              UINT flag);
+                              unsigned int edge,
+                              unsigned int flag);
 
         static bool draw_state(HDC dc_handle,
                                HBRUSH brush_handle,
@@ -44,7 +44,7 @@ namespace YanLib::ui::gdi {
                                int y,
                                int width,
                                int height,
-                               UINT flag);
+                               unsigned int flag);
 
         static bool draw_animated_rect(HWND hwnd,
                                        int animate_id,
@@ -55,12 +55,12 @@ namespace YanLib::ui::gdi {
 
         static bool draw_frame_control(HDC hdc,
                                        RECT *rect,
-                                       UINT type,
-                                       UINT state);
+                                       unsigned int type,
+                                       unsigned int state);
 
-        static DWORD gdi_get_batch_limit();
+        static unsigned long gdi_get_batch_limit();
 
-        static DWORD gdi_set_batch_limit(DWORD limit);
+        static unsigned long gdi_set_batch_limit(unsigned long limit);
 
         static COLORREF get_background_color(HDC dc_handle);
 
@@ -70,13 +70,13 @@ namespace YanLib::ui::gdi {
 
         static int set_background_mode(HDC dc_handle, int mode);
 
-        static UINT get_bounds_rect(HDC dc_handle,
+        static unsigned int get_bounds_rect(HDC dc_handle,
                                     RECT *rect,
-                                    UINT flag);
+                                    unsigned int flag);
 
-        static UINT set_bounds_rect(HDC dc_handle,
+        static unsigned int set_bounds_rect(HDC dc_handle,
                                     const RECT *rect,
-                                    UINT flag);
+                                    unsigned int flag);
 
         static int get_rop2(HDC dc_handle);
 
@@ -101,7 +101,7 @@ namespace YanLib::ui::gdi {
         static bool redraw_window(HWND hwnd,
                                   const RECT *rect,
                                   HRGN region_handle,
-                                  UINT flag);
+                                  unsigned int flag);
 
         static HDC get_window_dc(HWND hwnd);
 

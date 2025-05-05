@@ -75,7 +75,7 @@ namespace YanLib::io {
         }
     }
 
-    bool ftp::url_crack(DWORD flag) {
+    bool ftp::url_crack(unsigned long flag) {
         if (!InternetCrackUrlW(
             url.data(),
             url.size(),
@@ -89,10 +89,10 @@ namespace YanLib::io {
     }
 
     bool ftp::open(const wchar_t *agent_name,
-                   DWORD access_type,
+                   unsigned long access_type,
                    const wchar_t *proxy,
                    const wchar_t *proxy_bypass,
-                   DWORD flag) {
+                   unsigned long flag) {
         internet_handle = InternetOpenW(agent_name,
                                         access_type,
                                         proxy,
@@ -105,8 +105,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool ftp::connect(DWORD service,
-                      DWORD flag,
+    bool ftp::connect(unsigned long service,
+                      unsigned long flag,
                       DWORD_PTR context) {
         session_read_handle = InternetConnectW(internet_handle,
                                                _hostname,
@@ -144,8 +144,8 @@ namespace YanLib::io {
     }
 
     HINTERNET ftp::open_file(const wchar_t *file_name,
-                             DWORD access,
-                             DWORD flag,
+                             unsigned long access,
+                             unsigned long flag,
                              DWORD_PTR context) {
         HINTERNET file_handle = FtpOpenFileW(session_read_handle,
                                              file_name,
@@ -159,8 +159,8 @@ namespace YanLib::io {
     }
 
     HINTERNET ftp::create_file(const wchar_t *file_name,
-                               DWORD access,
-                               DWORD flag,
+                               unsigned long access,
+                               unsigned long flag,
                                DWORD_PTR context) {
         HINTERNET file_handle = FtpOpenFileW(session_upload_handle,
                                              file_name,
@@ -175,8 +175,8 @@ namespace YanLib::io {
 
     bool ftp::read(HINTERNET file_handle,
                    void *buf,
-                   DWORD size,
-                   DWORD *ret_size) {
+                   unsigned long size,
+                   unsigned long *ret_size) {
         if (!InternetReadFile(file_handle,
                               buf,
                               size,
@@ -193,7 +193,7 @@ namespace YanLib::io {
             buffer_size = 1024;
         }
         std::vector<uint8_t> raw_data(buffer_size, '\0');
-        DWORD bytes_read = 0;
+        unsigned long bytes_read = 0;
         if (InternetReadFile(file_handle,
                              raw_data.data(),
                              buffer_size,
@@ -208,8 +208,8 @@ namespace YanLib::io {
 
     bool ftp::write(HINTERNET file_handle,
                     const void *buf,
-                    DWORD size,
-                    DWORD *ret_size) {
+                    unsigned long size,
+                    unsigned long *ret_size) {
         if (!InternetWriteFile(file_handle,
                                buf,
                                size,
@@ -220,8 +220,8 @@ namespace YanLib::io {
         return true;
     }
 
-    DWORD ftp::write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec) {
-        DWORD bytes_read = 0;
+    unsigned long ftp::write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec) {
+        unsigned long bytes_read = 0;
         if (InternetWriteFile(file_handle,
                               vec.data(),
                               vec.size(),
@@ -233,8 +233,8 @@ namespace YanLib::io {
     }
 
     int64_t ftp::size(HINTERNET file_handle) {
-        DWORD low = 0;
-        DWORD high = 0;
+        unsigned long low = 0;
+        unsigned long high = 0;
 
         low = FtpGetFileSize(file_handle, &high);
         if (low == INVALID_FILE_SIZE) {
@@ -246,7 +246,7 @@ namespace YanLib::io {
 
     std::wstring ftp::pwd() {
         wchar_t current_dir[MAX_PATH];
-        DWORD buffer_size = MAX_PATH;
+        unsigned long buffer_size = MAX_PATH;
         if (!FtpGetCurrentDirectoryW(session_read_handle,
                                      current_dir,
                                      &buffer_size)) {
@@ -405,8 +405,8 @@ namespace YanLib::io {
             return {};
         }
         std::vector<uint8_t> result;
-        DWORD bytes_read = 0;
-        constexpr DWORD buffer_size = 1024;
+        unsigned long bytes_read = 0;
+        constexpr unsigned long buffer_size = 1024;
         uint8_t *buffer = new uint8_t[buffer_size];
         while (InternetReadFile(cmd_handle,
                                 buffer,
@@ -424,8 +424,8 @@ namespace YanLib::io {
     bool ftp::download(const wchar_t *remote_file,
                        const wchar_t *new_file,
                        bool is_fail_if_exists,
-                       DWORD flags_and_attrs,
-                       DWORD flag,
+                       unsigned long flags_and_attrs,
+                       unsigned long flag,
                        DWORD_PTR context) {
         if (!FtpGetFileW(session_read_handle,
                          remote_file,
@@ -441,7 +441,7 @@ namespace YanLib::io {
 
     bool ftp::upload(const wchar_t *local_file,
                      const wchar_t *new_remote_file,
-                     DWORD flag,
+                     unsigned long flag,
                      DWORD_PTR context) {
         if (!FtpPutFileW(session_upload_handle,
                          local_file,
@@ -453,19 +453,19 @@ namespace YanLib::io {
         return true;
     }
 
-    DWORD ftp::download2(HINTERNET remote_file,
+    unsigned long ftp::download2(HINTERNET remote_file,
                          const wchar_t *local_file) {
-        DWORD error = 0;
+        unsigned long error = 0;
         fs file;
         HANDLE file_handle = file.create(local_file);
         if (!file_handle) {
             return file.err_code();
         }
-        constexpr DWORD buf_size = 4096;
+        constexpr unsigned long buf_size = 4096;
         uint8_t *buf = new uint8_t[buf_size];
         memset(buf, 0, buf_size);
-        DWORD bytes_read = 0;
-        DWORD bytes_written = 0;
+        unsigned long bytes_read = 0;
+        unsigned long bytes_written = 0;
         do {
             if (!read(remote_file, buf, buf_size, &bytes_read)) {
                 error = err_code();
@@ -481,19 +481,19 @@ namespace YanLib::io {
         return error;
     }
 
-    DWORD ftp::upload2(HINTERNET remote_file,
+    unsigned long ftp::upload2(HINTERNET remote_file,
                        const wchar_t *local_file) {
-        DWORD error = 0;
+        unsigned long error = 0;
         fs file;
         HANDLE file_handle = file.open(local_file);
         if (!file_handle) {
             return file.err_code();
         }
-        constexpr DWORD buf_size = 4096;
+        constexpr unsigned long buf_size = 4096;
         uint8_t *buf = new uint8_t[buf_size];
         memset(buf, 0, buf_size);
-        DWORD bytes_read = 0;
-        DWORD bytes_written = 0;
+        unsigned long bytes_read = 0;
+        unsigned long bytes_written = 0;
         do {
             if (!file.read(file_handle, buf, buf_size, &bytes_read)) {
                 error = file.err_code();
@@ -509,7 +509,7 @@ namespace YanLib::io {
         return error;
     }
 
-    DWORD ftp::err_code() const {
+    unsigned long ftp::err_code() const {
         return error_code;
     }
 

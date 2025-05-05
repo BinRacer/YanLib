@@ -14,7 +14,7 @@ namespace YanLib::sys {
     private:
         std::vector<void *> fiber_addrs = {};
         sync::rwlock fiber_lock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         fiber(const fiber &other) = delete;
@@ -33,15 +33,15 @@ namespace YanLib::sys {
                      void *params,
                      size_t commit = 0,
                      size_t reserve = 0,
-                     DWORD flag = FIBER_FLAG_FLOAT_SWITCH);
+                     unsigned long flag = FIBER_FLAG_FLOAT_SWITCH);
 
-        DWORD fls_alloc(PFLS_CALLBACK_FUNCTION callback);
+        unsigned long fls_alloc(PFLS_CALLBACK_FUNCTION callback);
 
-        bool fls_free(DWORD index);
+        bool fls_free(unsigned long index);
 
-        void *fls_get_value(DWORD index);
+        void *fls_get_value(unsigned long index);
 
-        bool fls_set_value(DWORD index, void *value);
+        bool fls_set_value(unsigned long index, void *value);
 
         bool is_fiber();
 
@@ -49,11 +49,11 @@ namespace YanLib::sys {
 
         void yield();
 
-        void *thread_to_fiber(void *params, DWORD flag = FIBER_FLAG_FLOAT_SWITCH);
+        void *thread_to_fiber(void *params, unsigned long flag = FIBER_FLAG_FLOAT_SWITCH);
 
         bool fiber_to_thread();
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

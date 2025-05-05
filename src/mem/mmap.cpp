@@ -35,9 +35,9 @@ namespace YanLib::mem {
     HANDLE mmap::create(const wchar_t *file_name,
                         const wchar_t *mmap_name,
                         SECURITY_ATTRIBUTES* file_mapping_attrs,
-                        DWORD protect_flag,
-                        DWORD max_high,
-                        DWORD max_low) {
+                        unsigned long protect_flag,
+                        unsigned long max_high,
+                        unsigned long max_low) {
         HANDLE file_handle = CreateFileW(file_name,
                                          GENERIC_READ | GENERIC_WRITE,
                                          FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -71,9 +71,9 @@ namespace YanLib::mem {
     HANDLE mmap::create(HANDLE file_handle,
                         const wchar_t *mmap_name,
                         SECURITY_ATTRIBUTES* file_mapping_attrs,
-                        DWORD protect_flag,
-                        DWORD max_high,
-                        DWORD max_low) {
+                        unsigned long protect_flag,
+                        unsigned long max_high,
+                        unsigned long max_low) {
         HANDLE mmap_handle = CreateFileMappingW(file_handle,
                                                 file_mapping_attrs,
                                                 protect_flag,
@@ -91,7 +91,7 @@ namespace YanLib::mem {
     }
 
     HANDLE mmap::open(const wchar_t *mmap_name,
-                      DWORD desired_access,
+                      unsigned long desired_access,
                       bool is_inherit_handle) {
         HANDLE mmap_handle = OpenFileMappingW(desired_access,
                                               is_inherit_handle ? TRUE : FALSE,
@@ -107,9 +107,9 @@ namespace YanLib::mem {
     }
 
     void *mmap::mmap_file(HANDLE mmap_handle,
-                          DWORD desired_access,
-                          DWORD file_offset_high,
-                          DWORD file_offset_low,
+                          unsigned long desired_access,
+                          unsigned long file_offset_high,
+                          unsigned long file_offset_low,
                           SIZE_T size) {
         void *address = MapViewOfFile(mmap_handle,
                                       desired_access,
@@ -171,7 +171,7 @@ namespace YanLib::mem {
         return true;
     }
 
-    DWORD mmap::err_code() const {
+    unsigned long mmap::err_code() const {
         return error_code;
     }
 

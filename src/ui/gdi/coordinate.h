@@ -71,14 +71,14 @@ namespace YanLib::ui::gdi {
         static bool set_world_transform(HDC dc_handle, const XFORM *xfrom);
 
         // std::pair<result, error_code>
-        static std::pair<int, DWORD> map_window_points(HWND hwnd_from,
+        static std::pair<int, unsigned long> map_window_points(HWND hwnd_from,
                                                        HWND hwnd_to,
                                                        POINT *point,
-                                                       UINT num);
+                                                       unsigned int num);
 
         static bool modify_world_transform(HDC dc_handle,
                                            const XFORM *xfrom,
-                                           DWORD mode);
+                                           unsigned long mode);
 
         static bool offset_window_org(HDC dc_handle, int x, int y, POINT *point);
 

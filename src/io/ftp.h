@@ -26,7 +26,7 @@ namespace YanLib::io {
         wchar_t urlpath[512] = {};
         wchar_t extra_info[256] = {};
         uint16_t _port = 0;
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         ftp(const ftp &other) = delete;
@@ -48,46 +48,46 @@ namespace YanLib::io {
 
         ~ftp();
 
-        bool url_crack(DWORD flag = ICU_DECODE | ICU_ESCAPE);
+        bool url_crack(unsigned long flag = ICU_DECODE | ICU_ESCAPE);
 
         bool open(const wchar_t *agent_name = L"MiniFTP/0.1",
-                  DWORD access_type = INTERNET_OPEN_TYPE_PRECONFIG,
+                  unsigned long access_type = INTERNET_OPEN_TYPE_PRECONFIG,
                   const wchar_t *proxy = nullptr,
                   const wchar_t *proxy_bypass = nullptr,
-                  DWORD flag = 0);
+                  unsigned long flag = 0);
 
-        bool connect(DWORD service = INTERNET_SERVICE_FTP,
-                     DWORD flag = INTERNET_FLAG_PASSIVE,
+        bool connect(unsigned long service = INTERNET_SERVICE_FTP,
+                     unsigned long flag = INTERNET_FLAG_PASSIVE,
                      DWORD_PTR context = 0);
 
         HINTERNET open_file(const wchar_t *file_name,
-                            DWORD access = GENERIC_READ,
-                            DWORD flag = FTP_TRANSFER_TYPE_BINARY |
+                            unsigned long access = GENERIC_READ,
+                            unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
                                          INTERNET_FLAG_RELOAD |
                                          INTERNET_FLAG_TRANSFER_BINARY,
                             DWORD_PTR context = 0);
 
         HINTERNET create_file(const wchar_t *file_name,
-                              DWORD access = GENERIC_WRITE,
-                              DWORD flag = FTP_TRANSFER_TYPE_BINARY |
+                              unsigned long access = GENERIC_WRITE,
+                              unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
                                            INTERNET_FLAG_RELOAD |
                                            INTERNET_FLAG_TRANSFER_BINARY,
                               DWORD_PTR context = 0);
 
         bool read(HINTERNET file_handle,
                   void* buf,
-                  DWORD size,
-                  DWORD* ret_size);
+                  unsigned long size,
+                  unsigned long* ret_size);
 
         std::vector<uint8_t> read_bytes(HINTERNET file_handle,
                                         int32_t buffer_size = 1024);
 
         bool write(HINTERNET file_handle,
                    const void* buf,
-                   DWORD size,
-                   DWORD* ret_size);
+                   unsigned long size,
+                   unsigned long* ret_size);
 
-        DWORD write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec);
+        unsigned long write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec);
 
         int64_t size(HINTERNET file_handle);
 
@@ -115,26 +115,26 @@ namespace YanLib::io {
         bool download(const wchar_t *remote_file,
                       const wchar_t *new_file,
                       bool is_fail_if_exists = false,
-                      DWORD flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
-                      DWORD flag = FTP_TRANSFER_TYPE_BINARY |
+                      unsigned long flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
+                      unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
                                    INTERNET_FLAG_RELOAD |
                                    INTERNET_FLAG_TRANSFER_BINARY,
                       DWORD_PTR context = 0);
 
         bool upload(const wchar_t *local_file,
                     const wchar_t *new_remote_file,
-                    DWORD flag = FTP_TRANSFER_TYPE_BINARY |
+                    unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
                                  INTERNET_FLAG_RELOAD |
                                  INTERNET_FLAG_TRANSFER_BINARY,
                     DWORD_PTR context = 0);
 
-        DWORD download2(HINTERNET remote_file,
+        unsigned long download2(HINTERNET remote_file,
                         const wchar_t *local_file);
 
-        DWORD upload2(HINTERNET remote_file,
+        unsigned long upload2(HINTERNET remote_file,
                       const wchar_t *local_file);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

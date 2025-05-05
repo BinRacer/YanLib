@@ -37,7 +37,7 @@ namespace YanLib::ui::gdi {
         static bool angle_arc(HDC dc_handle,
                               int x,
                               int y,
-                              DWORD r,
+                              unsigned long r,
                               FLOAT start_angle,
                               FLOAT sweep_angle);
 

@@ -11,7 +11,7 @@ namespace YanLib::sync {
     class semaphore {
     private:
         HANDLE semaphore_handle;
-        DWORD error_code;
+        unsigned long error_code;
 
     public:
         semaphore(const semaphore &other) = delete;
@@ -27,19 +27,19 @@ namespace YanLib::sync {
         ~semaphore();
 
         bool create(SECURITY_ATTRIBUTES* semaphore_attrs = nullptr,
-                    LONG initial_count = 1,
-                    LONG maximum_count = 1,
+                    long initial_count = 1,
+                    long maximum_count = 1,
                     const wchar_t *name = nullptr);
 
         bool open(const wchar_t *name,
-                  DWORD desired_access = SEMAPHORE_ALL_ACCESS,
+                  unsigned long desired_access = SEMAPHORE_ALL_ACCESS,
                   bool inherit_handle = false);
 
-        bool wait(DWORD milli_seconds = INFINITE);
+        bool wait(unsigned long milli_seconds = INFINITE);
 
-        bool signal(LONG release_count = 1, LONG* previous_count = nullptr);
+        bool signal(long release_count = 1, long* previous_count = nullptr);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

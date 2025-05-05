@@ -5,7 +5,7 @@
 #include "convert.h"
 
 namespace YanLib::helper {
-    std::wstring convert::str_to_wstr(const std::string &str, UINT code_page) {
+    std::wstring convert::str_to_wstr(const std::string &str, unsigned int code_page) {
         int len = MultiByteToWideChar(code_page,
                                       0,
                                       str.data(),
@@ -24,7 +24,7 @@ namespace YanLib::helper {
         return wstr;
     }
 
-    std::string convert::wstr_to_str(const std::wstring &wstr, UINT code_page) {
+    std::string convert::wstr_to_str(const std::wstring &wstr, unsigned int code_page) {
         int len = WideCharToMultiByte(code_page,
                                       0,
                                       wstr.data(),
@@ -48,16 +48,16 @@ namespace YanLib::helper {
         return str;
     }
 
-    std::string convert::err_string(DWORD error_code) {
+    std::string convert::err_string(unsigned long error_code) {
         std::string result = wstr_to_str(err_wstring(error_code));
         return result;
     }
 
-    std::wstring convert::err_wstring(DWORD error_code) {
+    std::wstring convert::err_wstring(unsigned long error_code) {
         std::wstring result;
         HLOCAL hlocal = nullptr;
-        DWORD system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
-        DWORD is_ok = FormatMessageW(
+        unsigned long system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
+        unsigned long is_ok = FormatMessageW(
             FORMAT_MESSAGE_FROM_SYSTEM |
             FORMAT_MESSAGE_IGNORE_INSERTS |
             FORMAT_MESSAGE_ALLOCATE_BUFFER,

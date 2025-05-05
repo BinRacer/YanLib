@@ -16,7 +16,7 @@ namespace YanLib::mem {
         std::list<std::pair<HANDLE, void *> > mem_list = {};
         sync::rwlock heap_rwlock = {};
         sync::rwlock mem_rwlock = {};
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         heap(const heap &other) = delete;
@@ -31,7 +31,7 @@ namespace YanLib::mem {
 
         ~heap();
 
-        HANDLE create(DWORD options = 0,
+        HANDLE create(unsigned long options = 0,
                       size_t initial_size = 0,
                       size_t maximum_size = 0);
 
@@ -57,7 +57,7 @@ namespace YanLib::mem {
 
         bool unlock(HANDLE heap_handle);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

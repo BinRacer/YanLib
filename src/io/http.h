@@ -27,7 +27,7 @@ namespace YanLib::io {
         wchar_t extra_info[256] = {};
         bool is_https = false;
         uint16_t port = 0;
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         http(const http &other) = delete;
@@ -44,10 +44,10 @@ namespace YanLib::io {
 
         ~http();
 
-        bool url_crack(DWORD flag = ICU_DECODE | ICU_ESCAPE);
+        bool url_crack(unsigned long flag = ICU_DECODE | ICU_ESCAPE);
 
         bool add_header(const wchar_t *headers,
-                        DWORD headers_length = -1);
+                        unsigned long headers_length = -1);
 
         bool add_header(const std::string &headers);
 
@@ -73,29 +73,29 @@ namespace YanLib::io {
         [[nodiscard]]
         std::vector<std::wstring> get_headers_vec_wide() const;
 
-        bool query_option(DWORD option,
+        bool query_option(unsigned long option,
                           void *buffer,
-                          DWORD *buffer_length);
+                          unsigned long *buffer_length);
 
-        bool set_option(DWORD option,
+        bool set_option(unsigned long option,
                         void *buffer,
-                        DWORD buffer_length);
+                        unsigned long buffer_length);
 
         bool open(const wchar_t *agent_name = L"MiniCurl/0.1",
-                  DWORD access_type = INTERNET_OPEN_TYPE_PRECONFIG,
+                  unsigned long access_type = INTERNET_OPEN_TYPE_PRECONFIG,
                   const wchar_t *proxy = nullptr,
                   const wchar_t *proxy_bypass = nullptr,
-                  DWORD flag = 0);
+                  unsigned long flag = 0);
 
-        bool connect(DWORD service = INTERNET_SERVICE_HTTP,
-                     DWORD flag = 0,
+        bool connect(unsigned long service = INTERNET_SERVICE_HTTP,
+                     unsigned long flag = 0,
                      DWORD_PTR context = 0);
 
         bool open_request(const wchar_t *verb = L"GET",
                           const wchar_t *version = L"HTTP/1.1",
                           const wchar_t *referrer = nullptr,
                           const wchar_t **accept_types = nullptr,
-                          DWORD flag = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
+                          unsigned long flag = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
                                        INTERNET_FLAG_KEEP_CONNECTION |
                                        INTERNET_FLAG_NO_AUTH |
                                        INTERNET_FLAG_NO_COOKIES |
@@ -104,33 +104,33 @@ namespace YanLib::io {
                           DWORD_PTR context = 0);
 
 
-        DWORD get_content_length();
+        unsigned long get_content_length();
 
         bool send_request(const wchar_t *headers = nullptr,
-                          DWORD headers_length = 0,
+                          unsigned long headers_length = 0,
                           void *optional = nullptr,
-                          DWORD optional_length = 0);
+                          unsigned long optional_length = 0);
 
         bool send_request_ex(INTERNET_BUFFERSW *buffers_in,
                              INTERNET_BUFFERSW *buffers_out = nullptr,
-                             DWORD flag = 0,
+                             unsigned long flag = 0,
                              DWORD_PTR context = 0);
 
         bool end_request_ex(INTERNET_BUFFERSW *buffers_out = nullptr,
-                            DWORD flag = 0,
+                            unsigned long flag = 0,
                             DWORD_PTR context = 0);
 
         bool read(void *buf,
-                  DWORD size,
-                  DWORD *ret_size);
+                  unsigned long size,
+                  unsigned long *ret_size);
 
         std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
         bool write(const void *buf,
-                   DWORD size,
-                   DWORD *ret_size);
+                   unsigned long size,
+                   unsigned long *ret_size);
 
-        DWORD write_bytes(std::vector<uint8_t> &vec);
+        unsigned long write_bytes(std::vector<uint8_t> &vec);
 
         static std::string read_string_to_end(const std::wstring &input_url);
 
@@ -139,13 +139,13 @@ namespace YanLib::io {
         static std::vector<uint8_t> read_bytes_to_end(
             const std::wstring &input_url);
 
-        static DWORD download(const std::wstring &input_url,
+        static unsigned long download(const std::wstring &input_url,
                               const wchar_t *file_name);
 
-        static DWORD upload(const std::wstring &input_url,
+        static unsigned long upload(const std::wstring &input_url,
                             const wchar_t *file_name);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

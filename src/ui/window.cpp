@@ -15,8 +15,8 @@ namespace YanLib::ui {
                                int y,
                                int width,
                                int height,
-                               DWORD style,
-                               DWORD ext_style) {
+                               unsigned long style,
+                               unsigned long ext_style) {
         HWND hwnd_handle = CreateWindowExW(ext_style,
                                            class_name,
                                            window_name,
@@ -44,7 +44,7 @@ namespace YanLib::ui {
                                    int y,
                                    int width,
                                    int height,
-                                   DWORD style) {
+                                   unsigned long style) {
         HWND hwnd_handle = CreateMDIWindowW(class_name,
                                             window_name,
                                             style,
@@ -64,7 +64,7 @@ namespace YanLib::ui {
     WNDCLASSEXW window::make_window_class(const wchar_t *class_name,
                                           WNDPROC window_proc,
                                           HINSTANCE instance_handle,
-                                          UINT style,
+                                          unsigned int style,
                                           const wchar_t *menu_name,
                                           int cb_class_extra,
                                           int cb_window_extra,
@@ -129,16 +129,16 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD window::get_class_long(HWND hwnd, int index) {
-        DWORD result = GetClassLongW(hwnd, index);
+    unsigned long window::get_class_long(HWND hwnd, int index) {
+        unsigned long result = GetClassLongW(hwnd, index);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    DWORD window::set_class_long(HWND hwnd, int index, LONG value) {
-        DWORD result = SetClassLongW(hwnd, index, value);
+    unsigned long window::set_class_long(HWND hwnd, int index, long value) {
+        unsigned long result = SetClassLongW(hwnd, index, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -161,16 +161,16 @@ namespace YanLib::ui {
         return result;
     }
 
-    WORD window::get_class_word(HWND hwnd, int index) {
-        WORD result = GetClassWord(hwnd, index);
+    unsigned short window::get_class_word(HWND hwnd, int index) {
+        unsigned short result = GetClassWord(hwnd, index);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    WORD window::set_class_word(HWND hwnd, int index, WORD value) {
-        WORD result = SetClassWord(hwnd, index, value);
+    unsigned short window::set_class_word(HWND hwnd, int index, unsigned short value) {
+        unsigned short result = SetClassWord(hwnd, index, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -220,7 +220,7 @@ namespace YanLib::ui {
     HHOOK window::set_windows_hook(int id_hook,
                                    HOOKPROC fn,
                                    HINSTANCE hmod,
-                                   DWORD tid) {
+                                   unsigned long tid) {
         HHOOK result = SetWindowsHookExW(id_hook, fn, hmod, tid);
         if (!result) {
             error_code = GetLastError();
@@ -243,13 +243,13 @@ namespace YanLib::ui {
         return CallNextHookEx(hhk, code, w_param, l_param);
     }
 
-    HWINEVENTHOOK window::set_win_event_hook(DWORD event_min,
-                                             DWORD event_max,
+    HWINEVENTHOOK window::set_win_event_hook(unsigned long event_min,
+                                             unsigned long event_max,
                                              HMODULE hmod_win_event_proc,
                                              WINEVENTPROC fn_win_event_proc,
-                                             DWORD pid,
-                                             DWORD tid,
-                                             DWORD flag) {
+                                             unsigned long pid,
+                                             unsigned long tid,
+                                             unsigned long flag) {
         return SetWinEventHook(event_min,
                                event_max,
                                hmod_win_event_proc,
@@ -263,7 +263,7 @@ namespace YanLib::ui {
         return UnhookWinEvent(hwin_event_hook);
     }
 
-    bool window::is_win_event_hook_installed(DWORD event) {
+    bool window::is_win_event_hook_installed(unsigned long event) {
         return IsWinEventHookInstalled(event);
     }
 
@@ -287,7 +287,7 @@ namespace YanLib::ui {
                                        POINT *point_src,
                                        COLORREF color_ref,
                                        BLENDFUNCTION *blend_fn,
-                                       DWORD flag) {
+                                       unsigned long flag) {
         if (!UpdateLayeredWindow(hwnd,
                                  hdc_dst,
                                  point_dst,
@@ -311,7 +311,7 @@ namespace YanLib::ui {
         return LockWindowUpdate(nullptr);
     }
 
-    bool window::animate_window(HWND hwnd, DWORD time, DWORD flag) {
+    bool window::animate_window(HWND hwnd, unsigned long time, unsigned long flag) {
         if (!AnimateWindow(hwnd, time, flag)) {
             error_code = GetLastError();
             return false;
@@ -319,8 +319,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT window::arrange_minimize_windows(HWND hwnd) {
-        UINT height = ArrangeIconicWindows(hwnd);
+    unsigned int window::arrange_minimize_windows(HWND hwnd) {
+        unsigned int height = ArrangeIconicWindows(hwnd);
         if (!height) {
             error_code = GetLastError();
         }
@@ -342,7 +342,7 @@ namespace YanLib::ui {
                                   int y,
                                   int cx,
                                   int cy,
-                                  UINT flag) {
+                                  unsigned int flag) {
         HDWP hdwp = DeferWindowPos(hwin_pos_info,
                                    hwnd,
                                    hwnd_insert_after,
@@ -371,7 +371,7 @@ namespace YanLib::ui {
                                 int y,
                                 int cx,
                                 int cy,
-                                UINT flag) {
+                                unsigned int flag) {
         if (!SetWindowPos(hwnd,
                           hwnd_insert_after,
                           x,
@@ -387,7 +387,7 @@ namespace YanLib::ui {
 
     bool window::calculate_popup_window_position(const POINT *anchor_point,
                                                  const SIZE *window_size,
-                                                 UINT flag,
+                                                 unsigned int flag,
                                                  RECT *exclude_rect,
                                                  RECT *popup_window_position) {
         if (!CalculatePopupWindowPosition(anchor_point,
@@ -411,7 +411,7 @@ namespace YanLib::ui {
 
     LRESULT window::call_window_proc(WNDPROC prev_wnd_func,
                                      HWND hwnd,
-                                     UINT msg,
+                                     unsigned int msg,
                                      WPARAM w_param,
                                      LPARAM l_param) {
         return CallWindowProcW(prev_wnd_func,
@@ -422,7 +422,7 @@ namespace YanLib::ui {
     }
 
     LRESULT window::default_window_proc(HWND hwnd,
-                                        UINT msg,
+                                        unsigned int msg,
                                         WPARAM w_param,
                                         LPARAM l_param) {
         return DefWindowProcW(hwnd, msg, w_param, l_param);
@@ -430,25 +430,25 @@ namespace YanLib::ui {
 
     LRESULT window::default_frame_proc(HWND hwnd,
                                        HWND hwnd_mdi_client,
-                                       UINT msg,
+                                       unsigned int msg,
                                        WPARAM w_param,
                                        LPARAM l_param) {
         return DefFrameProcW(hwnd, hwnd_mdi_client, msg, w_param, l_param);
     }
 
     LRESULT window::default_mdi_child_proc(HWND hwnd,
-                                           UINT msg,
+                                           unsigned int msg,
                                            WPARAM w_param,
                                            LPARAM l_param) {
         return DefMDIChildProcW(hwnd, msg, w_param, l_param);
     }
 
-    WORD window::cascade_windows(HWND hwnd_parent,
-                                 UINT how,
+    unsigned short window::cascade_windows(HWND hwnd_parent,
+                                 unsigned int how,
                                  const RECT *rect,
-                                 UINT kids_count,
+                                 unsigned int kids_count,
                                  const HWND *kids) {
-        WORD count = CascadeWindows(hwnd_parent,
+        unsigned short count = CascadeWindows(hwnd_parent,
                                     how,
                                     rect,
                                     kids_count,
@@ -463,7 +463,7 @@ namespace YanLib::ui {
         return ChildWindowFromPoint(hwnd_parent, point);
     }
 
-    HWND window::child_window_from_point(HWND hwnd_parent, POINT point, UINT flag) {
+    HWND window::child_window_from_point(HWND hwnd_parent, POINT point, unsigned int flag) {
         return ChildWindowFromPointEx(hwnd_parent, point, flag);
     }
 
@@ -483,7 +483,7 @@ namespace YanLib::ui {
     int window::map_window_points(HWND hwnd_from,
                                   HWND hwnd_to,
                                   POINT *point,
-                                  UINT count) {
+                                  unsigned int count) {
         int result = MapWindowPoints(hwnd_from, hwnd_to, point, count);
         error_code = GetLastError();
         return result;
@@ -527,13 +527,13 @@ namespace YanLib::ui {
         return EnumChildWindows(hwnd_parent, enum_func, l_param);
     }
 
-    bool window::enum_thread_windows(DWORD tid,
+    bool window::enum_thread_windows(unsigned long tid,
                                      WNDENUMPROC fn,
                                      LPARAM l_param) {
         return EnumThreadWindows(tid, fn, l_param);
     }
 
-    bool window::exit_windows(UINT flag, DWORD reason) {
+    bool window::exit_windows(unsigned int flag, unsigned long reason) {
         if (!ExitWindowsEx(flag, reason)) {
             error_code = GetLastError();
             return false;
@@ -580,7 +580,7 @@ namespace YanLib::ui {
         return hwnd_handle;
     }
 
-    UINT window::get_dpi_for_window(HWND hwnd) {
+    unsigned int window::get_dpi_for_window(HWND hwnd) {
         return GetDpiForWindow(hwnd);
     }
 
@@ -592,7 +592,7 @@ namespace YanLib::ui {
         return SetForegroundWindow(hwnd);
     }
 
-    bool window::allow_set_foreground_window(DWORD pid) {
+    bool window::allow_set_foreground_window(unsigned long pid) {
         if (!AllowSetForegroundWindow(pid)) {
             error_code = GetLastError();
             return false;
@@ -611,7 +611,7 @@ namespace YanLib::ui {
     bool window::get_layered_window_attrs(HWND hwnd,
                                           COLORREF *color_ref,
                                           uint8_t *alpha,
-                                          DWORD *flag) {
+                                          unsigned long *flag) {
         if (!GetLayeredWindowAttributes(hwnd,
                                         color_ref,
                                         alpha,
@@ -625,7 +625,7 @@ namespace YanLib::ui {
     bool window::set_layered_window_attrs(HWND hwnd,
                                           COLORREF color_ref,
                                           uint8_t alpha,
-                                          DWORD flag) {
+                                          unsigned long flag) {
         if (!SetLayeredWindowAttributes(hwnd,
                                         color_ref,
                                         alpha,
@@ -637,7 +637,7 @@ namespace YanLib::ui {
     }
 
 
-    HWND window::get_window(HWND hwnd, UINT cmd) {
+    HWND window::get_window(HWND hwnd, unsigned int cmd) {
         HWND hwnd_handle = GetWindow(hwnd, cmd);
         if (!hwnd_handle) {
             error_code = GetLastError();
@@ -645,7 +645,7 @@ namespace YanLib::ui {
         return hwnd_handle;
     }
 
-    HWND window::get_next_window(HWND hwnd, UINT cmd) {
+    HWND window::get_next_window(HWND hwnd, unsigned int cmd) {
         return GetWindow(hwnd, cmd);
     }
 
@@ -661,11 +661,11 @@ namespace YanLib::ui {
         return hwnd_handle;
     }
 
-    DWORD window::get_window_context_help_id(HWND hwnd) {
+    unsigned long window::get_window_context_help_id(HWND hwnd) {
         return GetWindowContextHelpId(hwnd);
     }
 
-    bool window::set_window_context_help_id(HWND hwnd, DWORD param) {
+    bool window::set_window_context_help_id(HWND hwnd, unsigned long param) {
         if (!SetWindowContextHelpId(hwnd, param)) {
             error_code = GetLastError();
             return false;
@@ -673,7 +673,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::get_window_display_affinity(HWND hwnd, DWORD *affinity) {
+    bool window::get_window_display_affinity(HWND hwnd, unsigned long *affinity) {
         if (!GetWindowDisplayAffinity(hwnd, affinity)) {
             error_code = GetLastError();
             return false;
@@ -681,7 +681,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::set_window_display_affinity(HWND hwnd, DWORD affinity) {
+    bool window::set_window_display_affinity(HWND hwnd, unsigned long affinity) {
         if (!SetWindowDisplayAffinity(hwnd, affinity)) {
             error_code = GetLastError();
             return false;
@@ -699,8 +699,8 @@ namespace YanLib::ui {
 
     bool window::get_window_feedback_setting(HWND hwnd,
                                              FEEDBACK_TYPE feedback,
-                                             DWORD flag,
-                                             UINT32 *size,
+                                             unsigned long flag,
+                                             unsigned int *size,
                                              void *config) {
         return GetWindowFeedbackSetting(hwnd,
                                         feedback,
@@ -711,8 +711,8 @@ namespace YanLib::ui {
 
     bool window::set_window_feedback_setting(HWND hwnd,
                                              FEEDBACK_TYPE feedback,
-                                             DWORD flag,
-                                             UINT32 size,
+                                             unsigned long flag,
+                                             unsigned int size,
                                              const void *config) {
         return SetWindowFeedbackSetting(hwnd,
                                         feedback,
@@ -729,16 +729,16 @@ namespace YanLib::ui {
         return true;
     }
 
-    LONG window::get_window_long(HWND hwnd, int index) {
-        LONG result = GetWindowLongW(hwnd, index);
+    long window::get_window_long(HWND hwnd, int index) {
+        long result = GetWindowLongW(hwnd, index);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    LONG window::set_window_long(HWND hwnd, int index, LONG value) {
-        LONG result = SetWindowLongW(hwnd, index, value);
+    long window::set_window_long(HWND hwnd, int index, long value) {
+        long result = SetWindowLongW(hwnd, index, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -761,9 +761,9 @@ namespace YanLib::ui {
         return result;
     }
 
-    UINT window::get_window_module_file_name(HWND hwnd,
+    unsigned int window::get_window_module_file_name(HWND hwnd,
                                              wchar_t *file_name,
-                                             UINT cch_size) {
+                                             unsigned int cch_size) {
         return GetWindowModuleFileNameW(hwnd, file_name, cch_size);
     }
 
@@ -794,7 +794,7 @@ namespace YanLib::ui {
     }
 
 
-    bool window::adjust_window_rect(RECT *rect, DWORD style, bool menu) {
+    bool window::adjust_window_rect(RECT *rect, unsigned long style, bool menu) {
         if (!AdjustWindowRect(rect,
                               style,
                               menu ? TRUE : FALSE)) {
@@ -805,9 +805,9 @@ namespace YanLib::ui {
     }
 
     bool window::adjust_window_rect(RECT *rect,
-                                    DWORD style,
+                                    unsigned long style,
                                     bool menu,
-                                    DWORD ext_style) {
+                                    unsigned long ext_style) {
         if (!AdjustWindowRectEx(rect,
                                 style,
                                 menu ? TRUE : FALSE,
@@ -819,10 +819,10 @@ namespace YanLib::ui {
     }
 
     bool window::adjust_window_rect_for_dpi(RECT *rect,
-                                            DWORD style,
+                                            unsigned long style,
                                             bool menu,
-                                            DWORD ext_style,
-                                            UINT dpi) {
+                                            unsigned long ext_style,
+                                            unsigned int dpi) {
         if (!AdjustWindowRectExForDpi(rect,
                                       style,
                                       menu ? TRUE : FALSE,
@@ -870,16 +870,16 @@ namespace YanLib::ui {
         return result;
     }
 
-    DWORD window::get_window_thread_process_id(HWND hwnd, DWORD *pid) {
-        DWORD result = GetWindowThreadProcessId(hwnd, pid);
+    unsigned long window::get_window_thread_process_id(HWND hwnd, unsigned long *pid) {
+        unsigned long result = GetWindowThreadProcessId(hwnd, pid);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    WORD window::get_window_word(HWND hwnd, int index) {
-        WORD result = GetWindowWord(hwnd, index);
+    unsigned short window::get_window_word(HWND hwnd, int index) {
+        unsigned short result = GetWindowWord(hwnd, index);
         if (!result) {
             error_code = GetLastError();
         }
@@ -953,7 +953,7 @@ namespace YanLib::ui {
         return AnyPopup();
     }
 
-    HMONITOR window::monitor_from_window(HWND hwnd, DWORD flag) {
+    HMONITOR window::monitor_from_window(HWND hwnd, unsigned long flag) {
         return MonitorFromWindow(hwnd, flag);
     }
 
@@ -975,14 +975,14 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::print_window(HWND hwnd, HDC dc_handle, UINT flag) {
+    bool window::print_window(HWND hwnd, HDC dc_handle, unsigned int flag) {
         return PrintWindow(hwnd, dc_handle, flag);
     }
 
-    UINT window::real_get_window_class(HWND hwnd,
+    unsigned int window::real_get_window_class(HWND hwnd,
                                        wchar_t *class_name,
-                                       UINT cch_size) {
-        UINT result = RealGetWindowClassW(hwnd, class_name, cch_size);
+                                       unsigned int cch_size) {
+        unsigned int result = RealGetWindowClassW(hwnd, class_name, cch_size);
         if (!result) {
             error_code = GetLastError();
         }
@@ -992,7 +992,7 @@ namespace YanLib::ui {
     bool window::redraw_window(HWND hwnd,
                                const RECT *rect,
                                HRGN region_handle,
-                               UINT flag) {
+                               unsigned int flag) {
         return RedrawWindow(hwnd,
                             rect,
                             region_handle,
@@ -1018,7 +1018,7 @@ namespace YanLib::ui {
                               const RECT *rect_clip,
                               HRGN region_handle_update,
                               RECT *rect_update,
-                              UINT flag) {
+                              unsigned int flag) {
         int result = ScrollWindowEx(hwnd,
                                     dx,
                                     dy,
@@ -1037,12 +1037,12 @@ namespace YanLib::ui {
         SwitchToThisWindow(hwnd, unknown ? TRUE : FALSE);
     }
 
-    WORD window::tile_windows(HWND hwnd_parent,
-                              UINT how,
+    unsigned short window::tile_windows(HWND hwnd_parent,
+                              unsigned int how,
                               const RECT *rect,
-                              UINT kids_num,
+                              unsigned int kids_num,
                               const HWND *kids) {
-        WORD result = TileWindows(hwnd_parent, how, rect, kids_num, kids);
+        unsigned short result = TileWindows(hwnd_parent, how, rect, kids_num, kids);
         if (!result) {
             error_code = GetLastError();
         }
@@ -1051,7 +1051,7 @@ namespace YanLib::ui {
 
     bool window::win_help(HWND hwnd,
                           const wchar_t *help,
-                          UINT cmd,
+                          unsigned int cmd,
                           ULONG_PTR data) {
         if (!WinHelpW(hwnd,
                       help,
@@ -1075,7 +1075,7 @@ namespace YanLib::ui {
         return IsIconic(hwnd);
     }
 
-    DWORD window::err_code() const {
+    unsigned long window::err_code() const {
         return error_code;
     }
 

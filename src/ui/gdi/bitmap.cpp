@@ -7,8 +7,8 @@
 namespace YanLib::ui::gdi {
     HBITMAP bitmap::create_bitmap(int width,
                                   int height,
-                                  UINT planes,
-                                  UINT bit_count,
+                                  unsigned int planes,
+                                  unsigned int bit_count,
                                   const void *bits) {
         return CreateBitmap(width, height, planes, bit_count, bits);
     }
@@ -23,10 +23,10 @@ namespace YanLib::ui::gdi {
 
     HBITMAP bitmap::create_di_bitmap(HDC dc_handle,
                                      const BITMAPINFOHEADER *bitmap_info_header,
-                                     DWORD flag,
+                                     unsigned long flag,
                                      const void *bits,
                                      const BITMAPINFO *bitmap_info,
-                                     UINT usage) {
+                                     unsigned int usage) {
         return CreateDIBitmap(dc_handle,
                               bitmap_info_header,
                               flag,
@@ -35,20 +35,20 @@ namespace YanLib::ui::gdi {
                               usage);
     }
 
-    std::pair<HBITMAP, DWORD> bitmap::create_dib_section(
+    std::pair<HBITMAP, unsigned long> bitmap::create_dib_section(
         HDC dc_handle,
         const BITMAPINFO *bitmap_info,
-        UINT usage,
+        unsigned int usage,
         void **bits,
         HANDLE section_handle,
-        DWORD offset) {
+        unsigned long offset) {
         HBITMAP result = CreateDIBSection(dc_handle,
                                           bitmap_info,
                                           usage,
                                           bits,
                                           section_handle,
                                           offset);
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
         if (!result) {
             error_code = GetLastError();
         }
@@ -60,7 +60,7 @@ namespace YanLib::ui::gdi {
         return LoadBitmapW(hinstance_handle, bitmap_name);
     }
 
-    std::pair<bool, DWORD> bitmap::bit_blt(HDC dc_handle_dst,
+    std::pair<bool, unsigned long> bitmap::bit_blt(HDC dc_handle_dst,
                                            int x,
                                            int y,
                                            int width,
@@ -68,8 +68,8 @@ namespace YanLib::ui::gdi {
                                            HDC dc_handle_src,
                                            int x1,
                                            int y1,
-                                           DWORD rop) {
-        DWORD error_code = 0;
+                                           unsigned long rop) {
+        unsigned long error_code = 0;
         if (!BitBlt(dc_handle_dst,
                     x,
                     y,
@@ -118,7 +118,7 @@ namespace YanLib::ui::gdi {
                           HBITMAP bitmap_mask_handle,
                           int x_mask,
                           int y_mask,
-                          DWORD rop) {
+                          unsigned long rop) {
         return MaskBlt(dc_handle_dst,
                        x_dst,
                        y_dst,
@@ -143,7 +143,7 @@ namespace YanLib::ui::gdi {
                              int y_src,
                              int width_src,
                              int height_src,
-                             DWORD rop) {
+                             unsigned long rop) {
         return StretchBlt(dc_handle_dst,
                           x_dst,
                           y_dst,
@@ -162,7 +162,7 @@ namespace YanLib::ui::gdi {
                          int y,
                          int width,
                          int height,
-                         DWORD rop) {
+                         unsigned long rop) {
         return PatBlt(dc_handle,
                       x,
                       y,
@@ -181,7 +181,7 @@ namespace YanLib::ui::gdi {
                                  int y_src,
                                  int width_src,
                                  int height_src,
-                                 UINT transparent) {
+                                 unsigned int transparent) {
         return TransparentBlt(dc_handle_dst,
                               x_dst,
                               y_dst,
@@ -197,10 +197,10 @@ namespace YanLib::ui::gdi {
 
     bool bitmap::gradient_fill(HDC dc_handle,
                                TRIVERTEX *vertex,
-                               ULONG vertex_num,
+                               unsigned long vertex_num,
                                void *mesh,
-                               ULONG mesh_num,
-                               ULONG mode) {
+                               unsigned long mesh_num,
+                               unsigned long mode) {
         return GradientFill(dc_handle,
                             vertex,
                             vertex_num,
@@ -213,7 +213,7 @@ namespace YanLib::ui::gdi {
                                 int x,
                                 int y,
                                 COLORREF color,
-                                UINT type) {
+                                unsigned int type) {
         return ExtFloodFill(dc_handle,
                             x,
                             y,
@@ -232,8 +232,8 @@ namespace YanLib::ui::gdi {
                                 int height_src,
                                 const void *bits,
                                 const BITMAPINFO *bitmap_info,
-                                UINT usage,
-                                DWORD rop) {
+                                unsigned int usage,
+                                unsigned long rop) {
         return StretchDIBits(dc_handle,
                              x_dst,
                              y_dst,
@@ -284,27 +284,27 @@ namespace YanLib::ui::gdi {
         return SetBitmapDimensionEx(bitmap_handle, width, height, size);
     }
 
-    UINT bitmap::get_dib_color_table(HDC dc_handle,
-                                     UINT start_index,
-                                     UINT entries,
+    unsigned int bitmap::get_dib_color_table(HDC dc_handle,
+                                     unsigned int start_index,
+                                     unsigned int entries,
                                      RGBQUAD *buf) {
         return GetDIBColorTable(dc_handle, start_index, entries, buf);
     }
 
-    UINT bitmap::set_dib_color_table(HDC dc_handle,
-                                     UINT start_index,
-                                     UINT entries,
+    unsigned int bitmap::set_dib_color_table(HDC dc_handle,
+                                     unsigned int start_index,
+                                     unsigned int entries,
                                      const RGBQUAD *buf) {
         return SetDIBColorTable(dc_handle, start_index, entries, buf);
     }
 
     int bitmap::get_di_bits(HDC dc_handle,
                             HBITMAP bitmap_handle,
-                            UINT start_line,
-                            UINT line_num,
+                            unsigned int start_line,
+                            unsigned int line_num,
                             void *bits,
                             BITMAPINFO *bitmap_info,
-                            UINT usage) {
+                            unsigned int usage) {
         return GetDIBits(dc_handle,
                          bitmap_handle,
                          start_line,
@@ -316,11 +316,11 @@ namespace YanLib::ui::gdi {
 
     int bitmap::set_di_bits(HDC dc_handle,
                             HBITMAP bitmap_handle,
-                            UINT start_line,
-                            UINT line_num,
+                            unsigned int start_line,
+                            unsigned int line_num,
                             const void *bits,
                             const BITMAPINFO *bitmap_info,
-                            UINT color_use) {
+                            unsigned int color_use) {
         return SetDIBits(dc_handle,
                          bitmap_handle,
                          start_line,
@@ -353,15 +353,15 @@ namespace YanLib::ui::gdi {
     int bitmap::set_di_bits_to_device(HDC dc_handle,
                                       int x_dst,
                                       int y_dst,
-                                      DWORD width,
-                                      DWORD height,
+                                      unsigned long width,
+                                      unsigned long height,
                                       int x_src,
                                       int y_src,
-                                      UINT start_scan,
-                                      UINT line_num,
+                                      unsigned int start_scan,
+                                      unsigned int line_num,
                                       const void *bits,
                                       const BITMAPINFO *bitmap_info,
-                                      UINT color_use) {
+                                      unsigned int color_use) {
         return SetDIBitsToDevice(dc_handle,
                                  x_dst,
                                  y_dst,

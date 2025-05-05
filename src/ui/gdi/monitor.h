@@ -26,9 +26,9 @@ namespace YanLib::ui::gdi {
                                           MONITORENUMPROC monitor_enum_proc,
                                           LPARAM data);
 
-        static HMONITOR monitor_from_point(POINT point, DWORD flag);
+        static HMONITOR monitor_from_point(POINT point, unsigned long flag);
 
-        static HMONITOR monitor_from_rect(const RECT *rect, DWORD flag);
+        static HMONITOR monitor_from_rect(const RECT *rect, unsigned long flag);
 
         static bool get_monitor_info(HMONITOR monitor_handle,
                                      MONITORINFO *monitor_info);

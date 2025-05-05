@@ -30,7 +30,7 @@ namespace YanLib::sys {
     }
 
     HANDLE job::open(const wchar_t *job_name,
-                     DWORD desired_access,
+                     unsigned long desired_access,
                      bool is_inherit_handle) {
         HANDLE job_handle = OpenJobObjectW(desired_access,
                                            is_inherit_handle ? TRUE : FALSE,
@@ -61,7 +61,7 @@ namespace YanLib::sys {
         return is_ok;
     }
 
-    bool job::kill(HANDLE job_handle, UINT exit_code) {
+    bool job::kill(HANDLE job_handle, unsigned int exit_code) {
         if (!TerminateJobObject(job_handle, exit_code)) {
             error_code = GetLastError();
             return false;
@@ -88,8 +88,8 @@ namespace YanLib::sys {
     bool job::get_info(HANDLE job_handle,
                        JOBOBJECTINFOCLASS job_object_info_class,
                        void *job_object_info,
-                       DWORD job_object_info_len,
-                       DWORD* ret_len) {
+                       unsigned long job_object_info_len,
+                       unsigned long* ret_len) {
         if (!QueryInformationJobObject(job_handle,
                                        job_object_info_class,
                                        job_object_info,
@@ -104,7 +104,7 @@ namespace YanLib::sys {
     bool job::set_info(HANDLE job_handle,
                        JOBOBJECTINFOCLASS job_object_info_class,
                        void *job_object_info,
-                       DWORD job_object_info_len) {
+                       unsigned long job_object_info_len) {
         if (!SetInformationJobObject(job_handle,
                                      job_object_info_class,
                                      job_object_info,
@@ -115,7 +115,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    DWORD job::err_code() const {
+    unsigned long job::err_code() const {
         return error_code;
     }
 

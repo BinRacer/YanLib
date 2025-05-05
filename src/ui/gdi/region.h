@@ -42,7 +42,7 @@ namespace YanLib::ui::gdi {
                                           int mode);
 
         static HRGN create_poly_polygon_region(const POINT *points,
-                                               const INT *points_num,
+                                               const int *points_num,
                                                int poly_count,
                                                int mode);
 
@@ -51,7 +51,7 @@ namespace YanLib::ui::gdi {
                                 HBRUSH brush_handle);
 
         static HRGN ext_create_region(const XFORM *xfrom,
-                                      DWORD size,
+                                      unsigned long size,
                                       const RGNDATA *buf);
 
         static bool frame_region(HDC dc_handle,
@@ -98,8 +98,8 @@ namespace YanLib::ui::gdi {
         static int exclude_update_region(HDC dc_handle, HWND hwnd);
 
         // std::pair<result, error_code>
-        static std::pair<DWORD, DWORD> get_region_data(HRGN region_handle,
-                                                       DWORD size,
+        static std::pair<unsigned long, unsigned long> get_region_data(HRGN region_handle,
+                                                       unsigned long size,
                                                        RGNDATA *buf);
     };
 }

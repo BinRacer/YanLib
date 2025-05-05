@@ -10,7 +10,7 @@
 namespace YanLib::ui {
     class mouse {
     private:
-        DWORD error_code = 0;
+        unsigned long error_code = 0;
 
     public:
         mouse(const mouse &other) = delete;
@@ -31,9 +31,9 @@ namespace YanLib::ui {
 
         bool drag_detect(HWND hwnd, POINT point);
 
-        UINT get_double_click_time();
+        unsigned int get_double_click_time();
 
-        bool set_double_click_time(UINT milli_seconds);
+        bool set_double_click_time(unsigned int milli_seconds);
 
         HWND get_capture();
 
@@ -41,12 +41,12 @@ namespace YanLib::ui {
 
         bool release_capture();
 
-        UINT send_input(UINT inputs_count, INPUT* inputs, int cb_size);
+        unsigned int send_input(unsigned int inputs_count, INPUT* inputs, int cb_size);
 
-        void send_mouse_event(DWORD flag,
-                              DWORD x,
-                              DWORD y,
-                              DWORD data,
+        void send_mouse_event(unsigned long flag,
+                              unsigned long x,
+                              unsigned long y,
+                              unsigned long data,
                               ULONG_PTR extra_info);
 
         bool track_mouse_event(TRACKMOUSEEVENT* event_track);
@@ -61,8 +61,8 @@ namespace YanLib::ui {
 
         bool get_last_input_info(LASTINPUTINFO* last_input_info);
 
-        bool get_pointer_input_transform(UINT32 pointer_id,
-                                         UINT32 history_count,
+        bool get_pointer_input_transform(unsigned int pointer_id,
+                                         unsigned int history_count,
                                          INPUT_TRANSFORM *input_transform);
 
         bool get_pointer_device(HANDLE device_handle,
@@ -70,65 +70,65 @@ namespace YanLib::ui {
 
         bool get_pointer_device_properties(
             HANDLE device_handle,
-            UINT32 *property_count,
+            unsigned int *property_count,
             POINTER_DEVICE_PROPERTY *pointer_properties);
 
         bool get_pointer_device_rects(HANDLE device_handle,
                                       RECT *pointer_device_rect,
                                       RECT *display_rect);
 
-        bool get_pointer_devices(UINT32 *device_count,
+        bool get_pointer_devices(unsigned int *device_count,
                                  POINTER_DEVICE_INFO *pointer_devices);
 
-        bool get_pointer_frame_info(UINT32 pointer_id,
-                                    UINT32 *pointer_count,
+        bool get_pointer_frame_info(unsigned int pointer_id,
+                                    unsigned int *pointer_count,
                                     POINTER_INFO *pointer_info);
 
-        bool get_pointer_frame_info_history(UINT32 pointer_id,
-                                            UINT32 *entries_count,
-                                            UINT32 *pointer_count,
+        bool get_pointer_frame_info_history(unsigned int pointer_id,
+                                            unsigned int *entries_count,
+                                            unsigned int *pointer_count,
                                             POINTER_INFO *pointer_info);
 
-        bool get_pointer_frame_pen_info(UINT32 pointer_id,
-                                        UINT32 *pointer_count,
+        bool get_pointer_frame_pen_info(unsigned int pointer_id,
+                                        unsigned int *pointer_count,
                                         POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_frame_pen_info_history(UINT32 pointer_id,
-                                                UINT32 *entries_count,
-                                                UINT32 *pointer_count,
+        bool get_pointer_frame_pen_info_history(unsigned int pointer_id,
+                                                unsigned int *entries_count,
+                                                unsigned int *pointer_count,
                                                 POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_info(UINT32 pointer_id, POINTER_INFO *pointer_info);
+        bool get_pointer_info(unsigned int pointer_id, POINTER_INFO *pointer_info);
 
-        bool get_pointer_info_history(UINT32 pointer_id,
-                                      UINT32 *entries_count,
+        bool get_pointer_info_history(unsigned int pointer_id,
+                                      unsigned int *entries_count,
                                       POINTER_INFO *pointer_info);
 
-        bool get_pointer_pen_info(UINT32 pointer_id,
+        bool get_pointer_pen_info(unsigned int pointer_id,
                                   POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_pen_info_history(UINT32 pointer_id,
-                                          UINT32 *entries_count,
+        bool get_pointer_pen_info_history(unsigned int pointer_id,
+                                          unsigned int *entries_count,
                                           POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_type(UINT32 pointer_id,
+        bool get_pointer_type(unsigned int pointer_id,
                               POINTER_INPUT_TYPE *pointer_type);
 
-        bool get_raw_pointer_device_data(UINT32 pointer_id,
-                                         UINT32 history_count,
-                                         UINT32 properties_count,
+        bool get_raw_pointer_device_data(unsigned int pointer_id,
+                                         unsigned int history_count,
+                                         unsigned int properties_count,
                                          POINTER_DEVICE_PROPERTY *properties,
-                                         LONG *values);
+                                         long *values);
 
-        int get_mouse_move_points(UINT cb_size,
+        int get_mouse_move_points(unsigned int cb_size,
                                   MOUSEMOVEPOINT* mouse_move_point,
                                   MOUSEMOVEPOINT* points_buf,
                                   int points_count,
-                                  DWORD resolution);
+                                  unsigned long resolution);
 
         bool register_pointer_device_notifications(HWND hwnd, bool notify_range);
 
-        bool is_pointer_flag_set_wparam(WPARAM w_param, DWORD flag);
+        bool is_pointer_flag_set_wparam(WPARAM w_param, unsigned long flag);
 
         bool is_pointer_in_contact_wparam(WPARAM w_param);
 
@@ -152,7 +152,7 @@ namespace YanLib::ui {
 
         bool is_pointer_fifth_button_wparam(WPARAM w_param);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

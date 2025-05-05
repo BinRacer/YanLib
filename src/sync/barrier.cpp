@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::sync {
-    barrier::barrier(LONG total_threads, LONG spin_count) {
+    barrier::barrier(long total_threads, long spin_count) {
         if (InitializeSynchronizationBarrier(&synchronization_barrier,
                                              total_threads,
                                              spin_count)) {
@@ -19,15 +19,15 @@ namespace YanLib::sync {
         DeleteSynchronizationBarrier(&synchronization_barrier);
     }
 
-    bool barrier::enter(DWORD flag) {
+    bool barrier::enter(unsigned long flag) {
         return EnterSynchronizationBarrier(&synchronization_barrier, flag);
     }
 
-    bool barrier::wait(DWORD count,
+    bool barrier::wait(unsigned long count,
                        const HANDLE *handles,
                        bool wait_all,
-                       DWORD milli_seconds) {
-        DWORD ret = WaitForMultipleObjects(count,
+                       unsigned long milli_seconds) {
+        unsigned long ret = WaitForMultipleObjects(count,
                                            handles,
                                            wait_all ? TRUE : FALSE,
                                            milli_seconds);
@@ -40,7 +40,7 @@ namespace YanLib::sync {
         return error_code != WAIT_FAILED && error_code != WAIT_TIMEOUT;
     }
 
-    DWORD barrier::err_code() const {
+    unsigned long barrier::err_code() const {
         return error_code;
     }
 

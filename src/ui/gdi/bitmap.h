@@ -24,8 +24,8 @@ namespace YanLib::ui::gdi {
 
         static HBITMAP create_bitmap(int width,
                                      int height,
-                                     UINT planes,
-                                     UINT bit_count,
+                                     unsigned int planes,
+                                     unsigned int bit_count,
                                      const void *bits);
 
         static HBITMAP create_bitmap_indirect(const BITMAP *bitmap);
@@ -34,25 +34,25 @@ namespace YanLib::ui::gdi {
 
         static HBITMAP create_di_bitmap(HDC dc_handle,
                                         const BITMAPINFOHEADER *bitmap_info_header,
-                                        DWORD flag,
+                                        unsigned long flag,
                                         const void *bits,
                                         const BITMAPINFO *bitmap_info,
-                                        UINT usage);
+                                        unsigned int usage);
 
         // std::pair<result, error_code>
-        static std::pair<HBITMAP, DWORD> create_dib_section(
+        static std::pair<HBITMAP, unsigned long> create_dib_section(
             HDC dc_handle,
             const BITMAPINFO *bitmap_info,
-            UINT usage,
+            unsigned int usage,
             void **bits,
             HANDLE section_handle,
-            DWORD offset);
+            unsigned long offset);
 
         static HBITMAP load_bitmap(HINSTANCE hinstance_handle,
                                    const wchar_t *bitmap_name);
 
         // std::pair<result, error_code>
-        static std::pair<bool, DWORD> bit_blt(HDC dc_handle_dst,
+        static std::pair<bool, unsigned long> bit_blt(HDC dc_handle_dst,
                                               int x,
                                               int y,
                                               int width,
@@ -60,7 +60,7 @@ namespace YanLib::ui::gdi {
                                               HDC dc_handle_src,
                                               int x1,
                                               int y1,
-                                              DWORD rop);
+                                              unsigned long rop);
 
         static bool plg_blt(HDC dc_handle_dst,
                             const POINT *point,
@@ -84,7 +84,7 @@ namespace YanLib::ui::gdi {
                              HBITMAP bitmap_mask_handle,
                              int x_mask,
                              int y_mask,
-                             DWORD rop);
+                             unsigned long rop);
 
         static bool stretch_blt(HDC dc_handle_dst,
                                 int x_dst,
@@ -96,14 +96,14 @@ namespace YanLib::ui::gdi {
                                 int y_src,
                                 int width_src,
                                 int height_src,
-                                DWORD rop);
+                                unsigned long rop);
 
         static bool pat_blt(HDC dc_handle,
                             int x,
                             int y,
                             int width,
                             int height,
-                            DWORD rop);
+                            unsigned long rop);
 
         static bool transparent_blt(HDC dc_handle_dst,
                                     int x_dst,
@@ -115,20 +115,20 @@ namespace YanLib::ui::gdi {
                                     int y_src,
                                     int width_src,
                                     int height_src,
-                                    UINT transparent);
+                                    unsigned int transparent);
 
         static bool gradient_fill(HDC dc_handle,
                                   TRIVERTEX *vertex,
-                                  ULONG vertex_num,
+                                  unsigned long vertex_num,
                                   void *mesh,
-                                  ULONG mesh_num,
-                                  ULONG mode);
+                                  unsigned long mesh_num,
+                                  unsigned long mode);
 
         static bool ext_flood_fill(HDC dc_handle,
                                    int x,
                                    int y,
                                    COLORREF color,
-                                   UINT type);
+                                   unsigned int type);
 
         static int stretch_di_bits(HDC dc_handle,
                                    int x_dst,
@@ -141,8 +141,8 @@ namespace YanLib::ui::gdi {
                                    int height_src,
                                    const void *bits,
                                    const BITMAPINFO *bitmap_info,
-                                   UINT usage,
-                                   DWORD rop);
+                                   unsigned int usage,
+                                   unsigned long rop);
 
         static bool alpha_blend(HDC dc_handle_dst,
                                 int x_dst,
@@ -163,31 +163,31 @@ namespace YanLib::ui::gdi {
                                          int height,
                                          SIZE *size);
 
-        static UINT get_dib_color_table(HDC dc_handle,
-                                        UINT start_index,
-                                        UINT entries,
+        static unsigned int get_dib_color_table(HDC dc_handle,
+                                        unsigned int start_index,
+                                        unsigned int entries,
                                         RGBQUAD *buf);
 
-        static UINT set_dib_color_table(HDC dc_handle,
-                                        UINT start_index,
-                                        UINT entries,
+        static unsigned int set_dib_color_table(HDC dc_handle,
+                                        unsigned int start_index,
+                                        unsigned int entries,
                                         const RGBQUAD *buf);
 
         static int get_di_bits(HDC dc_handle,
                                HBITMAP bitmap_handle,
-                               UINT start_line,
-                               UINT line_num,
+                               unsigned int start_line,
+                               unsigned int line_num,
                                void *bits,
                                BITMAPINFO *bitmap_info,
-                               UINT usage);
+                               unsigned int usage);
 
         static int set_di_bits(HDC dc_handle,
                                HBITMAP bitmap_handle,
-                               UINT start_line,
-                               UINT line_num,
+                               unsigned int start_line,
+                               unsigned int line_num,
                                const void *bits,
                                const BITMAPINFO *bitmap_info,
-                               UINT color_use);
+                               unsigned int color_use);
 
         static COLORREF get_pixel(HDC dc_handle, int x, int y);
 
@@ -202,15 +202,15 @@ namespace YanLib::ui::gdi {
         static int set_di_bits_to_device(HDC dc_handle,
                                          int x_dst,
                                          int y_dst,
-                                         DWORD width,
-                                         DWORD height,
+                                         unsigned long width,
+                                         unsigned long height,
                                          int x_src,
                                          int y_src,
-                                         UINT start_scan,
-                                         UINT line_num,
+                                         unsigned int start_scan,
+                                         unsigned int line_num,
                                          const void *bits,
                                          const BITMAPINFO *bitmap_info,
-                                         UINT color_use);
+                                         unsigned int color_use);
     };
 }
 #endif //BITMAP_H

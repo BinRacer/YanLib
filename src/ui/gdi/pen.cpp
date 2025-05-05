@@ -13,11 +13,11 @@ namespace YanLib::ui::gdi {
         return CreatePenIndirect(log_pen);
     }
 
-    HPEN pen::ext_create_pen(DWORD pen_style,
-                             DWORD width,
+    HPEN pen::ext_create_pen(unsigned long pen_style,
+                             unsigned long width,
                              const LOGBRUSH *log_brush,
-                             DWORD style_num,
-                             const DWORD *style_array) {
+                             unsigned long style_num,
+                             const unsigned long *style_array) {
         return ExtCreatePen(pen_style,
                             width,
                             log_brush,

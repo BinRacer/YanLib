@@ -47,7 +47,7 @@ namespace YanLib::io {
     }
 
     bool completion_port::post_status(ULONG_PTR completion_key,
-                                      DWORD num_bytes,
+                                      unsigned long num_bytes,
                                       OVERLAPPED* overlapped) {
         if (!PostQueuedCompletionStatus(iocp,
                                         num_bytes,
@@ -60,9 +60,9 @@ namespace YanLib::io {
     }
 
     bool completion_port::get_status(ULONG_PTR *completion_key,
-                                     DWORD* num_bytes,
+                                     unsigned long* num_bytes,
                                      OVERLAPPED* *overlapped,
-                                     DWORD milli_seconds) {
+                                     unsigned long milli_seconds) {
         if (!GetQueuedCompletionStatus(iocp,
                                        num_bytes,
                                        completion_key,
@@ -75,9 +75,9 @@ namespace YanLib::io {
     }
 
     bool completion_port::get_status(OVERLAPPED_ENTRY* completion_port_entries,
-                                     ULONG count,
-                                     ULONG* num_entries_removed,
-                                     DWORD milli_seconds,
+                                     unsigned long count,
+                                     unsigned long* num_entries_removed,
+                                     unsigned long milli_seconds,
                                      bool alertable) {
         if (!GetQueuedCompletionStatusEx(iocp,
                                          completion_port_entries,
@@ -116,12 +116,12 @@ namespace YanLib::io {
     }
 
     bool completion_port::device_io_control(HANDLE device_handle,
-                                            DWORD io_control_code,
+                                            unsigned long io_control_code,
                                             void *in_buffer,
-                                            DWORD in_buffer_size,
+                                            unsigned long in_buffer_size,
                                             void *out_buffer,
-                                            DWORD out_buffer_size,
-                                            DWORD* bytes_returned,
+                                            unsigned long out_buffer_size,
+                                            unsigned long* bytes_returned,
                                             OVERLAPPED* overlapped) {
         if (!DeviceIoControl(device_handle,
                              io_control_code,
@@ -139,7 +139,7 @@ namespace YanLib::io {
 
     bool completion_port::get_overlapped_result(HANDLE file_handle,
                                                 OVERLAPPED* overlapped,
-                                                DWORD* number_of_bytes_transferred,
+                                                unsigned long* number_of_bytes_transferred,
                                                 bool is_wait) {
         if (!GetOverlappedResult(file_handle,
                                  overlapped,
@@ -153,8 +153,8 @@ namespace YanLib::io {
 
     bool completion_port::get_overlapped_result(HANDLE file_handle,
                                                 OVERLAPPED* overlapped,
-                                                DWORD* number_of_bytes_transferred,
-                                                DWORD milli_seconds,
+                                                unsigned long* number_of_bytes_transferred,
+                                                unsigned long milli_seconds,
                                                 bool is_wait) {
         if (!GetOverlappedResultEx(file_handle,
                                    overlapped,
@@ -173,7 +173,7 @@ namespace YanLib::io {
         return is_ok;
     }
 
-    DWORD completion_port::err_code() const {
+    unsigned long completion_port::err_code() const {
         return error_code;
     }
 

@@ -5,11 +5,11 @@
 #include "bezier.h"
 
 namespace YanLib::ui::gdi {
-    bool bezier::poly_bezier(HDC dc_handle, const POINT *point, DWORD num) {
+    bool bezier::poly_bezier(HDC dc_handle, const POINT *point, unsigned long num) {
         return PolyBezier(dc_handle, point, num);
     }
 
-    bool bezier::poly_bezier_to(HDC dc_handle, const POINT *point, DWORD num) {
+    bool bezier::poly_bezier_to(HDC dc_handle, const POINT *point, unsigned long num) {
         return PolyBezierTo(dc_handle, point, num);
     }
 

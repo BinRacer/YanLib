@@ -14,8 +14,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT clipboard::register_clipboard_format(const wchar_t *format) {
-        UINT result = RegisterClipboardFormatW(format);
+    unsigned int clipboard::register_clipboard_format(const wchar_t *format) {
+        unsigned int result = RegisterClipboardFormatW(format);
         if (!result) {
             error_code = GetLastError();
         }
@@ -38,7 +38,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    HANDLE clipboard::get_clipboard_data(UINT format) {
+    HANDLE clipboard::get_clipboard_data(unsigned int format) {
         HANDLE result = GetClipboardData(format);
         if (!result) {
             error_code = GetLastError();
@@ -46,7 +46,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HANDLE clipboard::set_clipboard_data(UINT format, HANDLE mem_handle) {
+    HANDLE clipboard::set_clipboard_data(unsigned int format, HANDLE mem_handle) {
         HANDLE result = SetClipboardData(format, mem_handle);
         if (!result) {
             error_code = GetLastError();
@@ -54,7 +54,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    int clipboard::get_clipboard_format_name(UINT format,
+    int clipboard::get_clipboard_format_name(unsigned int format,
                                              wchar_t *format_name,
                                              int cch_max) {
         int result = GetClipboardFormatNameW(format, format_name, cch_max);
@@ -80,7 +80,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    DWORD clipboard::get_clipboard_sequence_number() {
+    unsigned long clipboard::get_clipboard_sequence_number() {
         return GetClipboardSequenceNumber();
     }
 
@@ -92,7 +92,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    int clipboard::get_priority_clipboard_format(UINT *format_priority_list,
+    int clipboard::get_priority_clipboard_format(unsigned int *format_priority_list,
                                                  int formats) {
         int result = GetPriorityClipboardFormat(format_priority_list, formats);
         if (result == -1) {
@@ -101,9 +101,9 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool clipboard::get_updated_clipboard_formats(UINT* formats,
-                                                  UINT formats_count,
-                                                  UINT* formats_out) {
+    bool clipboard::get_updated_clipboard_formats(unsigned int* formats,
+                                                  unsigned int formats_count,
+                                                  unsigned int* formats_out) {
         if (!GetUpdatedClipboardFormats(formats,
                                         formats_count,
                                         formats_out)) {
@@ -113,7 +113,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool clipboard::is_clipboard_format_available(UINT format) {
+    bool clipboard::is_clipboard_format_available(unsigned int format) {
         if (!IsClipboardFormatAvailable(format)) {
             error_code = GetLastError();
             return false;
@@ -141,8 +141,8 @@ namespace YanLib::ui {
         return ChangeClipboardChain(hwnd_remove, hwnd_new_next);
     }
 
-    UINT clipboard::enum_clipboard_formats(UINT format) {
-        UINT result = EnumClipboardFormats(format);
+    unsigned int clipboard::enum_clipboard_formats(unsigned int format) {
+        unsigned int result = EnumClipboardFormats(format);
         if (!result) {
             error_code = GetLastError();
         }
@@ -157,7 +157,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    DWORD clipboard::err_code() const {
+    unsigned long clipboard::err_code() const {
         return error_code;
     }
 

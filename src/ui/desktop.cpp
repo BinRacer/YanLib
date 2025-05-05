@@ -7,10 +7,10 @@
 
 namespace YanLib::ui {
     HDESK desktop::create_desktop(const wchar_t *desktop_name,
-                                  DWORD flag,
+                                  unsigned long flag,
                                   ACCESS_MASK desired_access,
                                   SECURITY_ATTRIBUTES* security_attrs,
-                                  ULONG heap_size) {
+                                  unsigned long heap_size) {
         HDESK result = CreateDesktopExW(desktop_name,
                                         nullptr,
                                         nullptr,
@@ -26,7 +26,7 @@ namespace YanLib::ui {
     }
 
     HDESK desktop::open_desktop(const wchar_t *desktop_name,
-                                DWORD flag,
+                                unsigned long flag,
                                 bool is_inherit,
                                 ACCESS_MASK desired_access) {
         HDESK result = OpenDesktopW(desktop_name,
@@ -39,7 +39,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HDESK desktop::open_input_desktop(DWORD flag,
+    HDESK desktop::open_input_desktop(unsigned long flag,
                                       bool is_inherit,
                                       ACCESS_MASK desired_access) {
         HDESK result = OpenInputDesktop(flag,
@@ -88,7 +88,7 @@ namespace YanLib::ui {
         return GetDesktopWindow();
     }
 
-    HDESK desktop::get_thread_desktop(DWORD tid) {
+    HDESK desktop::get_thread_desktop(unsigned long tid) {
         HDESK result = GetThreadDesktop(tid);
         if (!result) {
             error_code = GetLastError();
@@ -117,7 +117,7 @@ namespace YanLib::ui {
     }
 
     HWINSTA desktop::create_window_station(const wchar_t *window_station_name,
-                                           DWORD flag,
+                                           unsigned long flag,
                                            ACCESS_MASK desired_access,
                                            SECURITY_ATTRIBUTES* security_attrs) {
         HWINSTA result = CreateWindowStationW(window_station_name,
@@ -177,8 +177,8 @@ namespace YanLib::ui {
     bool desktop::get_user_object_info(HANDLE desktop_or_window_station_handle,
                                        int index,
                                        void *info,
-                                       DWORD len,
-                                       DWORD* ret_len) {
+                                       unsigned long len,
+                                       unsigned long* ret_len) {
         if (!GetUserObjectInformationW(desktop_or_window_station_handle,
                                        index,
                                        info,
@@ -194,7 +194,7 @@ namespace YanLib::ui {
     desktop::set_user_object_information(HANDLE desktop_or_window_station_handle,
                                          int index,
                                          void *info,
-                                         DWORD len) {
+                                         unsigned long len) {
         if (!SetUserObjectInformationW(desktop_or_window_station_handle,
                                        index,
                                        info,
@@ -205,7 +205,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    DWORD desktop::err_code() const {
+    unsigned long desktop::err_code() const {
         return error_code;
     }
 

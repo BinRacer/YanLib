@@ -11,7 +11,7 @@ namespace YanLib::sync {
     class timer {
     private:
         HANDLE timer_handle;
-        DWORD error_code;
+        unsigned long error_code;
 
     public:
         timer(const timer &other) = delete;
@@ -31,20 +31,20 @@ namespace YanLib::sync {
                     const wchar_t *timer_name = nullptr);
 
         bool open(const wchar_t *timer_name,
-                  DWORD desired_access = TIMER_ALL_ACCESS,
+                  unsigned long desired_access = TIMER_ALL_ACCESS,
                   bool is_inherit_handle = false);
 
         bool set_timer(const LARGE_INTEGER *due_time,
-                       LONG period = 1000, /* 1s */
+                       long period = 1000, /* 1s */
                        PTIMERAPCROUTINE pfn_completion_routine = nullptr,
                        void *arg_to_completion_routine = nullptr,
                        bool is_resume = false);
 
         bool cancel_timer();
 
-        bool wait(DWORD milli_seconds = INFINITE);
+        bool wait(unsigned long milli_seconds = INFINITE);
 
-        [[nodiscard]] DWORD err_code() const;
+        [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

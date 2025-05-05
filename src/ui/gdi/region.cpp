@@ -37,7 +37,7 @@ namespace YanLib::ui::gdi {
     }
 
     HRGN region::create_poly_polygon_region(const POINT *points,
-                                            const INT *points_num,
+                                            const int *points_num,
                                             int poly_count,
                                             int mode) {
         return CreatePolyPolygonRgn(points, points_num, poly_count, mode);
@@ -50,7 +50,7 @@ namespace YanLib::ui::gdi {
     }
 
     HRGN region::ext_create_region(const XFORM *xfrom,
-                                   DWORD size,
+                                   unsigned long size,
                                    const RGNDATA *buf) {
         return ExtCreateRegion(xfrom, size, buf);
     }
@@ -133,11 +133,11 @@ namespace YanLib::ui::gdi {
         return ExcludeUpdateRgn(dc_handle, hwnd);
     }
 
-    std::pair<DWORD, DWORD> region::get_region_data(HRGN region_handle,
-                                                    DWORD size,
+    std::pair<unsigned long, unsigned long> region::get_region_data(HRGN region_handle,
+                                                    unsigned long size,
                                                     RGNDATA *buf) {
-        DWORD result = GetRegionData(region_handle, size, buf);
-        DWORD error_code = 0;
+        unsigned long result = GetRegionData(region_handle, size, buf);
+        unsigned long error_code = 0;
         if (!result) {
             error_code = GetLastError();
         }

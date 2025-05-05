@@ -38,16 +38,16 @@ namespace YanLib::ui {
         bool get_scroll_info(HWND hwnd, int32_t scroll_type, SCROLLINFO *scroll_info);
 
         int32_t set_scroll_info(HWND hwnd,
-                            int32_t scroll_type,
-                            SCROLLINFO *scroll_info,
-                            bool is_redraw);
+                                int32_t scroll_type,
+                                SCROLLINFO *scroll_info,
+                                bool is_redraw);
 
         int32_t get_scroll_pos(HWND hwnd, int32_t scroll_info);
 
         int32_t set_scroll_pos(HWND hwnd,
-                           int32_t scroll_type,
-                           int32_t pos,
-                           bool is_redraw);
+                               int32_t scroll_type,
+                               int32_t pos,
+                               bool is_redraw);
 
         bool get_scroll_range(HWND hwnd,
                               int32_t scroll_type,
@@ -59,6 +59,21 @@ namespace YanLib::ui {
                               int32_t min_pos,
                               int32_t max_pos,
                               bool is_redraw);
+
+        bool scroll_window(HWND hwnd,
+                           int32_t x_amount,
+                           int32_t y_amount,
+                           const RECT *rect,
+                           const RECT *clip_rect);
+
+        int32_t scroll_window(HWND hwnd,
+                              int32_t dx,
+                              int32_t dy,
+                              const RECT *rect_scroll,
+                              const RECT *rect_clip,
+                              HRGN region_handle_update,
+                              RECT *rect_update,
+                              uint32_t flag);
 
         [[nodiscard]] unsigned long err_code() const;
 

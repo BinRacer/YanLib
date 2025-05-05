@@ -426,21 +426,6 @@ namespace YanLib::ui {
                            HRGN region_handle,
                            uint32_t flag);
 
-        bool scroll_window(HWND hwnd,
-                           int32_t x_amount,
-                           int32_t y_amount,
-                           const RECT *rect,
-                           const RECT *clip_rect);
-
-        int32_t scroll_window(HWND hwnd,
-                          int32_t dx,
-                          int32_t dy,
-                          const RECT *rect_scroll,
-                          const RECT *rect_clip,
-                          HRGN region_handle_update,
-                          RECT *rect_update,
-                          uint32_t flag);
-
         void switch_to_this_window(HWND hwnd, bool unknown = false);
 
         uint16_t tile_windows(HWND hwnd_parent,

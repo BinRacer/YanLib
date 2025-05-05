@@ -999,40 +999,6 @@ namespace YanLib::ui {
                             flag);
     }
 
-    bool window::scroll_window(HWND hwnd,
-                               int32_t x_amount,
-                               int32_t y_amount,
-                               const RECT *rect,
-                               const RECT *clip_rect) {
-        if (!ScrollWindow(hwnd, x_amount, y_amount, rect, clip_rect)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    int32_t window::scroll_window(HWND hwnd,
-                              int32_t dx,
-                              int32_t dy,
-                              const RECT *rect_scroll,
-                              const RECT *rect_clip,
-                              HRGN region_handle_update,
-                              RECT *rect_update,
-                              uint32_t flag) {
-        int32_t result = ScrollWindowEx(hwnd,
-                                    dx,
-                                    dy,
-                                    rect_scroll,
-                                    rect_clip,
-                                    region_handle_update,
-                                    rect_update,
-                                    flag);
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
     void window::switch_to_this_window(HWND hwnd, bool unknown) {
         SwitchToThisWindow(hwnd, unknown ? TRUE : FALSE);
     }

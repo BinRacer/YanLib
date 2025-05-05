@@ -197,6 +197,17 @@ namespace YanLib::ui {
                                     WPARAM w_param,
                                     LPARAM l_param);
 
+        LRESULT default_frame_proc(HWND hwnd,
+                                   HWND hwnd_mdi_client,
+                                   UINT msg,
+                                   WPARAM w_param,
+                                   LPARAM l_param);
+
+        LRESULT default_mdi_child_proc(HWND hwnd,
+                                       UINT msg,
+                                       WPARAM w_param,
+                                       LPARAM l_param);
+
         WORD cascade_windows(HWND hwnd_parent,
                              UINT how,
                              const RECT *rect,
@@ -389,6 +400,8 @@ namespace YanLib::ui {
         bool is_window_unicode(HWND hwnd);
 
         bool is_window_visible(HWND hwnd);
+
+        bool is_any_popup();
 
         HMONITOR monitor_from_window(HWND hwnd,
                                      DWORD flag);

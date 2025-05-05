@@ -267,6 +267,13 @@ namespace YanLib::ui {
         return IsWinEventHookInstalled(event);
     }
 
+    void window::notify_win_event(unsigned long event,
+                                  HWND hwnd,
+                                  int32_t object_id,
+                                  int32_t child_id) {
+        NotifyWinEvent(event, hwnd, object_id, child_id);
+    }
+
     bool window::show_window(HWND hwnd, int32_t cmd_show) const {
         return ShowWindow(hwnd, cmd_show);
     }
@@ -321,6 +328,14 @@ namespace YanLib::ui {
 
     bool window::close_window(HWND hwnd) {
         if (!CloseWindow(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::close_window(HWND hwnd, bool is_force) {
+        if (!EndTask(hwnd, FALSE, is_force ? TRUE : FALSE)) {
             error_code = GetLastError();
             return false;
         }
@@ -463,6 +478,46 @@ namespace YanLib::ui {
         return result;
     }
 
+    HWND window::get_parent_window(HWND hwnd) {
+        HWND result = GetParent(hwnd);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND window::set_parent_window(HWND hwnd_child, HWND hwnd_new_parent) {
+        HWND result = SetParent(hwnd_child, hwnd_new_parent);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND window::get_ancestor_window(HWND hwnd, uint32_t flag) {
+        return GetAncestor(hwnd, flag);
+    }
+
+    bool window::show_popup_window(HWND hwnd) {
+        if (!ShowOwnedPopups(hwnd, TRUE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::hide_popup_window(HWND hwnd) {
+        if (!ShowOwnedPopups(hwnd, FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    HWND window::get_last_active_popup_window(HWND hwnd) {
+        return GetLastActivePopup(hwnd);
+    }
+
     bool window::is_hung_app_window(HWND hwnd) {
         return IsHungAppWindow(hwnd);
     }
@@ -534,6 +589,22 @@ namespace YanLib::ui {
             error_code = GetLastError();
         }
         return height;
+    }
+
+    bool window::get_process_default_layout(unsigned long *default_layout) {
+        if (!GetProcessDefaultLayout(default_layout)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::set_process_default_layout(unsigned long default_layout) {
+        if (!SetProcessDefaultLayout(default_layout)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     HDWP window::begin_defer_window_pos(int32_t num_windows) {
@@ -1052,6 +1123,48 @@ namespace YanLib::ui {
                       help,
                       cmd,
                       data)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    unsigned long window::get_gui_resources(HANDLE proc_handle,
+                                            unsigned long flag) {
+        unsigned long result = GetGuiResources(proc_handle, flag);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::get_gui_thread_info(unsigned long tid,
+                                     GUITHREADINFO *gui_thread_info) {
+        if (!GetGUIThreadInfo(tid, gui_thread_info)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::is_gui_thread(bool is_convert) {
+        int result = IsGUIThread(is_convert ? TRUE : FALSE);
+        if (result == ERROR_NOT_ENOUGH_MEMORY) {
+            return false;
+        }
+        return result;
+    }
+
+    bool window::get_alt_tab_info(HWND hwnd,
+                                  int32_t item_index,
+                                  ALTTABINFO *alt_tab_info,
+                                  wchar_t *item_text,
+                                  uint32_t cch_item_text) {
+        if (!GetAltTabInfoW(hwnd,
+                            item_index,
+                            alt_tab_info,
+                            item_text,
+                            cch_item_text)) {
             error_code = GetLastError();
             return false;
         }

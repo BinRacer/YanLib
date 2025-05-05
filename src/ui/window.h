@@ -4,6 +4,9 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
+#ifndef WINNT
+#define WINNT
+#endif
 #include <Windows.h>
 #include <string>
 
@@ -133,6 +136,11 @@ namespace YanLib::ui {
 
         bool is_win_event_hook_installed(unsigned long event);
 
+        void notify_win_event(unsigned long event,
+                              HWND hwnd,
+                              int32_t object_id,
+                              int32_t child_id);
+
         bool show_window(HWND hwnd, int32_t cmd_show) const;
 
         bool show_window_async(HWND hwnd, int32_t cmd_show) const;
@@ -156,6 +164,8 @@ namespace YanLib::ui {
         bool animate_window(HWND hwnd, unsigned long time, unsigned long flag);
 
         bool close_window(HWND hwnd);
+
+        bool close_window(HWND hwnd, bool is_force);
 
         bool exit_windows(uint32_t flag, unsigned long reason);
 
@@ -217,6 +227,18 @@ namespace YanLib::ui {
                               uint32_t kids_num,
                               const HWND *kids);
 
+        HWND get_parent_window(HWND hwnd);
+
+        HWND set_parent_window(HWND hwnd_child, HWND hwnd_new_parent);
+
+        HWND get_ancestor_window(HWND hwnd, uint32_t flag);
+
+        bool show_popup_window(HWND hwnd);
+
+        bool hide_popup_window(HWND hwnd);
+
+        HWND get_last_active_popup_window(HWND hwnd);
+
         bool is_hung_app_window(HWND hwnd);
 
         bool is_window(HWND hwnd);
@@ -238,6 +260,10 @@ namespace YanLib::ui {
         bool is_any_popup();
 
         uint32_t arrange_minimize_windows(HWND hwnd);
+
+        bool get_process_default_layout(unsigned long *default_layout);
+
+        bool set_process_default_layout(unsigned long default_layout);
 
         HDWP begin_defer_window_pos(int32_t num_windows);
 
@@ -448,6 +474,19 @@ namespace YanLib::ui {
                       const wchar_t *help,
                       uint32_t cmd,
                       ULONG_PTR data);
+
+        unsigned long get_gui_resources(HANDLE proc_handle, unsigned long flag);
+
+        bool get_gui_thread_info(unsigned long tid,
+                                 GUITHREADINFO *gui_thread_info);
+
+        bool is_gui_thread(bool is_convert);
+
+        bool get_alt_tab_info(HWND hwnd,
+                              int32_t item_index,
+                              ALTTABINFO *alt_tab_info,
+                              wchar_t *item_text,
+                              uint32_t cch_item_text);
 
         [[nodiscard]] unsigned long err_code() const;
 

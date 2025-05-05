@@ -109,7 +109,7 @@ namespace YanLib::ui::gdi {
     }
 
     std::pair<int32_t, unsigned long> paint::load_string(HINSTANCE instance_handle,
-                                                     UINT id,
+                                                     uint32_t id,
                                                      wchar_t *buf,
                                                      int32_t cch_size) {
         int32_t result = LoadStringW(instance_handle, id, buf, cch_size);

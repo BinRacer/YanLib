@@ -41,13 +41,13 @@ namespace YanLib::ui::gdi {
         return SetDCBrushColor(dc_handle, color);
     }
 
-    DWORD brush::get_sys_color(int32_t index) {
+    unsigned long brush::get_sys_color(int32_t index) {
         return GetSysColor(index);
     }
 
     std::pair<bool, unsigned long> brush::set_sys_colors(
         int32_t ele_num,
-        const INT *ele_array,
+        const int32_t *ele_array,
         const COLORREF *rgb_values) {
         unsigned long error_code = 0;
         if (!SetSysColors(ele_num, ele_array, rgb_values)) {

@@ -76,6 +76,8 @@ namespace YanLib::ui {
 
         bool close_window_station(HWINSTA window_station_handle);
 
+        bool lock_work_station();
+
         bool enum_window_stations(WINSTAENUMPROCW enum_func, LPARAM param);
 
         HWINSTA get_process_window_station();

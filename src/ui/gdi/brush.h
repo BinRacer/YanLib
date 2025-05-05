@@ -41,12 +41,12 @@ namespace YanLib::ui::gdi {
 
         static COLORREF set_dc_brush_color(HDC dc_handle, COLORREF color);
 
-        static DWORD get_sys_color(int32_t index);
+        static unsigned long get_sys_color(int32_t index);
 
         // std::pair<result, error_code>
         static std::pair<bool, unsigned long> set_sys_colors(
             int32_t ele_num,
-            const INT *ele_array,
+            const int32_t *ele_array,
             const COLORREF *rgb_values);
     };
 }

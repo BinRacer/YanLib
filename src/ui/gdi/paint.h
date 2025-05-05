@@ -79,7 +79,7 @@ namespace YanLib::ui::gdi {
                                 int32_t height);
 
         static std::pair<int32_t, unsigned long> load_string(HINSTANCE instance_handle,
-                                                         UINT id,
+                                                         uint32_t id,
                                                          wchar_t *buf,
                                                          int32_t cch_size);
 

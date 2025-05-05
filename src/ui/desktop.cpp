@@ -150,6 +150,14 @@ namespace YanLib::ui {
         return true;
     }
 
+    bool desktop::lock_work_station() {
+        if (!LockWorkStation()) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     bool desktop::enum_window_stations(WINSTAENUMPROCW enum_func, LPARAM param) {
         if (!EnumWindowStationsW(enum_func, param)) {
             error_code = GetLastError();

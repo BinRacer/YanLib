@@ -458,6 +458,8 @@ namespace YanLib::ui {
 
         bool is_window_minimize(HWND hwnd);
 
+        bool is_window_maximize(HWND hwnd);
+
         [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;

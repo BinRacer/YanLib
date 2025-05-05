@@ -834,8 +834,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    int window::get_window_region(HWND hwnd, HRGN hrgn) {
-        return GetWindowRgn(hwnd, hrgn);
+    int window::get_window_region(HWND hwnd, HRGN region_handle) {
+        return GetWindowRgn(hwnd, region_handle);
     }
 
     int window::set_window_region(HWND hwnd, HRGN region_handle, bool is_redraw) {
@@ -1073,6 +1073,10 @@ namespace YanLib::ui {
 
     bool window::is_window_minimize(HWND hwnd) {
         return IsIconic(hwnd);
+    }
+
+    bool window::is_window_maximize(HWND hwnd) {
+        return IsZoomed(hwnd);
     }
 
     unsigned long window::err_code() const {

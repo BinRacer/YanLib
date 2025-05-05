@@ -176,6 +176,8 @@ add_library(YanLib STATIC
         src/ui/gdi/pen.h
         src/ui/gdi/path.cpp
         src/ui/gdi/path.h
+        src/ui/gdi/meta.cpp
+        src/ui/gdi/meta.h
 )
 
 target_include_directories(YanLib

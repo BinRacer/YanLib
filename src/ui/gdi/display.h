@@ -23,7 +23,7 @@ namespace YanLib::ui::gdi {
 
         static bool enum_display_devices(const wchar_t *device_name,
                                          unsigned long device_index,
-                                         DISPLAY_DEVICEW* display_device,
+                                         DISPLAY_DEVICEW *display_device,
                                          unsigned long flag);
 
         static bool enum_display_settings(const wchar_t *device_name,

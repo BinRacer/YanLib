@@ -16,7 +16,7 @@ namespace YanLib::sync {
         }
     }
 
-    bool mutex::create(SECURITY_ATTRIBUTES* mutex_attrs,
+    bool mutex::create(SECURITY_ATTRIBUTES *mutex_attrs,
                        bool is_initial_owner,
                        const wchar_t *name) {
         mutex_handle = CreateMutexW(mutex_attrs,

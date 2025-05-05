@@ -94,8 +94,8 @@ namespace YanLib::sys {
         std::vector<HEAPENTRY32> find_heap_blocks(unsigned long pid);
 
         HANDLE pid_to_handle(unsigned long pid,
-                     unsigned long desired_access = PROCESS_ALL_ACCESS,
-                     bool is_inherit_handle = false);
+                             unsigned long desired_access = PROCESS_ALL_ACCESS,
+                             bool is_inherit_handle = false);
 
         unsigned long handle_to_pid(HANDLE proc_handle);
 

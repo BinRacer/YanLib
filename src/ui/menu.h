@@ -61,14 +61,14 @@ namespace YanLib::ui {
 
         bool set_menu(HWND hwnd, HMENU menu_handle);
 
-        bool set_menu_info(HMENU menu_handle, const MENUINFO* memu_info);
+        bool set_menu_info(HMENU menu_handle, const MENUINFO *memu_info);
 
-        bool get_menu_info(HMENU menu_handle, MENUINFO* memu_info);
+        bool get_menu_info(HMENU menu_handle, MENUINFO *memu_info);
 
         bool get_menu_bar_info(HWND hwnd,
                                long id_object,
                                long id_item,
-                               MENUBARINFO* menu_bar_info);
+                               MENUBARINFO *menu_bar_info);
 
         unsigned int get_menu_state(HMENU menu_handle, unsigned int id, unsigned int flag);
 
@@ -95,22 +95,22 @@ namespace YanLib::ui {
         bool insert_menu_item(HMENU menu_handle,
                               unsigned int item,
                               bool is_pos,
-                              const MENUITEMINFOW* menu_item_info);
+                              const MENUITEMINFOW *menu_item_info);
 
         bool get_menu_item_info(HMENU menu_handle,
                                 unsigned int item,
                                 bool is_pos,
-                                MENUITEMINFOW* menu_item_info);
+                                MENUITEMINFOW *menu_item_info);
 
         bool set_menu_item_info(HMENU menu_handle,
                                 unsigned int item,
                                 bool is_pos,
-                                const MENUITEMINFOW* menu_item_info);
+                                const MENUITEMINFOW *menu_item_info);
 
 
         unsigned int get_menu_default_item(HMENU menu_handle,
-                                   bool is_pos,
-                                   unsigned int flag);
+                                           bool is_pos,
+                                           unsigned int flag);
 
         bool set_menu_default_item(HMENU menu_handle,
                                    unsigned int item,
@@ -129,7 +129,7 @@ namespace YanLib::ui {
         bool get_menu_item_rect(HWND hwnd,
                                 HMENU menu_handle,
                                 unsigned int item,
-                                RECT* rect);
+                                RECT *rect);
 
         BOOL set_menu_item_bitmaps(HMENU menu_handle,
                                    unsigned int position,
@@ -147,8 +147,8 @@ namespace YanLib::ui {
                               unsigned int hilite);
 
         unsigned long check_menu_item(HMENU menu_handle,
-                              unsigned int id_check_item,
-                              unsigned int check);
+                                      unsigned int id_check_item,
+                                      unsigned int check);
 
         bool check_menu_radio_item(HMENU menu_handle,
                                    unsigned int first,
@@ -173,7 +173,7 @@ namespace YanLib::ui {
                               int x,
                               int y,
                               HWND hwnd,
-                              TPMPARAMS* tpm_params);
+                              TPMPARAMS *tpm_params);
 
         [[nodiscard]] unsigned long err_code() const;
 

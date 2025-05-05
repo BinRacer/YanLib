@@ -156,7 +156,7 @@ namespace YanLib::ui {
     int keyboard::to_ascii(unsigned int vk,
                            unsigned int scan_code,
                            const uint8_t *key_state,
-                           unsigned short* ch,
+                           unsigned short *ch,
                            unsigned int flag) {
         return ToAscii(vk, scan_code, key_state, ch, flag);
     }
@@ -164,7 +164,7 @@ namespace YanLib::ui {
     int keyboard::to_ascii(unsigned int vk,
                            unsigned int scan_code,
                            const uint8_t *key_state,
-                           unsigned short* ch,
+                           unsigned short *ch,
                            unsigned int flag,
                            HKL hkl) {
         return ToAsciiEx(vk,
@@ -231,7 +231,7 @@ namespace YanLib::ui {
         return WaitForInputIdle(proc_handle, milli_seconds);
     }
 
-    LRESULT keyboard::default_raw_input_proc(RAWINPUT* *raw_input,
+    LRESULT keyboard::default_raw_input_proc(RAWINPUT * *raw_input,
                                              int input,
                                              unsigned int cb_size_header) {
         return DefRawInputProc(raw_input, input, cb_size_header);
@@ -241,9 +241,9 @@ namespace YanLib::ui {
         return GET_RAWINPUT_CODE_WPARAM(w_param);
     }
 
-    unsigned int keyboard::get_raw_input_buffer(RAWINPUT* data,
-                                        unsigned int* cb_size,
-                                        unsigned int cb_size_header) {
+    unsigned int keyboard::get_raw_input_buffer(RAWINPUT *data,
+                                                unsigned int *cb_size,
+                                                unsigned int cb_size_header) {
         unsigned int result = GetRawInputBuffer(data, cb_size, cb_size_header);
         if (result == static_cast<unsigned int>(-1)) {
             error_code = GetLastError();
@@ -252,10 +252,10 @@ namespace YanLib::ui {
     }
 
     unsigned int keyboard::get_raw_input_data(HRAWINPUT raw_input,
-                                      unsigned int command,
-                                      void *data,
-                                      unsigned int* cb_size,
-                                      unsigned int cb_size_header) {
+                                              unsigned int command,
+                                              void *data,
+                                              unsigned int *cb_size,
+                                              unsigned int cb_size_header) {
         return GetRawInputData(raw_input,
                                command,
                                data,
@@ -264,24 +264,24 @@ namespace YanLib::ui {
     }
 
     unsigned int keyboard::get_raw_input_device_info(HANDLE device_handle,
-                                             unsigned int command,
-                                             void *data,
-                                             unsigned int* cb_size) {
+                                                     unsigned int command,
+                                                     void *data,
+                                                     unsigned int *cb_size) {
         unsigned int result = GetRawInputDeviceInfoW(device_handle,
-                                             command,
-                                             data,
-                                             cb_size);
+                                                     command,
+                                                     data,
+                                                     cb_size);
         error_code = GetLastError();
         return result;
     }
 
     unsigned int
-    keyboard::get_raw_input_device_list(RAWINPUTDEVICELIST* raw_input_device_list,
-                                        unsigned int* num_devices,
+    keyboard::get_raw_input_device_list(RAWINPUTDEVICELIST *raw_input_device_list,
+                                        unsigned int *num_devices,
                                         unsigned int cb_size) {
         unsigned int result = GetRawInputDeviceList(raw_input_device_list,
-                                            num_devices,
-                                            cb_size);
+                                                    num_devices,
+                                                    cb_size);
         if (result == static_cast<unsigned int>(-1)) {
             error_code = GetLastError();
         }
@@ -289,24 +289,24 @@ namespace YanLib::ui {
     }
 
     unsigned int
-    keyboard::get_registered_raw_input_devices(RAWINPUTDEVICE* raw_input_devices,
-                                               unsigned int* num_devices,
+    keyboard::get_registered_raw_input_devices(RAWINPUTDEVICE *raw_input_devices,
+                                               unsigned int *num_devices,
                                                unsigned int cb_size) {
         unsigned int result = GetRegisteredRawInputDevices(raw_input_devices,
-                                                   num_devices,
-                                                   cb_size);
+                                                           num_devices,
+                                                           cb_size);
         if (result == static_cast<unsigned int>(-1)) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    RAWINPUT* keyboard::next_raw_input_block(RAWINPUT* raw_input) {
+    RAWINPUT *keyboard::next_raw_input_block(RAWINPUT *raw_input) {
         typedef unsigned __int64 QWORD;
         return NEXTRAWINPUTBLOCK(raw_input);
     }
 
-    bool keyboard::register_raw_input_devices(const RAWINPUTDEVICE* raw_input_devices,
+    bool keyboard::register_raw_input_devices(const RAWINPUTDEVICE *raw_input_devices,
                                               unsigned int num_devices,
                                               unsigned int cb_size) {
         if (!RegisterRawInputDevices(raw_input_devices,

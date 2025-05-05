@@ -63,29 +63,29 @@ namespace YanLib::io {
         HINTERNET open_file(const wchar_t *file_name,
                             unsigned long access = GENERIC_READ,
                             unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
-                                         INTERNET_FLAG_RELOAD |
-                                         INTERNET_FLAG_TRANSFER_BINARY,
+                                                 INTERNET_FLAG_RELOAD |
+                                                 INTERNET_FLAG_TRANSFER_BINARY,
                             DWORD_PTR context = 0);
 
         HINTERNET create_file(const wchar_t *file_name,
                               unsigned long access = GENERIC_WRITE,
                               unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
-                                           INTERNET_FLAG_RELOAD |
-                                           INTERNET_FLAG_TRANSFER_BINARY,
+                                                   INTERNET_FLAG_RELOAD |
+                                                   INTERNET_FLAG_TRANSFER_BINARY,
                               DWORD_PTR context = 0);
 
         bool read(HINTERNET file_handle,
-                  void* buf,
+                  void *buf,
                   unsigned long size,
-                  unsigned long* ret_size);
+                  unsigned long *ret_size);
 
         std::vector<uint8_t> read_bytes(HINTERNET file_handle,
                                         int32_t buffer_size = 1024);
 
         bool write(HINTERNET file_handle,
-                   const void* buf,
+                   const void *buf,
                    unsigned long size,
-                   unsigned long* ret_size);
+                   unsigned long *ret_size);
 
         unsigned long write_bytes(HINTERNET file_handle, std::vector<uint8_t> &vec);
 
@@ -117,22 +117,22 @@ namespace YanLib::io {
                       bool is_fail_if_exists = false,
                       unsigned long flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                       unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
-                                   INTERNET_FLAG_RELOAD |
-                                   INTERNET_FLAG_TRANSFER_BINARY,
+                                           INTERNET_FLAG_RELOAD |
+                                           INTERNET_FLAG_TRANSFER_BINARY,
                       DWORD_PTR context = 0);
 
         bool upload(const wchar_t *local_file,
                     const wchar_t *new_remote_file,
                     unsigned long flag = FTP_TRANSFER_TYPE_BINARY |
-                                 INTERNET_FLAG_RELOAD |
-                                 INTERNET_FLAG_TRANSFER_BINARY,
+                                         INTERNET_FLAG_RELOAD |
+                                         INTERNET_FLAG_TRANSFER_BINARY,
                     DWORD_PTR context = 0);
 
         unsigned long download2(HINTERNET remote_file,
-                        const wchar_t *local_file);
+                                const wchar_t *local_file);
 
         unsigned long upload2(HINTERNET remote_file,
-                      const wchar_t *local_file);
+                              const wchar_t *local_file);
 
         [[nodiscard]] unsigned long err_code() const;
 

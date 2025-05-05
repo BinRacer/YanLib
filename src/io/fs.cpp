@@ -34,7 +34,7 @@ namespace YanLib::io {
     HANDLE fs::open(const wchar_t *file_name,
                     unsigned long desired_access,
                     unsigned long share_mode,
-                    SECURITY_ATTRIBUTES* security_attrs,
+                    SECURITY_ATTRIBUTES *security_attrs,
                     unsigned long creation_disposition,
                     unsigned long flags_and_attrs,
                     HANDLE template_file) {
@@ -58,7 +58,7 @@ namespace YanLib::io {
     HANDLE fs::create(const wchar_t *file_name,
                       unsigned long desired_access,
                       unsigned long share_mode,
-                      SECURITY_ATTRIBUTES* security_attrs,
+                      SECURITY_ATTRIBUTES *security_attrs,
                       unsigned long creation_disposition,
                       unsigned long flags_and_attrs,
                       HANDLE template_file) {
@@ -100,8 +100,8 @@ namespace YanLib::io {
     bool fs::read(HANDLE file_handle,
                   void *buf,
                   unsigned long size,
-                  unsigned long* ret_size,
-                  OVERLAPPED* overlapped) {
+                  unsigned long *ret_size,
+                  OVERLAPPED *overlapped) {
         if (!ReadFile(file_handle,
                       buf,
                       size,
@@ -116,7 +116,7 @@ namespace YanLib::io {
     bool fs::read(HANDLE file_handle,
                   void *buf,
                   unsigned long size,
-                  OVERLAPPED* overlapped,
+                  OVERLAPPED *overlapped,
                   OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadFileEx(file_handle,
                         buf,
@@ -132,8 +132,8 @@ namespace YanLib::io {
     bool fs::write(HANDLE file_handle,
                    const void *buf,
                    unsigned long size,
-                   unsigned long* ret_size,
-                   OVERLAPPED* overlapped) {
+                   unsigned long *ret_size,
+                   OVERLAPPED *overlapped) {
         if (!WriteFile(file_handle,
                        buf,
                        size,
@@ -148,7 +148,7 @@ namespace YanLib::io {
     bool fs::write(HANDLE file_handle,
                    const void *buf,
                    unsigned long size,
-                   OVERLAPPED* overlapped,
+                   OVERLAPPED *overlapped,
                    OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!WriteFileEx(file_handle,
                          buf,
@@ -309,7 +309,7 @@ namespace YanLib::io {
     }
 
     unsigned long fs::write_bytes(HANDLE file_handle,
-                          const std::vector<uint8_t> &vec) {
+                                  const std::vector<uint8_t> &vec) {
         if (vec.empty()) {
             return 0;
         }
@@ -325,7 +325,7 @@ namespace YanLib::io {
     }
 
     unsigned long fs::write_string(HANDLE file_handle,
-                           const std::string &str) {
+                                   const std::string &str) {
         if (str.empty()) {
             return 0;
         }
@@ -341,7 +341,7 @@ namespace YanLib::io {
     }
 
     unsigned long fs::write_wstring(HANDLE file_handle,
-                            const std::wstring &wstr) {
+                                    const std::wstring &wstr) {
         if (wstr.empty()) {
             return 0;
         }
@@ -401,7 +401,7 @@ namespace YanLib::io {
     bool fs::lock_async(HANDLE file_handle,
                         unsigned long flag,
                         uint64_t range,
-                        OVERLAPPED* overlapped,
+                        OVERLAPPED *overlapped,
                         unsigned long reserved) {
         auto low = static_cast<unsigned long>(range & 0xFFFFFFFF);
         auto high = static_cast<unsigned long>(range >> 32);
@@ -437,7 +437,7 @@ namespace YanLib::io {
 
     bool fs::unlock_async(HANDLE file_handle,
                           uint64_t range,
-                          OVERLAPPED* overlapped,
+                          OVERLAPPED *overlapped,
                           unsigned long reserved) {
         auto low = static_cast<unsigned long>(range & 0xFFFFFFFF);
         auto high = static_cast<unsigned long>(range >> 32);
@@ -521,9 +521,9 @@ namespace YanLib::io {
     std::wstring fs::get_final_path_name(HANDLE file_handle,
                                          unsigned long flag) {
         unsigned long size = GetFinalPathNameByHandleW(file_handle,
-                                               nullptr,
-                                               0,
-                                               flag);
+                                                       nullptr,
+                                                       0,
+                                                       flag);
         std::wstring buffer(size, L'\0');
         size = GetFinalPathNameByHandleW(file_handle,
                                          buffer.data(),
@@ -553,8 +553,8 @@ namespace YanLib::io {
                                 unsigned long buffer_length,
                                 bool is_watch_subtree,
                                 unsigned long notify_filter,
-                                unsigned long* bytes_returned,
-                                OVERLAPPED* overlapped,
+                                unsigned long *bytes_returned,
+                                OVERLAPPED *overlapped,
                                 OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadDirectoryChangesW(dir_handle,
                                    buffer,
@@ -673,7 +673,7 @@ namespace YanLib::io {
     std::wstring fs::get_temp_path() {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         unsigned long size = GetTempPathW(MAX_PATH,
-                                  buffer.data());
+                                          buffer.data());
         if (!size) {
             error_code = GetLastError();
             return {};
@@ -703,8 +703,8 @@ namespace YanLib::io {
 
     std::wstring fs::get_short_path_name(const wchar_t *long_path) {
         unsigned long size = GetShortPathNameW(long_path,
-                                       nullptr,
-                                       0);
+                                               nullptr,
+                                               0);
         std::wstring buffer(size, L'\0');
         size = GetShortPathNameW(long_path,
                                  buffer.data(),
@@ -722,8 +722,8 @@ namespace YanLib::io {
 
     std::wstring fs::get_long_path_name(const wchar_t *short_path) {
         unsigned long size = GetLongPathNameW(short_path,
-                                      nullptr,
-                                      0);
+                                              nullptr,
+                                              0);
         std::wstring buffer(size, L'\0');
         size = GetLongPathNameW(short_path,
                                 buffer.data(),
@@ -741,7 +741,7 @@ namespace YanLib::io {
 
     std::wstring fs::get_logical_drive_strings() {
         unsigned long size = GetLogicalDriveStringsW(0,
-                                             nullptr);
+                                                     nullptr);
         std::wstring buffer(size, L'\0');
         size = GetLogicalDriveStringsW(buffer.size(),
                                        buffer.data());
@@ -762,9 +762,9 @@ namespace YanLib::io {
 
     std::wstring fs::get_full_path_name(const wchar_t *file_name) {
         unsigned long size = GetFullPathNameW(file_name,
-                                      0,
-                                      nullptr,
-                                      nullptr);
+                                              0,
+                                              nullptr,
+                                              nullptr);
         std::wstring buffer(size, L'\0');
         size = GetFullPathNameW(file_name,
                                 buffer.size(),
@@ -841,8 +841,8 @@ namespace YanLib::io {
         size_t buff_size = MAX_PATH;
         std::wstring buffer(buff_size + 1, L'\0');
         unsigned long size = QueryDosDeviceW(device_name,
-                                     buffer.data(),
-                                     MAX_PATH);
+                                             buffer.data(),
+                                             MAX_PATH);
         while (!size) {
             error_code = GetLastError();
             if (error_code != ERROR_INSUFFICIENT_BUFFER) {
@@ -864,8 +864,8 @@ namespace YanLib::io {
         size_t buff_size = 4096;
         std::wstring buffer(buff_size, L'\0');
         unsigned long size = QueryDosDeviceW(nullptr,
-                                     buffer.data(),
-                                     buff_size - 1);
+                                             buffer.data(),
+                                             buff_size - 1);
         while (!size) {
             error_code = GetLastError();
             if (error_code != ERROR_INSUFFICIENT_BUFFER) {
@@ -986,13 +986,13 @@ namespace YanLib::io {
     }
 
     bool fs::mkdir(const wchar_t *path_name,
-                   SECURITY_ATTRIBUTES*
+                   SECURITY_ATTRIBUTES *
                    security_attrs) {
         return CreateDirectoryW(path_name, security_attrs);
     }
 
     bool fs::mkdir_all(const wchar_t *path_name,
-                       SECURITY_ATTRIBUTES* security_attrs) {
+                       SECURITY_ATTRIBUTES *security_attrs) {
         std::wstring path(path_name);
         std::vector<std::wstring> dirs;
         std::wstring currentDir;

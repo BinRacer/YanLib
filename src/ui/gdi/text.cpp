@@ -131,11 +131,11 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned long text::get_char_placement(HDC dc_handle,
-                                   const wchar_t *text,
-                                   int cch_size,
-                                   int mex_extent,
-                                   GCP_RESULTSW *results,
-                                   unsigned long flag) {
+                                           const wchar_t *text,
+                                           int cch_size,
+                                           int mex_extent,
+                                           GCP_RESULTSW *results,
+                                           unsigned long flag) {
         return GetCharacterPlacementW(dc_handle,
                                       text,
                                       cch_size,
@@ -145,20 +145,20 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned long text::get_glyph_indices(HDC dc_handle,
-                                  const wchar_t *text,
-                                  int cch_size,
-                                  unsigned short *glyph_index,
-                                  unsigned long flag) {
+                                          const wchar_t *text,
+                                          int cch_size,
+                                          unsigned short *glyph_index,
+                                          unsigned long flag) {
         return GetGlyphIndicesW(dc_handle, text, cch_size, glyph_index, flag);
     }
 
     unsigned long text::get_glyph_outline(HDC dc_handle,
-                                  unsigned int ch,
-                                  unsigned int format,
-                                  GLYPHMETRICS *glyph_metrics,
-                                  unsigned long size,
-                                  void *buf,
-                                  const MAT2 *mat2) {
+                                          unsigned int ch,
+                                          unsigned int format,
+                                          GLYPHMETRICS *glyph_metrics,
+                                          unsigned long size,
+                                          void *buf,
+                                          const MAT2 *mat2) {
         return GetGlyphOutlineW(dc_handle,
                                 ch,
                                 format,
@@ -169,8 +169,8 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned long text::get_kerning_pairs(HDC dc_handle,
-                                  unsigned long pairs,
-                                  KERNINGPAIR *kern_pair) {
+                                          unsigned long pairs,
+                                          KERNINGPAIR *kern_pair) {
         return GetKerningPairsW(dc_handle, pairs, kern_pair);
     }
 
@@ -180,10 +180,10 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned long text::get_tabbed_text_extent(HDC dc_handle,
-                                       const wchar_t *text,
-                                       int cch_size,
-                                       int tab_positions,
-                                       const int *tab_stop_positions) {
+                                               const wchar_t *text,
+                                               int cch_size,
+                                               int tab_positions,
+                                               const int *tab_stop_positions) {
         return GetTabbedTextExtentW(dc_handle,
                                     text,
                                     cch_size,
@@ -224,8 +224,8 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int text::get_outline_text_metrics(HDC dc_handle,
-                                        unsigned int size,
-                                        OUTLINETEXTMETRICW *outline_text_metric) {
+                                                unsigned int size,
+                                                OUTLINETEXTMETRICW *outline_text_metric) {
         return GetOutlineTextMetricsW(dc_handle, size, outline_text_metric);
     }
 

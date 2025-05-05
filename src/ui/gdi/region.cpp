@@ -134,8 +134,8 @@ namespace YanLib::ui::gdi {
     }
 
     std::pair<unsigned long, unsigned long> region::get_region_data(HRGN region_handle,
-                                                    unsigned long size,
-                                                    RGNDATA *buf) {
+                                                                    unsigned long size,
+                                                                    RGNDATA *buf) {
         unsigned long result = GetRegionData(region_handle, size, buf);
         unsigned long error_code = 0;
         if (!result) {

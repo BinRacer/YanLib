@@ -40,12 +40,12 @@ namespace YanLib::ui::gdi {
     }
 
     std::pair<bool, unsigned long> dc::scroll_dc(HDC dc_handle,
-                                         int x,
-                                         int y,
-                                         const RECT *rect_scroll,
-                                         const RECT *rect_clip,
-                                         HRGN region_update_handle,
-                                         RECT *rect_update) {
+                                                 int x,
+                                                 int y,
+                                                 const RECT *rect_scroll,
+                                                 const RECT *rect_clip,
+                                                 HRGN region_update_handle,
+                                                 RECT *rect_update) {
         unsigned long error_code = 0;
         if (!ScrollDC(dc_handle,
                       x,

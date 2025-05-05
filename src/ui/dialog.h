@@ -37,12 +37,12 @@ namespace YanLib::ui {
                               LPARAM init_param);
 
         INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
-                                       const DLGTEMPLATE* dialog_template,
+                                       const DLGTEMPLATE *dialog_template,
                                        HWND hwnd_parent,
                                        DLGPROC dialog_func);
 
         INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
-                                       const DLGTEMPLATE* dialog_template,
+                                       const DLGTEMPLATE *dialog_template,
                                        HWND hwnd_parent,
                                        DLGPROC dialog_func,
                                        LPARAM init_param);
@@ -59,12 +59,12 @@ namespace YanLib::ui {
                                     LPARAM init_param);
 
         HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                             const DLGTEMPLATE* dialog_template,
+                                             const DLGTEMPLATE *dialog_template,
                                              HWND hwnd_parent,
                                              DLGPROC dialog_func);
 
         HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                             const DLGTEMPLATE* dialog_template,
+                                             const DLGTEMPLATE *dialog_template,
                                              HWND hwnd_parent,
                                              DLGPROC dialog_func,
                                              LPARAM init_param);
@@ -105,8 +105,8 @@ namespace YanLib::ui {
         HWND get_dialog_item(HWND hwnd_dialog, int id_dialog_item);
 
         std::pair<unsigned int, bool> get_dialog_item_int(HWND hwnd_dialog,
-                                                  int id_dialog_item,
-                                                  bool is_signed);
+                                                          int id_dialog_item,
+                                                          bool is_signed);
 
         bool set_dialog_item_int(HWND hwnd_dialog,
                                  int id_dialog_item,
@@ -114,9 +114,9 @@ namespace YanLib::ui {
                                  bool is_signed);
 
         unsigned int get_dialog_item_text(HWND hwnd_dialog,
-                                  int id_dialog_item,
-                                  wchar_t *text,
-                                  int cch_max);
+                                          int id_dialog_item,
+                                          wchar_t *text,
+                                          int cch_max);
 
         bool set_dialog_item_text(HWND hwnd_dialog,
                                   int id_dialog_item,
@@ -150,7 +150,7 @@ namespace YanLib::ui {
             DIALOG_DPI_CHANGE_BEHAVIORS mask,
             DIALOG_DPI_CHANGE_BEHAVIORS values);
 
-        bool map_dialog_rect(HWND hwnd_dialog, RECT* rect);
+        bool map_dialog_rect(HWND hwnd_dialog, RECT *rect);
 
         [[nodiscard]] unsigned long err_code() const;
 

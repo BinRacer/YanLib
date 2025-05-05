@@ -99,8 +99,8 @@ namespace YanLib::ui::gdi {
 
         // std::pair<result, error_code>
         static std::pair<unsigned long, unsigned long> get_region_data(HRGN region_handle,
-                                                       unsigned long size,
-                                                       RGNDATA *buf);
+                                                                       unsigned long size,
+                                                                       RGNDATA *buf);
     };
 }
 #endif //REGION_H

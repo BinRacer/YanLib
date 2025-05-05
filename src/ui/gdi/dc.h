@@ -44,12 +44,12 @@ namespace YanLib::ui::gdi {
 
         // std::pair<result, error_code>
         static std::pair<bool, unsigned long> scroll_dc(HDC dc_handle,
-                                         int x,
-                                         int y,
-                                         const RECT *rect_scroll,
-                                         const RECT *rect_clip,
-                                         HRGN region_update_handle,
-                                         RECT *rect_update);
+                                                        int x,
+                                                        int y,
+                                                        const RECT *rect_scroll,
+                                                        const RECT *rect_clip,
+                                                        HRGN region_update_handle,
+                                                        RECT *rect_update);
 
         // std::pair<result, error_code>
         static std::pair<unsigned long, unsigned long> get_layout(HDC dc_handle);

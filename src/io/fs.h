@@ -53,7 +53,7 @@ namespace YanLib::io {
         bool read(HANDLE file_handle,
                   void *buf,
                   unsigned long size,
-                  unsigned long* ret_size,
+                  unsigned long *ret_size,
                   OVERLAPPED *overlapped = nullptr);
 
         typedef LPOVERLAPPED_COMPLETION_ROUTINE OVERLAPPED_COMPLETION_ROUTINE;
@@ -67,7 +67,7 @@ namespace YanLib::io {
         bool write(HANDLE file_handle,
                    const void *buf,
                    unsigned long size,
-                   unsigned long* ret_size,
+                   unsigned long *ret_size,
                    OVERLAPPED *overlapped = nullptr);
 
         bool write(HANDLE file_handle,
@@ -93,13 +93,13 @@ namespace YanLib::io {
         std::wstring read_wstring_to_end(HANDLE file_handle);
 
         unsigned long write_bytes(HANDLE file_handle,
-                          const std::vector<uint8_t> &vec);
+                                  const std::vector<uint8_t> &vec);
 
         unsigned long write_string(HANDLE file_handle,
-                           const std::string &str);
+                                   const std::string &str);
 
         unsigned long write_wstring(HANDLE file_handle,
-                            const std::wstring &wstr);
+                                    const std::wstring &wstr);
 
         int64_t seek(HANDLE file_handle,
                      int64_t offset,
@@ -161,7 +161,7 @@ namespace YanLib::io {
                                 unsigned long buffer_length,
                                 bool is_watch_subtree,
                                 unsigned long notify_filter,
-                                unsigned long* bytes_returned,
+                                unsigned long *bytes_returned,
                                 OVERLAPPED *overlapped,
                                 OVERLAPPED_COMPLETION_ROUTINE completion_routine);
 

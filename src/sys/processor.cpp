@@ -23,12 +23,12 @@ namespace YanLib::sys {
         return GetCurrentProcessorNumber();
     }
 
-    void processor::number(PROCESSOR_NUMBER* processor_number) {
+    void processor::number(PROCESSOR_NUMBER *processor_number) {
         GetCurrentProcessorNumberEx(processor_number);
     }
 
-    bool processor::logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buffer,
-                               unsigned long* ret_len) {
+    bool processor::logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buffer,
+                               unsigned long *ret_len) {
         if (!GetLogicalProcessorInformation(buffer, ret_len)) {
             error_code = GetLastError();
             return false;
@@ -37,8 +37,8 @@ namespace YanLib::sys {
     }
 
     bool processor::logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
-                               SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* buffer,
-                               unsigned long* ret_len) {
+                               SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *buffer,
+                               unsigned long *ret_len) {
         if (!GetLogicalProcessorInformationEx(relationship_type, buffer, ret_len)) {
             error_code = GetLastError();
             return false;
@@ -59,8 +59,8 @@ namespace YanLib::sys {
         return GetMaximumProcessorGroupCount();
     }
 
-    bool processor::idle_cycle_time(unsigned long* buffer_length,
-                                    unsigned long long* processor_idle_cycle_time) {
+    bool processor::idle_cycle_time(unsigned long *buffer_length,
+                                    unsigned long long *processor_idle_cycle_time) {
         if (!QueryIdleProcessorCycleTime(buffer_length,
                                          processor_idle_cycle_time)) {
             error_code = GetLastError();
@@ -70,8 +70,8 @@ namespace YanLib::sys {
     }
 
     bool processor::idle_cycle_time(unsigned short group,
-                                    unsigned long* buffer_length,
-                                    unsigned long long* processor_idle_cycle_time) {
+                                    unsigned long *buffer_length,
+                                    unsigned long long *processor_idle_cycle_time) {
         if (!QueryIdleProcessorCycleTimeEx(group,
                                            buffer_length,
                                            processor_idle_cycle_time)) {

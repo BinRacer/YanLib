@@ -66,7 +66,7 @@ namespace YanLib::ui {
         mouse_event(flag, x, y, data, extra_info);
     }
 
-    bool mouse::track_mouse_event(TRACKMOUSEEVENT* event_track) {
+    bool mouse::track_mouse_event(TRACKMOUSEEVENT *event_track) {
         if (!TrackMouseEvent(event_track)) {
             error_code = GetLastError();
             return false;
@@ -96,7 +96,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool mouse::get_last_input_info(LASTINPUTINFO* last_input_info) {
+    bool mouse::get_last_input_info(LASTINPUTINFO *last_input_info) {
         return GetLastInputInfo(last_input_info);
     }
 

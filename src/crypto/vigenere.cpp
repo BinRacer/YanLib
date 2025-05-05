@@ -6,7 +6,7 @@
 
 namespace YanLib::crypto {
     std::vector<uint8_t> vigenere::encode(const std::vector<uint8_t> &data,
-                                                const std::vector<uint8_t> &key) {
+                                          const std::vector<uint8_t> &key) {
         if (data.empty() || key.empty()) return {};
         std::vector<uint8_t> result;
         for (const auto k: key) {
@@ -34,7 +34,7 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> vigenere::decode(const std::vector<uint8_t> &data,
-                                                const std::vector<uint8_t> &key) {
+                                          const std::vector<uint8_t> &key) {
         if (data.empty() || key.empty()) return {};
         std::vector<uint8_t> result;
 

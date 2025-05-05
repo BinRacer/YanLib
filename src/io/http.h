@@ -96,11 +96,11 @@ namespace YanLib::io {
                           const wchar_t *referrer = nullptr,
                           const wchar_t **accept_types = nullptr,
                           unsigned long flag = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
-                                       INTERNET_FLAG_KEEP_CONNECTION |
-                                       INTERNET_FLAG_NO_AUTH |
-                                       INTERNET_FLAG_NO_COOKIES |
-                                       INTERNET_FLAG_NO_UI |
-                                       INTERNET_FLAG_RELOAD,
+                                               INTERNET_FLAG_KEEP_CONNECTION |
+                                               INTERNET_FLAG_NO_AUTH |
+                                               INTERNET_FLAG_NO_COOKIES |
+                                               INTERNET_FLAG_NO_UI |
+                                               INTERNET_FLAG_RELOAD,
                           DWORD_PTR context = 0);
 
 
@@ -140,10 +140,10 @@ namespace YanLib::io {
             const std::wstring &input_url);
 
         static unsigned long download(const std::wstring &input_url,
-                              const wchar_t *file_name);
+                                      const wchar_t *file_name);
 
         static unsigned long upload(const std::wstring &input_url,
-                            const wchar_t *file_name);
+                                    const wchar_t *file_name);
 
         [[nodiscard]] unsigned long err_code() const;
 

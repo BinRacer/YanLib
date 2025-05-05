@@ -39,22 +39,22 @@ namespace YanLib::io {
 
         bool post_status(ULONG_PTR completion_key,
                          unsigned long num_bytes = 0,
-                         OVERLAPPED* overlapped = nullptr);
+                         OVERLAPPED *overlapped = nullptr);
 
         bool get_status(ULONG_PTR *completion_key,
-                        unsigned long* num_bytes,
-                        OVERLAPPED* *overlapped,
+                        unsigned long *num_bytes,
+                        OVERLAPPED * *overlapped,
                         unsigned long milli_seconds = INFINITE);
 
-        bool get_status(OVERLAPPED_ENTRY* completion_port_entries,
+        bool get_status(OVERLAPPED_ENTRY *completion_port_entries,
                         unsigned long count,
-                        unsigned long* num_entries_removed,
+                        unsigned long *num_entries_removed,
                         unsigned long milli_seconds = INFINITE,
                         bool alertable = false);
 
         bool cancel(HANDLE file_handle);
 
-        bool cancel(HANDLE file_handle, OVERLAPPED* overlapped);
+        bool cancel(HANDLE file_handle, OVERLAPPED *overlapped);
 
         bool cancel_sync_io(HANDLE thread_handle);
 
@@ -64,17 +64,17 @@ namespace YanLib::io {
                                unsigned long in_buffer_size,
                                void *out_buffer,
                                unsigned long out_buffer_size,
-                               unsigned long* bytes_returned,
-                               OVERLAPPED* overlapped);
+                               unsigned long *bytes_returned,
+                               OVERLAPPED *overlapped);
 
         bool get_overlapped_result(HANDLE file_handle,
-                                   OVERLAPPED* overlapped,
-                                   unsigned long* number_of_bytes_transferred,
+                                   OVERLAPPED *overlapped,
+                                   unsigned long *number_of_bytes_transferred,
                                    bool is_wait);
 
         bool get_overlapped_result(HANDLE file_handle,
-                                   OVERLAPPED* overlapped,
-                                   unsigned long* number_of_bytes_transferred,
+                                   OVERLAPPED *overlapped,
+                                   unsigned long *number_of_bytes_transferred,
                                    unsigned long milli_seconds,
                                    bool is_wait);
 

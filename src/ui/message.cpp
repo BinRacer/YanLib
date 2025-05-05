@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    bool message::get_message(MSG* msg,
+    bool message::get_message(MSG *msg,
                               HWND hwnd,
                               unsigned int msg_filter_min,
                               unsigned int msg_filter_max) {
@@ -43,7 +43,7 @@ namespace YanLib::ui {
         return GetMessageTime();
     }
 
-    bool message::peek_message(MSG* msg,
+    bool message::peek_message(MSG *msg,
                                HWND hwnd,
                                unsigned int msg_filter_min,
                                unsigned int msg_filter_max,
@@ -154,7 +154,7 @@ namespace YanLib::ui {
                                           LPARAM l_param,
                                           unsigned int flag,
                                           unsigned int timeout,
-                                          DWORD_PTR* result) {
+                                          DWORD_PTR *result) {
         SetLastError(ERROR_SUCCESS);
         LRESULT ret = SendMessageTimeoutW(hwnd,
                                           msg,
@@ -205,7 +205,7 @@ namespace YanLib::ui {
         return DispatchMessageW(msg);
     }
 
-    bool message::call_message_filter(MSG* msg, int code) {
+    bool message::call_message_filter(MSG *msg, int code) {
         return CallMsgFilterW(msg, code);
     }
 
@@ -226,7 +226,7 @@ namespace YanLib::ui {
         return InSendMessageEx(reserved);
     }
 
-    bool message::is_dialog_message(HWND hwnd_dialog, MSG* msg) {
+    bool message::is_dialog_message(HWND hwnd_dialog, MSG *msg) {
         return IsDialogMessageW(hwnd_dialog, msg);
     }
 
@@ -235,7 +235,7 @@ namespace YanLib::ui {
     }
 
     long message::broadcast_system_message(unsigned long flag,
-                                           unsigned long* info,
+                                           unsigned long *info,
                                            unsigned int msg,
                                            WPARAM w_param,
                                            LPARAM l_param) {
@@ -251,11 +251,11 @@ namespace YanLib::ui {
     }
 
     long message::broadcast_system_message(unsigned long flag,
-                                           unsigned long* info,
+                                           unsigned long *info,
                                            unsigned int msg,
                                            WPARAM w_param,
                                            LPARAM l_param,
-                                           BSMINFO* bsm_info) {
+                                           BSMINFO *bsm_info) {
         long result = BroadcastSystemMessageExW(flag,
                                                 info,
                                                 msg,
@@ -280,7 +280,7 @@ namespace YanLib::ui {
     message::change_window_message_filter(HWND hwnd,
                                           unsigned int message,
                                           unsigned long action,
-                                          CHANGEFILTERSTRUCT* change_filter_struct) {
+                                          CHANGEFILTERSTRUCT *change_filter_struct) {
         if (!ChangeWindowMessageFilterEx(hwnd,
                                          message,
                                          action,

@@ -725,8 +725,8 @@ namespace YanLib::sys {
     std::wstring proc::get_env_var(std::wstring var_name) {
         std::wstring var_value;
         unsigned long size = GetEnvironmentVariableW(var_name.data(),
-                                             var_value.data(),
-                                             var_value.size());
+                                                     var_value.data(),
+                                                     var_value.size());
         if (size <= 0) {
             error_code = GetLastError();
             return {};
@@ -1167,8 +1167,8 @@ namespace YanLib::sys {
     }
 
     bool proc::get_affinity_mask(HANDLE proc_handle,
-                                 DWORD_PTR* proc_affinity_mask,
-                                 DWORD_PTR* system_affinity_mask) {
+                                 DWORD_PTR *proc_affinity_mask,
+                                 DWORD_PTR *system_affinity_mask) {
         if (!GetProcessAffinityMask(proc_handle,
                                     proc_affinity_mask,
                                     system_affinity_mask)) {

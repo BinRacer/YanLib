@@ -16,7 +16,7 @@ namespace YanLib::sync {
         }
     }
 
-    bool event::create(SECURITY_ATTRIBUTES* event_attrs,
+    bool event::create(SECURITY_ATTRIBUTES *event_attrs,
                        bool is_manual_reset,
                        bool is_initial_state,
                        const wchar_t *name) {

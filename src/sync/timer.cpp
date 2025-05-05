@@ -16,7 +16,7 @@ namespace YanLib::sync {
         }
     }
 
-    bool timer::create(SECURITY_ATTRIBUTES* timer_attrs,
+    bool timer::create(SECURITY_ATTRIBUTES *timer_attrs,
                        bool is_manual_reset,
                        const wchar_t *timer_name) {
         timer_handle = CreateWaitableTimerW(timer_attrs,

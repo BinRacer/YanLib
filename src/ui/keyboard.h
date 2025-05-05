@@ -80,13 +80,13 @@ namespace YanLib::ui {
         int to_ascii(unsigned int vk,
                      unsigned int scan_code,
                      const uint8_t *key_state,
-                     unsigned short* ch,
+                     unsigned short *ch,
                      unsigned int flag);
 
         int to_ascii(unsigned int vk,
                      unsigned int scan_code,
                      const uint8_t *key_state,
-                     unsigned short* ch,
+                     unsigned short *ch,
                      unsigned int flag,
                      HKL hkl);
 
@@ -113,39 +113,39 @@ namespace YanLib::ui {
 
         unsigned long wait_for_input_idle(HANDLE proc_handle, unsigned long milli_seconds);
 
-        LRESULT default_raw_input_proc(RAWINPUT* *raw_input,
+        LRESULT default_raw_input_proc(RAWINPUT * *raw_input,
                                        int input,
                                        unsigned int cb_size_header);
 
         unsigned short get_rawinput_code_wparam(WPARAM w_param);
 
-        unsigned int get_raw_input_buffer(RAWINPUT* data,
-                                  unsigned int* cb_size,
-                                  unsigned int cb_size_header);
+        unsigned int get_raw_input_buffer(RAWINPUT *data,
+                                          unsigned int *cb_size,
+                                          unsigned int cb_size_header);
 
         unsigned int get_raw_input_data(HRAWINPUT raw_input,
-                                unsigned int command,
-                                void *data,
-                                unsigned int* cb_size,
-                                unsigned int cb_size_header);
+                                        unsigned int command,
+                                        void *data,
+                                        unsigned int *cb_size,
+                                        unsigned int cb_size_header);
 
         unsigned int get_raw_input_device_info(HANDLE device_handle,
-                                       unsigned int command,
-                                       void *data,
-                                       unsigned int* cb_size);
+                                               unsigned int command,
+                                               void *data,
+                                               unsigned int *cb_size);
 
-        unsigned int get_raw_input_device_list(RAWINPUTDEVICELIST* raw_input_device_list,
-                                       unsigned int* num_devices,
-                                       unsigned int cb_size);
+        unsigned int get_raw_input_device_list(RAWINPUTDEVICELIST *raw_input_device_list,
+                                               unsigned int *num_devices,
+                                               unsigned int cb_size);
 
-        unsigned int get_registered_raw_input_devices(RAWINPUTDEVICE* raw_input_devices,
-                                              unsigned int* num_devices,
-                                              unsigned int cb_size);
+        unsigned int get_registered_raw_input_devices(RAWINPUTDEVICE *raw_input_devices,
+                                                      unsigned int *num_devices,
+                                                      unsigned int cb_size);
 
 
-        RAWINPUT* next_raw_input_block(RAWINPUT* raw_input);
+        RAWINPUT *next_raw_input_block(RAWINPUT *raw_input);
 
-        bool register_raw_input_devices(const RAWINPUTDEVICE* raw_input_devices,
+        bool register_raw_input_devices(const RAWINPUTDEVICE *raw_input_devices,
                                         unsigned int num_devices,
                                         unsigned int cb_size);
 

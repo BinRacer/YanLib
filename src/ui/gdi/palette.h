@@ -34,22 +34,22 @@ namespace YanLib::ui::gdi {
         static COLORREF get_nearest_color(HDC dc_handle, COLORREF color);
 
         static unsigned int get_nearest_palette_index(HPALETTE palette_handle,
-                                              COLORREF color);
+                                                      COLORREF color);
 
         static unsigned int get_palette_entries(HPALETTE palette_handle,
-                                        unsigned int start,
-                                        unsigned int entry_count,
-                                        PALETTEENTRY *palette_entry);
+                                                unsigned int start,
+                                                unsigned int entry_count,
+                                                PALETTEENTRY *palette_entry);
 
         static unsigned int set_palette_entries(HPALETTE palette_handle,
-                                        unsigned int start,
-                                        unsigned int entry_count,
-                                        const PALETTEENTRY *palette_entry);
+                                                unsigned int start,
+                                                unsigned int entry_count,
+                                                const PALETTEENTRY *palette_entry);
 
         static unsigned int get_system_palette_entries(HDC dc_handle,
-                                               unsigned int start,
-                                               unsigned int entry_count,
-                                               PALETTEENTRY *palette_entry);
+                                                       unsigned int start,
+                                                       unsigned int entry_count,
+                                                       PALETTEENTRY *palette_entry);
 
         static unsigned int get_system_palette_use(HDC dc_handle);
 

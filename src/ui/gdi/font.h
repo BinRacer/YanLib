@@ -73,19 +73,19 @@ namespace YanLib::ui::gdi {
                                         unsigned long font_type);
 
         static int enum_font_families(HDC dc_handle,
-                                      LOGFONTW* log_font,
+                                      LOGFONTW *log_font,
                                       FONTENUMPROCW font_enum_proc,
                                       LPARAM l_param);
 
         static unsigned long get_font_data(HDC dc_handle,
-                                   unsigned long table,
-                                   unsigned long offset,
-                                   void *buf,
-                                   unsigned long size);
+                                           unsigned long table,
+                                           unsigned long offset,
+                                           void *buf,
+                                           unsigned long size);
 
         static unsigned long get_font_language_info(HDC dc_handle);
 
-        static unsigned long get_font_unicode_ranges(HDC dc_handle, GLYPHSET* glyph_set);
+        static unsigned long get_font_unicode_ranges(HDC dc_handle, GLYPHSET *glyph_set);
     };
 }
 #endif //FONT_H

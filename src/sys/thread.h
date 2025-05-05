@@ -103,7 +103,7 @@ namespace YanLib::sys {
         bool tls_set(unsigned long tls_index, void *tls_value);
 
         unsigned long wait_for_input_idle(HANDLE proc_handle,
-                                  unsigned long milli_seconds);
+                                          unsigned long milli_seconds);
 
         bool attach_thread_input(unsigned long id_attach,
                                  unsigned long id_attach_to,

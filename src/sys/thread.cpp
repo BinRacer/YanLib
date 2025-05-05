@@ -277,7 +277,7 @@ namespace YanLib::sys {
     }
 
     unsigned long thread::wait_for_input_idle(HANDLE proc_handle,
-                                      unsigned long milli_seconds) {
+                                              unsigned long milli_seconds) {
         return WaitForInputIdle(proc_handle, milli_seconds);
     }
 
@@ -361,9 +361,9 @@ namespace YanLib::sys {
     bool thread::wait_all(bool is_wait_all, unsigned long milli_seconds) {
         std::vector<HANDLE> thread_handles = thread::thread_handles();
         unsigned long ret = WaitForMultipleObjects(thread_handles.size(),
-                                           thread_handles.data(),
-                                           is_wait_all ? TRUE : FALSE,
-                                           milli_seconds);
+                                                   thread_handles.data(),
+                                                   is_wait_all ? TRUE : FALSE,
+                                                   milli_seconds);
         if (ret >= WAIT_OBJECT_0 &&
             ret <= WAIT_OBJECT_0 + thread_handles.size() - 1) {
             return true;

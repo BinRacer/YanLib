@@ -41,7 +41,7 @@ namespace YanLib::ui {
 
         bool release_capture();
 
-        unsigned int send_input(unsigned int inputs_count, INPUT* inputs, int cb_size);
+        unsigned int send_input(unsigned int inputs_count, INPUT *inputs, int cb_size);
 
         void send_mouse_event(unsigned long flag,
                               unsigned long x,
@@ -49,7 +49,7 @@ namespace YanLib::ui {
                               unsigned long data,
                               ULONG_PTR extra_info);
 
-        bool track_mouse_event(TRACKMOUSEEVENT* event_track);
+        bool track_mouse_event(TRACKMOUSEEVENT *event_track);
 
         bool swap_mouse_button(bool is_swap);
 
@@ -59,7 +59,7 @@ namespace YanLib::ui {
         bool unregister_pointer_input_target(HWND hwnd,
                                              POINTER_INPUT_TYPE pointer_type);
 
-        bool get_last_input_info(LASTINPUTINFO* last_input_info);
+        bool get_last_input_info(LASTINPUTINFO *last_input_info);
 
         bool get_pointer_input_transform(unsigned int pointer_id,
                                          unsigned int history_count,
@@ -121,8 +121,8 @@ namespace YanLib::ui {
                                          long *values);
 
         int get_mouse_move_points(unsigned int cb_size,
-                                  MOUSEMOVEPOINT* mouse_move_point,
-                                  MOUSEMOVEPOINT* points_buf,
+                                  MOUSEMOVEPOINT *mouse_move_point,
+                                  MOUSEMOVEPOINT *points_buf,
                                   int points_count,
                                   unsigned long resolution);
 

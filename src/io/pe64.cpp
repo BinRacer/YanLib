@@ -409,7 +409,7 @@ namespace YanLib::io {
             return {};
         }
         auto rva =
-            _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+                _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
         auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return {};
@@ -935,7 +935,7 @@ namespace YanLib::io {
     }
 
     unsigned long pe64::foa_to_rva(IMAGE_SECTION_HEADER &section_header,
-                           int64_t foa) {
+                                   int64_t foa) {
         return foa - section_header.PointerToRawData +
                section_header.VirtualAddress;
     }

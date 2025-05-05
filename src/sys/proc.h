@@ -60,7 +60,7 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             unsigned long create_flag = NORMAL_PRIORITY_CLASS |
-                                CREATE_SUSPENDED,
+                                        CREATE_SUSPENDED,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
@@ -72,7 +72,7 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             unsigned long create_flag = NORMAL_PRIORITY_CLASS |
-                                CREATE_UNICODE_ENVIRONMENT,
+                                        CREATE_UNICODE_ENVIRONMENT,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
@@ -84,8 +84,8 @@ namespace YanLib::sys {
             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
             bool is_inherit_handles = false,
             unsigned long create_flag = NORMAL_PRIORITY_CLASS |
-                                CREATE_UNICODE_ENVIRONMENT |
-                                CREATE_NEW_CONSOLE,
+                                        CREATE_UNICODE_ENVIRONMENT |
+                                        CREATE_NEW_CONSOLE,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
@@ -97,8 +97,8 @@ namespace YanLib::sys {
             wchar_t *cmdline = nullptr,
             unsigned long logon_flag = LOGON_WITH_PROFILE,
             unsigned long create_flag = NORMAL_PRIORITY_CLASS |
-                                CREATE_NEW_CONSOLE |
-                                CREATE_UNICODE_ENVIRONMENT,
+                                        CREATE_NEW_CONSOLE |
+                                        CREATE_UNICODE_ENVIRONMENT,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
@@ -108,8 +108,8 @@ namespace YanLib::sys {
             wchar_t *cmdline = nullptr,
             unsigned long logon_flag = LOGON_WITH_PROFILE,
             unsigned long create_flag = NORMAL_PRIORITY_CLASS |
-                                CREATE_NEW_CONSOLE |
-                                CREATE_UNICODE_ENVIRONMENT,
+                                        CREATE_NEW_CONSOLE |
+                                        CREATE_UNICODE_ENVIRONMENT,
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
@@ -258,7 +258,7 @@ namespace YanLib::sys {
         unsigned long handle_count(HANDLE proc_handle);
 
         unsigned long gui_handle_count(HANDLE proc_handle,
-                               unsigned long flag = GR_GDIOBJECTS);
+                                       unsigned long flag = GR_GDIOBJECTS);
 
         unsigned long processor_num();
 
@@ -285,8 +285,8 @@ namespace YanLib::sys {
                                     unsigned long *ret_len);
 
         bool get_affinity_mask(HANDLE proc_handle,
-                               DWORD_PTR* proc_affinity_mask,
-                               DWORD_PTR* system_affinity_mask);
+                               DWORD_PTR *proc_affinity_mask,
+                               DWORD_PTR *system_affinity_mask);
 
         bool set_affinity_mask(HANDLE proc_handle,
                                DWORD_PTR proc_affinity_mask);

@@ -71,12 +71,12 @@ namespace YanLib::ui::gdi {
         static int set_background_mode(HDC dc_handle, int mode);
 
         static unsigned int get_bounds_rect(HDC dc_handle,
-                                    RECT *rect,
-                                    unsigned int flag);
+                                            RECT *rect,
+                                            unsigned int flag);
 
         static unsigned int set_bounds_rect(HDC dc_handle,
-                                    const RECT *rect,
-                                    unsigned int flag);
+                                            const RECT *rect,
+                                            unsigned int flag);
 
         static int get_rop2(HDC dc_handle);
 

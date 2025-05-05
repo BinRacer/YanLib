@@ -49,9 +49,9 @@ namespace YanLib::ui {
 
         int get_priority_clipboard_format(unsigned int *format_priority_list, int formats);
 
-        bool get_updated_clipboard_formats(unsigned int* formats,
+        bool get_updated_clipboard_formats(unsigned int *formats,
                                            unsigned int formats_count,
-                                           unsigned int* formats_out);
+                                           unsigned int *formats_out);
 
         bool is_clipboard_format_available(unsigned int format);
 

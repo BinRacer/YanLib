@@ -48,7 +48,7 @@ namespace YanLib::io {
 
     bool completion_port::post_status(ULONG_PTR completion_key,
                                       unsigned long num_bytes,
-                                      OVERLAPPED* overlapped) {
+                                      OVERLAPPED *overlapped) {
         if (!PostQueuedCompletionStatus(iocp,
                                         num_bytes,
                                         completion_key,
@@ -60,8 +60,8 @@ namespace YanLib::io {
     }
 
     bool completion_port::get_status(ULONG_PTR *completion_key,
-                                     unsigned long* num_bytes,
-                                     OVERLAPPED* *overlapped,
+                                     unsigned long *num_bytes,
+                                     OVERLAPPED * *overlapped,
                                      unsigned long milli_seconds) {
         if (!GetQueuedCompletionStatus(iocp,
                                        num_bytes,
@@ -74,9 +74,9 @@ namespace YanLib::io {
         return true;
     }
 
-    bool completion_port::get_status(OVERLAPPED_ENTRY* completion_port_entries,
+    bool completion_port::get_status(OVERLAPPED_ENTRY *completion_port_entries,
                                      unsigned long count,
-                                     unsigned long* num_entries_removed,
+                                     unsigned long *num_entries_removed,
                                      unsigned long milli_seconds,
                                      bool alertable) {
         if (!GetQueuedCompletionStatusEx(iocp,
@@ -99,7 +99,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool completion_port::cancel(HANDLE file_handle, OVERLAPPED* overlapped) {
+    bool completion_port::cancel(HANDLE file_handle, OVERLAPPED *overlapped) {
         if (!CancelIoEx(file_handle, overlapped)) {
             error_code = GetLastError();
             return false;
@@ -121,8 +121,8 @@ namespace YanLib::io {
                                             unsigned long in_buffer_size,
                                             void *out_buffer,
                                             unsigned long out_buffer_size,
-                                            unsigned long* bytes_returned,
-                                            OVERLAPPED* overlapped) {
+                                            unsigned long *bytes_returned,
+                                            OVERLAPPED *overlapped) {
         if (!DeviceIoControl(device_handle,
                              io_control_code,
                              in_buffer,
@@ -137,10 +137,11 @@ namespace YanLib::io {
         return true;
     }
 
-    bool completion_port::get_overlapped_result(HANDLE file_handle,
-                                                OVERLAPPED* overlapped,
-                                                unsigned long* number_of_bytes_transferred,
-                                                bool is_wait) {
+    bool completion_port::get_overlapped_result(
+        HANDLE file_handle,
+        OVERLAPPED *overlapped,
+        unsigned long *number_of_bytes_transferred,
+        bool is_wait) {
         if (!GetOverlappedResult(file_handle,
                                  overlapped,
                                  number_of_bytes_transferred,
@@ -151,11 +152,12 @@ namespace YanLib::io {
         return true;
     }
 
-    bool completion_port::get_overlapped_result(HANDLE file_handle,
-                                                OVERLAPPED* overlapped,
-                                                unsigned long* number_of_bytes_transferred,
-                                                unsigned long milli_seconds,
-                                                bool is_wait) {
+    bool completion_port::get_overlapped_result(
+        HANDLE file_handle,
+        OVERLAPPED *overlapped,
+        unsigned long *number_of_bytes_transferred,
+        unsigned long milli_seconds,
+        bool is_wait) {
         if (!GetOverlappedResultEx(file_handle,
                                    overlapped,
                                    number_of_bytes_transferred,

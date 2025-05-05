@@ -101,9 +101,9 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool clipboard::get_updated_clipboard_formats(unsigned int* formats,
+    bool clipboard::get_updated_clipboard_formats(unsigned int *formats,
                                                   unsigned int formats_count,
-                                                  unsigned int* formats_out) {
+                                                  unsigned int *formats_out) {
         if (!GetUpdatedClipboardFormats(formats,
                                         formats_count,
                                         formats_out)) {

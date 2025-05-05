@@ -46,7 +46,7 @@ namespace YanLib::ui {
                                         int desired_height,
                                         unsigned int flag);
 
-        HICON create_icon_indirect(ICONINFO* icon_info);
+        HICON create_icon_indirect(ICONINFO *icon_info);
 
         HICON load_icon(HINSTANCE instance_handle, const wchar_t *icon_name);
 
@@ -66,9 +66,9 @@ namespace YanLib::ui {
 
         bool destroy_icon(HICON icon_handle);
 
-        bool get_icon_info(HICON icon_handle, ICONINFO* icon_info);
+        bool get_icon_info(HICON icon_handle, ICONINFO *icon_info);
 
-        bool get_icon_info(HICON icon_handle, ICONINFOEXW* icon_info);
+        bool get_icon_info(HICON icon_handle, ICONINFOEXW *icon_info);
 
         int lookup_icon_id_from_directory(uint8_t *res_buf, bool is_icon);
 
@@ -79,13 +79,13 @@ namespace YanLib::ui {
                                           unsigned int flag);
 
         unsigned int private_extract_icons(const wchar_t *file_name,
-                                   int icon_index,
-                                   int icon_width,
-                                   int icon_height,
-                                   HICON *icon_handle,
-                                   unsigned int *icon_id,
-                                   unsigned int icon_count,
-                                   unsigned int flag);
+                                           int icon_index,
+                                           int icon_width,
+                                           int icon_height,
+                                           HICON *icon_handle,
+                                           unsigned int *icon_id,
+                                           unsigned int icon_count,
+                                           unsigned int flag);
 
         [[nodiscard]] unsigned long err_code() const;
 

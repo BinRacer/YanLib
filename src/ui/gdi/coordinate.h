@@ -72,9 +72,9 @@ namespace YanLib::ui::gdi {
 
         // std::pair<result, error_code>
         static std::pair<int, unsigned long> map_window_points(HWND hwnd_from,
-                                                       HWND hwnd_to,
-                                                       POINT *point,
-                                                       unsigned int num);
+                                                               HWND hwnd_to,
+                                                               POINT *point,
+                                                               unsigned int num);
 
         static bool modify_world_transform(HDC dc_handle,
                                            const XFORM *xfrom,

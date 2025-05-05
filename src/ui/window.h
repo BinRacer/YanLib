@@ -48,7 +48,7 @@ namespace YanLib::ui {
                                int width = CW_USEDEFAULT,
                                int height = CW_USEDEFAULT,
                                unsigned long style = MDIS_ALLCHILDSTYLES |
-                                             WS_OVERLAPPEDWINDOW);
+                                                     WS_OVERLAPPEDWINDOW);
 
         WNDCLASSEXW make_window_class(const wchar_t *class_name,
                                       WNDPROC window_proc,
@@ -209,10 +209,10 @@ namespace YanLib::ui {
                                        LPARAM l_param);
 
         unsigned short cascade_windows(HWND hwnd_parent,
-                             unsigned int how,
-                             const RECT *rect,
-                             unsigned int kids_count,
-                             const HWND *kids);
+                                       unsigned int how,
+                                       const RECT *rect,
+                                       unsigned int kids_count,
+                                       const HWND *kids);
 
         HWND child_window_from_point(HWND hwnd_parent, POINT point);
 
@@ -336,8 +336,8 @@ namespace YanLib::ui {
                                      LONG_PTR value);
 
         unsigned int get_window_module_file_name(HWND hwnd,
-                                         wchar_t *file_name,
-                                         unsigned int cch_size = MAX_PATH);
+                                                 wchar_t *file_name,
+                                                 unsigned int cch_size = MAX_PATH);
 
         bool get_window_placement(HWND hwnd,
                                   WINDOWPLACEMENT *window_placement);
@@ -378,7 +378,7 @@ namespace YanLib::ui {
         int get_window_text_length(HWND hwnd);
 
         unsigned long get_window_thread_process_id(HWND hwnd,
-                                           unsigned long *pid);
+                                                   unsigned long *pid);
 
         unsigned short get_window_word(HWND hwnd, int index);
 
@@ -418,8 +418,8 @@ namespace YanLib::ui {
                           unsigned int flag);
 
         unsigned int real_get_window_class(HWND hwnd,
-                                   wchar_t *class_name,
-                                   unsigned int cch_size = MAX_PATH);
+                                           wchar_t *class_name,
+                                           unsigned int cch_size = MAX_PATH);
 
         bool redraw_window(HWND hwnd,
                            const RECT *rect,
@@ -444,10 +444,10 @@ namespace YanLib::ui {
         void switch_to_this_window(HWND hwnd, bool unknown = false);
 
         unsigned short tile_windows(HWND hwnd_parent,
-                          unsigned int how,
-                          const RECT *rect,
-                          unsigned int kids_num,
-                          const HWND *kids);
+                                    unsigned int how,
+                                    const RECT *rect,
+                                    unsigned int kids_num,
+                                    const HWND *kids);
 
         bool win_help(HWND hwnd,
                       const wchar_t *help,

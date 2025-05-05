@@ -45,15 +45,15 @@ namespace YanLib::ui {
 
         HCURSOR set_cursor(HCURSOR cursor_handle);
 
-        bool get_cursor_info(CURSORINFO* cursor_info);
+        bool get_cursor_info(CURSORINFO *cursor_info);
 
-        bool get_cursor_pos(POINT* point);
+        bool get_cursor_pos(POINT *point);
 
         bool set_cursor_pos(int x, int y);
 
-        bool get_clip_cursor(RECT* rect);
+        bool get_clip_cursor(RECT *rect);
 
-        bool get_physical_cursor_pos(POINT* point);
+        bool get_physical_cursor_pos(POINT *point);
 
         bool set_physical_cursor_pos(int x, int y);
 

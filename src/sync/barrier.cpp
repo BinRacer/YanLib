@@ -28,9 +28,9 @@ namespace YanLib::sync {
                        bool wait_all,
                        unsigned long milli_seconds) {
         unsigned long ret = WaitForMultipleObjects(count,
-                                           handles,
-                                           wait_all ? TRUE : FALSE,
-                                           milli_seconds);
+                                                   handles,
+                                                   wait_all ? TRUE : FALSE,
+                                                   milli_seconds);
         if (ret == WAIT_FAILED) {
             error_code = GetLastError();
         } else {

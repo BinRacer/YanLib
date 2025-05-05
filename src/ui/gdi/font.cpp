@@ -113,10 +113,10 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned long font::get_font_data(HDC dc_handle,
-                              unsigned long table,
-                              unsigned long offset,
-                              void *buf,
-                              unsigned long size) {
+                                      unsigned long table,
+                                      unsigned long offset,
+                                      void *buf,
+                                      unsigned long size) {
         return GetFontData(dc_handle, table, offset, buf, size);
     }
 

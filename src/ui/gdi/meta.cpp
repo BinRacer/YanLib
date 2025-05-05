@@ -58,14 +58,14 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int meta::get_enhance_meta_file_header(HENHMETAFILE enh_meta_file_handle,
-                                            unsigned int size,
-                                            ENHMETAHEADER *buf) {
+                                                    unsigned int size,
+                                                    ENHMETAHEADER *buf) {
         return GetEnhMetaFileHeader(enh_meta_file_handle, size, buf);
     }
 
     unsigned int meta::get_enhance_meta_file_description(HENHMETAFILE enh_meta_file_handle,
-                                                 unsigned int cch_size,
-                                                 wchar_t *description) {
+                                                         unsigned int cch_size,
+                                                         wchar_t *description) {
         return GetEnhMetaFileDescriptionW(enh_meta_file_handle,
                                           cch_size,
                                           description);
@@ -81,10 +81,10 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int meta::get_win_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                      unsigned int size,
-                                      uint8_t *buf,
-                                      int map_mode,
-                                      HDC dc_handle) {
+                                              unsigned int size,
+                                              uint8_t *buf,
+                                              int map_mode,
+                                              HDC dc_handle) {
         return GetWinMetaFileBits(enh_meta_file_handle,
                                   size,
                                   buf,
@@ -101,8 +101,8 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int meta::get_enhance_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                          unsigned int size,
-                                          uint8_t *buf) {
+                                                  unsigned int size,
+                                                  uint8_t *buf) {
         return GetEnhMetaFileBits(enh_meta_file_handle, size, buf);
     }
 

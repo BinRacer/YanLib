@@ -31,25 +31,25 @@ namespace YanLib::sys {
 
         unsigned long number();
 
-        void number(PROCESSOR_NUMBER* processor_number);
+        void number(PROCESSOR_NUMBER *processor_number);
 
-        bool logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buffer,
-                        unsigned long* ret_len);
+        bool logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buffer,
+                        unsigned long *ret_len);
 
         bool logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
-                        SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* buffer,
-                        unsigned long* ret_len);
+                        SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *buffer,
+                        unsigned long *ret_len);
 
         unsigned long max_count(unsigned short GroupNumber);
 
         unsigned short max_group_count();
 
-        bool idle_cycle_time(unsigned long* buffer_length,
-                             unsigned long long* processor_idle_cycle_time);
+        bool idle_cycle_time(unsigned long *buffer_length,
+                             unsigned long long *processor_idle_cycle_time);
 
         bool idle_cycle_time(unsigned short group,
-                             unsigned long* buffer_length,
-                             unsigned long long* processor_idle_cycle_time);
+                             unsigned long *buffer_length,
+                             unsigned long long *processor_idle_cycle_time);
 
         [[nodiscard]] unsigned long err_code() const;
 

@@ -96,9 +96,9 @@ namespace YanLib::ui::gdi {
     }
 
     std::pair<int, unsigned long> coordinate::map_window_points(HWND hwnd_from,
-                                                        HWND hwnd_to,
-                                                        POINT *point,
-                                                        unsigned int num) {
+                                                                HWND hwnd_to,
+                                                                POINT *point,
+                                                                unsigned int num) {
         SetLastError(0);
         unsigned long result = MapWindowPoints(hwnd_from, hwnd_to, point, num);
         unsigned long error_code = GetLastError();

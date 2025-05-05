@@ -54,8 +54,8 @@ namespace YanLib::ui::gdi {
         static HENHMETAFILE get_enhance_meta_file(const wchar_t *file_name);
 
         static unsigned int get_enhance_meta_file_header(HENHMETAFILE enh_meta_file_handle,
-                                                 unsigned int size,
-                                                 ENHMETAHEADER *buf);
+                                                         unsigned int size,
+                                                         ENHMETAHEADER *buf);
 
         static unsigned int get_enhance_meta_file_description(
             HENHMETAFILE enh_meta_file_handle,
@@ -68,10 +68,10 @@ namespace YanLib::ui::gdi {
             PALETTEENTRY *palette_entries);
 
         static unsigned int get_win_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                           unsigned int size,
-                                           uint8_t *buf,
-                                           int map_mode,
-                                           HDC dc_handle);
+                                                   unsigned int size,
+                                                   uint8_t *buf,
+                                                   int map_mode,
+                                                   HDC dc_handle);
 
         static HENHMETAFILE set_win_meta_file_bits(
             unsigned int size,
@@ -80,8 +80,8 @@ namespace YanLib::ui::gdi {
             const METAFILEPICT *meta_file_pict);
 
         static unsigned int get_enhance_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                               unsigned int size,
-                                               uint8_t *buf);
+                                                       unsigned int size,
+                                                       uint8_t *buf);
 
         static HENHMETAFILE set_enhance_meta_file_bits(unsigned int size,
                                                        const uint8_t *buf);

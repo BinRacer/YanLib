@@ -31,7 +31,7 @@ namespace YanLib::ui {
 
         bool set_caret_blink_time(unsigned int milli_second);
 
-        bool get_caret_pos(POINT* point);
+        bool get_caret_pos(POINT *point);
 
         bool set_caret_pos(int x, int y);
 

@@ -454,7 +454,7 @@ namespace YanLib::io {
     }
 
     unsigned long ftp::download2(HINTERNET remote_file,
-                         const wchar_t *local_file) {
+                                 const wchar_t *local_file) {
         unsigned long error = 0;
         fs file;
         HANDLE file_handle = file.create(local_file);
@@ -482,7 +482,7 @@ namespace YanLib::io {
     }
 
     unsigned long ftp::upload2(HINTERNET remote_file,
-                       const wchar_t *local_file) {
+                               const wchar_t *local_file) {
         unsigned long error = 0;
         fs file;
         HANDLE file_handle = file.open(local_file);

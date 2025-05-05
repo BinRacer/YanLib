@@ -16,7 +16,7 @@ namespace YanLib::sync {
         }
     }
 
-    bool semaphore::create(SECURITY_ATTRIBUTES* semaphore_attrs,
+    bool semaphore::create(SECURITY_ATTRIBUTES *semaphore_attrs,
                            long initial_count,
                            long maximum_count,
                            const wchar_t *name) {
@@ -50,7 +50,7 @@ namespace YanLib::sync {
         return error_code == WAIT_OBJECT_0;
     }
 
-    bool semaphore::signal(long release_count, long* previous_count) {
+    bool semaphore::signal(long release_count, long *previous_count) {
         if (semaphore_handle &&
             ReleaseSemaphore(semaphore_handle, release_count, previous_count)) {
             return true;

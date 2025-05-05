@@ -52,87 +52,87 @@ namespace YanLib::ui::gdi {
         static int draw_text(HDC dc_handle,
                              const wchar_t *text,
                              int cch_size,
-                             RECT* rect,
+                             RECT *rect,
                              unsigned int format);
 
         static int draw_text(HDC dc_handle,
                              wchar_t *text,
                              int cch_size,
-                             RECT* rect,
+                             RECT *rect,
                              unsigned int format,
-                             DRAWTEXTPARAMS* draw_text_param);
+                             DRAWTEXTPARAMS *draw_text_param);
 
         static unsigned long set_mapper_flags(HDC dc_handle, unsigned long flag);
 
         static bool set_text_justification(HDC dc_handle, int extra, int count);
 
-        static bool get_aspect_ratio_filter(HDC dc_handle, SIZE* size);
+        static bool get_aspect_ratio_filter(HDC dc_handle, SIZE *size);
 
         static bool get_char_width32(HDC dc_handle,
                                      unsigned int ch_first,
                                      unsigned int ch_last,
-                                     int* buf);
+                                     int *buf);
 
         static bool get_char_width_float(HDC dc_handle,
                                          unsigned int code_point_first,
                                          unsigned int code_point_last,
-                                         FLOAT* buf);
+                                         FLOAT *buf);
 
         static bool get_char_width_index(HDC dc_handle,
                                          unsigned int glyph_index_first,
                                          unsigned int glyph_index_num,
-                                         unsigned short* glyph_index_array,
-                                         int* widths);
+                                         unsigned short *glyph_index_array,
+                                         int *widths);
 
         static unsigned long get_char_placement(HDC dc_handle,
-                                        const wchar_t *text,
-                                        int cch_size,
-                                        int mex_extent,
-                                        GCP_RESULTSW* results,
-                                        unsigned long flag);
+                                                const wchar_t *text,
+                                                int cch_size,
+                                                int mex_extent,
+                                                GCP_RESULTSW *results,
+                                                unsigned long flag);
 
         static bool get_char_abc_widths(HDC dc_handle,
                                         unsigned int ch_first,
                                         unsigned int ch_last,
-                                        ABC* abc);
+                                        ABC *abc);
 
         static bool get_char_abc_widths_float(HDC dc_handle,
                                               unsigned int code_point_first,
                                               unsigned int code_point_last,
-                                              ABCFLOAT* abc_float);
+                                              ABCFLOAT *abc_float);
 
         static bool get_char_abc_widths_index(HDC dc_handle,
                                               unsigned int first_glyph_index,
                                               unsigned int glyph_index_num,
-                                              unsigned short* glyph_index_array,
-                                              ABC* abc);
+                                              unsigned short *glyph_index_array,
+                                              ABC *abc);
 
         static unsigned long get_glyph_indices(HDC dc_handle,
-                                       const wchar_t *text,
-                                       int cch_size,
-                                       unsigned short* glyph_index,
-                                       unsigned long flag);
+                                               const wchar_t *text,
+                                               int cch_size,
+                                               unsigned short *glyph_index,
+                                               unsigned long flag);
 
         static unsigned long get_glyph_outline(HDC dc_handle,
-                                       unsigned int ch,
-                                       unsigned int format,
-                                       GLYPHMETRICS* glyph_metrics,
-                                       unsigned long size,
-                                       void *buf,
-                                       const MAT2 *mat2);
+                                               unsigned int ch,
+                                               unsigned int format,
+                                               GLYPHMETRICS *glyph_metrics,
+                                               unsigned long size,
+                                               void *buf,
+                                               const MAT2 *mat2);
 
         static unsigned long get_kerning_pairs(HDC dc_handle,
-                                       unsigned long pairs,
-                                       KERNINGPAIR* kern_pair);
+                                               unsigned long pairs,
+                                               KERNINGPAIR *kern_pair);
 
-        static bool get_rasterizer_caps(RASTERIZER_STATUS* rasterizer_status,
+        static bool get_rasterizer_caps(RASTERIZER_STATUS *rasterizer_status,
                                         unsigned int size);
 
         static unsigned long get_tabbed_text_extent(HDC dc_handle,
-                                            const wchar_t *text,
-                                            int cch_size,
-                                            int tab_positions,
-                                            const int *tab_stop_positions);
+                                                    const wchar_t *text,
+                                                    int cch_size,
+                                                    int tab_positions,
+                                                    const int *tab_stop_positions);
 
         static unsigned int get_text_align(HDC dc_handle);
 
@@ -148,38 +148,38 @@ namespace YanLib::ui::gdi {
 
         static int get_text_face(HDC dc_handle, int cch_size, wchar_t *buf);
 
-        static bool get_text_metrics(HDC dc_handle, TEXTMETRICW* text_metric);
+        static bool get_text_metrics(HDC dc_handle, TEXTMETRICW *text_metric);
 
         static unsigned int get_outline_text_metrics(
             HDC dc_handle,
             unsigned int size,
-            OUTLINETEXTMETRICW* outline_text_metric);
+            OUTLINETEXTMETRICW *outline_text_metric);
 
         static bool get_text_extent_point(HDC dc_handle,
                                           const wchar_t *text,
                                           int cch_size,
                                           int max_extent,
-                                          int* fit,
-                                          int* dx,
-                                          SIZE* size);
+                                          int *fit,
+                                          int *dx,
+                                          SIZE *size);
 
         static bool get_text_extent_point32(HDC dc_handle,
                                             const wchar_t *text,
                                             int cch_size,
-                                            SIZE* size);
+                                            SIZE *size);
 
         static bool get_text_extent_point_index(HDC dc_handle,
-                                                unsigned short* glyph_index_array,
+                                                unsigned short *glyph_index_array,
                                                 int glyph_index_num,
                                                 int max_extent,
-                                                int* fit,
-                                                int* dx,
-                                                SIZE* size);
+                                                int *fit,
+                                                int *dx,
+                                                SIZE *size);
 
         static bool get_text_extent_point_index(HDC dc_handle,
-                                                unsigned short* glyph_index_array,
+                                                unsigned short *glyph_index_array,
                                                 int glyph_index_num,
-                                                SIZE* size);
+                                                SIZE *size);
     };
 }
 #endif //TEXT_H

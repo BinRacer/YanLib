@@ -28,14 +28,14 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int palette::get_nearest_palette_index(HPALETTE palette_handle,
-                                            COLORREF color) {
+                                                    COLORREF color) {
         return GetNearestPaletteIndex(palette_handle, color);
     }
 
     unsigned int palette::get_palette_entries(HPALETTE palette_handle,
-                                      unsigned int start,
-                                      unsigned int entry_count,
-                                      PALETTEENTRY *palette_entry) {
+                                              unsigned int start,
+                                              unsigned int entry_count,
+                                              PALETTEENTRY *palette_entry) {
         return GetPaletteEntries(palette_handle,
                                  start,
                                  entry_count,
@@ -43,9 +43,9 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int palette::set_palette_entries(HPALETTE palette_handle,
-                                      unsigned int start,
-                                      unsigned int entry_count,
-                                      const PALETTEENTRY *palette_entry) {
+                                              unsigned int start,
+                                              unsigned int entry_count,
+                                              const PALETTEENTRY *palette_entry) {
         return SetPaletteEntries(palette_handle,
                                  start,
                                  entry_count,
@@ -53,9 +53,9 @@ namespace YanLib::ui::gdi {
     }
 
     unsigned int palette::get_system_palette_entries(HDC dc_handle,
-                                             unsigned int start,
-                                             unsigned int entry_count,
-                                             PALETTEENTRY *palette_entry) {
+                                                     unsigned int start,
+                                                     unsigned int entry_count,
+                                                     PALETTEENTRY *palette_entry) {
         return GetSystemPaletteEntries(dc_handle,
                                        start,
                                        entry_count,

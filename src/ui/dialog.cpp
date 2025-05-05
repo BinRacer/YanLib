@@ -38,7 +38,7 @@ namespace YanLib::ui {
     }
 
     INT_PTR dialog::create_dialog_indirect(HINSTANCE instance_handle,
-                                           const DLGTEMPLATE* dialog_template,
+                                           const DLGTEMPLATE *dialog_template,
                                            HWND hwnd_parent,
                                            DLGPROC dialog_func) {
         INT_PTR result = DialogBoxIndirectParamW(instance_handle,
@@ -53,7 +53,7 @@ namespace YanLib::ui {
     }
 
     INT_PTR dialog::create_dialog_indirect(HINSTANCE instance_handle,
-                                           const DLGTEMPLATE* dialog_template,
+                                           const DLGTEMPLATE *dialog_template,
                                            HWND hwnd_parent,
                                            DLGPROC dialog_func,
                                            LPARAM init_param) {
@@ -100,7 +100,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                                 const DLGTEMPLATE* dialog_template,
+                                                 const DLGTEMPLATE *dialog_template,
                                                  HWND hwnd_parent,
                                                  DLGPROC dialog_func) {
         HWND result = CreateDialogIndirectParamW(instance_handle,
@@ -115,7 +115,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                                 const DLGTEMPLATE* dialog_template,
+                                                 const DLGTEMPLATE *dialog_template,
                                                  HWND hwnd_parent,
                                                  DLGPROC dialog_func,
                                                  LPARAM init_param) {
@@ -237,13 +237,13 @@ namespace YanLib::ui {
     }
 
     std::pair<unsigned int, bool> dialog::get_dialog_item_int(HWND hwnd_dialog,
-                                                      int id_dialog_item,
-                                                      bool is_signed) {
+                                                              int id_dialog_item,
+                                                              bool is_signed) {
         int is_translated = 0;
         unsigned int result = GetDlgItemInt(hwnd_dialog,
-                                    id_dialog_item,
-                                    &is_translated,
-                                    is_signed ? TRUE : FALSE);
+                                            id_dialog_item,
+                                            &is_translated,
+                                            is_signed ? TRUE : FALSE);
         if (!is_translated) {
             error_code = GetLastError();
         }
@@ -265,13 +265,13 @@ namespace YanLib::ui {
     }
 
     unsigned int dialog::get_dialog_item_text(HWND hwnd_dialog,
-                                      int id_dialog_item,
-                                      wchar_t *text,
-                                      int cch_max) {
+                                              int id_dialog_item,
+                                              wchar_t *text,
+                                              int cch_max) {
         unsigned int result = GetDlgItemTextW(hwnd_dialog,
-                                      id_dialog_item,
-                                      text,
-                                      cch_max);
+                                              id_dialog_item,
+                                              text,
+                                              cch_max);
         if (!result) {
             error_code = GetLastError();
         }
@@ -368,7 +368,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool dialog::map_dialog_rect(HWND hwnd_dialog, RECT* rect) {
+    bool dialog::map_dialog_rect(HWND hwnd_dialog, RECT *rect) {
         if (!MapDialogRect(hwnd_dialog, rect)) {
             error_code = GetLastError();
             return false;

@@ -444,15 +444,15 @@ namespace YanLib::ui {
     }
 
     unsigned short window::cascade_windows(HWND hwnd_parent,
-                                 unsigned int how,
-                                 const RECT *rect,
-                                 unsigned int kids_count,
-                                 const HWND *kids) {
+                                           unsigned int how,
+                                           const RECT *rect,
+                                           unsigned int kids_count,
+                                           const HWND *kids) {
         unsigned short count = CascadeWindows(hwnd_parent,
-                                    how,
-                                    rect,
-                                    kids_count,
-                                    kids);
+                                              how,
+                                              rect,
+                                              kids_count,
+                                              kids);
         if (!count) {
             error_code = GetLastError();
         }
@@ -762,8 +762,8 @@ namespace YanLib::ui {
     }
 
     unsigned int window::get_window_module_file_name(HWND hwnd,
-                                             wchar_t *file_name,
-                                             unsigned int cch_size) {
+                                                     wchar_t *file_name,
+                                                     unsigned int cch_size) {
         return GetWindowModuleFileNameW(hwnd, file_name, cch_size);
     }
 
@@ -980,8 +980,8 @@ namespace YanLib::ui {
     }
 
     unsigned int window::real_get_window_class(HWND hwnd,
-                                       wchar_t *class_name,
-                                       unsigned int cch_size) {
+                                               wchar_t *class_name,
+                                               unsigned int cch_size) {
         unsigned int result = RealGetWindowClassW(hwnd, class_name, cch_size);
         if (!result) {
             error_code = GetLastError();
@@ -1038,10 +1038,10 @@ namespace YanLib::ui {
     }
 
     unsigned short window::tile_windows(HWND hwnd_parent,
-                              unsigned int how,
-                              const RECT *rect,
-                              unsigned int kids_num,
-                              const HWND *kids) {
+                                        unsigned int how,
+                                        const RECT *rect,
+                                        unsigned int kids_num,
+                                        const HWND *kids) {
         unsigned short result = TileWindows(hwnd_parent, how, rect, kids_num, kids);
         if (!result) {
             error_code = GetLastError();

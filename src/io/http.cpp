@@ -431,7 +431,7 @@ namespace YanLib::io {
         if (is_https) {
             do {
                 unsigned long flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-                              SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+                                      SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
                 if (!set_option(INTERNET_OPTION_SECURITY_FLAGS,
                                 &flags,
                                 sizeof(flags))) {
@@ -470,7 +470,7 @@ namespace YanLib::io {
         if (is_https) {
             do {
                 unsigned long flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
-                              SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+                                      SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
                 if (!set_option(INTERNET_OPTION_SECURITY_FLAGS,
                                 &flags,
                                 sizeof(flags))) {
@@ -651,7 +651,7 @@ namespace YanLib::io {
 
     // support http and https
     unsigned long http::download(const std::wstring &input_url,
-                         const wchar_t *file_name) {
+                                 const wchar_t *file_name) {
         unsigned long error = 0;
         http client(input_url);
         unsigned long content_length = 0;
@@ -708,7 +708,7 @@ namespace YanLib::io {
 
     // support http and https
     unsigned long http::upload(const std::wstring &input_url,
-                       const wchar_t *file_name) {
+                               const wchar_t *file_name) {
         unsigned long error = 0;
         http client(input_url);
         fs file;

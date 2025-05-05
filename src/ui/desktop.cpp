@@ -9,7 +9,7 @@ namespace YanLib::ui {
     HDESK desktop::create_desktop(const wchar_t *desktop_name,
                                   unsigned long flag,
                                   ACCESS_MASK desired_access,
-                                  SECURITY_ATTRIBUTES* security_attrs,
+                                  SECURITY_ATTRIBUTES *security_attrs,
                                   unsigned long heap_size) {
         HDESK result = CreateDesktopExW(desktop_name,
                                         nullptr,
@@ -119,7 +119,7 @@ namespace YanLib::ui {
     HWINSTA desktop::create_window_station(const wchar_t *window_station_name,
                                            unsigned long flag,
                                            ACCESS_MASK desired_access,
-                                           SECURITY_ATTRIBUTES* security_attrs) {
+                                           SECURITY_ATTRIBUTES *security_attrs) {
         HWINSTA result = CreateWindowStationW(window_station_name,
                                               flag,
                                               desired_access,
@@ -178,7 +178,7 @@ namespace YanLib::ui {
                                        int index,
                                        void *info,
                                        unsigned long len,
-                                       unsigned long* ret_len) {
+                                       unsigned long *ret_len) {
         if (!GetUserObjectInformationW(desktop_or_window_station_handle,
                                        index,
                                        info,

@@ -27,8 +27,8 @@ namespace YanLib::ui {
 
         bool get_message(MSG *msg,
                          HWND hwnd,
-                         unsigned int msg_filter_min,
-                         unsigned int msg_filter_max);
+                         uint32_t msg_filter_min,
+                         uint32_t msg_filter_max);
 
         LPARAM get_message_extra_info();
 
@@ -42,60 +42,60 @@ namespace YanLib::ui {
 
         bool peek_message(MSG *msg,
                           HWND hwnd,
-                          unsigned int msg_filter_min,
-                          unsigned int msg_filter_max,
-                          unsigned int remove_msg);
+                          uint32_t msg_filter_min,
+                          uint32_t msg_filter_max,
+                          uint32_t remove_msg);
 
         bool post_message(HWND hwnd,
-                          unsigned int msg,
+                          uint32_t msg,
                           WPARAM w_param,
                           LPARAM l_param);
 
-        void post_quit_message(int exit_code);
+        void post_quit_message(int32_t exit_code);
 
         bool post_thread_message(unsigned long tid,
-                                 unsigned int msg,
+                                 uint32_t msg,
                                  WPARAM w_param,
                                  LPARAM l_param);
 
-        bool message_beep(unsigned int type);
+        bool message_beep(uint32_t type);
 
-        unsigned int register_window_message(const wchar_t *message);
+        uint32_t register_window_message(const wchar_t *message);
 
         bool reply_message(LRESULT result);
 
         LRESULT send_dialog_item_message(HWND hwnd_dialog,
-                                         int id_dialog_item,
-                                         unsigned int msg,
+                                         int32_t id_dialog_item,
+                                         uint32_t msg,
                                          WPARAM w_param,
                                          LPARAM l_param);
 
         LRESULT send_message(HWND hwnd,
-                             unsigned int msg,
+                             uint32_t msg,
                              WPARAM w_param,
                              LPARAM l_param);
 
         bool send_message_callback(HWND hwnd,
-                                   unsigned int msg,
+                                   uint32_t msg,
                                    WPARAM w_param,
                                    LPARAM l_param,
                                    SENDASYNCPROC result_callback,
                                    ULONG_PTR data);
 
         LRESULT send_message_timeout(HWND hwnd,
-                                     unsigned int msg,
+                                     uint32_t msg,
                                      WPARAM w_param,
                                      LPARAM l_param,
-                                     unsigned int flag,
-                                     unsigned int timeout,
+                                     uint32_t flag,
+                                     uint32_t timeout,
                                      DWORD_PTR *result);
 
         bool send_notify_message(HWND hwnd,
-                                 unsigned int msg,
+                                 uint32_t msg,
                                  WPARAM w_param,
                                  LPARAM l_param);
 
-        bool skip_pointer_frame_messages(unsigned int pointer_id);
+        bool skip_pointer_frame_messages(uint32_t pointer_id);
 
         bool translate_message(const MSG *msg);
 
@@ -103,7 +103,7 @@ namespace YanLib::ui {
 
         LRESULT dispatch_message(const MSG *msg);
 
-        bool call_message_filter(MSG *msg, int code);
+        bool call_message_filter(MSG *msg, int32_t code);
 
         bool get_current_input_message_source(
             INPUT_MESSAGE_SOURCE *input_message_source);
@@ -118,36 +118,36 @@ namespace YanLib::ui {
 
         long broadcast_system_message(unsigned long flag,
                                       unsigned long *info,
-                                      unsigned int msg,
+                                      uint32_t msg,
                                       WPARAM w_param,
                                       LPARAM l_param);
 
         long broadcast_system_message(unsigned long flag,
                                       unsigned long *info,
-                                      unsigned int msg,
+                                      uint32_t msg,
                                       WPARAM w_param,
                                       LPARAM l_param,
                                       BSMINFO *bsm_info);
 
-        bool change_window_message_filter(unsigned int message, unsigned long flag);
+        bool change_window_message_filter(uint32_t message, unsigned long flag);
 
         bool change_window_message_filter(HWND hwnd,
-                                          unsigned int message,
+                                          uint32_t message,
                                           unsigned long action,
                                           CHANGEFILTERSTRUCT *change_filter_struct);
 
-        int message_box(HWND hwnd,
+        int32_t message_box(HWND hwnd,
                         const wchar_t *text,
                         const wchar_t *caption,
-                        unsigned int type);
+                        uint32_t type);
 
-        int message_box(HWND hwnd,
+        int32_t message_box(HWND hwnd,
                         const wchar_t *text,
                         const wchar_t *caption,
-                        unsigned int type,
-                        unsigned short language_id);
+                        uint32_t type,
+                        uint16_t language_id);
 
-        int message_box_indirect(const MSGBOXPARAMSW *msgbox_param);
+        int32_t message_box_indirect(const MSGBOXPARAMSW *msgbox_param);
 
 
         [[nodiscard]] unsigned long err_code() const;

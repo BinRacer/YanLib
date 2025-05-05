@@ -5,11 +5,11 @@
 #include "rect.h"
 
 namespace YanLib::ui::gdi {
-    int rect::fill_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
+    int32_t rect::fill_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
         return FillRect(dc_handle, rect, brush_handle);
     }
 
-    int rect::frame_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
+    int32_t rect::frame_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
         return FrameRect(dc_handle, rect, brush_handle);
     }
 
@@ -18,10 +18,10 @@ namespace YanLib::ui::gdi {
     }
 
     bool rect::set_rect(RECT *rect,
-                        int x_left,
-                        int y_top,
-                        int x_right,
-                        int y_bottom) {
+                        int32_t x_left,
+                        int32_t y_top,
+                        int32_t x_right,
+                        int32_t y_bottom) {
         return SetRect(rect, x_left, y_top, x_right, y_bottom);
     }
 
@@ -33,7 +33,7 @@ namespace YanLib::ui::gdi {
         return EqualRect(rect1, rect2);
     }
 
-    bool rect::inflate_rect(RECT *rect, int x, int y) {
+    bool rect::inflate_rect(RECT *rect, int32_t x, int32_t y) {
         return InflateRect(rect, x, y);
     }
 
@@ -47,7 +47,7 @@ namespace YanLib::ui::gdi {
         return IsRectEmpty(rect);
     }
 
-    bool rect::offset_rect(RECT *rect, int x, int y) {
+    bool rect::offset_rect(RECT *rect, int32_t x, int32_t y) {
         return OffsetRect(rect, x, y);
     }
 
@@ -80,7 +80,7 @@ namespace YanLib::ui::gdi {
     }
 
     bool rect::draw_animated_rects(HWND hwnd,
-                                   int animate_id,
+                                   int32_t animate_id,
                                    const RECT *rect_from,
                                    const RECT *rect_to) {
         return DrawAnimatedRects(hwnd, animate_id, rect_from, rect_to);
@@ -90,15 +90,15 @@ namespace YanLib::ui::gdi {
         return DrawFocusRect(dc_handle, rect);
     }
 
-    unsigned int rect::get_bounds_rect(HDC dc_handle,
+    uint32_t rect::get_bounds_rect(HDC dc_handle,
                                        RECT *rect,
-                                       unsigned int flag) {
+                                       uint32_t flag) {
         return GetBoundsRect(dc_handle, rect, flag);
     }
 
-    unsigned int rect::set_bounds_rect(HDC dc_handle,
+    uint32_t rect::set_bounds_rect(HDC dc_handle,
                                        const RECT *rect,
-                                       unsigned int flag) {
+                                       uint32_t flag) {
         return SetBoundsRect(dc_handle, rect, flag);
     }
 

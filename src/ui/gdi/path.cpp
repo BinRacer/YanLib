@@ -13,7 +13,7 @@ namespace YanLib::ui::gdi {
         return EndPath(dc_handle);
     }
 
-    int path::get_path(HDC dc_handle, POINT *point, uint8_t *type_array, int num) {
+    int32_t path::get_path(HDC dc_handle, POINT *point, uint8_t *type_array, int32_t num) {
         return GetPath(dc_handle, point, type_array, num);
     }
 

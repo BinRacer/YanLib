@@ -14,8 +14,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    unsigned int clipboard::register_clipboard_format(const wchar_t *format) {
-        unsigned int result = RegisterClipboardFormatW(format);
+    uint32_t clipboard::register_clipboard_format(const wchar_t *format) {
+        uint32_t result = RegisterClipboardFormatW(format);
         if (!result) {
             error_code = GetLastError();
         }
@@ -38,7 +38,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    HANDLE clipboard::get_clipboard_data(unsigned int format) {
+    HANDLE clipboard::get_clipboard_data(uint32_t format) {
         HANDLE result = GetClipboardData(format);
         if (!result) {
             error_code = GetLastError();
@@ -46,7 +46,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HANDLE clipboard::set_clipboard_data(unsigned int format, HANDLE mem_handle) {
+    HANDLE clipboard::set_clipboard_data(uint32_t format, HANDLE mem_handle) {
         HANDLE result = SetClipboardData(format, mem_handle);
         if (!result) {
             error_code = GetLastError();
@@ -54,10 +54,10 @@ namespace YanLib::ui {
         return result;
     }
 
-    int clipboard::get_clipboard_format_name(unsigned int format,
+    int32_t clipboard::get_clipboard_format_name(uint32_t format,
                                              wchar_t *format_name,
-                                             int cch_max) {
-        int result = GetClipboardFormatNameW(format, format_name, cch_max);
+                                             int32_t cch_max) {
+        int32_t result = GetClipboardFormatNameW(format, format_name, cch_max);
         if (!result) {
             error_code = GetLastError();
         }
@@ -92,18 +92,18 @@ namespace YanLib::ui {
         return result;
     }
 
-    int clipboard::get_priority_clipboard_format(unsigned int *format_priority_list,
-                                                 int formats) {
-        int result = GetPriorityClipboardFormat(format_priority_list, formats);
+    int32_t clipboard::get_priority_clipboard_format(uint32_t *format_priority_list,
+                                                 int32_t formats) {
+        int32_t result = GetPriorityClipboardFormat(format_priority_list, formats);
         if (result == -1) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    bool clipboard::get_updated_clipboard_formats(unsigned int *formats,
-                                                  unsigned int formats_count,
-                                                  unsigned int *formats_out) {
+    bool clipboard::get_updated_clipboard_formats(uint32_t *formats,
+                                                  uint32_t formats_count,
+                                                  uint32_t *formats_out) {
         if (!GetUpdatedClipboardFormats(formats,
                                         formats_count,
                                         formats_out)) {
@@ -113,7 +113,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool clipboard::is_clipboard_format_available(unsigned int format) {
+    bool clipboard::is_clipboard_format_available(uint32_t format) {
         if (!IsClipboardFormatAvailable(format)) {
             error_code = GetLastError();
             return false;
@@ -141,16 +141,16 @@ namespace YanLib::ui {
         return ChangeClipboardChain(hwnd_remove, hwnd_new_next);
     }
 
-    unsigned int clipboard::enum_clipboard_formats(unsigned int format) {
-        unsigned int result = EnumClipboardFormats(format);
+    uint32_t clipboard::enum_clipboard_formats(uint32_t format) {
+        uint32_t result = EnumClipboardFormats(format);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int clipboard::count_clipboard_formats() {
-        int result = CountClipboardFormats();
+    int32_t clipboard::count_clipboard_formats() {
+        int32_t result = CountClipboardFormats();
         if (!result) {
             error_code = GetLastError();
         }

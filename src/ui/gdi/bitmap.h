@@ -22,28 +22,28 @@ namespace YanLib::ui::gdi {
 
         ~bitmap() = default;
 
-        static HBITMAP create_bitmap(int width,
-                                     int height,
-                                     unsigned int planes,
-                                     unsigned int bit_count,
+        static HBITMAP create_bitmap(int32_t width,
+                                     int32_t height,
+                                     uint32_t planes,
+                                     uint32_t bit_count,
                                      const void *bits);
 
         static HBITMAP create_bitmap_indirect(const BITMAP *bitmap);
 
-        static HBITMAP create_compatible_bitmap(HDC dc_handle, int x, int y);
+        static HBITMAP create_compatible_bitmap(HDC dc_handle, int32_t x, int32_t y);
 
         static HBITMAP create_di_bitmap(HDC dc_handle,
                                         const BITMAPINFOHEADER *bitmap_info_header,
                                         unsigned long flag,
                                         const void *bits,
                                         const BITMAPINFO *bitmap_info,
-                                        unsigned int usage);
+                                        uint32_t usage);
 
         // std::pair<result, error_code>
         static std::pair<HBITMAP, unsigned long> create_dib_section(
             HDC dc_handle,
             const BITMAPINFO *bitmap_info,
-            unsigned int usage,
+            uint32_t usage,
             void **bits,
             HANDLE section_handle,
             unsigned long offset);
@@ -53,69 +53,69 @@ namespace YanLib::ui::gdi {
 
         // std::pair<result, error_code>
         static std::pair<bool, unsigned long> bit_blt(HDC dc_handle_dst,
-                                              int x,
-                                              int y,
-                                              int width,
-                                              int height,
+                                              int32_t x,
+                                              int32_t y,
+                                              int32_t width,
+                                              int32_t height,
                                               HDC dc_handle_src,
-                                              int x1,
-                                              int y1,
+                                              int32_t x1,
+                                              int32_t y1,
                                               unsigned long rop);
 
         static bool plg_blt(HDC dc_handle_dst,
                             const POINT *point,
                             HDC dc_handle_src,
-                            int x_src,
-                            int y_src,
-                            int width,
-                            int height,
+                            int32_t x_src,
+                            int32_t y_src,
+                            int32_t width,
+                            int32_t height,
                             HBITMAP bitmap_mask_handle,
-                            int x_mask,
-                            int y_mask);
+                            int32_t x_mask,
+                            int32_t y_mask);
 
         static bool mask_blt(HDC dc_handle_dst,
-                             int x_dst,
-                             int y_dst,
-                             int width,
-                             int height,
+                             int32_t x_dst,
+                             int32_t y_dst,
+                             int32_t width,
+                             int32_t height,
                              HDC dc_handle_src,
-                             int x_src,
-                             int y_src,
+                             int32_t x_src,
+                             int32_t y_src,
                              HBITMAP bitmap_mask_handle,
-                             int x_mask,
-                             int y_mask,
+                             int32_t x_mask,
+                             int32_t y_mask,
                              unsigned long rop);
 
         static bool stretch_blt(HDC dc_handle_dst,
-                                int x_dst,
-                                int y_dst,
-                                int width_dst,
-                                int height_dst,
+                                int32_t x_dst,
+                                int32_t y_dst,
+                                int32_t width_dst,
+                                int32_t height_dst,
                                 HDC dc_handle_src,
-                                int x_src,
-                                int y_src,
-                                int width_src,
-                                int height_src,
+                                int32_t x_src,
+                                int32_t y_src,
+                                int32_t width_src,
+                                int32_t height_src,
                                 unsigned long rop);
 
         static bool pat_blt(HDC dc_handle,
-                            int x,
-                            int y,
-                            int width,
-                            int height,
+                            int32_t x,
+                            int32_t y,
+                            int32_t width,
+                            int32_t height,
                             unsigned long rop);
 
         static bool transparent_blt(HDC dc_handle_dst,
-                                    int x_dst,
-                                    int y_dst,
-                                    int width_dst,
-                                    int height_dst,
+                                    int32_t x_dst,
+                                    int32_t y_dst,
+                                    int32_t width_dst,
+                                    int32_t height_dst,
                                     HDC dc_handle_src,
-                                    int x_src,
-                                    int y_src,
-                                    int width_src,
-                                    int height_src,
-                                    unsigned int transparent);
+                                    int32_t x_src,
+                                    int32_t y_src,
+                                    int32_t width_src,
+                                    int32_t height_src,
+                                    uint32_t transparent);
 
         static bool gradient_fill(HDC dc_handle,
                                   TRIVERTEX *vertex,
@@ -125,92 +125,92 @@ namespace YanLib::ui::gdi {
                                   unsigned long mode);
 
         static bool ext_flood_fill(HDC dc_handle,
-                                   int x,
-                                   int y,
+                                   int32_t x,
+                                   int32_t y,
                                    COLORREF color,
-                                   unsigned int type);
+                                   uint32_t type);
 
-        static int stretch_di_bits(HDC dc_handle,
-                                   int x_dst,
-                                   int y_dst,
-                                   int width_dst,
-                                   int height_dst,
-                                   int x_src,
-                                   int y_src,
-                                   int width_src,
-                                   int height_src,
+        static int32_t stretch_di_bits(HDC dc_handle,
+                                   int32_t x_dst,
+                                   int32_t y_dst,
+                                   int32_t width_dst,
+                                   int32_t height_dst,
+                                   int32_t x_src,
+                                   int32_t y_src,
+                                   int32_t width_src,
+                                   int32_t height_src,
                                    const void *bits,
                                    const BITMAPINFO *bitmap_info,
-                                   unsigned int usage,
+                                   uint32_t usage,
                                    unsigned long rop);
 
         static bool alpha_blend(HDC dc_handle_dst,
-                                int x_dst,
-                                int y_dst,
-                                int width_dst,
-                                int height_dst,
+                                int32_t x_dst,
+                                int32_t y_dst,
+                                int32_t width_dst,
+                                int32_t height_dst,
                                 HDC dc_handle_src,
-                                int x_src,
-                                int y_src,
-                                int width_src,
-                                int height_src,
+                                int32_t x_src,
+                                int32_t y_src,
+                                int32_t width_src,
+                                int32_t height_src,
                                 BLENDFUNCTION blend_function);
 
         static bool get_bitmap_dimension(HBITMAP bitmap_handle, SIZE *size);
 
         static bool set_bitmap_dimension(HBITMAP bitmap_handle,
-                                         int width,
-                                         int height,
+                                         int32_t width,
+                                         int32_t height,
                                          SIZE *size);
 
-        static unsigned int get_dib_color_table(HDC dc_handle,
-                                        unsigned int start_index,
-                                        unsigned int entries,
+        static uint32_t get_dib_color_table(HDC dc_handle,
+                                        uint32_t start_index,
+                                        uint32_t entries,
                                         RGBQUAD *buf);
 
-        static unsigned int set_dib_color_table(HDC dc_handle,
-                                        unsigned int start_index,
-                                        unsigned int entries,
+        static uint32_t set_dib_color_table(HDC dc_handle,
+                                        uint32_t start_index,
+                                        uint32_t entries,
                                         const RGBQUAD *buf);
 
-        static int get_di_bits(HDC dc_handle,
+        static int32_t get_di_bits(HDC dc_handle,
                                HBITMAP bitmap_handle,
-                               unsigned int start_line,
-                               unsigned int line_num,
+                               uint32_t start_line,
+                               uint32_t line_num,
                                void *bits,
                                BITMAPINFO *bitmap_info,
-                               unsigned int usage);
+                               uint32_t usage);
 
-        static int set_di_bits(HDC dc_handle,
+        static int32_t set_di_bits(HDC dc_handle,
                                HBITMAP bitmap_handle,
-                               unsigned int start_line,
-                               unsigned int line_num,
+                               uint32_t start_line,
+                               uint32_t line_num,
                                const void *bits,
                                const BITMAPINFO *bitmap_info,
-                               unsigned int color_use);
+                               uint32_t color_use);
 
-        static COLORREF get_pixel(HDC dc_handle, int x, int y);
+        static COLORREF get_pixel(HDC dc_handle, int32_t x, int32_t y);
 
-        static COLORREF set_pixel(HDC dc_handle, int x, int y, COLORREF color);
+        static COLORREF set_pixel(HDC dc_handle, int32_t x, int32_t y, COLORREF color);
 
-        static bool set_pixel_near(HDC dc_handle, int x, int y, COLORREF color);
+        static bool set_pixel_near(HDC dc_handle, int32_t x, int32_t y, COLORREF color);
 
-        static int get_stretch_blt_mode(HDC dc_handle);
+        static int32_t get_stretch_blt_mode(HDC dc_handle);
 
-        static int set_stretch_blt_mode(HDC dc_handle, int mode);
+        static int32_t set_stretch_blt_mode(HDC dc_handle, int32_t mode);
 
-        static int set_di_bits_to_device(HDC dc_handle,
-                                         int x_dst,
-                                         int y_dst,
+        static int32_t set_di_bits_to_device(HDC dc_handle,
+                                         int32_t x_dst,
+                                         int32_t y_dst,
                                          unsigned long width,
                                          unsigned long height,
-                                         int x_src,
-                                         int y_src,
-                                         unsigned int start_scan,
-                                         unsigned int line_num,
+                                         int32_t x_src,
+                                         int32_t y_src,
+                                         uint32_t start_scan,
+                                         uint32_t line_num,
                                          const void *bits,
                                          const BITMAPINFO *bitmap_info,
-                                         unsigned int color_use);
+                                         uint32_t color_use);
     };
 }
 #endif //BITMAP_H

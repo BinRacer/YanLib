@@ -35,27 +35,27 @@ namespace YanLib::ui {
         HMENU load_menu_indirect(const MENUTEMPLATEW *menu_template);
 
         bool append_menu(HMENU menu_handle,
-                         unsigned int flag,
+                         uint32_t flag,
                          UINT_PTR id_new_item,
                          const wchar_t *new_item);
 
         bool insert_menu(HMENU menu_handle,
-                         unsigned int position,
-                         unsigned int flag,
+                         uint32_t position,
+                         uint32_t flag,
                          UINT_PTR id_new_item,
                          const wchar_t *new_item);
 
         bool remove_menu(HMENU menu_handle,
-                         unsigned int position,
-                         unsigned int flag);
+                         uint32_t position,
+                         uint32_t flag);
 
         bool delete_menu(HMENU menu_handle,
-                         unsigned int position,
-                         unsigned int flag);
+                         uint32_t position,
+                         uint32_t flag);
 
         bool modify_menu(HMENU menu_handle,
-                         unsigned int position,
-                         unsigned int flag,
+                         uint32_t position,
+                         uint32_t flag,
                          UINT_PTR id_new_item,
                          const wchar_t *new_item);
 
@@ -72,15 +72,15 @@ namespace YanLib::ui {
                                long id_item,
                                MENUBARINFO *menu_bar_info);
 
-        unsigned int get_menu_state(HMENU menu_handle, unsigned int id, unsigned int flag);
+        uint32_t get_menu_state(HMENU menu_handle, uint32_t id, uint32_t flag);
 
-        int get_menu_string(HMENU menu_handle,
-                            unsigned int id_item,
+        int32_t get_menu_string(HMENU menu_handle,
+                            uint32_t id_item,
                             wchar_t *text,
-                            int cch_max,
-                            unsigned int flag);
+                            int32_t cch_max,
+                            uint32_t flag);
 
-        HMENU get_sub_menu(HMENU menu_handle, int pos);
+        HMENU get_sub_menu(HMENU menu_handle, int32_t pos);
 
         HMENU get_system_menu(HWND hwnd, bool revert);
 
@@ -95,27 +95,27 @@ namespace YanLib::ui {
         bool draw_menu_bar(HWND hwnd);
 
         bool insert_menu_item(HMENU menu_handle,
-                              unsigned int item,
+                              uint32_t item,
                               bool is_pos,
                               const MENUITEMINFOW *menu_item_info);
 
         bool get_menu_item_info(HMENU menu_handle,
-                                unsigned int item,
+                                uint32_t item,
                                 bool is_pos,
                                 MENUITEMINFOW *menu_item_info);
 
         bool set_menu_item_info(HMENU menu_handle,
-                                unsigned int item,
+                                uint32_t item,
                                 bool is_pos,
                                 const MENUITEMINFOW *menu_item_info);
 
 
-        unsigned int get_menu_default_item(HMENU menu_handle,
+        uint32_t get_menu_default_item(HMENU menu_handle,
                                            bool is_pos,
-                                           unsigned int flag);
+                                           uint32_t flag);
 
         bool set_menu_default_item(HMENU menu_handle,
-                                   unsigned int item,
+                                   uint32_t item,
                                    bool is_pos);
 
         unsigned long get_menu_context_help_id(HMENU menu_handle);
@@ -123,57 +123,57 @@ namespace YanLib::ui {
         bool set_menu_context_help_id(HMENU menu_handle, unsigned long param);
 
 
-        int get_menu_item_count(HMENU menu_handle);
+        int32_t get_menu_item_count(HMENU menu_handle);
 
-        unsigned int get_menu_item_id(HMENU menu_handle, int pos);
+        uint32_t get_menu_item_id(HMENU menu_handle, int32_t pos);
 
 
         bool get_menu_item_rect(HWND hwnd,
                                 HMENU menu_handle,
-                                unsigned int item,
+                                uint32_t item,
                                 RECT *rect);
 
         BOOL set_menu_item_bitmaps(HMENU menu_handle,
-                                   unsigned int position,
-                                   unsigned int flag,
+                                   uint32_t position,
+                                   uint32_t flag,
                                    HBITMAP bitmap_unchecked_handle,
                                    HBITMAP bitmap_checked_handle);
 
-        int menu_item_from_point(HWND hwnd,
+        int32_t menu_item_from_point(HWND hwnd,
                                  HMENU menu_handle,
                                  POINT point_screen);
 
         bool hilite_menu_item(HWND hwnd,
                               HMENU menu_handle,
-                              unsigned int id_hilite_item,
-                              unsigned int hilite);
+                              uint32_t id_hilite_item,
+                              uint32_t hilite);
 
         unsigned long check_menu_item(HMENU menu_handle,
-                                      unsigned int id_check_item,
-                                      unsigned int check);
+                                      uint32_t id_check_item,
+                                      uint32_t check);
 
         bool check_menu_radio_item(HMENU menu_handle,
-                                   unsigned int first,
-                                   unsigned int last,
-                                   unsigned int check,
-                                   unsigned int flag);
+                                   uint32_t first,
+                                   uint32_t last,
+                                   uint32_t check,
+                                   uint32_t flag);
 
-        int enable_menu_item(HMENU menu_handle,
-                             unsigned int id_enable_item,
-                             unsigned int enable);
+        int32_t enable_menu_item(HMENU menu_handle,
+                             uint32_t id_enable_item,
+                             uint32_t enable);
 
         bool track_popup_menu(HMENU menu_handle,
-                              unsigned int flag,
-                              int x,
-                              int y,
-                              int reserved,
+                              uint32_t flag,
+                              int32_t x,
+                              int32_t y,
+                              int32_t reserved,
                               HWND hwnd,
                               const RECT *rect);
 
         bool track_popup_menu(HMENU menu_handle,
-                              unsigned int flag,
-                              int x,
-                              int y,
+                              uint32_t flag,
+                              int32_t x,
+                              int32_t y,
                               HWND hwnd,
                               TPMPARAMS *tpm_params);
 

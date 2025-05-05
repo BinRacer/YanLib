@@ -46,7 +46,7 @@ namespace YanLib::ui::gdi {
     bool meta::play_enhance_meta_file_record(HDC dc_handle,
                                              HANDLETABLE *table_handle,
                                              const ENHMETARECORD *enh_meta_record,
-                                             unsigned int table_num) {
+                                             uint32_t table_num) {
         return PlayEnhMetaFileRecord(dc_handle,
                                      table_handle,
                                      enh_meta_record,
@@ -57,33 +57,33 @@ namespace YanLib::ui::gdi {
         return GetEnhMetaFileW(file_name);
     }
 
-    unsigned int meta::get_enhance_meta_file_header(HENHMETAFILE enh_meta_file_handle,
-                                                    unsigned int size,
+    uint32_t meta::get_enhance_meta_file_header(HENHMETAFILE enh_meta_file_handle,
+                                                    uint32_t size,
                                                     ENHMETAHEADER *buf) {
         return GetEnhMetaFileHeader(enh_meta_file_handle, size, buf);
     }
 
-    unsigned int meta::get_enhance_meta_file_description(HENHMETAFILE enh_meta_file_handle,
-                                                         unsigned int cch_size,
+    uint32_t meta::get_enhance_meta_file_description(HENHMETAFILE enh_meta_file_handle,
+                                                         uint32_t cch_size,
                                                          wchar_t *description) {
         return GetEnhMetaFileDescriptionW(enh_meta_file_handle,
                                           cch_size,
                                           description);
     }
 
-    unsigned int meta::get_enhance_meta_file_palette_entries(
+    uint32_t meta::get_enhance_meta_file_palette_entries(
         HENHMETAFILE enh_meta_file_handle,
-        unsigned int num,
+        uint32_t num,
         PALETTEENTRY *palette_entries) {
         return GetEnhMetaFilePaletteEntries(enh_meta_file_handle,
                                             num,
                                             palette_entries);
     }
 
-    unsigned int meta::get_win_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                              unsigned int size,
+    uint32_t meta::get_win_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
+                                              uint32_t size,
                                               uint8_t *buf,
-                                              int map_mode,
+                                              int32_t map_mode,
                                               HDC dc_handle) {
         return GetWinMetaFileBits(enh_meta_file_handle,
                                   size,
@@ -93,25 +93,25 @@ namespace YanLib::ui::gdi {
     }
 
     HENHMETAFILE meta::set_win_meta_file_bits(
-        unsigned int size,
+        uint32_t size,
         const uint8_t *buf,
         HDC dc_handle,
         const METAFILEPICT *meta_file_pict) {
         return SetWinMetaFileBits(size, buf, dc_handle, meta_file_pict);
     }
 
-    unsigned int meta::get_enhance_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                                  unsigned int size,
+    uint32_t meta::get_enhance_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
+                                                  uint32_t size,
                                                   uint8_t *buf) {
         return GetEnhMetaFileBits(enh_meta_file_handle, size, buf);
     }
 
-    HENHMETAFILE meta::set_enhance_meta_file_bits(unsigned int size,
+    HENHMETAFILE meta::set_enhance_meta_file_bits(uint32_t size,
                                                   const uint8_t *buf) {
         return SetEnhMetaFileBits(size, buf);
     }
 
-    bool meta::gdi_comment(HDC dc_handle, unsigned int size, const uint8_t *buf) {
+    bool meta::gdi_comment(HDC dc_handle, uint32_t size, const uint8_t *buf) {
         return GdiComment(dc_handle, size, buf);
     }
 }

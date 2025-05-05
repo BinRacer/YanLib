@@ -27,14 +27,14 @@ namespace YanLib::ui::gdi {
         return GetNearestColor(dc_handle, color);
     }
 
-    unsigned int palette::get_nearest_palette_index(HPALETTE palette_handle,
+    uint32_t palette::get_nearest_palette_index(HPALETTE palette_handle,
                                                     COLORREF color) {
         return GetNearestPaletteIndex(palette_handle, color);
     }
 
-    unsigned int palette::get_palette_entries(HPALETTE palette_handle,
-                                              unsigned int start,
-                                              unsigned int entry_count,
+    uint32_t palette::get_palette_entries(HPALETTE palette_handle,
+                                              uint32_t start,
+                                              uint32_t entry_count,
                                               PALETTEENTRY *palette_entry) {
         return GetPaletteEntries(palette_handle,
                                  start,
@@ -42,9 +42,9 @@ namespace YanLib::ui::gdi {
                                  palette_entry);
     }
 
-    unsigned int palette::set_palette_entries(HPALETTE palette_handle,
-                                              unsigned int start,
-                                              unsigned int entry_count,
+    uint32_t palette::set_palette_entries(HPALETTE palette_handle,
+                                              uint32_t start,
+                                              uint32_t entry_count,
                                               const PALETTEENTRY *palette_entry) {
         return SetPaletteEntries(palette_handle,
                                  start,
@@ -52,9 +52,9 @@ namespace YanLib::ui::gdi {
                                  palette_entry);
     }
 
-    unsigned int palette::get_system_palette_entries(HDC dc_handle,
-                                                     unsigned int start,
-                                                     unsigned int entry_count,
+    uint32_t palette::get_system_palette_entries(HDC dc_handle,
+                                                     uint32_t start,
+                                                     uint32_t entry_count,
                                                      PALETTEENTRY *palette_entry) {
         return GetSystemPaletteEntries(dc_handle,
                                        start,
@@ -62,11 +62,11 @@ namespace YanLib::ui::gdi {
                                        palette_entry);
     }
 
-    unsigned int palette::get_system_palette_use(HDC dc_handle) {
+    uint32_t palette::get_system_palette_use(HDC dc_handle) {
         return GetSystemPaletteUse(dc_handle);
     }
 
-    unsigned int palette::set_system_palette_use(HDC dc_handle, unsigned int use) {
+    uint32_t palette::set_system_palette_use(HDC dc_handle, uint32_t use) {
         return SetSystemPaletteUse(dc_handle, use);
     }
 
@@ -87,8 +87,8 @@ namespace YanLib::ui::gdi {
     }
 
     bool palette::animate_palette(HPALETTE palette_handle,
-                                  unsigned int start,
-                                  unsigned int entry_count,
+                                  uint32_t start,
+                                  uint32_t entry_count,
                                   const PALETTEENTRY *palette_entry) {
         return AnimatePalette(palette_handle,
                               start,
@@ -96,11 +96,11 @@ namespace YanLib::ui::gdi {
                               palette_entry);
     }
 
-    unsigned int palette::realize_palette(HDC dc_handle) {
+    uint32_t palette::realize_palette(HDC dc_handle) {
         return RealizePalette(dc_handle);
     }
 
-    bool palette::resize_palette(HPALETTE palette_handle, unsigned int num) {
+    bool palette::resize_palette(HPALETTE palette_handle, uint32_t num) {
         return ResizePalette(palette_handle, num);
     }
 }

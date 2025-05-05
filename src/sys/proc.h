@@ -113,12 +113,12 @@ namespace YanLib::sys {
             void *env = nullptr,
             const wchar_t *curr_dir = nullptr);
 
-        bool win_exec(const char *cmdline, unsigned int show_flag = SW_SHOWDEFAULT);
+        bool win_exec(const char *cmdline, uint32_t show_flag = SW_SHOWDEFAULT);
 
         bool shell_exec(const wchar_t *file_name,
                         const wchar_t *params = nullptr,
                         const wchar_t *dir = nullptr,
-                        int show_flag = SW_SHOWDEFAULT,
+                        int32_t show_flag = SW_SHOWDEFAULT,
                         HWND hwnd = nullptr,
                         const wchar_t *operation = nullptr);
 
@@ -148,9 +148,9 @@ namespace YanLib::sys {
         unsigned long handle_to_pid(HANDLE proc_handle);
 
 
-        bool kill(HANDLE proc_handle, unsigned int exit_code);
+        bool kill(HANDLE proc_handle, uint32_t exit_code);
 
-        void exit(unsigned int exit_code);
+        void exit(uint32_t exit_code);
 
         unsigned long exit_status(HANDLE proc_handle);
 
@@ -251,9 +251,9 @@ namespace YanLib::sys {
 
         bool set_priority(HANDLE proc_handle, unsigned long priority);
 
-        int get_thread_priority(HANDLE thread_handle);
+        int32_t get_thread_priority(HANDLE thread_handle);
 
-        bool set_thread_priority(HANDLE thread_handle, int priority);
+        bool set_thread_priority(HANDLE thread_handle, int32_t priority);
 
         unsigned long handle_count(HANDLE proc_handle);
 
@@ -292,8 +292,8 @@ namespace YanLib::sys {
                                DWORD_PTR proc_affinity_mask);
 
         bool get_group_affinity(HANDLE proc_handle,
-                                unsigned short *group_count,
-                                unsigned short *group_array);
+                                uint16_t *group_count,
+                                uint16_t *group_array);
 
         bool io_counters(HANDLE proc_handle,
                          IO_COUNTERS *io_counters);
@@ -335,7 +335,7 @@ namespace YanLib::sys {
                                   size_t max_working_set_size);
 
         bool get_processor_system_cycle_time(
-            unsigned short group,
+            uint16_t group,
             SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION *buffer,
             unsigned long *ret_len);
 
@@ -355,7 +355,7 @@ namespace YanLib::sys {
                                       unsigned long flag);
 
         bool all_thread_cycle_time(HANDLE proc_handle,
-                                   unsigned long long *cycle_time);
+                                   uint64_t *cycle_time);
 
         bool set_restriction_exemption(bool is_enable_exemption);
 

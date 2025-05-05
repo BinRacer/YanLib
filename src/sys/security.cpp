@@ -265,7 +265,7 @@ namespace YanLib::sys {
         helper::autoclean<HANDLE> token_handle(nullptr);
         helper::autoclean<HANDLE> filter_token_handle(nullptr);
         TOKEN_ELEVATION_TYPE token_type = TokenElevationTypeDefault;
-        int is_admin = 0;
+        int32_t is_admin = 0;
         unsigned long size = 0;
         do {
             if (!OpenProcessToken(process_handle,

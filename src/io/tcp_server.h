@@ -17,7 +17,7 @@ namespace YanLib::io {
         volatile bool is_ipv6 = false;
         SOCKET server_socket = INVALID_SOCKET;
         volatile bool init_done = false;
-        int error_code = {};
+        int32_t error_code = {};
         sync::rwlock rwlock = {};
         std::vector<SOCKET> client_sockets = {};
 
@@ -41,15 +41,15 @@ namespace YanLib::io {
         bool bind(const char *local_ip = "0.0.0.0",
                   uint16_t local_port = 8080);
 
-        bool listen(int backlog = SOMAXCONN);
+        bool listen(int32_t backlog = SOMAXCONN);
 
-        SOCKET accept(sockaddr *addr, int *addrlen);
+        SOCKET accept(sockaddr *addr, int32_t *addrlen);
 
-        int read(SOCKET client_socket, char *buf,
-                 int len, int flags = 0);
+        int32_t read(SOCKET client_socket, char *buf,
+                 int32_t len, int32_t flags = 0);
 
-        int write(SOCKET client_socket, const char *buf,
-                  int len, int flags = 0);
+        int32_t write(SOCKET client_socket, const char *buf,
+                  int32_t len, int32_t flags = 0);
 
         std::string read_string(SOCKET client_socket, int32_t buffer_size = 1024);
 
@@ -59,11 +59,11 @@ namespace YanLib::io {
 
         std::wstring read_wstring_to_end(SOCKET client_socket);
 
-        int write_string(SOCKET client_socket, std::string &str);
+        int32_t write_string(SOCKET client_socket, std::string &str);
 
-        int write_wstring(SOCKET client_socket, std::wstring &wstr);
+        int32_t write_wstring(SOCKET client_socket, std::wstring &wstr);
 
-        [[nodiscard]] int err_code() const;
+        [[nodiscard]] int32_t err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

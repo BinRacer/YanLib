@@ -16,7 +16,7 @@ namespace YanLib::io {
         volatile bool is_ipv6 = false;
         SOCKET client_socket = INVALID_SOCKET;
         volatile bool init_done = false;
-        int error_code = 0;
+        int32_t error_code = 0;
 
         tcp_client() = default;
 
@@ -38,9 +38,9 @@ namespace YanLib::io {
         bool connect(const char *remote_ip = "127.0.0.1",
                      uint16_t remote_port = 8080);
 
-        int read(char *buf, int len, int flags = 0);
+        int32_t read(char *buf, int32_t len, int32_t flags = 0);
 
-        int write(const char *buf, int len, int flags = 0);
+        int32_t write(const char *buf, int32_t len, int32_t flags = 0);
 
         std::string read_string(int32_t buffer_size = 1024);
 
@@ -50,11 +50,11 @@ namespace YanLib::io {
 
         std::wstring read_wstring_to_end();
 
-        int write_string(std::string &str);
+        int32_t write_string(std::string &str);
 
-        int write_wstring(std::wstring &wstr);
+        int32_t write_wstring(std::wstring &wstr);
 
-        [[nodiscard]] int err_code() const;
+        [[nodiscard]] int32_t err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

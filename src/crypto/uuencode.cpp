@@ -18,9 +18,9 @@ namespace YanLib::crypto {
 
             output.push_back(static_cast<uint8_t>(n_actual + 32));
 
-            for (int i = 0; i < padded_len; i += 3) {
+            for (int32_t i = 0; i < padded_len; i += 3) {
                 uint8_t trio[3] = {};
-                for (int j = 0; j < 3; ++j) {
+                for (int32_t j = 0; j < 3; ++j) {
                     size_t pos = bytes_processed + i + j;
                     trio[j] = (pos < buff_len) ? data[pos] : 0;
                 }
@@ -66,19 +66,19 @@ namespace YanLib::crypto {
             }
 
             uint8_t n_char = data[in_index];
-            int n_actual = (n_char - 32) & 0x3F;
+            int32_t n_actual = (n_char - 32) & 0x3F;
 
             if (n_actual == 0) break;
             if (n_actual > 45) return {};
 
-            int expected_chars = ((n_actual + 2) / 3) * 4;
+            int32_t expected_chars = ((n_actual + 2) / 3) * 4;
             size_t data_start = in_index + 1;
             size_t data_end = data_start + expected_chars;
 
             if (data_end > line_end) return {};
 
             size_t output_before = output.size();
-            for (int i = 0; i < expected_chars; i += 4) {
+            for (int32_t i = 0; i < expected_chars; i += 4) {
                 if (data_start + i + 3 >= data.size()) return {};
 
                 uint8_t c1 = data[data_start + i];

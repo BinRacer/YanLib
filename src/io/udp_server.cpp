@@ -84,10 +84,10 @@ namespace YanLib::io {
         }
     }
 
-    int udp_server::read(char *buf, int len,
-                         int flags,
-                         sockaddr *from, int *fromlen) {
-        int number_of_bytes = recvfrom(server_socket,
+    int32_t udp_server::read(char *buf, int32_t len,
+                         int32_t flags,
+                         sockaddr *from, int32_t *fromlen) {
+        int32_t number_of_bytes = recvfrom(server_socket,
                                        buf, len,
                                        flags,
                                        from, fromlen);
@@ -97,10 +97,10 @@ namespace YanLib::io {
         return number_of_bytes;
     }
 
-    int udp_server::write(const char *buf, int len,
-                          int flags,
-                          const sockaddr *to, int tolen) {
-        int number_of_bytes = sendto(server_socket,
+    int32_t udp_server::write(const char *buf, int32_t len,
+                          int32_t flags,
+                          const sockaddr *to, int32_t tolen) {
+        int32_t number_of_bytes = sendto(server_socket,
                                      buf, len,
                                      flags,
                                      to, tolen);
@@ -110,13 +110,13 @@ namespace YanLib::io {
         return number_of_bytes;
     }
 
-    int udp_server::read(char *buf, int len,
+    int32_t udp_server::read(char *buf, int32_t len,
                          std::string &client_ip,
                          uint16_t &client_port) {
         if (is_ipv6) {
             sockaddr_in6 client_addr{};
-            int client_size = sizeof (client_addr);
-            int number_of_bytes = recvfrom(server_socket,
+            int32_t client_size = sizeof (client_addr);
+            int32_t number_of_bytes = recvfrom(server_socket,
                                            buf, len,
                                            0,
                                            reinterpret_cast<sockaddr *>(
@@ -135,8 +135,8 @@ namespace YanLib::io {
             return number_of_bytes;
         } else {
             sockaddr_in client_addr{};
-            int client_size = sizeof (client_addr);
-            int number_of_bytes = recvfrom(server_socket,
+            int32_t client_size = sizeof (client_addr);
+            int32_t number_of_bytes = recvfrom(server_socket,
                                            buf,
                                            len,
                                            0,
@@ -158,7 +158,7 @@ namespace YanLib::io {
         }
     }
 
-    int udp_server::write(char *buf, int len,
+    int32_t udp_server::write(char *buf, int32_t len,
                           std::string &client_ip,
                           uint16_t &client_port) {
         if (is_ipv6) {
@@ -170,7 +170,7 @@ namespace YanLib::io {
                           &addr.sin6_addr) != 1) {
                 error_code = WSAGetLastError();
             }
-            int number_of_bytes = sendto(server_socket,
+            int32_t number_of_bytes = sendto(server_socket,
                                          buf,
                                          len,
                                          0,
@@ -189,7 +189,7 @@ namespace YanLib::io {
                           &addr.sin_addr) != 1) {
                 error_code = WSAGetLastError();
             }
-            int number_of_bytes = sendto(server_socket,
+            int32_t number_of_bytes = sendto(server_socket,
                                          buf, len,
                                          0,
                                          reinterpret_cast<sockaddr *>(&addr),
@@ -208,7 +208,7 @@ namespace YanLib::io {
             buffer_size = 1024;
         }
         std::string raw_data(buffer_size, '\0');
-        int bytes_read = read(raw_data.data(),
+        int32_t bytes_read = read(raw_data.data(),
                               buffer_size,
                               client_ip,
                               client_port);
@@ -239,7 +239,7 @@ namespace YanLib::io {
         memset(buf, 0, buffer_size);
         std::string raw_data;
         raw_data.reserve(buffer_size);
-        int bytes_read = 0;
+        int32_t bytes_read = 0;
         do {
             bytes_read = read(buf,
                               buffer_size,
@@ -264,7 +264,7 @@ namespace YanLib::io {
             read_string_to_end(client_ip, client_port));
     }
 
-    int udp_server::write_string(std::string &str,
+    int32_t udp_server::write_string(std::string &str,
                                  std::string &client_ip,
                                  uint16_t &client_port) {
         if (str.empty()) {
@@ -273,7 +273,7 @@ namespace YanLib::io {
         return write(str.data(), str.size(), client_ip, client_port);
     }
 
-    int udp_server::write_wstring(std::wstring &wstr,
+    int32_t udp_server::write_wstring(std::wstring &wstr,
                                   std::string &client_ip,
                                   uint16_t &client_port) {
         if (wstr.empty()) {
@@ -283,7 +283,7 @@ namespace YanLib::io {
         return write_string(raw_data, client_ip, client_port);
     }
 
-    int udp_server::err_code() const {
+    int32_t udp_server::err_code() const {
         return error_code;
     }
 

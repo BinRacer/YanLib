@@ -26,8 +26,8 @@ namespace YanLib::ui {
         ~icon() = default;
 
         HICON create_icon(HINSTANCE instance_handle,
-                          int width,
-                          int height,
+                          int32_t width,
+                          int32_t height,
                           uint8_t planes,
                           uint8_t bits_pixel,
                           const uint8_t *and_bits,
@@ -42,9 +42,9 @@ namespace YanLib::ui {
                                         unsigned long res_size,
                                         bool is_icon,
                                         unsigned long version,
-                                        int desired_width,
-                                        int desired_height,
-                                        unsigned int flag);
+                                        int32_t desired_width,
+                                        int32_t desired_height,
+                                        uint32_t flag);
 
         HICON create_icon_indirect(ICONINFO *icon_info);
 
@@ -52,17 +52,17 @@ namespace YanLib::ui {
 
         HICON copy_icon(HICON icon_handle);
 
-        bool draw_icon(HDC dc_handle, int x, int y, HICON icon_handle);
+        bool draw_icon(HDC dc_handle, int32_t x, int32_t y, HICON icon_handle);
 
         bool draw_icon(HDC dc_handle,
-                       int x_left,
-                       int y_top,
+                       int32_t x_left,
+                       int32_t y_top,
                        HICON icon_handle,
-                       int cx_width,
-                       int cy_width,
-                       unsigned int step_if_ani_cur,
+                       int32_t cx_width,
+                       int32_t cy_width,
+                       uint32_t step_if_ani_cur,
                        HBRUSH hbr_flicker_free_draw,
-                       unsigned int flag);
+                       uint32_t flag);
 
         bool destroy_icon(HICON icon_handle);
 
@@ -70,22 +70,22 @@ namespace YanLib::ui {
 
         bool get_icon_info(HICON icon_handle, ICONINFOEXW *icon_info);
 
-        int lookup_icon_id_from_directory(uint8_t *res_buf, bool is_icon);
+        int32_t lookup_icon_id_from_directory(uint8_t *res_buf, bool is_icon);
 
-        int lookup_icon_id_from_directory(uint8_t *res_buf,
+        int32_t lookup_icon_id_from_directory(uint8_t *res_buf,
                                           bool is_icon,
-                                          int desired_width,
-                                          int desired_height,
-                                          unsigned int flag);
+                                          int32_t desired_width,
+                                          int32_t desired_height,
+                                          uint32_t flag);
 
-        unsigned int private_extract_icons(const wchar_t *file_name,
-                                           int icon_index,
-                                           int icon_width,
-                                           int icon_height,
+        uint32_t private_extract_icons(const wchar_t *file_name,
+                                           int32_t icon_index,
+                                           int32_t icon_width,
+                                           int32_t icon_height,
                                            HICON *icon_handle,
-                                           unsigned int *icon_id,
-                                           unsigned int icon_count,
-                                           unsigned int flag);
+                                           uint32_t *icon_id,
+                                           uint32_t icon_count,
+                                           uint32_t flag);
 
         [[nodiscard]] unsigned long err_code() const;
 

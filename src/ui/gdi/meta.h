@@ -49,45 +49,45 @@ namespace YanLib::ui::gdi {
             HDC dc_handle,
             HANDLETABLE *table_handle,
             const ENHMETARECORD *enh_meta_record,
-            unsigned int table_num);
+            uint32_t table_num);
 
         static HENHMETAFILE get_enhance_meta_file(const wchar_t *file_name);
 
-        static unsigned int get_enhance_meta_file_header(HENHMETAFILE enh_meta_file_handle,
-                                                         unsigned int size,
+        static uint32_t get_enhance_meta_file_header(HENHMETAFILE enh_meta_file_handle,
+                                                         uint32_t size,
                                                          ENHMETAHEADER *buf);
 
-        static unsigned int get_enhance_meta_file_description(
+        static uint32_t get_enhance_meta_file_description(
             HENHMETAFILE enh_meta_file_handle,
-            unsigned int cch_size,
+            uint32_t cch_size,
             wchar_t *description);
 
-        static unsigned int get_enhance_meta_file_palette_entries(
+        static uint32_t get_enhance_meta_file_palette_entries(
             HENHMETAFILE enh_meta_file_handle,
-            unsigned int num,
+            uint32_t num,
             PALETTEENTRY *palette_entries);
 
-        static unsigned int get_win_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                                   unsigned int size,
+        static uint32_t get_win_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
+                                                   uint32_t size,
                                                    uint8_t *buf,
-                                                   int map_mode,
+                                                   int32_t map_mode,
                                                    HDC dc_handle);
 
         static HENHMETAFILE set_win_meta_file_bits(
-            unsigned int size,
+            uint32_t size,
             const uint8_t *buf,
             HDC dc_handle,
             const METAFILEPICT *meta_file_pict);
 
-        static unsigned int get_enhance_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
-                                                       unsigned int size,
+        static uint32_t get_enhance_meta_file_bits(HENHMETAFILE enh_meta_file_handle,
+                                                       uint32_t size,
                                                        uint8_t *buf);
 
-        static HENHMETAFILE set_enhance_meta_file_bits(unsigned int size,
+        static HENHMETAFILE set_enhance_meta_file_bits(uint32_t size,
                                                        const uint8_t *buf);
 
         static bool gdi_comment(HDC dc_handle,
-                                unsigned int size,
+                                uint32_t size,
                                 const uint8_t *buf);
     };
 }

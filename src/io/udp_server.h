@@ -15,7 +15,7 @@ namespace YanLib::io {
         volatile bool is_ipv6 = false;
         SOCKET server_socket = INVALID_SOCKET;
         volatile bool init_done = false;
-        int error_code = 0;
+        int32_t error_code = 0;
 
         udp_server() = default;
 
@@ -37,18 +37,18 @@ namespace YanLib::io {
         bool bind(const char *local_ip = "0.0.0.0",
                   uint16_t local_port = 8080);
 
-        int read(char *buf, int len,
-                 int flags,
-                 sockaddr *from, int *fromlen);
+        int32_t read(char *buf, int32_t len,
+                 int32_t flags,
+                 sockaddr *from, int32_t *fromlen);
 
-        int write(const char *buf, int len,
-                  int flags,
-                  const sockaddr *to, int tolen);
+        int32_t write(const char *buf, int32_t len,
+                  int32_t flags,
+                  const sockaddr *to, int32_t tolen);
 
-        int read(char *buf, int len,
+        int32_t read(char *buf, int32_t len,
                  std::string &client_ip, uint16_t &client_port);
 
-        int write(char *buf, int len,
+        int32_t write(char *buf, int32_t len,
                   std::string &client_ip, uint16_t &client_port);
 
         std::string read_string(std::string &client_ip,
@@ -65,13 +65,13 @@ namespace YanLib::io {
         std::wstring read_wstring_to_end(std::string &client_ip,
                                          uint16_t &client_port);
 
-        int write_string(std::string &str, std::string &client_ip,
+        int32_t write_string(std::string &str, std::string &client_ip,
                          uint16_t &client_port);
 
-        int write_wstring(std::wstring &wstr, std::string &client_ip,
+        int32_t write_wstring(std::wstring &wstr, std::string &client_ip,
                           uint16_t &client_port);
 
-        [[nodiscard]] int err_code() const;
+        [[nodiscard]] int32_t err_code() const;
 
         [[nodiscard]] std::string err_string() const;
 

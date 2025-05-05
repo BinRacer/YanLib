@@ -11,7 +11,7 @@ namespace YanLib::io {
     class completion_port {
     private:
         HANDLE iocp = nullptr;
-        int max_concurrent_threads = 0;
+        int32_t max_concurrent_threads = 0;
         unsigned long error_code = 0;
 
         completion_port() = default;
@@ -25,7 +25,7 @@ namespace YanLib::io {
 
         completion_port &operator=(completion_port &&other) = delete;
 
-        explicit completion_port(int max_concurrency = 0);
+        explicit completion_port(int32_t max_concurrency = 0);
 
         ~completion_port();
 

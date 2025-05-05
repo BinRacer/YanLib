@@ -13,14 +13,14 @@ namespace YanLib::crypto {
         if (data.empty()) return {};
         std::vector<uint8_t> encoded;
         encoded.reserve(data.size());
-        unsigned int b = 0;
-        int n = 0;
+        uint32_t b = 0;
+        int32_t n = 0;
         for (auto byte: data) {
-            b |= static_cast<unsigned int>(byte) << n;
+            b |= static_cast<uint32_t>(byte) << n;
             n += 8;
 
             while (n >= 13) {
-                unsigned int v = b & 0x1FFF;
+                uint32_t v = b & 0x1FFF;
                 if (v > 88) {
                     b >>= 13;
                     n -= 13;
@@ -51,8 +51,8 @@ namespace YanLib::crypto {
                 "0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~\"";
         if (data.empty()) return {};
 
-        std::vector<int> reverse_table(256, -1);
-        for (int i = 0; i < 91; ++i) {
+        std::vector<int32_t> reverse_table(256, -1);
+        for (int32_t i = 0; i < 91; ++i) {
             reverse_table[BASE91_CHARS[i]] = i;
         }
 
@@ -60,11 +60,11 @@ namespace YanLib::crypto {
         decoded.reserve(data.size() * 3 / 4);
 
         uint32_t buffer = 0;
-        int bits_count = 0;
-        int value = -1;
+        int32_t bits_count = 0;
+        int32_t value = -1;
 
         for (auto c: data) {
-            const int idx = reverse_table[c];
+            const int32_t idx = reverse_table[c];
             if (idx == -1) continue;
 
             if (value < 0) {

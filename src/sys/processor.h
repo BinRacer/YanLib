@@ -25,9 +25,9 @@ namespace YanLib::sys {
 
         ~processor() = default;
 
-        unsigned long active_count(unsigned short group_number = ALL_PROCESSOR_GROUPS);
+        unsigned long active_count(uint16_t group_number = ALL_PROCESSOR_GROUPS);
 
-        unsigned short active_group_count();
+        uint16_t active_group_count();
 
         unsigned long number();
 
@@ -40,16 +40,16 @@ namespace YanLib::sys {
                         SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *buffer,
                         unsigned long *ret_len);
 
-        unsigned long max_count(unsigned short GroupNumber);
+        unsigned long max_count(uint16_t GroupNumber);
 
-        unsigned short max_group_count();
+        uint16_t max_group_count();
 
         bool idle_cycle_time(unsigned long *buffer_length,
-                             unsigned long long *processor_idle_cycle_time);
+                             uint64_t *processor_idle_cycle_time);
 
-        bool idle_cycle_time(unsigned short group,
+        bool idle_cycle_time(uint16_t group,
                              unsigned long *buffer_length,
-                             unsigned long long *processor_idle_cycle_time);
+                             uint64_t *processor_idle_cycle_time);
 
         [[nodiscard]] unsigned long err_code() const;
 

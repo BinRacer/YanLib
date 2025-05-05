@@ -22,23 +22,23 @@ namespace YanLib::ui::gdi {
 
         ~rect() = default;
 
-        static int fill_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle);
+        static int32_t fill_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle);
 
-        static int frame_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle);
+        static int32_t frame_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle);
 
         static bool invert_rect(HDC dc_handle, const RECT *rect);
 
         static bool set_rect(RECT *rect,
-                             int x_left,
-                             int y_top,
-                             int x_right,
-                             int y_bottom);
+                             int32_t x_left,
+                             int32_t y_top,
+                             int32_t x_right,
+                             int32_t y_bottom);
 
         static bool copy_rect(RECT *rect_dst, const RECT *rect_src);
 
         static bool equal_rect(const RECT *rect1, const RECT *rect2);
 
-        static bool inflate_rect(RECT *rect, int x, int y);
+        static bool inflate_rect(RECT *rect, int32_t x, int32_t y);
 
         static bool intersect_rect(RECT *rect_dst,
                                    const RECT *rect_src1,
@@ -46,7 +46,7 @@ namespace YanLib::ui::gdi {
 
         static bool is_rect_empty(const RECT *rect);
 
-        static bool offset_rect(RECT *rect, int x, int y);
+        static bool offset_rect(RECT *rect, int32_t x, int32_t y);
 
         static bool point_in_rect(const RECT *rect, POINT point);
 
@@ -65,19 +65,19 @@ namespace YanLib::ui::gdi {
         static bool invalidate_rect(HWND hwnd, const RECT *rect, bool is_erase);
 
         static bool draw_animated_rects(HWND hwnd,
-                                        int animate_id,
+                                        int32_t animate_id,
                                         const RECT *rect_from,
                                         const RECT *rect_to);
 
         static bool draw_focus_rect(HDC dc_handle, const RECT *rect);
 
-        static unsigned int get_bounds_rect(HDC dc_handle,
+        static uint32_t get_bounds_rect(HDC dc_handle,
                                             RECT *rect,
-                                            unsigned int flag);
+                                            uint32_t flag);
 
-        static unsigned int set_bounds_rect(HDC dc_handle,
+        static uint32_t set_bounds_rect(HDC dc_handle,
                                             const RECT *rect,
-                                            unsigned int flag);
+                                            uint32_t flag);
 
         static bool get_update_rect(HWND hwnd,
                                     RECT *rect,

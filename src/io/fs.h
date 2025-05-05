@@ -173,7 +173,7 @@ namespace YanLib::io {
 
         bool set_attr(const wchar_t *file_name, unsigned long attr);
 
-        unsigned int get_drive_type(const wchar_t *path_name);
+        uint32_t get_drive_type(const wchar_t *path_name);
 
         std::wstring get_volume_path_name(const wchar_t *file_name);
 
@@ -189,7 +189,7 @@ namespace YanLib::io {
 
         std::wstring get_temp_file_name(const wchar_t *path_name,
                                         const wchar_t *prefix = nullptr,
-                                        unsigned int unique = 0);
+                                        uint32_t unique = 0);
 
         std::wstring get_short_path_name(const wchar_t *long_path);
 

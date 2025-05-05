@@ -54,14 +54,14 @@ namespace YanLib::sys {
     }
 
     bool job::contains(HANDLE job_handle, HANDLE proc_handle) {
-        int is_ok = 0;
+        int32_t is_ok = 0;
         if (!IsProcessInJob(proc_handle, job_handle, &is_ok)) {
             error_code = GetLastError();
         }
         return is_ok;
     }
 
-    bool job::kill(HANDLE job_handle, unsigned int exit_code) {
+    bool job::kill(HANDLE job_handle, uint32_t exit_code) {
         if (!TerminateJobObject(job_handle, exit_code)) {
             error_code = GetLastError();
             return false;

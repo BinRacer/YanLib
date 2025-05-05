@@ -13,9 +13,9 @@ namespace YanLib::crypto {
         while (leading_zeros < data.size() && data[leading_zeros] == 0) {
             ++leading_zeros;
         }
-        std::vector<int> digits;
+        std::vector<int32_t> digits;
         for (const uint8_t byte: data) {
-            int carry = byte;
+            int32_t carry = byte;
             for (auto &digit: digits) {
                 carry += digit * 256;
                 digit = carry % 58;
@@ -34,11 +34,11 @@ namespace YanLib::crypto {
     }
 
     std::vector<uint8_t> base58::decode(const std::vector<uint8_t> &data) {
-        static const std::vector<int> table = [] {
-            std::vector<int> t(256, -1);
+        static const std::vector<int32_t> table = [] {
+            std::vector<int32_t> t(256, -1);
             constexpr uint8_t BASE58_CHARS[] =
                     "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-            for (int i = 0; i < 58; ++i) {
+            for (int32_t i = 0; i < 58; ++i) {
                 t[BASE58_CHARS[i]] = i;
             }
             return t;
@@ -57,12 +57,12 @@ namespace YanLib::crypto {
 
         for (size_t i = leading_ones; i < data.size(); ++i) {
             const uint8_t c = data[i];
-            const int pos = table[c];
+            const int32_t pos = table[c];
             if (pos == -1) return {};
 
-            int carry = pos;
+            int32_t carry = pos;
             for (auto &byte: bytes) {
-                carry += static_cast<int>(byte) * 58;
+                carry += static_cast<int32_t>(byte) * 58;
                 byte = carry % 256;
                 carry /= 256;
             }

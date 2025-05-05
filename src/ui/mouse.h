@@ -31,9 +31,9 @@ namespace YanLib::ui {
 
         bool drag_detect(HWND hwnd, POINT point);
 
-        unsigned int get_double_click_time();
+        uint32_t get_double_click_time();
 
-        bool set_double_click_time(unsigned int milli_seconds);
+        bool set_double_click_time(uint32_t milli_seconds);
 
         HWND get_capture();
 
@@ -41,7 +41,7 @@ namespace YanLib::ui {
 
         bool release_capture();
 
-        unsigned int send_input(unsigned int inputs_count, INPUT *inputs, int cb_size);
+        uint32_t send_input(uint32_t inputs_count, INPUT *inputs, int32_t cb_size);
 
         void send_mouse_event(unsigned long flag,
                               unsigned long x,
@@ -61,8 +61,8 @@ namespace YanLib::ui {
 
         bool get_last_input_info(LASTINPUTINFO *last_input_info);
 
-        bool get_pointer_input_transform(unsigned int pointer_id,
-                                         unsigned int history_count,
+        bool get_pointer_input_transform(uint32_t pointer_id,
+                                         uint32_t history_count,
                                          INPUT_TRANSFORM *input_transform);
 
         bool get_pointer_device(HANDLE device_handle,
@@ -70,60 +70,60 @@ namespace YanLib::ui {
 
         bool get_pointer_device_properties(
             HANDLE device_handle,
-            unsigned int *property_count,
+            uint32_t *property_count,
             POINTER_DEVICE_PROPERTY *pointer_properties);
 
         bool get_pointer_device_rects(HANDLE device_handle,
                                       RECT *pointer_device_rect,
                                       RECT *display_rect);
 
-        bool get_pointer_devices(unsigned int *device_count,
+        bool get_pointer_devices(uint32_t *device_count,
                                  POINTER_DEVICE_INFO *pointer_devices);
 
-        bool get_pointer_frame_info(unsigned int pointer_id,
-                                    unsigned int *pointer_count,
+        bool get_pointer_frame_info(uint32_t pointer_id,
+                                    uint32_t *pointer_count,
                                     POINTER_INFO *pointer_info);
 
-        bool get_pointer_frame_info_history(unsigned int pointer_id,
-                                            unsigned int *entries_count,
-                                            unsigned int *pointer_count,
+        bool get_pointer_frame_info_history(uint32_t pointer_id,
+                                            uint32_t *entries_count,
+                                            uint32_t *pointer_count,
                                             POINTER_INFO *pointer_info);
 
-        bool get_pointer_frame_pen_info(unsigned int pointer_id,
-                                        unsigned int *pointer_count,
+        bool get_pointer_frame_pen_info(uint32_t pointer_id,
+                                        uint32_t *pointer_count,
                                         POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_frame_pen_info_history(unsigned int pointer_id,
-                                                unsigned int *entries_count,
-                                                unsigned int *pointer_count,
+        bool get_pointer_frame_pen_info_history(uint32_t pointer_id,
+                                                uint32_t *entries_count,
+                                                uint32_t *pointer_count,
                                                 POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_info(unsigned int pointer_id, POINTER_INFO *pointer_info);
+        bool get_pointer_info(uint32_t pointer_id, POINTER_INFO *pointer_info);
 
-        bool get_pointer_info_history(unsigned int pointer_id,
-                                      unsigned int *entries_count,
+        bool get_pointer_info_history(uint32_t pointer_id,
+                                      uint32_t *entries_count,
                                       POINTER_INFO *pointer_info);
 
-        bool get_pointer_pen_info(unsigned int pointer_id,
+        bool get_pointer_pen_info(uint32_t pointer_id,
                                   POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_pen_info_history(unsigned int pointer_id,
-                                          unsigned int *entries_count,
+        bool get_pointer_pen_info_history(uint32_t pointer_id,
+                                          uint32_t *entries_count,
                                           POINTER_PEN_INFO *pen_info);
 
-        bool get_pointer_type(unsigned int pointer_id,
+        bool get_pointer_type(uint32_t pointer_id,
                               POINTER_INPUT_TYPE *pointer_type);
 
-        bool get_raw_pointer_device_data(unsigned int pointer_id,
-                                         unsigned int history_count,
-                                         unsigned int properties_count,
+        bool get_raw_pointer_device_data(uint32_t pointer_id,
+                                         uint32_t history_count,
+                                         uint32_t properties_count,
                                          POINTER_DEVICE_PROPERTY *properties,
                                          long *values);
 
-        int get_mouse_move_points(unsigned int cb_size,
+        int32_t get_mouse_move_points(uint32_t cb_size,
                                   MOUSEMOVEPOINT *mouse_move_point,
                                   MOUSEMOVEPOINT *points_buf,
-                                  int points_count,
+                                  int32_t points_count,
                                   unsigned long resolution);
 
         bool register_pointer_device_notifications(HWND hwnd, bool notify_range);

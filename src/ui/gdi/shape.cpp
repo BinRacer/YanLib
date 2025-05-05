@@ -5,22 +5,22 @@
 #include "shape.h"
 
 namespace YanLib::ui::gdi {
-    bool shape::rectangle(HDC dc_handle, int left, int top, int right, int bottom) {
+    bool shape::rectangle(HDC dc_handle, int32_t left, int32_t top, int32_t right, int32_t bottom) {
         return Rectangle(dc_handle, left, top, right, bottom);
     }
 
-    int shape::fill_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
+    int32_t shape::fill_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
         return FillRect(dc_handle, rect, brush_handle);
     }
 
     bool shape::round_rect(HDC dc_handle,
-                           int left, int top,
-                           int right, int bottom,
-                           int width, int height) {
+                           int32_t left, int32_t top,
+                           int32_t right, int32_t bottom,
+                           int32_t width, int32_t height) {
         return RoundRect(dc_handle, left, top, right, bottom, width, height);
     }
 
-    int shape::frame_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
+    int32_t shape::frame_rect(HDC dc_handle, const RECT *rect, HBRUSH brush_handle) {
         return FrameRect(dc_handle, rect, brush_handle);
     }
 
@@ -28,15 +28,15 @@ namespace YanLib::ui::gdi {
         return InvertRect(dc_handle, rect);
     }
 
-    bool shape::ellipse(HDC dc_handle, int left, int top, int right, int bottom) {
+    bool shape::ellipse(HDC dc_handle, int32_t left, int32_t top, int32_t right, int32_t bottom) {
         return Ellipse(dc_handle, left, top, right, bottom);
     }
 
     bool shape::chord(HDC dc_handle,
-                      int x1, int y1,
-                      int x2, int y2,
-                      int x3, int y3,
-                      int x4, int y4) {
+                      int32_t x1, int32_t y1,
+                      int32_t x2, int32_t y2,
+                      int32_t x3, int32_t y3,
+                      int32_t x4, int32_t y4) {
         return Chord(dc_handle,
                      x1, y1,
                      x2, y2,
@@ -44,22 +44,22 @@ namespace YanLib::ui::gdi {
                      x4, y4);
     }
 
-    bool shape::poly_gon(HDC dc_handle, const POINT *point, int num) {
+    bool shape::poly_gon(HDC dc_handle, const POINT *point, int32_t num) {
         return Polygon(dc_handle, point, num);
     }
 
     bool shape::poly_poly_gon(HDC dc_handle,
                               const POINT *point,
-                              const int *num_array,
-                              int num) {
+                              const int32_t *num_array,
+                              int32_t num) {
         return PolyPolygon(dc_handle, point, num_array, num);
     }
 
     bool shape::pie(HDC dc_handle,
-                    int left, int top,
-                    int right, int bottom,
-                    int xr1, int yr1,
-                    int xr2, int yr2) {
+                    int32_t left, int32_t top,
+                    int32_t right, int32_t bottom,
+                    int32_t xr1, int32_t yr1,
+                    int32_t xr2, int32_t yr2) {
         return Pie(dc_handle,
                    left, top,
                    right, bottom,

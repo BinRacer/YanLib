@@ -25,7 +25,7 @@ namespace YanLib::crypto {
             }
 
             uint8_t buf[5];
-            for (int j = 4; j >= 0; --j) {
+            for (int32_t j = 4; j >= 0; --j) {
                 buf[j] = BASE85_CHARS[chunk % 85];
                 chunk /= 85;
             }
@@ -41,8 +41,8 @@ namespace YanLib::crypto {
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
                 "abcdefghijklmnopqrstu";
         if (data.empty()) return {};
-        std::vector<int> table(256, -1);
-        for (int i = 0; i < 85; ++i) {
+        std::vector<int32_t> table(256, -1);
+        for (int32_t i = 0; i < 85; ++i) {
             table[BASE85_CHARS[i]] = i;
         }
         std::vector<uint8_t> decoded;
@@ -59,7 +59,7 @@ namespace YanLib::crypto {
             buffer.push_back(c);
             if (buffer.size() == 5) {
                 uint32_t chunk = 0;
-                for (int j = 0; j < 5; ++j) {
+                for (int32_t j = 0; j < 5; ++j) {
                     auto pos = table[buffer[j]];
                     if (pos == -1) return {};
                     chunk = chunk * 85 + pos;
@@ -79,7 +79,7 @@ namespace YanLib::crypto {
                 buffer.push_back('u');
 
             uint32_t chunk = 0;
-            for (int j = 0; j < 5; ++j) {
+            for (int32_t j = 0; j < 5; ++j) {
                 auto pos = table[buffer[j]];
                 if (pos == -1) return {};
                 chunk = chunk * 85 + pos;

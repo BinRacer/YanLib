@@ -22,29 +22,29 @@ namespace YanLib::ui::gdi {
 
         ~region() = default;
 
-        static HRGN create_rect_region(int x1, int y1, int x2, int y2);
+        static HRGN create_rect_region(int32_t x1, int32_t y1, int32_t x2, int32_t y2);
 
         static HRGN create_rect_region_indirect(const RECT *rect);
 
-        static HRGN create_round_rect_region(int x1,
-                                             int y1,
-                                             int x2,
-                                             int y2,
-                                             int w,
-                                             int h);
+        static HRGN create_round_rect_region(int32_t x1,
+                                             int32_t y1,
+                                             int32_t x2,
+                                             int32_t y2,
+                                             int32_t w,
+                                             int32_t h);
 
-        static HRGN create_elliptic_region(int x1, int y1, int x2, int y2);
+        static HRGN create_elliptic_region(int32_t x1, int32_t y1, int32_t x2, int32_t y2);
 
         static HRGN create_elliptic_region_indirect(const RECT *rect);
 
         static HRGN create_polygon_region(const POINT *points,
-                                          int points_count,
-                                          int mode);
+                                          int32_t points_count,
+                                          int32_t mode);
 
         static HRGN create_poly_polygon_region(const POINT *points,
-                                               const int *points_num,
-                                               int poly_count,
-                                               int mode);
+                                               const int32_t *points_num,
+                                               int32_t poly_count,
+                                               int32_t mode);
 
         static bool fill_region(HDC dc_handle,
                                 HRGN region_handle,
@@ -57,45 +57,45 @@ namespace YanLib::ui::gdi {
         static bool frame_region(HDC dc_handle,
                                  HRGN region_handle,
                                  HBRUSH brush_handle,
-                                 int w,
-                                 int h);
+                                 int32_t w,
+                                 int32_t h);
 
-        static int combine_region(HRGN region_handle_dst,
+        static int32_t combine_region(HRGN region_handle_dst,
                                   HRGN region_handle_src1,
                                   HRGN region_handle_src2,
-                                  int mode);
+                                  int32_t mode);
 
         static bool equal_region(HRGN region_handle1, HRGN region_handle2);
 
         static bool invert_region(HDC dc_handle, HRGN region_handle);
 
-        static int offset_region(HRGN region_handle, int x, int y);
+        static int32_t offset_region(HRGN region_handle, int32_t x, int32_t y);
 
         static bool paint_region(HDC dc_handle, HRGN region_handle);
 
-        static bool point_in_region(HRGN region_handle, int x, int y);
+        static bool point_in_region(HRGN region_handle, int32_t x, int32_t y);
 
         static bool rect_in_region(HRGN region_handle, const RECT *rect);
 
-        static int get_poly_fill_mode(HDC dc_handle);
+        static int32_t get_poly_fill_mode(HDC dc_handle);
 
-        static int set_poly_fill_mode(HDC dc_handle, int mode);
+        static int32_t set_poly_fill_mode(HDC dc_handle, int32_t mode);
 
         static BOOL set_rect_region(HRGN region_handle,
-                                    int left,
-                                    int top,
-                                    int right,
-                                    int bottom);
+                                    int32_t left,
+                                    int32_t top,
+                                    int32_t right,
+                                    int32_t bottom);
 
-        static int get_region_box(HRGN region_handle, RECT *rect);
+        static int32_t get_region_box(HRGN region_handle, RECT *rect);
 
-        static int get_update_region(HWND hwnd, HRGN region_handle, bool is_erase);
+        static int32_t get_update_region(HWND hwnd, HRGN region_handle, bool is_erase);
 
         static bool validate_region(HWND hwnd, HRGN region_handle);
 
         static bool invalidate_region(HWND hwnd, HRGN region_handle, bool is_erase);
 
-        static int exclude_update_region(HDC dc_handle, HWND hwnd);
+        static int32_t exclude_update_region(HDC dc_handle, HWND hwnd);
 
         // std::pair<result, error_code>
         static std::pair<unsigned long, unsigned long> get_region_data(HRGN region_handle,

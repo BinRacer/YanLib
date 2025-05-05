@@ -541,7 +541,7 @@ namespace YanLib::io {
     }
 
     bool fs::is_short_name_enabled(HANDLE file_handle) {
-        int is_ok = 0;
+        int32_t is_ok = 0;
         if (!AreShortNamesEnabled(file_handle, &is_ok)) {
             error_code = GetLastError();
         }
@@ -603,7 +603,7 @@ namespace YanLib::io {
         return true;
     }
 
-    unsigned int fs::get_drive_type(const wchar_t *path_name) {
+    uint32_t fs::get_drive_type(const wchar_t *path_name) {
         return GetDriveTypeW(path_name);
     }
 
@@ -687,7 +687,7 @@ namespace YanLib::io {
 
     std::wstring fs::get_temp_file_name(const wchar_t *path_name,
                                         const wchar_t *prefix,
-                                        unsigned int unique) {
+                                        uint32_t unique) {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         if (!GetTempFileNameW(path_name,
                               prefix,
@@ -1033,7 +1033,7 @@ namespace YanLib::io {
         op.pFrom = szPath;
         op.fFlags = FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI;
 
-        int result = SHFileOperationW(&op);
+        int32_t result = SHFileOperationW(&op);
         return (result == 0) && !op.fAnyOperationsAborted;
     }
 
@@ -1223,7 +1223,7 @@ namespace YanLib::io {
         file_op.pFrom = from;
         file_op.pTo = to;
         file_op.fFlags = FOF_NOCONFIRMMKDIR | FOF_NOCONFIRMATION | FOF_NO_UI;
-        int result = SHFileOperationW(&file_op);
+        int32_t result = SHFileOperationW(&file_op);
         return (result == 0) && !file_op.fAnyOperationsAborted;
     }
 

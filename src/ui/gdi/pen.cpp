@@ -5,7 +5,7 @@
 #include "pen.h"
 
 namespace YanLib::ui::gdi {
-    HPEN pen::create_pen(int style, int width, COLORREF color) {
+    HPEN pen::create_pen(int32_t style, int32_t width, COLORREF color) {
         return CreatePen(style, width, color);
     }
 

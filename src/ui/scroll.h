@@ -25,39 +25,39 @@ namespace YanLib::ui {
 
         ~scroll() = default;
 
-        bool enable_scroll_bar(HWND hwnd, unsigned int scroll_type, unsigned int arrow_type);
+        bool enable_scroll_bar(HWND hwnd, uint32_t scroll_type, uint32_t arrow_type);
 
-        bool show_scroll_bar(HWND hwnd, int scroll_type);
+        bool show_scroll_bar(HWND hwnd, int32_t scroll_type);
 
-        bool hide_scroll_bar(HWND hwnd, int scroll_type);
+        bool hide_scroll_bar(HWND hwnd, int32_t scroll_type);
 
         bool get_scroll_bar_info(HWND hwnd,
                                  long object_id,
                                  SCROLLBARINFO *scroll_bar_info);
 
-        bool get_scroll_info(HWND hwnd, int scroll_type, SCROLLINFO *scroll_info);
+        bool get_scroll_info(HWND hwnd, int32_t scroll_type, SCROLLINFO *scroll_info);
 
-        int set_scroll_info(HWND hwnd,
-                            int scroll_type,
+        int32_t set_scroll_info(HWND hwnd,
+                            int32_t scroll_type,
                             SCROLLINFO *scroll_info,
                             bool is_redraw);
 
-        int get_scroll_pos(HWND hwnd, int scroll_info);
+        int32_t get_scroll_pos(HWND hwnd, int32_t scroll_info);
 
-        int set_scroll_pos(HWND hwnd,
-                           int scroll_type,
-                           int pos,
+        int32_t set_scroll_pos(HWND hwnd,
+                           int32_t scroll_type,
+                           int32_t pos,
                            bool is_redraw);
 
         bool get_scroll_range(HWND hwnd,
-                              int scroll_type,
-                              int *min_pos,
-                              int *max_pos);
+                              int32_t scroll_type,
+                              int32_t *min_pos,
+                              int32_t *max_pos);
 
         bool set_scroll_range(HWND hwnd,
-                              int scroll_type,
-                              int min_pos,
-                              int max_pos,
+                              int32_t scroll_type,
+                              int32_t min_pos,
+                              int32_t max_pos,
                               bool is_redraw);
 
         [[nodiscard]] unsigned long err_code() const;

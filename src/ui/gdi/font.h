@@ -24,11 +24,11 @@ namespace YanLib::ui::gdi {
 
         static HFONT create_font(const wchar_t *face_name = L"宋体",
                                  unsigned long charset = GB2312_CHARSET,
-                                 int height = 12,
-                                 int width = 0,
-                                 int escapement = 0,
-                                 int orientation = 0,
-                                 int weight = 0,
+                                 int32_t height = 12,
+                                 int32_t width = 0,
+                                 int32_t escapement = 0,
+                                 int32_t orientation = 0,
+                                 int32_t weight = 0,
                                  bool is_italic = false,
                                  bool is_underline = false,
                                  bool is_strike_out = false,
@@ -63,16 +63,16 @@ namespace YanLib::ui::gdi {
 
         static bool remove_font_mem_resource(HANDLE font_res_handle);
 
-        static int add_font_resource(const wchar_t *font_file_name);
+        static int32_t add_font_resource(const wchar_t *font_file_name);
 
         static bool remove_font_resource(const wchar_t *font_file_name);
 
-        static int add_font_resource(const wchar_t *font_file_name, unsigned long font_type);
+        static int32_t add_font_resource(const wchar_t *font_file_name, unsigned long font_type);
 
-        static int remove_font_resource(const wchar_t *font_file_name,
+        static int32_t remove_font_resource(const wchar_t *font_file_name,
                                         unsigned long font_type);
 
-        static int enum_font_families(HDC dc_handle,
+        static int32_t enum_font_families(HDC dc_handle,
                                       LOGFONTW *log_font,
                                       FONTENUMPROCW font_enum_proc,
                                       LPARAM l_param);

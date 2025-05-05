@@ -5,6 +5,7 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 #include <Windows.h>
+#include <stdint.h>
 
 namespace YanLib::ui::gdi {
     class palette {
@@ -33,27 +34,27 @@ namespace YanLib::ui::gdi {
 
         static COLORREF get_nearest_color(HDC dc_handle, COLORREF color);
 
-        static unsigned int get_nearest_palette_index(HPALETTE palette_handle,
-                                                      COLORREF color);
+        static uint32_t get_nearest_palette_index(HPALETTE palette_handle,
+                                                  COLORREF color);
 
-        static unsigned int get_palette_entries(HPALETTE palette_handle,
-                                                unsigned int start,
-                                                unsigned int entry_count,
-                                                PALETTEENTRY *palette_entry);
+        static uint32_t get_palette_entries(HPALETTE palette_handle,
+                                            uint32_t start,
+                                            uint32_t entry_count,
+                                            PALETTEENTRY *palette_entry);
 
-        static unsigned int set_palette_entries(HPALETTE palette_handle,
-                                                unsigned int start,
-                                                unsigned int entry_count,
-                                                const PALETTEENTRY *palette_entry);
+        static uint32_t set_palette_entries(HPALETTE palette_handle,
+                                            uint32_t start,
+                                            uint32_t entry_count,
+                                            const PALETTEENTRY *palette_entry);
 
-        static unsigned int get_system_palette_entries(HDC dc_handle,
-                                                       unsigned int start,
-                                                       unsigned int entry_count,
-                                                       PALETTEENTRY *palette_entry);
+        static uint32_t get_system_palette_entries(HDC dc_handle,
+                                                   uint32_t start,
+                                                   uint32_t entry_count,
+                                                   PALETTEENTRY *palette_entry);
 
-        static unsigned int get_system_palette_use(HDC dc_handle);
+        static uint32_t get_system_palette_use(HDC dc_handle);
 
-        static unsigned int set_system_palette_use(HDC dc_handle, unsigned int use);
+        static uint32_t set_system_palette_use(HDC dc_handle, uint32_t use);
 
         static HPALETTE select_palette(HDC dc_handle,
                                        HPALETTE palette_handle,
@@ -64,13 +65,13 @@ namespace YanLib::ui::gdi {
         static bool update_colors(HDC dc_handle);
 
         static bool animate_palette(HPALETTE palette_handle,
-                                    unsigned int start,
-                                    unsigned int entry_count,
+                                    uint32_t start,
+                                    uint32_t entry_count,
                                     const PALETTEENTRY *palette_entry);
 
-        static unsigned int realize_palette(HDC dc_handle);
+        static uint32_t realize_palette(HDC dc_handle);
 
-        static bool resize_palette(HPALETTE palette_handle, unsigned int num);
+        static bool resize_palette(HPALETTE palette_handle, uint32_t num);
     };
 }
 #endif //PALETTE_H

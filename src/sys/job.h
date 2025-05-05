@@ -40,7 +40,7 @@ namespace YanLib::sys {
 
         bool contains(HANDLE job_handle, HANDLE proc_handle);
 
-        bool kill(HANDLE job_handle, unsigned int exit_code);
+        bool kill(HANDLE job_handle, uint32_t exit_code);
 
         bool grant_access(HANDLE job_handle, HANDLE user_handle);
 

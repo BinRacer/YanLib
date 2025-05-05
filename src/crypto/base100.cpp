@@ -11,7 +11,7 @@ namespace YanLib::crypto {
         result.reserve(data.size() * 4);
 
         for (const auto ch: data) {
-            unsigned int temp = static_cast<unsigned int>(ch) + 55;
+            uint32_t temp = static_cast<uint32_t>(ch) + 55;
             uint8_t byte3 = (temp >> 6) + 143;
             uint8_t byte4 = (temp & 0x3F) + 128;
 
@@ -35,7 +35,7 @@ namespace YanLib::crypto {
             uint8_t byte3 = data[i + 2];
             uint8_t byte4 = data[i + 3];
 
-            int decoded = ((byte3 - 143) << 6) | (byte4 - 128);
+            int32_t decoded = ((byte3 - 143) << 6) | (byte4 - 128);
             decoded -= 55;
 
             if (decoded < 0 || decoded > 255) return {};

@@ -29,7 +29,7 @@ namespace YanLib::ui::gdi {
         static bool poly_draw(HDC dc_handle,
                               const POINT *point,
                               const uint8_t *point_type,
-                              int num);
+                              int32_t num);
     };
 }
 #endif //BEZIER_H

@@ -5,6 +5,7 @@
 #ifndef CLIP_H
 #define CLIP_H
 #include <Windows.h>
+#include <stdint.h>
 
 namespace YanLib::ui::gdi {
     class clip {
@@ -21,39 +22,39 @@ namespace YanLib::ui::gdi {
 
         ~clip() = default;
 
-        static bool select_clip_path(HDC dc_handle, int mode);
+        static bool select_clip_path(HDC dc_handle, int32_t mode);
 
-        static int select_clip_region(HDC dc_handle, HRGN region_handle);
+        static int32_t select_clip_region(HDC dc_handle, HRGN region_handle);
 
-        static int select_clip_region(HDC dc_handle, HRGN region_handle, int mode);
+        static int32_t select_clip_region(HDC dc_handle, HRGN region_handle, int32_t mode);
 
-        static int exclude_clip_rect(HDC dc_handle,
-                                     int left,
-                                     int top,
-                                     int right,
-                                     int bottom);
+        static int32_t exclude_clip_rect(HDC dc_handle,
+                                         int32_t left,
+                                         int32_t top,
+                                         int32_t right,
+                                         int32_t bottom);
 
-        static int intersect_clip_rect(HDC dc_handle,
-                                       int left,
-                                       int top,
-                                       int right,
-                                       int bottom);
+        static int32_t intersect_clip_rect(HDC dc_handle,
+                                           int32_t left,
+                                           int32_t top,
+                                           int32_t right,
+                                           int32_t bottom);
 
-        static int offset_clip_region(HDC dc_handle, int x, int y);
+        static int32_t offset_clip_region(HDC dc_handle, int32_t x, int32_t y);
 
         static bool rect_visible(HDC dc_handle, const RECT *rect);
 
-        static bool point_visible(HDC dc_handle, int x, int y);
+        static bool point_visible(HDC dc_handle, int32_t x, int32_t y);
 
-        static int get_clip_box(HDC dc_handle, RECT *rect);
+        static int32_t get_clip_box(HDC dc_handle, RECT *rect);
 
-        static int get_clip_region(HDC dc_handle, HRGN region_handle);
+        static int32_t get_clip_region(HDC dc_handle, HRGN region_handle);
 
-        static int get_meta_region(HDC dc_handle, HRGN region_handle);
+        static int32_t get_meta_region(HDC dc_handle, HRGN region_handle);
 
-        static int set_meta_region(HDC dc_handle);
+        static int32_t set_meta_region(HDC dc_handle);
 
-        static int get_random_region(HDC dc_handle, HRGN region_handle);
+        static int32_t get_random_region(HDC dc_handle, HRGN region_handle);
     };
 }
 #endif //CLIP_H

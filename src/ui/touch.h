@@ -43,30 +43,30 @@ namespace YanLib::ui {
         bool close_touch_input_handle(HTOUCHINPUT touch_input_handle);
 
         bool get_touch_input_info(HTOUCHINPUT touch_input_handle,
-                                  unsigned int inputs_count,
+                                  uint32_t inputs_count,
                                   TOUCHINPUT *inputs,
-                                  int cb_size);
+                                  int32_t cb_size);
 
-        bool get_pointer_frame_touch_info(unsigned int pointer_id,
-                                          unsigned int *pointer_count,
+        bool get_pointer_frame_touch_info(uint32_t pointer_id,
+                                          uint32_t *pointer_count,
                                           POINTER_TOUCH_INFO *touch_info);
 
-        bool get_pointer_frame_touch_info_history(unsigned int pointer_id,
-                                                  unsigned int *entries_count,
-                                                  unsigned int *pointer_count,
+        bool get_pointer_frame_touch_info_history(uint32_t pointer_id,
+                                                  uint32_t *entries_count,
+                                                  uint32_t *pointer_count,
                                                   POINTER_TOUCH_INFO *touch_info);
 
-        bool get_pointer_touch_info(unsigned int pointer_id,
+        bool get_pointer_touch_info(uint32_t pointer_id,
                                     POINTER_TOUCH_INFO *touch_info);
 
-        bool get_pointer_touch_info_history(unsigned int pointer_id,
-                                            unsigned int *entries_count,
+        bool get_pointer_touch_info_history(uint32_t pointer_id,
+                                            uint32_t *entries_count,
                                             POINTER_TOUCH_INFO *touch_info);
 
-        unsigned short get_pointer_id_wparam(WPARAM w_param);
+        uint16_t get_pointer_id_wparam(WPARAM w_param);
 
         bool get_gesture_extra_args(HGESTUREINFO gesture_info_handle,
-                                    unsigned int extra_args_size,
+                                    uint32_t extra_args_size,
                                     uint8_t *extra_args_buf);
 
         bool get_gesture_info(HGESTUREINFO gesture_info_handle,
@@ -74,20 +74,20 @@ namespace YanLib::ui {
 
         bool close_gesture_info_handle(HGESTUREINFO gesture_info_handle);
 
-        bool initialize_touch_injection(unsigned int max_count, unsigned long mode);
+        bool initialize_touch_injection(uint32_t max_count, unsigned long mode);
 
         bool inject_synthetic_pointer_input(HSYNTHETICPOINTERDEVICE device_handle,
                                             const POINTER_TYPE_INFO *pointer_info,
-                                            unsigned int count);
+                                            uint32_t count);
 
-        bool inject_touch_input(unsigned int count, const POINTER_TOUCH_INFO *contacts);
+        bool inject_touch_input(uint32_t count, const POINTER_TOUCH_INFO *contacts);
 
         LRESULT pack_touch_hit_testing_proximity_evaluation(
             const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
             const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
 
         bool evaluate_proximity_to_polygon(
-            unsigned int num_vertices,
+            uint32_t num_vertices,
             const POINT *control_polygon,
             const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
             TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);

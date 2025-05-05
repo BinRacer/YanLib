@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    bool scroll::enable_scroll_bar(HWND hwnd, unsigned int scroll_type, unsigned int arrow_type) {
+    bool scroll::enable_scroll_bar(HWND hwnd, uint32_t scroll_type, uint32_t arrow_type) {
         if (!EnableScrollBar(hwnd, scroll_type, arrow_type)) {
             error_code = GetLastError();
             return false;
@@ -14,7 +14,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool scroll::show_scroll_bar(HWND hwnd, int scroll_type) {
+    bool scroll::show_scroll_bar(HWND hwnd, int32_t scroll_type) {
         if (!ShowScrollBar(hwnd, scroll_type, TRUE)) {
             error_code = GetLastError();
             return false;
@@ -22,7 +22,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool scroll::hide_scroll_bar(HWND hwnd, int scroll_type) {
+    bool scroll::hide_scroll_bar(HWND hwnd, int32_t scroll_type) {
         if (!ShowScrollBar(hwnd, scroll_type, FALSE)) {
             error_code = GetLastError();
             return false;
@@ -41,7 +41,7 @@ namespace YanLib::ui {
     }
 
     bool scroll::get_scroll_info(HWND hwnd,
-                                 int scroll_type,
+                                 int32_t scroll_type,
                                  SCROLLINFO *scroll_info) {
         if (!GetScrollInfo(hwnd, scroll_type, scroll_info)) {
             error_code = GetLastError();
@@ -50,8 +50,8 @@ namespace YanLib::ui {
         return true;
     }
 
-    int scroll::set_scroll_info(HWND hwnd,
-                                int scroll_type,
+    int32_t scroll::set_scroll_info(HWND hwnd,
+                                int32_t scroll_type,
                                 SCROLLINFO *scroll_info,
                                 bool is_redraw) {
         return SetScrollInfo(hwnd,
@@ -60,19 +60,19 @@ namespace YanLib::ui {
                              is_redraw ? TRUE : FALSE);
     }
 
-    int scroll::get_scroll_pos(HWND hwnd, int scroll_info) {
-        int result = GetScrollPos(hwnd, scroll_info);
+    int32_t scroll::get_scroll_pos(HWND hwnd, int32_t scroll_info) {
+        int32_t result = GetScrollPos(hwnd, scroll_info);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int scroll::set_scroll_pos(HWND hwnd,
-                               int scroll_type,
-                               int pos,
+    int32_t scroll::set_scroll_pos(HWND hwnd,
+                               int32_t scroll_type,
+                               int32_t pos,
                                bool is_redraw) {
-        int result = SetScrollPos(hwnd,
+        int32_t result = SetScrollPos(hwnd,
                                   scroll_type,
                                   pos,
                                   is_redraw ? TRUE : FALSE);
@@ -83,9 +83,9 @@ namespace YanLib::ui {
     }
 
     bool scroll::get_scroll_range(HWND hwnd,
-                                  int scroll_type,
-                                  int *min_pos,
-                                  int *max_pos) {
+                                  int32_t scroll_type,
+                                  int32_t *min_pos,
+                                  int32_t *max_pos) {
         if (!GetScrollRange(hwnd, scroll_type, min_pos, max_pos)) {
             error_code = GetLastError();
             return false;
@@ -94,9 +94,9 @@ namespace YanLib::ui {
     }
 
     bool scroll::set_scroll_range(HWND hwnd,
-                                  int scroll_type,
-                                  int min_pos,
-                                  int max_pos,
+                                  int32_t scroll_type,
+                                  int32_t min_pos,
+                                  int32_t max_pos,
                                   bool is_redraw) {
         if (!SetScrollRange(hwnd,
                             scroll_type,

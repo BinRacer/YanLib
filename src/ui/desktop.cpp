@@ -175,7 +175,7 @@ namespace YanLib::ui {
     }
 
     bool desktop::get_user_object_info(HANDLE desktop_or_window_station_handle,
-                                       int index,
+                                       int32_t index,
                                        void *info,
                                        unsigned long len,
                                        unsigned long *ret_len) {
@@ -192,7 +192,7 @@ namespace YanLib::ui {
 
     bool
     desktop::set_user_object_information(HANDLE desktop_or_window_station_handle,
-                                         int index,
+                                         int32_t index,
                                          void *info,
                                          unsigned long len) {
         if (!SetUserObjectInformationW(desktop_or_window_station_handle,

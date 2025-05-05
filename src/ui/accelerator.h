@@ -25,18 +25,18 @@ namespace YanLib::ui {
 
         ~accelerator() = default;
 
-        HACCEL create_accelerator_table(ACCEL *accel, int count);
+        HACCEL create_accelerator_table(ACCEL *accel, int32_t count);
 
         HACCEL load_accelerators(HINSTANCE instance_handle,
                                  const wchar_t *table_name);
 
         bool destroy_accelerator_table(HACCEL accel_handle);
 
-        int translate_accelerator(HWND hwnd, HACCEL accel_handle, MSG *msg);
+        int32_t translate_accelerator(HWND hwnd, HACCEL accel_handle, MSG *msg);
 
-        int copy_accelerator_table(HACCEL accel_handle_src,
+        int32_t copy_accelerator_table(HACCEL accel_handle_src,
                                    ACCEL *accel_handle_dst,
-                                   int accel_entries);
+                                   int32_t accel_entries);
 
         [[nodiscard]] unsigned long err_code() const;
 

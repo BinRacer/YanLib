@@ -7,11 +7,11 @@
 namespace YanLib::ui::gdi {
     HFONT font::create_font(const wchar_t *face_name,
                             unsigned long charset,
-                            int height,
-                            int width,
-                            int escapement,
-                            int orientation,
-                            int weight,
+                            int32_t height,
+                            int32_t width,
+                            int32_t escapement,
+                            int32_t orientation,
+                            int32_t weight,
                             bool is_italic,
                             bool is_underline,
                             bool is_strike_out,
@@ -85,7 +85,7 @@ namespace YanLib::ui::gdi {
         return RemoveFontMemResourceEx(font_res_handle);
     }
 
-    int font::add_font_resource(const wchar_t *font_file_name) {
+    int32_t font::add_font_resource(const wchar_t *font_file_name) {
         return AddFontResourceW(font_file_name);
     }
 
@@ -93,15 +93,15 @@ namespace YanLib::ui::gdi {
         return RemoveFontResourceW(font_file_name);
     }
 
-    int font::add_font_resource(const wchar_t *font_file_name, unsigned long font_type) {
+    int32_t font::add_font_resource(const wchar_t *font_file_name, unsigned long font_type) {
         return AddFontResourceExW(font_file_name, font_type, nullptr);
     }
 
-    int font::remove_font_resource(const wchar_t *font_file_name, unsigned long font_type) {
+    int32_t font::remove_font_resource(const wchar_t *font_file_name, unsigned long font_type) {
         return RemoveFontResourceExW(font_file_name, font_type, nullptr);
     }
 
-    int font::enum_font_families(HDC dc_handle,
+    int32_t font::enum_font_families(HDC dc_handle,
                                  LOGFONTW *log_font,
                                  FONTENUMPROCW font_enum_proc,
                                  LPARAM l_param) {

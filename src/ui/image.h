@@ -27,36 +27,36 @@ namespace YanLib::ui {
 
         HBITMAP load_bitmap(HINSTANCE instance_handle,
                             const wchar_t *image_name,
-                            int cx,
-                            int cy,
-                            unsigned int load);
+                            int32_t cx,
+                            int32_t cy,
+                            uint32_t load);
 
         HICON load_icon(HINSTANCE instance_handle,
                         const wchar_t *image_name,
-                        int cx,
-                        int cy,
-                        unsigned int load);
+                        int32_t cx,
+                        int32_t cy,
+                        uint32_t load);
 
         HCURSOR load_cursor(HINSTANCE instance_handle,
                             const wchar_t *image_name,
-                            int cx,
-                            int cy,
-                            unsigned int load);
+                            int32_t cx,
+                            int32_t cy,
+                            uint32_t load);
 
         HBITMAP copy_bitmap(HBITMAP bitmap_handle,
-                            int cx,
-                            int cy,
-                            unsigned int flag);
+                            int32_t cx,
+                            int32_t cy,
+                            uint32_t flag);
 
         HICON copy_icon(HICON icon_handle,
-                        int cx,
-                        int cy,
-                        unsigned int flag);
+                        int32_t cx,
+                        int32_t cy,
+                        uint32_t flag);
 
         HCURSOR copy_cursor(HCURSOR cursor_handle,
-                            int cx,
-                            int cy,
-                            unsigned int flag);
+                            int32_t cx,
+                            int32_t cy,
+                            uint32_t flag);
 
         bool close_bitmap(HBITMAP bitmap_handle);
 

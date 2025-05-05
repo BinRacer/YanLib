@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::sys {
-    unsigned long processor::active_count(unsigned short group_number) {
+    unsigned long processor::active_count(uint16_t group_number) {
         unsigned long count = GetActiveProcessorCount(group_number);
         if (!count) {
             error_code = GetLastError();
@@ -15,7 +15,7 @@ namespace YanLib::sys {
         return count;
     }
 
-    unsigned short processor::active_group_count() {
+    uint16_t processor::active_group_count() {
         return GetActiveProcessorGroupCount();
     }
 
@@ -46,7 +46,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    unsigned long processor::max_count(unsigned short GroupNumber) {
+    unsigned long processor::max_count(uint16_t GroupNumber) {
         unsigned long count = GetMaximumProcessorCount(GroupNumber);
         if (!count) {
             error_code = GetLastError();
@@ -55,12 +55,12 @@ namespace YanLib::sys {
         return count;
     }
 
-    unsigned short processor::max_group_count() {
+    uint16_t processor::max_group_count() {
         return GetMaximumProcessorGroupCount();
     }
 
     bool processor::idle_cycle_time(unsigned long *buffer_length,
-                                    unsigned long long *processor_idle_cycle_time) {
+                                    uint64_t *processor_idle_cycle_time) {
         if (!QueryIdleProcessorCycleTime(buffer_length,
                                          processor_idle_cycle_time)) {
             error_code = GetLastError();
@@ -69,9 +69,9 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool processor::idle_cycle_time(unsigned short group,
+    bool processor::idle_cycle_time(uint16_t group,
                                     unsigned long *buffer_length,
-                                    unsigned long long *processor_idle_cycle_time) {
+                                    uint64_t *processor_idle_cycle_time) {
         if (!QueryIdleProcessorCycleTimeEx(group,
                                            buffer_length,
                                            processor_idle_cycle_time)) {

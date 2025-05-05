@@ -95,7 +95,7 @@ namespace YanLib::crypto {
             return;
         }
         std::random_device rd = {};
-        for (int i = 0; i < pad_len - 1; i++) {
+        for (int32_t i = 0; i < pad_len - 1; i++) {
             data.push_back(static_cast<uint8_t>(rd()));
         }
         data.push_back(static_cast<uint8_t>(pad_len));

@@ -139,8 +139,8 @@ namespace YanLib::ui {
     }
 
     bool dialog::check_dialog_button(HWND hwnd_dialog,
-                                     int id_button,
-                                     unsigned int check) {
+                                     int32_t id_button,
+                                     uint32_t check) {
         if (!CheckDlgButton(hwnd_dialog,
                             id_button,
                             check)) {
@@ -151,7 +151,7 @@ namespace YanLib::ui {
     }
 
     LRESULT dialog::default_dialog_proc(HWND hwnd_dialog,
-                                        unsigned int msg,
+                                        uint32_t msg,
                                         WPARAM w_param,
                                         LPARAM l_param) {
         return DefDlgProcW(hwnd_dialog,
@@ -160,12 +160,12 @@ namespace YanLib::ui {
                            l_param);
     }
 
-    int dialog::dialog_dir_list(HWND hwnd_dialog,
+    int32_t dialog::dialog_dir_list(HWND hwnd_dialog,
                                 wchar_t *path_spec,
-                                int id_listbox,
-                                int id_static_path,
-                                unsigned int file_type) {
-        int result = DlgDirListW(hwnd_dialog,
+                                int32_t id_listbox,
+                                int32_t id_static_path,
+                                uint32_t file_type) {
+        int32_t result = DlgDirListW(hwnd_dialog,
                                  path_spec,
                                  id_listbox,
                                  id_static_path,
@@ -176,12 +176,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    int dialog::dialog_dir_list_combobox(HWND hwnd_dialog,
+    int32_t dialog::dialog_dir_list_combobox(HWND hwnd_dialog,
                                          wchar_t *path_spec,
-                                         int id_combobox,
-                                         int id_static_path,
-                                         unsigned int filetype) {
-        int result = DlgDirListComboBoxW(hwnd_dialog,
+                                         int32_t id_combobox,
+                                         int32_t id_static_path,
+                                         uint32_t filetype) {
+        int32_t result = DlgDirListComboBoxW(hwnd_dialog,
                                          path_spec,
                                          id_combobox,
                                          id_static_path,
@@ -194,8 +194,8 @@ namespace YanLib::ui {
 
     bool dialog::dialog_dir_select_combobox(HWND hwnd_dialog,
                                             wchar_t *text,
-                                            int cch_size,
-                                            int id_combobox) {
+                                            int32_t cch_size,
+                                            int32_t id_combobox) {
         if (!DlgDirSelectComboBoxExW(hwnd_dialog,
                                      text,
                                      cch_size,
@@ -208,8 +208,8 @@ namespace YanLib::ui {
 
     bool dialog::dialog_dir_select(HWND hwnd_dialog,
                                    wchar_t *text,
-                                   int cch_size,
-                                   int id_listbox) {
+                                   int32_t cch_size,
+                                   int32_t id_listbox) {
         if (!DlgDirSelectExW(hwnd_dialog,
                              text,
                              cch_size,
@@ -220,15 +220,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    int dialog::get_dialog_ctrl_id(HWND hwnd_ctrl) {
-        int result = GetDlgCtrlID(hwnd_ctrl);
+    int32_t dialog::get_dialog_ctrl_id(HWND hwnd_ctrl) {
+        int32_t result = GetDlgCtrlID(hwnd_ctrl);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    HWND dialog::get_dialog_item(HWND hwnd_dialog, int id_dialog_item) {
+    HWND dialog::get_dialog_item(HWND hwnd_dialog, int32_t id_dialog_item) {
         HWND result = GetDlgItem(hwnd_dialog, id_dialog_item);
         if (!result) {
             error_code = GetLastError();
@@ -236,11 +236,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    std::pair<unsigned int, bool> dialog::get_dialog_item_int(HWND hwnd_dialog,
-                                                              int id_dialog_item,
+    std::pair<uint32_t, bool> dialog::get_dialog_item_int(HWND hwnd_dialog,
+                                                              int32_t id_dialog_item,
                                                               bool is_signed) {
-        int is_translated = 0;
-        unsigned int result = GetDlgItemInt(hwnd_dialog,
+        int32_t is_translated = 0;
+        uint32_t result = GetDlgItemInt(hwnd_dialog,
                                             id_dialog_item,
                                             &is_translated,
                                             is_signed ? TRUE : FALSE);
@@ -251,8 +251,8 @@ namespace YanLib::ui {
     }
 
     bool dialog::set_dialog_item_int(HWND hwnd_dialog,
-                                     int id_dialog_item,
-                                     unsigned int value,
+                                     int32_t id_dialog_item,
+                                     uint32_t value,
                                      bool is_signed) {
         if (!SetDlgItemInt(hwnd_dialog,
                            id_dialog_item,
@@ -264,11 +264,11 @@ namespace YanLib::ui {
         return true;
     }
 
-    unsigned int dialog::get_dialog_item_text(HWND hwnd_dialog,
-                                              int id_dialog_item,
+    uint32_t dialog::get_dialog_item_text(HWND hwnd_dialog,
+                                              int32_t id_dialog_item,
                                               wchar_t *text,
-                                              int cch_max) {
-        unsigned int result = GetDlgItemTextW(hwnd_dialog,
+                                              int32_t cch_max) {
+        uint32_t result = GetDlgItemTextW(hwnd_dialog,
                                               id_dialog_item,
                                               text,
                                               cch_max);
@@ -279,7 +279,7 @@ namespace YanLib::ui {
     }
 
     bool dialog::set_dialog_item_text(HWND hwnd_dialog,
-                                      int id_dialog_item,
+                                      int32_t id_dialog_item,
                                       const wchar_t *text) {
         if (!SetDlgItemTextW(hwnd_dialog,
                              id_dialog_item,
@@ -314,7 +314,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    unsigned int dialog::is_dialog_button_checked(HWND hwnd_dialog, int id_button) {
+    uint32_t dialog::is_dialog_button_checked(HWND hwnd_dialog, int32_t id_button) {
         return IsDlgButtonChecked(hwnd_dialog, id_button);
     }
 

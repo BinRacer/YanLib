@@ -31,10 +31,10 @@ namespace YanLib::ui {
                            void *param = nullptr,
                            HWND hwnd_parent = nullptr,
                            HMENU menu_handle = nullptr,
-                           int x = CW_USEDEFAULT,
-                           int y = CW_USEDEFAULT,
-                           int width = CW_USEDEFAULT,
-                           int height = CW_USEDEFAULT,
+                           int32_t x = CW_USEDEFAULT,
+                           int32_t y = CW_USEDEFAULT,
+                           int32_t width = CW_USEDEFAULT,
+                           int32_t height = CW_USEDEFAULT,
                            unsigned long style = WS_OVERLAPPEDWINDOW,
                            unsigned long ext_style = 0);
 
@@ -43,20 +43,20 @@ namespace YanLib::ui {
                                HINSTANCE instance_handle,
                                LPARAM l_param,
                                HWND hwnd_parent,
-                               int x = CW_USEDEFAULT,
-                               int y = CW_USEDEFAULT,
-                               int width = CW_USEDEFAULT,
-                               int height = CW_USEDEFAULT,
+                               int32_t x = CW_USEDEFAULT,
+                               int32_t y = CW_USEDEFAULT,
+                               int32_t width = CW_USEDEFAULT,
+                               int32_t height = CW_USEDEFAULT,
                                unsigned long style = MDIS_ALLCHILDSTYLES |
                                                      WS_OVERLAPPEDWINDOW);
 
         WNDCLASSEXW make_window_class(const wchar_t *class_name,
                                       WNDPROC window_proc,
                                       HINSTANCE instance_handle,
-                                      unsigned int style = CS_HREDRAW | CS_VREDRAW,
+                                      uint32_t style = CS_HREDRAW | CS_VREDRAW,
                                       const wchar_t *menu_name = nullptr,
-                                      int cb_class_extra = 0,
-                                      int cb_window_extra = 0,
+                                      int32_t cb_class_extra = 0,
+                                      int32_t cb_window_extra = 0,
                                       HICON icon_handle = LoadIconW(
                                           nullptr,
                                           IDI_APPLICATION),
@@ -81,23 +81,23 @@ namespace YanLib::ui {
                             const wchar_t *class_name,
                             WNDCLASSEXW *wnd_class);
 
-        unsigned long get_class_long(HWND hwnd, int index);
+        unsigned long get_class_long(HWND hwnd, int32_t index);
 
-        unsigned long set_class_long(HWND hwnd, int index, long value);
+        unsigned long set_class_long(HWND hwnd, int32_t index, long value);
 
-        ULONG_PTR get_class_long_ptr(HWND hwnd, int index);
+        ULONG_PTR get_class_long_ptr(HWND hwnd, int32_t index);
 
-        ULONG_PTR set_class_long_ptr(HWND hwnd, int index, LONG_PTR value);
+        ULONG_PTR set_class_long_ptr(HWND hwnd, int32_t index, LONG_PTR value);
 
-        unsigned short get_class_word(HWND hwnd, int index);
+        uint16_t get_class_word(HWND hwnd, int32_t index);
 
-        unsigned short set_class_word(HWND hwnd, int index, unsigned short value);
+        uint16_t set_class_word(HWND hwnd, int32_t index, uint16_t value);
 
-        int get_class_name(HWND hwnd, wchar_t *class_name, int cch_size);
+        int32_t get_class_name(HWND hwnd, wchar_t *class_name, int32_t cch_size);
 
-        int enum_props(HWND hwnd, PROPENUMPROCW enum_func);
+        int32_t enum_props(HWND hwnd, PROPENUMPROCW enum_func);
 
-        int enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM l_param);
+        int32_t enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM l_param);
 
         HANDLE get_prop(HWND hwnd, const wchar_t *text);
 
@@ -109,7 +109,7 @@ namespace YanLib::ui {
 
         bool deregister_shell_hook_window(HWND hwnd);
 
-        HHOOK set_windows_hook(int id_hook,
+        HHOOK set_windows_hook(int32_t id_hook,
                                HOOKPROC fn,
                                HINSTANCE hmod,
                                unsigned long tid);
@@ -117,7 +117,7 @@ namespace YanLib::ui {
         bool unhook_windows_hook(HHOOK hhk);
 
         LRESULT call_next_hook(HHOOK hhk,
-                               int code,
+                               int32_t code,
                                WPARAM w_param,
                                LPARAM l_param);
 
@@ -133,9 +133,9 @@ namespace YanLib::ui {
 
         bool is_win_event_hook_installed(unsigned long event);
 
-        bool show_window(HWND hwnd, int cmd_show) const;
+        bool show_window(HWND hwnd, int32_t cmd_show) const;
 
-        bool show_window_async(HWND hwnd, int cmd_show) const;
+        bool show_window_async(HWND hwnd, int32_t cmd_show) const;
 
         bool update_window(HWND hwnd) const;
 
@@ -155,32 +155,32 @@ namespace YanLib::ui {
 
         bool animate_window(HWND hwnd, unsigned long time, unsigned long flag);
 
-        unsigned int arrange_minimize_windows(HWND hwnd);
+        uint32_t arrange_minimize_windows(HWND hwnd);
 
-        HDWP begin_defer_window_pos(int num_windows);
+        HDWP begin_defer_window_pos(int32_t num_windows);
 
         HDWP defer_window_pos(HDWP hwin_pos_info,
                               HWND hwnd,
                               HWND hwnd_insert_after,
-                              int x,
-                              int y,
-                              int cx,
-                              int cy,
-                              unsigned int flag);
+                              int32_t x,
+                              int32_t y,
+                              int32_t cx,
+                              int32_t cy,
+                              uint32_t flag);
 
         bool end_defer_window_pos(HDWP hwin_pos_info);
 
         bool set_window_pos(HWND hwnd,
                             HWND hwnd_insert_after,
-                            int x,
-                            int y,
-                            int cx,
-                            int cy,
-                            unsigned int flag);
+                            int32_t x,
+                            int32_t y,
+                            int32_t cx,
+                            int32_t cy,
+                            uint32_t flag);
 
         bool calculate_popup_window_position(const POINT *anchor_point,
                                              const SIZE *window_size,
-                                             unsigned int flag,
+                                             uint32_t flag,
                                              RECT *exclude_rect,
                                              RECT *popup_window_position);
 
@@ -188,35 +188,35 @@ namespace YanLib::ui {
 
         LRESULT call_window_proc(WNDPROC prev_wnd_func,
                                  HWND hwnd,
-                                 unsigned int msg,
+                                 uint32_t msg,
                                  WPARAM w_param,
                                  LPARAM l_param);
 
         LRESULT default_window_proc(HWND hwnd,
-                                    unsigned int msg,
+                                    uint32_t msg,
                                     WPARAM w_param,
                                     LPARAM l_param);
 
         LRESULT default_frame_proc(HWND hwnd,
                                    HWND hwnd_mdi_client,
-                                   unsigned int msg,
+                                   uint32_t msg,
                                    WPARAM w_param,
                                    LPARAM l_param);
 
         LRESULT default_mdi_child_proc(HWND hwnd,
-                                       unsigned int msg,
+                                       uint32_t msg,
                                        WPARAM w_param,
                                        LPARAM l_param);
 
-        unsigned short cascade_windows(HWND hwnd_parent,
-                                       unsigned int how,
+        uint16_t cascade_windows(HWND hwnd_parent,
+                                       uint32_t how,
                                        const RECT *rect,
-                                       unsigned int kids_count,
+                                       uint32_t kids_count,
                                        const HWND *kids);
 
         HWND child_window_from_point(HWND hwnd_parent, POINT point);
 
-        HWND child_window_from_point(HWND hwnd_parent, POINT point, unsigned int flag);
+        HWND child_window_from_point(HWND hwnd_parent, POINT point, uint32_t flag);
 
         HWND real_child_window_from_point(HWND hwnd_parent,
                                           POINT parent_client_coords);
@@ -225,10 +225,10 @@ namespace YanLib::ui {
 
         HWND window_from_point(POINT point);
 
-        int map_window_points(HWND hwnd_from,
+        int32_t map_window_points(HWND hwnd_from,
                               HWND hwnd_to,
                               POINT *point,
-                              unsigned int count);
+                              uint32_t count);
 
         bool close_window(HWND hwnd);
 
@@ -248,7 +248,7 @@ namespace YanLib::ui {
                                  WNDENUMPROC fn,
                                  LPARAM l_param);
 
-        bool exit_windows(unsigned int flag, unsigned long reason);
+        bool exit_windows(uint32_t flag, unsigned long reason);
 
         HWND find_window(const wchar_t *class_name,
                          const wchar_t *window_name);
@@ -266,7 +266,7 @@ namespace YanLib::ui {
 
         HWND set_active_window(HWND hwnd);
 
-        unsigned int get_dpi_for_window(HWND hwnd);
+        uint32_t get_dpi_for_window(HWND hwnd);
 
         HWND get_foreground_window();
 
@@ -288,9 +288,9 @@ namespace YanLib::ui {
                                       uint8_t alpha,
                                       unsigned long flag);
 
-        HWND get_window(HWND hwnd, unsigned int cmd);
+        HWND get_window(HWND hwnd, uint32_t cmd);
 
-        HWND get_next_window(HWND hwnd, unsigned int cmd);
+        HWND get_next_window(HWND hwnd, uint32_t cmd);
 
         HWND get_shell_window();
 
@@ -312,32 +312,32 @@ namespace YanLib::ui {
         bool get_window_feedback_setting(HWND hwnd,
                                          FEEDBACK_TYPE feedback,
                                          unsigned long flag,
-                                         unsigned int *size,
+                                         uint32_t *size,
                                          void *config);
 
         bool set_window_feedback_setting(HWND hwnd,
                                          FEEDBACK_TYPE feedback,
                                          unsigned long flag,
-                                         unsigned int size,
+                                         uint32_t size,
                                          const void *config);
 
         bool get_window_info(HWND hwnd, WINDOWINFO *window_info);
 
-        long get_window_long(HWND hwnd, int index);
+        long get_window_long(HWND hwnd, int32_t index);
 
         long set_window_long(HWND hwnd,
-                             int index,
+                             int32_t index,
                              long value);
 
-        LONG_PTR get_window_long_ptr(HWND hwnd, int index);
+        LONG_PTR get_window_long_ptr(HWND hwnd, int32_t index);
 
         LONG_PTR set_window_long_ptr(HWND hwnd,
-                                     int index,
+                                     int32_t index,
                                      LONG_PTR value);
 
-        unsigned int get_window_module_file_name(HWND hwnd,
+        uint32_t get_window_module_file_name(HWND hwnd,
                                                  wchar_t *file_name,
-                                                 unsigned int cch_size = MAX_PATH);
+                                                 uint32_t cch_size = MAX_PATH);
 
         bool get_window_placement(HWND hwnd,
                                   WINDOWPLACEMENT *window_placement);
@@ -358,36 +358,36 @@ namespace YanLib::ui {
                                         unsigned long style,
                                         bool menu,
                                         unsigned long ext_style,
-                                        unsigned int dpi);
+                                        uint32_t dpi);
 
-        int get_window_region(HWND hwnd, HRGN region_handle);
+        int32_t get_window_region(HWND hwnd, HRGN region_handle);
 
-        int set_window_region(HWND hwnd,
+        int32_t set_window_region(HWND hwnd,
                               HRGN region_handle,
                               bool is_redraw);
 
-        int get_window_region_box(HWND hwnd, RECT *rect);
+        int32_t get_window_region_box(HWND hwnd, RECT *rect);
 
-        int get_window_text(HWND hwnd,
+        int32_t get_window_text(HWND hwnd,
                             wchar_t *text,
-                            int cch_size);
+                            int32_t cch_size);
 
         bool set_window_text(HWND hwnd,
                              const wchar_t *text);
 
-        int get_window_text_length(HWND hwnd);
+        int32_t get_window_text_length(HWND hwnd);
 
         unsigned long get_window_thread_process_id(HWND hwnd,
                                                    unsigned long *pid);
 
-        unsigned short get_window_word(HWND hwnd, int index);
+        uint16_t get_window_word(HWND hwnd, int32_t index);
 
         bool inherit_window_monitor(HWND hwnd,
                                     HWND hwnd_inherit);
 
-        int internal_get_window_text(HWND hwnd,
+        int32_t internal_get_window_text(HWND hwnd,
                                      wchar_t *text,
-                                     int cch_size);
+                                     int32_t cch_size);
 
         bool is_hung_app_window(HWND hwnd);
 
@@ -407,51 +407,51 @@ namespace YanLib::ui {
                                      unsigned long flag);
 
         bool move_window(HWND hwnd,
-                         int x,
-                         int y,
-                         int width,
-                         int height,
+                         int32_t x,
+                         int32_t y,
+                         int32_t width,
+                         int32_t height,
                          bool is_repaint);
 
         bool print_window(HWND hwnd,
                           HDC dc_handle,
-                          unsigned int flag);
+                          uint32_t flag);
 
-        unsigned int real_get_window_class(HWND hwnd,
+        uint32_t real_get_window_class(HWND hwnd,
                                            wchar_t *class_name,
-                                           unsigned int cch_size = MAX_PATH);
+                                           uint32_t cch_size = MAX_PATH);
 
         bool redraw_window(HWND hwnd,
                            const RECT *rect,
                            HRGN region_handle,
-                           unsigned int flag);
+                           uint32_t flag);
 
         bool scroll_window(HWND hwnd,
-                           int x_amount,
-                           int y_amount,
+                           int32_t x_amount,
+                           int32_t y_amount,
                            const RECT *rect,
                            const RECT *clip_rect);
 
-        int scroll_window(HWND hwnd,
-                          int dx,
-                          int dy,
+        int32_t scroll_window(HWND hwnd,
+                          int32_t dx,
+                          int32_t dy,
                           const RECT *rect_scroll,
                           const RECT *rect_clip,
                           HRGN region_handle_update,
                           RECT *rect_update,
-                          unsigned int flag);
+                          uint32_t flag);
 
         void switch_to_this_window(HWND hwnd, bool unknown = false);
 
-        unsigned short tile_windows(HWND hwnd_parent,
-                                    unsigned int how,
+        uint16_t tile_windows(HWND hwnd_parent,
+                                    uint32_t how,
                                     const RECT *rect,
-                                    unsigned int kids_num,
+                                    uint32_t kids_num,
                                     const HWND *kids);
 
         bool win_help(HWND hwnd,
                       const wchar_t *help,
-                      unsigned int cmd,
+                      uint32_t cmd,
                       ULONG_PTR data);
 
         bool restore_window(HWND hwnd);

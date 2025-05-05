@@ -71,55 +71,55 @@ namespace YanLib::ui {
 
         bool end_dialog(HWND hwnd_dialog, INT_PTR result);
 
-        bool check_dialog_button(HWND hwnd_dialog, int id_button, unsigned int check);
+        bool check_dialog_button(HWND hwnd_dialog, int32_t id_button, uint32_t check);
 
         LRESULT default_dialog_proc(HWND hwnd_dialog,
-                                    unsigned int msg,
+                                    uint32_t msg,
                                     WPARAM w_param,
                                     LPARAM l_param);
 
-        int dialog_dir_list(HWND hwnd_dialog,
+        int32_t dialog_dir_list(HWND hwnd_dialog,
                             wchar_t *path_spec,
-                            int id_listbox,
-                            int id_static_path,
-                            unsigned int file_type);
+                            int32_t id_listbox,
+                            int32_t id_static_path,
+                            uint32_t file_type);
 
-        int dialog_dir_list_combobox(HWND hwnd_dialog,
+        int32_t dialog_dir_list_combobox(HWND hwnd_dialog,
                                      wchar_t *path_spec,
-                                     int id_combobox,
-                                     int id_static_path,
-                                     unsigned int filetype);
+                                     int32_t id_combobox,
+                                     int32_t id_static_path,
+                                     uint32_t filetype);
 
         bool dialog_dir_select_combobox(HWND hwnd_dialog,
                                         wchar_t *text,
-                                        int cch_size,
-                                        int id_combobox);
+                                        int32_t cch_size,
+                                        int32_t id_combobox);
 
         bool dialog_dir_select(HWND hwnd_dialog,
                                wchar_t *text,
-                               int cch_size,
-                               int id_listbox);
+                               int32_t cch_size,
+                               int32_t id_listbox);
 
-        int get_dialog_ctrl_id(HWND hwnd_ctrl);
+        int32_t get_dialog_ctrl_id(HWND hwnd_ctrl);
 
-        HWND get_dialog_item(HWND hwnd_dialog, int id_dialog_item);
+        HWND get_dialog_item(HWND hwnd_dialog, int32_t id_dialog_item);
 
-        std::pair<unsigned int, bool> get_dialog_item_int(HWND hwnd_dialog,
-                                                          int id_dialog_item,
+        std::pair<uint32_t, bool> get_dialog_item_int(HWND hwnd_dialog,
+                                                          int32_t id_dialog_item,
                                                           bool is_signed);
 
         bool set_dialog_item_int(HWND hwnd_dialog,
-                                 int id_dialog_item,
-                                 unsigned int value,
+                                 int32_t id_dialog_item,
+                                 uint32_t value,
                                  bool is_signed);
 
-        unsigned int get_dialog_item_text(HWND hwnd_dialog,
-                                          int id_dialog_item,
+        uint32_t get_dialog_item_text(HWND hwnd_dialog,
+                                          int32_t id_dialog_item,
                                           wchar_t *text,
-                                          int cch_max);
+                                          int32_t cch_max);
 
         bool set_dialog_item_text(HWND hwnd_dialog,
-                                  int id_dialog_item,
+                                  int32_t id_dialog_item,
                                   const wchar_t *text);
 
         HWND get_next_dialog_group_item(HWND hwnd_dialog,
@@ -130,7 +130,7 @@ namespace YanLib::ui {
                                       HWND hwnd_ctrl,
                                       bool previous);
 
-        unsigned int is_dialog_button_checked(HWND hwnd_dialog, int id_button);
+        uint32_t is_dialog_button_checked(HWND hwnd_dialog, int32_t id_button);
 
         long get_dialog_base_units();
 

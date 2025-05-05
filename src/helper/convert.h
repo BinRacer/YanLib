@@ -23,10 +23,10 @@ namespace YanLib::helper {
         ~convert() = delete;
 
         static std::wstring str_to_wstr(const std::string &str,
-                                        unsigned int code_page = CP_UTF8);
+                                        uint32_t code_page = CP_UTF8);
 
         static std::string wstr_to_str(const std::wstring &wstr,
-                                       unsigned int code_page = CP_UTF8);
+                                       uint32_t code_page = CP_UTF8);
 
         static std::string err_string(unsigned long error_code);
 

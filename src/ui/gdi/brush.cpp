@@ -9,7 +9,7 @@ namespace YanLib::ui::gdi {
         return CreateSolidBrush(color);
     }
 
-    HBRUSH brush::create_hatch_brush(int hatch, COLORREF color) {
+    HBRUSH brush::create_hatch_brush(int32_t hatch, COLORREF color) {
         return CreateHatchBrush(hatch, color);
     }
 
@@ -21,7 +21,7 @@ namespace YanLib::ui::gdi {
         return CreateBrushIndirect(log_brush);
     }
 
-    HBRUSH brush::create_dib_pattern_brush_pt(const void *packed_dib, unsigned int usage) {
+    HBRUSH brush::create_dib_pattern_brush_pt(const void *packed_dib, uint32_t usage) {
         return CreateDIBPatternBrushPt(packed_dib, usage);
     }
 
@@ -29,11 +29,11 @@ namespace YanLib::ui::gdi {
         return GetBrushOrgEx(dc_handle, point);
     }
 
-    bool brush::set_brush_org(HDC dc_handle, int x, int y, POINT *point) {
+    bool brush::set_brush_org(HDC dc_handle, int32_t x, int32_t y, POINT *point) {
         return SetBrushOrgEx(dc_handle, x, y, point);
     }
 
-    HBRUSH brush::get_sys_color_brush(int index) {
+    HBRUSH brush::get_sys_color_brush(int32_t index) {
         return GetSysColorBrush(index);
     }
 
@@ -41,12 +41,12 @@ namespace YanLib::ui::gdi {
         return SetDCBrushColor(dc_handle, color);
     }
 
-    DWORD brush::get_sys_color(int index) {
+    DWORD brush::get_sys_color(int32_t index) {
         return GetSysColor(index);
     }
 
     std::pair<bool, unsigned long> brush::set_sys_colors(
-        int ele_num,
+        int32_t ele_num,
         const INT *ele_array,
         const COLORREF *rgb_values) {
         unsigned long error_code = 0;

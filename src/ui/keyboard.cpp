@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    HKL keyboard::load_keyboard_layout(const wchar_t *kl_id, unsigned int flag) {
+    HKL keyboard::load_keyboard_layout(const wchar_t *kl_id, uint32_t flag) {
         HKL result = LoadKeyboardLayoutW(kl_id, flag);
         if (!result) {
             error_code = GetLastError();
@@ -14,7 +14,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool keyboard::register_hot_key(HWND hwnd, int id, unsigned int modifiers, unsigned int vk) {
+    bool keyboard::register_hot_key(HWND hwnd, int32_t id, uint32_t modifiers, uint32_t vk) {
         if (!RegisterHotKey(hwnd, id, modifiers, vk)) {
             error_code = GetLastError();
             return false;
@@ -22,7 +22,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool keyboard::unregister_hot_key(HWND hwnd, int id) {
+    bool keyboard::unregister_hot_key(HWND hwnd, int32_t id) {
         if (!UnregisterHotKey(hwnd, id)) {
             error_code = GetLastError();
             return false;
@@ -30,7 +30,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    HKL keyboard::activate_keyboard_layout(HKL hkl, unsigned int flag) {
+    HKL keyboard::activate_keyboard_layout(HKL hkl, uint32_t flag) {
         HKL result = ActivateKeyboardLayout(hkl, flag);
         if (!result) {
             error_code = GetLastError();
@@ -50,8 +50,8 @@ namespace YanLib::ui {
         return GetKeyboardLayout(tid);
     }
 
-    int keyboard::get_keyboard_layout_list(int hkl_count, HKL *hkl_buf) {
-        int result = GetKeyboardLayoutList(hkl_count, hkl_buf);
+    int32_t keyboard::get_keyboard_layout_list(int32_t hkl_count, HKL *hkl_buf) {
+        int32_t result = GetKeyboardLayoutList(hkl_count, hkl_buf);
         if (!result) {
             error_code = GetLastError();
         }
@@ -82,35 +82,35 @@ namespace YanLib::ui {
         return true;
     }
 
-    int keyboard::get_keyboard_type(int type_flag) {
-        int result = GetKeyboardType(type_flag);
+    int32_t keyboard::get_keyboard_type(int32_t type_flag) {
+        int32_t result = GetKeyboardType(type_flag);
         if (type_flag != 1 && !result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int keyboard::get_key_name_text(long param, wchar_t *buf, int cch_size) {
-        int result = GetKeyNameTextW(param, buf, cch_size);
+    int32_t keyboard::get_key_name_text(long param, wchar_t *buf, int32_t cch_size) {
+        int32_t result = GetKeyNameTextW(param, buf, cch_size);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    short keyboard::get_key_state(int vk) {
+    int16_t keyboard::get_key_state(int32_t vk) {
         return GetKeyState(vk);
     }
 
-    unsigned short keyboard::get_key_state_lparam(LPARAM l_param) {
+    uint16_t keyboard::get_key_state_lparam(LPARAM l_param) {
         return GET_KEYSTATE_LPARAM(l_param);
     }
 
-    unsigned short keyboard::get_key_state_wparam(WPARAM w_param) {
+    uint16_t keyboard::get_key_state_wparam(WPARAM w_param) {
         return GET_KEYSTATE_WPARAM(w_param);
     }
 
-    short keyboard::get_async_key_state(int vk) {
+    int16_t keyboard::get_async_key_state(int32_t vk) {
         return GetAsyncKeyState(vk);
     }
 
@@ -121,23 +121,23 @@ namespace YanLib::ui {
         keybd_event(vk, scan, flag, extra_info);
     }
 
-    unsigned int keyboard::map_virtual_key(unsigned int code, unsigned int map_type) {
+    uint32_t keyboard::map_virtual_key(uint32_t code, uint32_t map_type) {
         return MapVirtualKeyW(code, map_type);
     }
 
-    unsigned int keyboard::map_virtual_key(unsigned int code, unsigned int map_type, HKL hkl) {
+    uint32_t keyboard::map_virtual_key(uint32_t code, uint32_t map_type, HKL hkl) {
         return MapVirtualKeyExW(code, map_type, hkl);
     }
 
-    unsigned long keyboard::oem_key_scan(unsigned short oem_char) {
+    unsigned long keyboard::oem_key_scan(uint16_t oem_char) {
         return OemKeyScan(oem_char);
     }
 
-    short keyboard::vk_key_scan(wchar_t ch) {
+    int16_t keyboard::vk_key_scan(wchar_t ch) {
         return VkKeyScanW(ch);
     }
 
-    short keyboard::vk_key_scan(wchar_t ch, HKL hkl) {
+    int16_t keyboard::vk_key_scan(wchar_t ch, HKL hkl) {
         return VkKeyScanExW(ch, hkl);
     }
 
@@ -153,19 +153,19 @@ namespace YanLib::ui {
         return result;
     }
 
-    int keyboard::to_ascii(unsigned int vk,
-                           unsigned int scan_code,
+    int32_t keyboard::to_ascii(uint32_t vk,
+                           uint32_t scan_code,
                            const uint8_t *key_state,
-                           unsigned short *ch,
-                           unsigned int flag) {
+                           uint16_t *ch,
+                           uint32_t flag) {
         return ToAscii(vk, scan_code, key_state, ch, flag);
     }
 
-    int keyboard::to_ascii(unsigned int vk,
-                           unsigned int scan_code,
+    int32_t keyboard::to_ascii(uint32_t vk,
+                           uint32_t scan_code,
                            const uint8_t *key_state,
-                           unsigned short *ch,
-                           unsigned int flag,
+                           uint16_t *ch,
+                           uint32_t flag,
                            HKL hkl) {
         return ToAsciiEx(vk,
                          scan_code,
@@ -175,12 +175,12 @@ namespace YanLib::ui {
                          hkl);
     }
 
-    int keyboard::to_unicode(unsigned int vk,
-                             unsigned int scan_code,
+    int32_t keyboard::to_unicode(uint32_t vk,
+                             uint32_t scan_code,
                              const uint8_t *key_state,
                              wchar_t *buf,
-                             int cch_size,
-                             unsigned int flag) {
+                             int32_t cch_size,
+                             uint32_t flag) {
         return ToUnicode(vk,
                          scan_code,
                          key_state,
@@ -189,12 +189,12 @@ namespace YanLib::ui {
                          flag);
     }
 
-    int keyboard::to_unicode(unsigned int vk,
-                             unsigned int scan_code,
+    int32_t keyboard::to_unicode(uint32_t vk,
+                             uint32_t scan_code,
                              const uint8_t *key_state,
                              wchar_t *buf,
-                             int cch_size,
-                             unsigned int flag,
+                             int32_t cch_size,
+                             uint32_t flag,
                              HKL hkl) {
         return ToUnicodeEx(vk,
                            scan_code,
@@ -232,30 +232,30 @@ namespace YanLib::ui {
     }
 
     LRESULT keyboard::default_raw_input_proc(RAWINPUT * *raw_input,
-                                             int input,
-                                             unsigned int cb_size_header) {
+                                             int32_t input,
+                                             uint32_t cb_size_header) {
         return DefRawInputProc(raw_input, input, cb_size_header);
     }
 
-    unsigned short keyboard::get_rawinput_code_wparam(WPARAM w_param) {
+    uint16_t keyboard::get_rawinput_code_wparam(WPARAM w_param) {
         return GET_RAWINPUT_CODE_WPARAM(w_param);
     }
 
-    unsigned int keyboard::get_raw_input_buffer(RAWINPUT *data,
-                                                unsigned int *cb_size,
-                                                unsigned int cb_size_header) {
-        unsigned int result = GetRawInputBuffer(data, cb_size, cb_size_header);
-        if (result == static_cast<unsigned int>(-1)) {
+    uint32_t keyboard::get_raw_input_buffer(RAWINPUT *data,
+                                                uint32_t *cb_size,
+                                                uint32_t cb_size_header) {
+        uint32_t result = GetRawInputBuffer(data, cb_size, cb_size_header);
+        if (result == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    unsigned int keyboard::get_raw_input_data(HRAWINPUT raw_input,
-                                              unsigned int command,
+    uint32_t keyboard::get_raw_input_data(HRAWINPUT raw_input,
+                                              uint32_t command,
                                               void *data,
-                                              unsigned int *cb_size,
-                                              unsigned int cb_size_header) {
+                                              uint32_t *cb_size,
+                                              uint32_t cb_size_header) {
         return GetRawInputData(raw_input,
                                command,
                                data,
@@ -263,11 +263,11 @@ namespace YanLib::ui {
                                cb_size_header);
     }
 
-    unsigned int keyboard::get_raw_input_device_info(HANDLE device_handle,
-                                                     unsigned int command,
+    uint32_t keyboard::get_raw_input_device_info(HANDLE device_handle,
+                                                     uint32_t command,
                                                      void *data,
-                                                     unsigned int *cb_size) {
-        unsigned int result = GetRawInputDeviceInfoW(device_handle,
+                                                     uint32_t *cb_size) {
+        uint32_t result = GetRawInputDeviceInfoW(device_handle,
                                                      command,
                                                      data,
                                                      cb_size);
@@ -275,27 +275,27 @@ namespace YanLib::ui {
         return result;
     }
 
-    unsigned int
+    uint32_t
     keyboard::get_raw_input_device_list(RAWINPUTDEVICELIST *raw_input_device_list,
-                                        unsigned int *num_devices,
-                                        unsigned int cb_size) {
-        unsigned int result = GetRawInputDeviceList(raw_input_device_list,
+                                        uint32_t *num_devices,
+                                        uint32_t cb_size) {
+        uint32_t result = GetRawInputDeviceList(raw_input_device_list,
                                                     num_devices,
                                                     cb_size);
-        if (result == static_cast<unsigned int>(-1)) {
+        if (result == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    unsigned int
+    uint32_t
     keyboard::get_registered_raw_input_devices(RAWINPUTDEVICE *raw_input_devices,
-                                               unsigned int *num_devices,
-                                               unsigned int cb_size) {
-        unsigned int result = GetRegisteredRawInputDevices(raw_input_devices,
+                                               uint32_t *num_devices,
+                                               uint32_t cb_size) {
+        uint32_t result = GetRegisteredRawInputDevices(raw_input_devices,
                                                            num_devices,
                                                            cb_size);
-        if (result == static_cast<unsigned int>(-1)) {
+        if (result == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
         return result;
@@ -307,8 +307,8 @@ namespace YanLib::ui {
     }
 
     bool keyboard::register_raw_input_devices(const RAWINPUTDEVICE *raw_input_devices,
-                                              unsigned int num_devices,
-                                              unsigned int cb_size) {
+                                              uint32_t num_devices,
+                                              uint32_t cb_size) {
         if (!RegisterRawInputDevices(raw_input_devices,
                                      num_devices,
                                      cb_size)) {

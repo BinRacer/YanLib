@@ -26,10 +26,10 @@ namespace YanLib::ui::gdi {
 
         static bool end_path(HDC dc_handle);
 
-        static int get_path(HDC dc_handle,
+        static int32_t get_path(HDC dc_handle,
                             POINT *point,
                             uint8_t *type_array,
-                            int num);
+                            int32_t num);
 
         static bool fill_path(HDC dc_handle);
 

@@ -323,8 +323,8 @@ namespace YanLib::sys {
         return pi;
     }
 
-    bool proc::win_exec(const char *cmdline, unsigned int show_flag) {
-        unsigned int ret = WinExec(cmdline, show_flag);
+    bool proc::win_exec(const char *cmdline, uint32_t show_flag) {
+        uint32_t ret = WinExec(cmdline, show_flag);
         if (ret <= 31 && ret > 0) {
             error_code = ret;
         } else if (ret == 0) {
@@ -339,7 +339,7 @@ namespace YanLib::sys {
     bool proc::shell_exec(const wchar_t *file_name,
                           const wchar_t *params,
                           const wchar_t *dir,
-                          int show_flag,
+                          int32_t show_flag,
                           HWND hwnd,
                           const wchar_t *operation) {
         HINSTANCE instance = ShellExecuteW(hwnd,
@@ -408,7 +408,7 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            unsigned short len = (wcslen(cmdline) + 1) * sizeof(wchar_t);
+            uint16_t len = (wcslen(cmdline) + 1) * sizeof(wchar_t);
             if (!WriteProcessMemory(proc_handle,
                                     params->CommandLine.Buffer,
                                     cmdline,
@@ -509,7 +509,7 @@ namespace YanLib::sys {
         return pid;
     }
 
-    bool proc::kill(HANDLE proc_handle, unsigned int exit_code) {
+    bool proc::kill(HANDLE proc_handle, uint32_t exit_code) {
         if (!TerminateProcess(proc_handle, exit_code)) {
             error_code = GetLastError();
             return false;
@@ -517,7 +517,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    void proc::exit(unsigned int exit_code) {
+    void proc::exit(uint32_t exit_code) {
         ExitProcess(exit_code);
     }
 
@@ -1066,15 +1066,15 @@ namespace YanLib::sys {
         return true;
     }
 
-    int proc::get_thread_priority(HANDLE thread_handle) {
-        int priority = GetThreadPriority(thread_handle);
+    int32_t proc::get_thread_priority(HANDLE thread_handle) {
+        int32_t priority = GetThreadPriority(thread_handle);
         if (priority == THREAD_PRIORITY_ERROR_RETURN) {
             error_code = GetLastError();
         }
         return priority;
     }
 
-    bool proc::set_thread_priority(HANDLE thread_handle, int priority) {
+    bool proc::set_thread_priority(HANDLE thread_handle, int32_t priority) {
         if (!SetThreadPriority(thread_handle, priority)) {
             error_code = GetLastError();
             return false;
@@ -1189,8 +1189,8 @@ namespace YanLib::sys {
     }
 
     bool proc::get_group_affinity(HANDLE proc_handle,
-                                  unsigned short *group_count,
-                                  unsigned short *group_array) {
+                                  uint16_t *group_count,
+                                  uint16_t *group_array) {
         if (!GetProcessGroupAffinity(proc_handle,
                                      group_count,
                                      group_array)) {
@@ -1239,7 +1239,7 @@ namespace YanLib::sys {
     }
 
     bool proc::get_priority_boost(HANDLE proc_handle) {
-        int is_disable_priority_boost = 0;
+        int32_t is_disable_priority_boost = 0;
         if (!GetProcessPriorityBoost(proc_handle,
                                      &is_disable_priority_boost)) {
             error_code = GetLastError();
@@ -1324,7 +1324,7 @@ namespace YanLib::sys {
     }
 
     bool proc::get_processor_system_cycle_time(
-        unsigned short group,
+        uint16_t group,
         SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION *buffer,
         unsigned long *ret_len) {
         if (!GetProcessorSystemCycleTime(group,
@@ -1382,7 +1382,7 @@ namespace YanLib::sys {
     }
 
     bool proc::all_thread_cycle_time(HANDLE proc_handle,
-                                     unsigned long long *cycle_time) {
+                                     uint64_t *cycle_time) {
         if (!QueryProcessCycleTime(proc_handle,
                                    cycle_time)) {
             error_code = GetLastError();

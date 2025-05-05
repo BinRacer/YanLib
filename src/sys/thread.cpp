@@ -425,22 +425,22 @@ namespace YanLib::sys {
     }
 
     bool thread::is_io_pending(HANDLE thread_handle) {
-        int is_ok = 0;
+        int32_t is_ok = 0;
         if (!GetThreadIOPendingFlag(thread_handle, &is_ok)) {
             error_code = GetLastError();
         }
         return is_ok;
     }
 
-    int thread::get_priority(HANDLE thread_handle) {
-        int priority = GetThreadPriority(thread_handle);
+    int32_t thread::get_priority(HANDLE thread_handle) {
+        int32_t priority = GetThreadPriority(thread_handle);
         if (priority == THREAD_PRIORITY_ERROR_RETURN) {
             error_code = GetLastError();
         }
         return priority;
     }
 
-    bool thread::set_priority(HANDLE thread_handle, int priority) {
+    bool thread::set_priority(HANDLE thread_handle, int32_t priority) {
         if (!SetThreadPriority(thread_handle, priority)) {
             error_code = GetLastError();
             return false;
@@ -465,7 +465,7 @@ namespace YanLib::sys {
     }
 
     bool thread::get_priority_boost(HANDLE thread_handle) {
-        int is_disable_priority_boost = 0;
+        int32_t is_disable_priority_boost = 0;
         if (!GetThreadPriorityBoost(thread_handle,
                                     &is_disable_priority_boost)) {
             error_code = GetLastError();
@@ -586,9 +586,9 @@ namespace YanLib::sys {
     }
 
     bool thread::query_idle_processor_cycle_time(
-        unsigned short group,
+        uint16_t group,
         unsigned long *buffer_length,
-        unsigned long long *processor_idle_cycle_time) {
+        uint64_t *processor_idle_cycle_time) {
         if (QueryIdleProcessorCycleTimeEx(group,
                                           buffer_length,
                                           processor_idle_cycle_time)) {
@@ -599,7 +599,7 @@ namespace YanLib::sys {
     }
 
     bool thread::query_cycle_time(HANDLE thread_handle,
-                                  unsigned long long *cycle_time) {
+                                  uint64_t *cycle_time) {
         if (!QueryThreadCycleTime(thread_handle,
                                   cycle_time)) {
             error_code = GetLastError();

@@ -5,6 +5,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include <Windows.h>
+#include <stdint.h>
 
 namespace YanLib::ui::gdi {
     class display {
@@ -52,24 +53,24 @@ namespace YanLib::ui::gdi {
             ORIENTATION_PREFERENCE *orientation);
 
         static long get_display_config_buffer_sizes(
-            unsigned int flag,
-            unsigned int *num_path_array_elements,
-            unsigned int *num_mode_info_array_elements);
+            uint32_t flag,
+            uint32_t *num_path_array_elements,
+            uint32_t *num_mode_info_array_elements);
 
         static long get_display_config(
-            unsigned int flag,
-            unsigned int *num_path_array_elements,
+            uint32_t flag,
+            uint32_t *num_path_array_elements,
             DISPLAYCONFIG_PATH_INFO *path_array,
-            unsigned int *num_mode_info_array_elements,
+            uint32_t *num_mode_info_array_elements,
             DISPLAYCONFIG_MODE_INFO *mode_info_array,
             DISPLAYCONFIG_TOPOLOGY_ID *current_topology_id);
 
         static long set_display_config(
-            unsigned int num_path_array_elements,
+            uint32_t num_path_array_elements,
             DISPLAYCONFIG_PATH_INFO *path_array,
-            unsigned int num_mode_info_array_elements,
+            uint32_t num_mode_info_array_elements,
             DISPLAYCONFIG_MODE_INFO *mode_info_array,
-            unsigned int flag);
+            uint32_t flag);
 
         static long change_display_settings(DEVMODEW *device_mode, unsigned long flag);
 

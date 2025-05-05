@@ -21,7 +21,7 @@ namespace YanLib::io {
         std::vector<IMAGE_SECTION_HEADER> _section_header_list = {};
         std::vector<std::string> _export_func_name = {};
         std::vector<unsigned long> _export_func_addr = {};
-        std::vector<unsigned short> _export_func_ordinal = {};
+        std::vector<uint16_t> _export_func_ordinal = {};
         unsigned long error_code = 0;
         volatile bool is_64bit = false;
 
@@ -117,11 +117,11 @@ namespace YanLib::io {
         bool set_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<unsigned long> &func_addrs);
 
-        std::vector<unsigned short> get_export_func_ordinal(
+        std::vector<uint16_t> get_export_func_ordinal(
             IMAGE_EXPORT_DIRECTORY *export_table);
 
         bool set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
-                                     std::vector<unsigned short> &func_ordinals);
+                                     std::vector<uint16_t> &func_ordinals);
 
         std::vector<IMAGE_IMPORT_DESCRIPTOR> get_import_table();
 
@@ -155,7 +155,7 @@ namespace YanLib::io {
             std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
 
         struct ImportTableFuncName {
-            unsigned short hint;
+            uint16_t hint;
             std::string name;
         };
 
@@ -166,13 +166,13 @@ namespace YanLib::io {
             std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
             std::vector<ImportTableFuncName> &func_name);
 
-        std::vector<std::pair<unsigned long long, unsigned long> > get_import_table_func_ordinal(
+        std::vector<std::pair<uint64_t, unsigned long> > get_import_table_func_ordinal(
             std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
 
         bool set_import_table_func_ordinal(
             unsigned long &first_thunk,
             std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
-            std::vector<std::pair<unsigned long long, unsigned long> > &func_ordinals);
+            std::vector<std::pair<uint64_t, unsigned long> > &func_ordinals);
 
         // std::pair<ForwarderChain,OriginalFirstThunk>
         std::vector<std::pair<unsigned long, unsigned long> > get_import_table_forwarder_chain(
@@ -186,17 +186,17 @@ namespace YanLib::io {
         std::vector<std::string> get_import_table_forwarder_string(
             std::vector<std::pair<unsigned long, unsigned long> > &forwarder_chain);
 
-        std::vector<unsigned long long> get_import_table_forwarder_string_addr(
+        std::vector<uint64_t> get_import_table_forwarder_string_addr(
             std::vector<std::pair<unsigned long, unsigned long> > &forwarder_chain);
 
         bool set_import_table_forwarder_string_addr(
             std::vector<std::pair<unsigned long, unsigned long> > &forwarder_chain,
-            std::vector<unsigned long long> &forwarder_string_addrs);
+            std::vector<uint64_t> &forwarder_string_addrs);
 
         struct RelocationTable {
             unsigned long virtual_address;
             unsigned long size_of_block;
-            std::vector<unsigned short> items;
+            std::vector<uint16_t> items;
         };
 
         std::vector<RelocationTable> get_relocation_table();
@@ -205,12 +205,12 @@ namespace YanLib::io {
             std::vector<RelocationTable> &relocation_table);
 
         // std::tuple<raw item value, item type, real offset>
-        std::vector<std::tuple<unsigned short, unsigned short, unsigned long> > get_relocation_table_item(
+        std::vector<std::tuple<uint16_t, uint16_t, unsigned long> > get_relocation_table_item(
             RelocationTable &relocation);
 
         bool set_relocation_table_item(
             RelocationTable &relocation,
-            std::vector<std::tuple<unsigned short, unsigned short, unsigned long> > &items);
+            std::vector<std::tuple<uint16_t, uint16_t, unsigned long> > &items);
 
         IMAGE_SECTION_HEADER find_section_header(unsigned long rva);
 

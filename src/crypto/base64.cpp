@@ -17,9 +17,9 @@ namespace YanLib::crypto {
         size_t i = 0;
         while (i < len) {
             uint32_t triple = 0;
-            int valid_bytes = 0;
+            int32_t valid_bytes = 0;
 
-            for (int j = 0; j < 3; ++j, ++i) {
+            for (int32_t j = 0; j < 3; ++j, ++i) {
                 triple <<= 8;
                 if (i < len) {
                     triple |= data[i];
@@ -27,8 +27,8 @@ namespace YanLib::crypto {
                 }
             }
 
-            int sextets = (valid_bytes * 8 + 5) / 6;
-            for (int j = 0; j < 4; ++j) {
+            int32_t sextets = (valid_bytes * 8 + 5) / 6;
+            for (int32_t j = 0; j < 4; ++j) {
                 uint8_t index = (triple >> (18 - j * 6)) & 0x3F;
                 if (j < sextets) {
                     encoded.push_back(BASE64_CHARS[index]);
@@ -46,8 +46,8 @@ namespace YanLib::crypto {
         constexpr uint8_t BASE64_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-        std::vector<int> decode_table(256, -1);
-        for (int i = 0; i < 64; ++i) {
+        std::vector<int32_t> decode_table(256, -1);
+        for (int32_t i = 0; i < 64; ++i) {
             decode_table[BASE64_CHARS[i]] = i;
         }
         decode_table['='] = -1;
@@ -56,8 +56,8 @@ namespace YanLib::crypto {
         decoded.reserve((len * 3) / 4);
 
         uint32_t buffer = 0;
-        int bits_collected = 0;
-        int padding = 0;
+        int32_t bits_collected = 0;
+        int32_t padding = 0;
 
         for (size_t i = 0; i < len; ++i) {
             const uint8_t c = data[i];
@@ -184,9 +184,9 @@ namespace YanLib::crypto {
         size_t i = 0;
         while (i < len) {
             uint32_t triple = 0;
-            int valid_bytes = 0;
+            int32_t valid_bytes = 0;
 
-            for (int j = 0; j < 3; ++j, ++i) {
+            for (int32_t j = 0; j < 3; ++j, ++i) {
                 triple <<= 8;
                 if (i < len) {
                     triple |= data[i];
@@ -194,8 +194,8 @@ namespace YanLib::crypto {
                 }
             }
 
-            int sextets = (valid_bytes * 8 + 5) / 6;
-            for (int j = 0; j < 4; ++j) {
+            int32_t sextets = (valid_bytes * 8 + 5) / 6;
+            for (int32_t j = 0; j < 4; ++j) {
                 uint8_t index = (triple >> (18 - j * 6)) & 0x3F;
                 if (j < sextets) {
                     encoded.push_back(BASE64_CHARS[index]);
@@ -232,8 +232,8 @@ namespace YanLib::crypto {
 
         constexpr uint8_t BASE64_CHARS[] =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        std::vector<int> decode_table(256, -1);
-        for (int i = 0; i < 64; ++i) {
+        std::vector<int32_t> decode_table(256, -1);
+        for (int32_t i = 0; i < 64; ++i) {
             decode_table[BASE64_CHARS[i]] = i;
         }
 
@@ -241,7 +241,7 @@ namespace YanLib::crypto {
         decoded.reserve((modified_data.size() * 3) / 4);
 
         uint32_t buffer = 0;
-        int bits_collected = 0;
+        int32_t bits_collected = 0;
         bool padding_started = false;
 
         for (size_t i = 0; i < modified_data.size(); ++i) {

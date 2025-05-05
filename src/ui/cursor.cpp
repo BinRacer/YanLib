@@ -7,10 +7,10 @@
 
 namespace YanLib::ui {
     HCURSOR cursor::create_cursor(HINSTANCE instance_handle,
-                                  int x_hotspot,
-                                  int y_hotspot,
-                                  int width,
-                                  int height,
+                                  int32_t x_hotspot,
+                                  int32_t y_hotspot,
+                                  int32_t width,
+                                  int32_t height,
                                   const void *and_plane,
                                   const void *xor_plane) {
         HCURSOR result = CreateCursor(instance_handle,
@@ -83,7 +83,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::set_cursor_pos(int x, int y) {
+    bool cursor::set_cursor_pos(int32_t x, int32_t y) {
         if (!SetCursorPos(x, y)) {
             error_code = GetLastError();
             return false;
@@ -107,7 +107,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::set_physical_cursor_pos(int x, int y) {
+    bool cursor::set_physical_cursor_pos(int32_t x, int32_t y) {
         if (!SetPhysicalCursorPos(x, y)) {
             error_code = GetLastError();
             return false;
@@ -115,7 +115,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_pointer_cursor_id(unsigned int pointer_id, unsigned int *cursor_id) {
+    bool cursor::get_pointer_cursor_id(uint32_t pointer_id, uint32_t *cursor_id) {
         if (!GetPointerCursorId(pointer_id, cursor_id)) {
             error_code = GetLastError();
             return false;
@@ -125,7 +125,7 @@ namespace YanLib::ui {
 
     bool
     cursor::get_pointer_device_cursors(HANDLE device_handle,
-                                       unsigned int *cursor_count,
+                                       uint32_t *cursor_count,
                                        POINTER_DEVICE_CURSOR_INFO *device_cursors) {
         if (!GetPointerDeviceCursors(device_handle, cursor_count, device_cursors)) {
             error_code = GetLastError();
@@ -142,15 +142,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    unsigned int cursor::set_thread_cursor_creation_scaling(unsigned int cursor_dpi) {
+    uint32_t cursor::set_thread_cursor_creation_scaling(uint32_t cursor_dpi) {
         return SetThreadCursorCreationScaling(cursor_dpi);
     }
 
-    int cursor::show_cursor() {
+    int32_t cursor::show_cursor() {
         return ShowCursor(TRUE);
     }
 
-    int cursor::hide_cursor() {
+    int32_t cursor::hide_cursor() {
         return ShowCursor(FALSE);
     }
 

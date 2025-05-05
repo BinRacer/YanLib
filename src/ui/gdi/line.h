@@ -22,16 +22,16 @@ namespace YanLib::ui::gdi {
 
         ~line() = default;
 
-        static bool line_to(HDC dc_handle, int x, int y);
+        static bool line_to(HDC dc_handle, int32_t x, int32_t y);
 
-        static bool line_dda(int x_start,
-                             int y_start,
-                             int x_end,
-                             int y_end,
+        static bool line_dda(int32_t x_start,
+                             int32_t y_start,
+                             int32_t x_end,
+                             int32_t y_end,
                              LINEDDAPROC line_dda_proc,
                              LPARAM data);
 
-        static bool move_to(HDC dc_handle, int x, int y, POINT *point);
+        static bool move_to(HDC dc_handle, int32_t x, int32_t y, POINT *point);
 
         static bool poly_line(HDC dc_handle, const POINT *point, unsigned long num);
 
@@ -45,7 +45,7 @@ namespace YanLib::ui::gdi {
         static bool poly_draw(HDC dc_handle,
                               const POINT *point,
                               const uint8_t *point_type,
-                              int num);
+                              int32_t num);
     };
 }
 #endif //LINE_H

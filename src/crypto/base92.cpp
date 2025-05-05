@@ -28,20 +28,20 @@ namespace YanLib::crypto {
             if (chunk.length() < 13) {
                 if (chunk.length() <= 6) {
                     chunk += std::string(6 - chunk.length(), '0');
-                    int val = static_cast<int>(std::bitset<6>(chunk).to_ulong());
+                    int32_t val = static_cast<int32_t>(std::bitset<6>(chunk).to_ulong());
                     result.push_back(BASE92_CHARS[val]);
                 } else {
                     chunk += std::string(13 - chunk.length(), '0');
-                    int high = static_cast<int>(std::bitset<13>(chunk).to_ulong() / 91);
-                    int low = static_cast<int>(std::bitset<13>(chunk).to_ulong() % 91);
+                    int32_t high = static_cast<int32_t>(std::bitset<13>(chunk).to_ulong() / 91);
+                    int32_t low = static_cast<int32_t>(std::bitset<13>(chunk).to_ulong() % 91);
                     result.push_back(BASE92_CHARS[high]);
                     result.push_back(BASE92_CHARS[low]);
                 }
                 break;
             }
 
-            int high = static_cast<int>(std::bitset<13>(chunk).to_ulong() / 91);
-            int low = static_cast<int>(std::bitset<13>(chunk).to_ulong() % 91);
+            int32_t high = static_cast<int32_t>(std::bitset<13>(chunk).to_ulong() / 91);
+            int32_t low = static_cast<int32_t>(std::bitset<13>(chunk).to_ulong() % 91);
             result.push_back(BASE92_CHARS[high]);
             result.push_back(BASE92_CHARS[low]);
         }
@@ -57,23 +57,23 @@ namespace YanLib::crypto {
                 "abcdefghijklmnopqrstuvwxyz{|}";
         if (data.empty()) return {};
 
-        std::vector<int> table(256, -1);
-        for (int i = 0; i < sizeof(BASE92_CHARS) - 1; ++i) {
+        std::vector<int32_t> table(256, -1);
+        for (int32_t i = 0; i < sizeof(BASE92_CHARS) - 1; ++i) {
             table[BASE92_CHARS[i]] = i;
         }
 
         std::string bitstr;
         for (size_t i = 0; i < data.size(); ++i) {
             if (i + 1 < data.size()) {
-                int high = table[data[i]];
-                int low = table[data[i + 1]];
+                int32_t high = table[data[i]];
+                int32_t low = table[data[i + 1]];
                 if (high == -1 || low == -1) return {};
 
-                int combined = high * 91 + low;
+                int32_t combined = high * 91 + low;
                 bitstr += std::bitset<13>(combined).to_string();
                 ++i;
             } else {
-                int val = table[data[i]];
+                int32_t val = table[data[i]];
                 if (val == -1) return {};
                 bitstr += std::bitset<6>(val).to_string().substr(0, 6);
             }

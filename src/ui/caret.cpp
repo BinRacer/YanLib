@@ -8,8 +8,8 @@
 namespace YanLib::ui {
     bool caret::create_caret(HWND hwnd,
                              HBITMAP bitmap_handle,
-                             int width,
-                             int height) {
+                             int32_t width,
+                             int32_t height) {
         if (!CreateCaret(hwnd, bitmap_handle, width, height)) {
             error_code = GetLastError();
             return false;
@@ -17,15 +17,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    unsigned int caret::get_caret_blink_time() {
-        unsigned int result = GetCaretBlinkTime();
+    uint32_t caret::get_caret_blink_time() {
+        uint32_t result = GetCaretBlinkTime();
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    bool caret::set_caret_blink_time(unsigned int milli_second) {
+    bool caret::set_caret_blink_time(uint32_t milli_second) {
         if (!SetCaretBlinkTime(milli_second)) {
             error_code = GetLastError();
             return false;
@@ -41,7 +41,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool caret::set_caret_pos(int x, int y) {
+    bool caret::set_caret_pos(int32_t x, int32_t y) {
         if (!SetCaretPos(x, y)) {
             error_code = GetLastError();
             return false;

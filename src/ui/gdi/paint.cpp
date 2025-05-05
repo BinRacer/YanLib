@@ -16,14 +16,14 @@ namespace YanLib::ui::gdi {
     bool paint::draw_caption(HWND hwnd,
                              HDC dc_handle,
                              const RECT *rect,
-                             unsigned int flag) {
+                             uint32_t flag) {
         return DrawCaption(hwnd, dc_handle, rect, flag);
     }
 
     bool paint::draw_edge(HDC dc_handle,
                           RECT *rect,
-                          unsigned int edge,
-                          unsigned int flag) {
+                          uint32_t edge,
+                          uint32_t flag) {
         return DrawEdge(dc_handle, rect, edge, flag);
     }
 
@@ -32,11 +32,11 @@ namespace YanLib::ui::gdi {
                            DRAWSTATEPROC draw_state_proc,
                            LPARAM l_param,
                            WPARAM w_param,
-                           int x,
-                           int y,
-                           int width,
-                           int height,
-                           unsigned int flag) {
+                           int32_t x,
+                           int32_t y,
+                           int32_t width,
+                           int32_t height,
+                           uint32_t flag) {
         return DrawStateW(dc_handle,
                           brush_handle,
                           draw_state_proc,
@@ -51,8 +51,8 @@ namespace YanLib::ui::gdi {
 
     bool paint::draw_frame_control(HDC hdc,
                                    RECT *rect,
-                                   unsigned int type,
-                                   unsigned int state) {
+                                   uint32_t type,
+                                   uint32_t state) {
         return DrawFrameControl(hdc, rect, type, state);
     }
 
@@ -72,19 +72,19 @@ namespace YanLib::ui::gdi {
         return SetBkColor(dc_handle, color);
     }
 
-    int paint::get_background_mode(HDC dc_handle) {
+    int32_t paint::get_background_mode(HDC dc_handle) {
         return GetBkMode(dc_handle);
     }
 
-    int paint::set_background_mode(HDC dc_handle, int mode) {
+    int32_t paint::set_background_mode(HDC dc_handle, int32_t mode) {
         return SetBkMode(dc_handle, mode);
     }
 
-    int paint::get_rop2(HDC dc_handle) {
+    int32_t paint::get_rop2(HDC dc_handle) {
         return GetROP2(dc_handle);
     }
 
-    int paint::set_rop2(HDC dc_handle, int mode) {
+    int32_t paint::set_rop2(HDC dc_handle, int32_t mode) {
         return SetROP2(dc_handle, mode);
     }
 
@@ -92,11 +92,11 @@ namespace YanLib::ui::gdi {
                             HBRUSH brush_handle,
                             GRAYSTRINGPROC gray_string_proc,
                             LPARAM l_param,
-                            int cch_size,
-                            int x,
-                            int y,
-                            int width,
-                            int height) {
+                            int32_t cch_size,
+                            int32_t x,
+                            int32_t y,
+                            int32_t width,
+                            int32_t height) {
         return GrayStringW(dc_handle,
                            brush_handle,
                            gray_string_proc,
@@ -108,11 +108,11 @@ namespace YanLib::ui::gdi {
                            height);
     }
 
-    std::pair<int, unsigned long> paint::load_string(HINSTANCE instance_handle,
+    std::pair<int32_t, unsigned long> paint::load_string(HINSTANCE instance_handle,
                                                      UINT id,
                                                      wchar_t *buf,
-                                                     int cch_size) {
-        int result = LoadStringW(instance_handle, id, buf, cch_size);
+                                                     int32_t cch_size) {
+        int32_t result = LoadStringW(instance_handle, id, buf, cch_size);
         unsigned long error_code = GetLastError();
         return std::make_pair(result, error_code);
     }

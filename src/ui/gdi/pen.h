@@ -5,6 +5,7 @@
 #ifndef PEN_H
 #define PEN_H
 #include <Windows.h>
+#include <stdint.h>
 
 namespace YanLib::ui::gdi {
     class pen {
@@ -21,7 +22,7 @@ namespace YanLib::ui::gdi {
 
         ~pen() = default;
 
-        static HPEN create_pen(int style, int width, COLORREF color);
+        static HPEN create_pen(int32_t style, int32_t width, COLORREF color);
 
         static HPEN create_pen_indirect(const LOGPEN *log_pen);
 

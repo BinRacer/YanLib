@@ -31,7 +31,7 @@ namespace YanLib::ui::gdi {
         return GetDCEx(hwnd, region_clip_handle, flag);
     }
 
-    int dc::release_dc(HWND hwnd, HDC dc_handle) {
+    int32_t dc::release_dc(HWND hwnd, HDC dc_handle) {
         return ReleaseDC(hwnd, dc_handle);
     }
 
@@ -40,8 +40,8 @@ namespace YanLib::ui::gdi {
     }
 
     std::pair<bool, unsigned long> dc::scroll_dc(HDC dc_handle,
-                                                 int x,
-                                                 int y,
+                                                 int32_t x,
+                                                 int32_t y,
                                                  const RECT *rect_scroll,
                                                  const RECT *rect_clip,
                                                  HRGN region_update_handle,
@@ -89,11 +89,11 @@ namespace YanLib::ui::gdi {
         return ResetDCW(dc_handle, device_mode);
     }
 
-    int dc::save_dc(HDC dc_handle) {
+    int32_t dc::save_dc(HDC dc_handle) {
         return SaveDC(dc_handle);
     }
 
-    bool dc::restore_dc(HDC dc_handle, int saved_dc_state) {
+    bool dc::restore_dc(HDC dc_handle, int32_t saved_dc_state) {
         return RestoreDC(dc_handle, saved_dc_state);
     }
 
@@ -117,7 +117,7 @@ namespace YanLib::ui::gdi {
         return SetDCPenColor(dc_handle, color);
     }
 
-    int dc::get_object(HANDLE gdi_handle, int size, void *buf) {
+    int32_t dc::get_object(HANDLE gdi_handle, int32_t size, void *buf) {
         return GetObjectW(gdi_handle, size, buf);
     }
 
@@ -125,11 +125,11 @@ namespace YanLib::ui::gdi {
         return GetObjectType(gdi_obj_handle);
     }
 
-    HGDIOBJ dc::get_stock_object(int type) {
+    HGDIOBJ dc::get_stock_object(int32_t type) {
         return GetStockObject(type);
     }
 
-    HGDIOBJ dc::get_current_object(HDC dc_handle, unsigned int type) {
+    HGDIOBJ dc::get_current_object(HDC dc_handle, uint32_t type) {
         return GetCurrentObject(dc_handle, type);
     }
 
@@ -141,17 +141,17 @@ namespace YanLib::ui::gdi {
         return DeleteObject(gdi_obj_handle);
     }
 
-    int dc::enum_objects(HDC dc_handle, int type, GOBJENUMPROC func, LPARAM l_param) {
+    int32_t dc::enum_objects(HDC dc_handle, int32_t type, GOBJENUMPROC func, LPARAM l_param) {
         return EnumObjects(dc_handle, type, func, l_param);
     }
 
-    int dc::get_device_caps(HDC dc_handle, int index) {
+    int32_t dc::get_device_caps(HDC dc_handle, int32_t index) {
         return GetDeviceCaps(dc_handle, index);
     }
 
-    int dc::device_capabilities(const wchar_t *device_name,
+    int32_t dc::device_capabilities(const wchar_t *device_name,
                                 const wchar_t *port,
-                                unsigned short capability,
+                                uint16_t capability,
                                 wchar_t *output,
                                 const DEVMODEW *device_mode) {
         return DeviceCapabilitiesW(device_name,
@@ -161,7 +161,7 @@ namespace YanLib::ui::gdi {
                                    device_mode);
     }
 
-    int dc::draw_escape(HDC dc_handle, int escape_func, int in_size, const char *in) {
+    int32_t dc::draw_escape(HDC dc_handle, int32_t escape_func, int32_t in_size, const char *in) {
         return DrawEscape(dc_handle, escape_func, in_size, in);
     }
 }

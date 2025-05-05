@@ -5,8 +5,8 @@
 #include "convert.h"
 
 namespace YanLib::helper {
-    std::wstring convert::str_to_wstr(const std::string &str, unsigned int code_page) {
-        int len = MultiByteToWideChar(code_page,
+    std::wstring convert::str_to_wstr(const std::string &str, uint32_t code_page) {
+        int32_t len = MultiByteToWideChar(code_page,
                                       0,
                                       str.data(),
                                       -1,
@@ -24,8 +24,8 @@ namespace YanLib::helper {
         return wstr;
     }
 
-    std::string convert::wstr_to_str(const std::wstring &wstr, unsigned int code_page) {
-        int len = WideCharToMultiByte(code_page,
+    std::string convert::wstr_to_str(const std::wstring &wstr, uint32_t code_page) {
+        int32_t len = WideCharToMultiByte(code_page,
                                       0,
                                       wstr.data(),
                                       -1,

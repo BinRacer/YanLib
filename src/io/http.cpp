@@ -183,7 +183,7 @@ namespace YanLib::io {
         }
 
         // convert to utf-8
-        int len = WideCharToMultiByte(CP_UTF8,
+        int32_t len = WideCharToMultiByte(CP_UTF8,
                                       0,
                                       buffer.data(),
                                       -1,
@@ -268,7 +268,7 @@ namespace YanLib::io {
         }
 
         // convert to utf-8
-        int len = WideCharToMultiByte(CP_UTF8,
+        int32_t len = WideCharToMultiByte(CP_UTF8,
                                       0,
                                       buffer.data(),
                                       -1,

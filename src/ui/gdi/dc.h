@@ -38,14 +38,14 @@ namespace YanLib::ui::gdi {
 
         static HDC get_dc(HWND hwnd, HRGN region_clip_handle, unsigned long flag);
 
-        static int release_dc(HWND hwnd, HDC dc_handle);
+        static int32_t release_dc(HWND hwnd, HDC dc_handle);
 
         static bool delete_dc(HDC dc_handle);
 
         // std::pair<result, error_code>
         static std::pair<bool, unsigned long> scroll_dc(HDC dc_handle,
-                                                        int x,
-                                                        int y,
+                                                        int32_t x,
+                                                        int32_t y,
                                                         const RECT *rect_scroll,
                                                         const RECT *rect_clip,
                                                         HRGN region_update_handle,
@@ -64,9 +64,9 @@ namespace YanLib::ui::gdi {
 
         static HDC reset_dc(HDC dc_handle, const DEVMODEW *device_mode);
 
-        static int save_dc(HDC dc_handle);
+        static int32_t save_dc(HDC dc_handle);
 
-        static bool restore_dc(HDC dc_handle, int saved_dc_state);
+        static bool restore_dc(HDC dc_handle, int32_t saved_dc_state);
 
         static COLORREF get_dc_brush_color(HDC dc_handle);
 
@@ -78,34 +78,34 @@ namespace YanLib::ui::gdi {
 
         static COLORREF set_dc_pen_color(HDC dc_handle, COLORREF color);
 
-        static int get_object(HANDLE gdi_handle, int size, void *buf);
+        static int32_t get_object(HANDLE gdi_handle, int32_t size, void *buf);
 
         static unsigned long get_object_type(HGDIOBJ gdi_obj_handle);
 
-        static HGDIOBJ get_stock_object(int type);
+        static HGDIOBJ get_stock_object(int32_t type);
 
-        static HGDIOBJ get_current_object(HDC dc_handle, unsigned int type);
+        static HGDIOBJ get_current_object(HDC dc_handle, uint32_t type);
 
         static HGDIOBJ select_object(HDC dc_handle, HGDIOBJ gdi_obj_handle);
 
         static bool delete_object(HGDIOBJ gdi_obj_handle);
 
-        static int enum_objects(HDC dc_handle,
-                                int type,
+        static int32_t enum_objects(HDC dc_handle,
+                                int32_t type,
                                 GOBJENUMPROC func,
                                 LPARAM l_param);
 
-        static int get_device_caps(HDC dc_handle, int index);
+        static int32_t get_device_caps(HDC dc_handle, int32_t index);
 
-        static int device_capabilities(const wchar_t *device_name,
+        static int32_t device_capabilities(const wchar_t *device_name,
                                        const wchar_t *port,
-                                       unsigned short capability,
+                                       uint16_t capability,
                                        wchar_t *output,
                                        const DEVMODEW *device_mode);
 
-        static int draw_escape(HDC dc_handle,
-                               int escape_func,
-                               int in_size,
+        static int32_t draw_escape(HDC dc_handle,
+                               int32_t escape_func,
+                               int32_t in_size,
                                const char *in);
     };
 }

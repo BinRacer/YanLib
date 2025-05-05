@@ -296,7 +296,7 @@ namespace YanLib::io {
             reinterpret_cast<uint8_t *>(_dos_header) +
             rva_to_foa(export_table->AddressOfNames));
         std::vector<std::string> result;
-        for (int i = 0; i < export_table->NumberOfNames; i++) {
+        for (int32_t i = 0; i < export_table->NumberOfNames; i++) {
             auto name_addr = reinterpret_cast<char *>(
                                  reinterpret_cast<uint8_t *>(_dos_header)) +
                              rva_to_foa(start_name_addr[i]);
@@ -369,15 +369,15 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<unsigned short> pe32::get_export_func_ordinal(
+    std::vector<uint16_t> pe32::get_export_func_ordinal(
         IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
-        std::vector<unsigned short> result(export_table->NumberOfFunctions, 0);
+        std::vector<uint16_t> result(export_table->NumberOfFunctions, 0);
         if (!mmap.read(_dos_header,
                        reinterpret_cast<uint8_t *>(result.data()),
-                       sizeof(unsigned short) * export_table->NumberOfFunctions,
+                       sizeof(uint16_t) * export_table->NumberOfFunctions,
                        rva_to_foa(export_table->AddressOfNameOrdinals))) {
             error_code = mmap.err_code();
             return {};
@@ -386,14 +386,14 @@ namespace YanLib::io {
     }
 
     bool pe32::set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
-                                       std::vector<unsigned short> &func_ordinals) {
+                                       std::vector<uint16_t> &func_ordinals) {
         if (!export_table ||
             func_ordinals.size() != export_table->NumberOfFunctions) {
             return false;
         }
         if (!mmap.write(_dos_header,
                         reinterpret_cast<uint8_t *>(func_ordinals.data()),
-                        sizeof(unsigned short) * export_table->NumberOfFunctions,
+                        sizeof(uint16_t) * export_table->NumberOfFunctions,
                         rva_to_foa(export_table->AddressOfNameOrdinals))) {
             error_code = mmap.err_code();
             return false;
@@ -495,7 +495,7 @@ namespace YanLib::io {
             import_table.size() != dll_names.size()) {
             return false;
         }
-        for (int i = 0; i < import_table.size(); i++) {
+        for (int32_t i = 0; i < import_table.size(); i++) {
             import_table[i].Name = dll_names[i];
         }
         return set_import_table(import_table);
@@ -521,7 +521,7 @@ namespace YanLib::io {
             import_table.size() != first_thunks.size()) {
             return false;
         }
-        for (int i = 0; i < import_table.size(); i++) {
+        for (int32_t i = 0; i < import_table.size(); i++) {
             import_table[i].FirstThunk = first_thunks[i];
         }
         return set_import_table(import_table);
@@ -621,8 +621,8 @@ namespace YanLib::io {
             thunk_datas.size() != func_name.size()) {
             return false;
         }
-        int is_all_ordinals = 0;
-        for (int i = 0; i < thunk_datas.size(); i++) {
+        int32_t is_all_ordinals = 0;
+        for (int32_t i = 0; i < thunk_datas.size(); i++) {
             if (!(thunk_datas[i].u1.AddressOfData & IMAGE_ORDINAL_FLAG32)) {
                 auto func_name_addr =
                         reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
@@ -646,12 +646,12 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<std::pair<unsigned long long, unsigned long> > pe32::get_import_table_func_ordinal(
+    std::vector<std::pair<uint64_t, unsigned long> > pe32::get_import_table_func_ordinal(
         std::vector<IMAGE_THUNK_DATA32> &thunk_datas) {
         if (thunk_datas.empty()) {
             return {};
         }
-        std::vector<std::pair<unsigned long long, unsigned long> > result;
+        std::vector<std::pair<uint64_t, unsigned long> > result;
         for (const auto &entry: thunk_datas) {
             if (entry.u1.Ordinal & IMAGE_ORDINAL_FLAG32) {
                 result.push_back(
@@ -668,13 +668,13 @@ namespace YanLib::io {
     bool pe32::set_import_table_func_ordinal(
         unsigned long &first_thunk,
         std::vector<IMAGE_THUNK_DATA32> &thunk_datas,
-        std::vector<std::pair<unsigned long long, unsigned long> > &func_ordinals) {
+        std::vector<std::pair<uint64_t, unsigned long> > &func_ordinals) {
         if (thunk_datas.empty() ||
             func_ordinals.empty() ||
             thunk_datas.size() != func_ordinals.size()) {
             return false;
         }
-        for (int i = 0; i < thunk_datas.size(); i++) {
+        for (int32_t i = 0; i < thunk_datas.size(); i++) {
             if (thunk_datas[i].u1.Ordinal & IMAGE_ORDINAL_FLAG32) {
                 thunk_datas[i].u1.Ordinal =
                         (func_ordinals[i].first & 0xFFFFFFFFFFFF0000)
@@ -707,7 +707,7 @@ namespace YanLib::io {
             import_table.size() != forwarder_chain.size()) {
             return false;
         }
-        for (int i = 0; i < import_table.size(); i++) {
+        for (int32_t i = 0; i < import_table.size(); i++) {
             import_table[i].ForwarderChain = forwarder_chain[i].first;
             import_table[i].OriginalFirstThunk = forwarder_chain[i].second;
         }
@@ -740,13 +740,13 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<unsigned long long> pe32::get_import_table_forwarder_string_addr(
+    std::vector<uint64_t> pe32::get_import_table_forwarder_string_addr(
         std::vector<std::pair<unsigned long, unsigned long> > &forwarder_chain) {
         if (forwarder_chain.empty()) {
             return {};
         }
 
-        std::vector<unsigned long long> result;
+        std::vector<uint64_t> result;
         for (const auto &entry: forwarder_chain) {
             size_t offset = rva_to_foa(entry.second);
             auto original_thunk_data =
@@ -764,15 +764,15 @@ namespace YanLib::io {
 
     bool pe32::set_import_table_forwarder_string_addr(
         std::vector<std::pair<unsigned long, unsigned long> > &forwarder_chain,
-        std::vector<unsigned long long> &forwarder_string_addrs) {
+        std::vector<uint64_t> &forwarder_string_addrs) {
         if (forwarder_chain.empty() ||
             forwarder_string_addrs.empty() ||
             forwarder_chain.size() != forwarder_string_addrs.size()) {
             return false;
         }
 
-        int is_no_forward = 0;
-        for (int i = 0; i < forwarder_chain.size(); i++) {
+        int32_t is_no_forward = 0;
+        for (int32_t i = 0; i < forwarder_chain.size(); i++) {
             size_t offset = rva_to_foa(forwarder_chain[i].second);
             auto original_thunk_data =
                     reinterpret_cast<IMAGE_THUNK_DATA32 *>(
@@ -812,17 +812,17 @@ namespace YanLib::io {
             RelocationTable relocation = {};
             relocation.virtual_address = relocation_table->VirtualAddress;
             relocation.size_of_block = relocation_table->SizeOfBlock;
-            auto item_addr = reinterpret_cast<unsigned short *>(
+            auto item_addr = reinterpret_cast<uint16_t *>(
                 reinterpret_cast<uint8_t *>(relocation_table) +
                 sizeof(IMAGE_BASE_RELOCATION));
             auto item_count = (relocation_table->SizeOfBlock -
-                               sizeof(IMAGE_BASE_RELOCATION)) / sizeof(unsigned short);
+                               sizeof(IMAGE_BASE_RELOCATION)) / sizeof(uint16_t);
 
             relocation.items.resize(item_count);
             memcpy_s(relocation.items.data(),
-                     sizeof(unsigned short) * item_count,
+                     sizeof(uint16_t) * item_count,
                      item_addr,
-                     sizeof(unsigned short) * item_count);
+                     sizeof(uint16_t) * item_count);
             result.push_back(relocation);
             relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
                 reinterpret_cast<uint8_t *>(relocation_table) +
@@ -848,15 +848,15 @@ namespace YanLib::io {
         auto table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
             reinterpret_cast<uint8_t *>(_dos_header) + offset);
         for (const auto &entry: relocation_table) {
-            auto item_addr = reinterpret_cast<unsigned short *>(
+            auto item_addr = reinterpret_cast<uint16_t *>(
                 reinterpret_cast<uint8_t *>(table) +
                 sizeof(IMAGE_BASE_RELOCATION));
             auto item_count = (table->SizeOfBlock -
-                               sizeof(IMAGE_BASE_RELOCATION)) / sizeof(unsigned short);
+                               sizeof(IMAGE_BASE_RELOCATION)) / sizeof(uint16_t);
             memcpy_s(item_addr,
-                     sizeof(unsigned short) * item_count,
+                     sizeof(uint16_t) * item_count,
                      entry.items.data(),
-                     sizeof(unsigned short) * item_count);
+                     sizeof(uint16_t) * item_count);
             table->VirtualAddress = entry.virtual_address;
             table->SizeOfBlock = entry.size_of_block;
             table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
@@ -866,15 +866,15 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<std::tuple<unsigned short, unsigned short, unsigned long> > pe32::get_relocation_table_item(
+    std::vector<std::tuple<uint16_t, uint16_t, unsigned long> > pe32::get_relocation_table_item(
         RelocationTable &relocation) {
         if (!relocation.virtual_address ||
             !relocation.size_of_block) {
             return {};
         }
-        std::vector<std::tuple<unsigned short, unsigned short, unsigned long> > result;
+        std::vector<std::tuple<uint16_t, uint16_t, unsigned long> > result;
         for (const auto &entry: relocation.items) {
-            unsigned short type = entry >> 12;
+            uint16_t type = entry >> 12;
             unsigned long real_addr = relocation.virtual_address + (entry & 0x0FFF);
             result.push_back(std::make_tuple(
                 entry,
@@ -886,7 +886,7 @@ namespace YanLib::io {
 
     bool pe32::set_relocation_table_item(
         RelocationTable &relocation,
-        std::vector<std::tuple<unsigned short, unsigned short, unsigned long> > &items) {
+        std::vector<std::tuple<uint16_t, uint16_t, unsigned long> > &items) {
         if (!relocation.virtual_address ||
             !relocation.size_of_block ||
             relocation.items.empty() ||
@@ -894,7 +894,7 @@ namespace YanLib::io {
             relocation.items.size() != items.size()) {
             return false;
         }
-        for (int i = 0; i < relocation.items.size(); i++) {
+        for (int32_t i = 0; i < relocation.items.size(); i++) {
             relocation.items[i] =
                     std::get<1>(items[i]) << 12 |
                     ((std::get<2>(items[i]) -
@@ -956,14 +956,14 @@ namespace YanLib::io {
         SystemTimeToFileTime(&st, &ft);
         uli.HighPart = ft.dwHighDateTime;
         uli.LowPart = ft.dwLowDateTime;
-        uli.QuadPart += static_cast<unsigned long long>(10000000) * timestamp;
+        uli.QuadPart += static_cast<uint64_t>(10000000) * timestamp;
         ft.dwHighDateTime = uli.HighPart;
         ft.dwLowDateTime = uli.LowPart;
         FileTimeToLocalFileTime(&ft, &ftLocal);
         FileTimeToSystemTime(&ftLocal, &st);
 
         std::string result(64, '\0');
-        int size = sprintf_s(result.data(),
+        int32_t size = sprintf_s(result.data(),
                              result.size(),
                              "%04d-%02d-%02d %02d:%02d:%02d.%03d",
                              st.wYear, st.wMonth, st.wDay,

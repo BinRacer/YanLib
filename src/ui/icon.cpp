@@ -7,8 +7,8 @@
 
 namespace YanLib::ui {
     HICON icon::create_icon(HINSTANCE instance_handle,
-                            int width,
-                            int height,
+                            int32_t width,
+                            int32_t height,
                             uint8_t planes,
                             uint8_t bits_pixel,
                             const uint8_t *and_bits,
@@ -44,9 +44,9 @@ namespace YanLib::ui {
                                           unsigned long res_size,
                                           bool is_icon,
                                           unsigned long version,
-                                          int desired_width,
-                                          int desired_height,
-                                          unsigned int flag) {
+                                          int32_t desired_width,
+                                          int32_t desired_height,
+                                          uint32_t flag) {
         HICON result = CreateIconFromResourceEx(res_buf,
                                                 res_size,
                                                 is_icon ? TRUE : FALSE,
@@ -84,7 +84,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool icon::draw_icon(HDC dc_handle, int x, int y, HICON icon_handle) {
+    bool icon::draw_icon(HDC dc_handle, int32_t x, int32_t y, HICON icon_handle) {
         if (!DrawIcon(dc_handle, x, y, icon_handle)) {
             error_code = GetLastError();
             return false;
@@ -93,14 +93,14 @@ namespace YanLib::ui {
     }
 
     bool icon::draw_icon(HDC dc_handle,
-                         int x_left,
-                         int y_top,
+                         int32_t x_left,
+                         int32_t y_top,
                          HICON icon_handle,
-                         int cx_width,
-                         int cy_width,
-                         unsigned int step_if_ani_cur,
+                         int32_t cx_width,
+                         int32_t cy_width,
+                         uint32_t step_if_ani_cur,
                          HBRUSH hbr_flicker_free_draw,
-                         unsigned int flag) {
+                         uint32_t flag) {
         if (!DrawIconEx(dc_handle,
                         x_left,
                         y_top,
@@ -136,20 +136,20 @@ namespace YanLib::ui {
         return GetIconInfoExW(icon_handle, icon_info);
     }
 
-    int icon::lookup_icon_id_from_directory(uint8_t *res_buf, bool is_icon) {
-        int result = LookupIconIdFromDirectory(res_buf, is_icon);
+    int32_t icon::lookup_icon_id_from_directory(uint8_t *res_buf, bool is_icon) {
+        int32_t result = LookupIconIdFromDirectory(res_buf, is_icon);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int icon::lookup_icon_id_from_directory(uint8_t *res_buf,
+    int32_t icon::lookup_icon_id_from_directory(uint8_t *res_buf,
                                             bool is_icon,
-                                            int desired_width,
-                                            int desired_height,
-                                            unsigned int flag) {
-        int result = LookupIconIdFromDirectoryEx(res_buf,
+                                            int32_t desired_width,
+                                            int32_t desired_height,
+                                            uint32_t flag) {
+        int32_t result = LookupIconIdFromDirectoryEx(res_buf,
                                                  is_icon,
                                                  desired_width,
                                                  desired_height,
@@ -160,14 +160,14 @@ namespace YanLib::ui {
         return result;
     }
 
-    unsigned int icon::private_extract_icons(const wchar_t *file_name,
-                                             int icon_index,
-                                             int icon_width,
-                                             int icon_height,
+    uint32_t icon::private_extract_icons(const wchar_t *file_name,
+                                             int32_t icon_index,
+                                             int32_t icon_width,
+                                             int32_t icon_height,
                                              HICON *icon_handle,
-                                             unsigned int *icon_id,
-                                             unsigned int icon_count,
-                                             unsigned int flag) {
+                                             uint32_t *icon_id,
+                                             uint32_t icon_count,
+                                             uint32_t flag) {
         return PrivateExtractIconsW(file_name,
                                     icon_index,
                                     icon_width,

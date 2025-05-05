@@ -5,14 +5,14 @@
 #include "line.h"
 
 namespace YanLib::ui::gdi {
-    bool line::line_to(HDC dc_handle, int x, int y) {
+    bool line::line_to(HDC dc_handle, int32_t x, int32_t y) {
         return LineTo(dc_handle, x, y);
     }
 
-    bool line::line_dda(int x_start,
-                        int y_start,
-                        int x_end,
-                        int y_end,
+    bool line::line_dda(int32_t x_start,
+                        int32_t y_start,
+                        int32_t x_end,
+                        int32_t y_end,
                         LINEDDAPROC line_dda_proc,
                         LPARAM data) {
         return LineDDA(x_start,
@@ -23,7 +23,7 @@ namespace YanLib::ui::gdi {
                        data);
     }
 
-    bool line::move_to(HDC dc_handle, int x, int y, POINT *point) {
+    bool line::move_to(HDC dc_handle, int32_t x, int32_t y, POINT *point) {
         return MoveToEx(dc_handle, x, y, point);
     }
 
@@ -48,7 +48,7 @@ namespace YanLib::ui::gdi {
     bool line::poly_draw(HDC dc_handle,
                          const POINT *point,
                          const uint8_t *point_type,
-                         int num) {
+                         int32_t num) {
         return PolyDraw(dc_handle,
                         point,
                         point_type,

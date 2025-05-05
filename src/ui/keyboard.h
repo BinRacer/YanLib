@@ -26,19 +26,19 @@ namespace YanLib::ui {
         ~keyboard() = default;
 
         HKL load_keyboard_layout(const wchar_t *kl_id = L"00000804",
-                                 unsigned int flag = KLF_ACTIVATE | KLF_SUBSTITUTE_OK);
+                                 uint32_t flag = KLF_ACTIVATE | KLF_SUBSTITUTE_OK);
 
-        bool register_hot_key(HWND hwnd, int id, unsigned int modifiers, unsigned int vk);
+        bool register_hot_key(HWND hwnd, int32_t id, uint32_t modifiers, uint32_t vk);
 
-        bool unregister_hot_key(HWND hwnd, int id);
+        bool unregister_hot_key(HWND hwnd, int32_t id);
 
-        HKL activate_keyboard_layout(HKL hkl, unsigned int flag);
+        HKL activate_keyboard_layout(HKL hkl, uint32_t flag);
 
         bool unload_keyboard_layout(HKL hkl);
 
         HKL get_keyboard_layout(unsigned long tid);
 
-        int get_keyboard_layout_list(int hkl_count, HKL *hkl_buf);
+        int32_t get_keyboard_layout_list(int32_t hkl_count, HKL *hkl_buf);
 
         bool get_keyboard_layout_name(wchar_t *kl_id);
 
@@ -46,63 +46,63 @@ namespace YanLib::ui {
 
         bool set_keyboard_state(uint8_t *key_state);
 
-        int get_keyboard_type(int type_flag);
+        int32_t get_keyboard_type(int32_t type_flag);
 
-        int get_key_name_text(long param, wchar_t *buf, int cch_size);
+        int32_t get_key_name_text(long param, wchar_t *buf, int32_t cch_size);
 
-        short get_key_state(int vk);
+        int16_t get_key_state(int32_t vk);
 
-        unsigned short get_key_state_lparam(LPARAM l_param);
+        uint16_t get_key_state_lparam(LPARAM l_param);
 
-        unsigned short get_key_state_wparam(WPARAM w_param);
+        uint16_t get_key_state_wparam(WPARAM w_param);
 
-        short get_async_key_state(int vk);
+        int16_t get_async_key_state(int32_t vk);
 
         void send_keyboard_event(uint8_t vk,
                                  uint8_t scan,
                                  unsigned long flag,
                                  ULONG_PTR extra_info);
 
-        unsigned int map_virtual_key(unsigned int code, unsigned int map_type);
+        uint32_t map_virtual_key(uint32_t code, uint32_t map_type);
 
-        unsigned int map_virtual_key(unsigned int code, unsigned int map_type, HKL hkl);
+        uint32_t map_virtual_key(uint32_t code, uint32_t map_type, HKL hkl);
 
-        unsigned long oem_key_scan(unsigned short oem_char);
+        unsigned long oem_key_scan(uint16_t oem_char);
 
-        short vk_key_scan(wchar_t ch);
+        int16_t vk_key_scan(wchar_t ch);
 
-        short vk_key_scan(wchar_t ch, HKL hkl);
+        int16_t vk_key_scan(wchar_t ch, HKL hkl);
 
         HWND get_focus();
 
         HWND set_focus(HWND hwnd);
 
-        int to_ascii(unsigned int vk,
-                     unsigned int scan_code,
+        int32_t to_ascii(uint32_t vk,
+                     uint32_t scan_code,
                      const uint8_t *key_state,
-                     unsigned short *ch,
-                     unsigned int flag);
+                     uint16_t *ch,
+                     uint32_t flag);
 
-        int to_ascii(unsigned int vk,
-                     unsigned int scan_code,
+        int32_t to_ascii(uint32_t vk,
+                     uint32_t scan_code,
                      const uint8_t *key_state,
-                     unsigned short *ch,
-                     unsigned int flag,
+                     uint16_t *ch,
+                     uint32_t flag,
                      HKL hkl);
 
-        int to_unicode(unsigned int vk,
-                       unsigned int scan_code,
+        int32_t to_unicode(uint32_t vk,
+                       uint32_t scan_code,
                        const uint8_t *key_state,
                        wchar_t *buf,
-                       int cch_size,
-                       unsigned int flag);
+                       int32_t cch_size,
+                       uint32_t flag);
 
-        int to_unicode(unsigned int vk,
-                       unsigned int scan_code,
+        int32_t to_unicode(uint32_t vk,
+                       uint32_t scan_code,
                        const uint8_t *key_state,
                        wchar_t *buf,
-                       int cch_size,
-                       unsigned int flag,
+                       int32_t cch_size,
+                       uint32_t flag,
                        HKL hkl);
 
         bool get_input_state();
@@ -114,40 +114,40 @@ namespace YanLib::ui {
         unsigned long wait_for_input_idle(HANDLE proc_handle, unsigned long milli_seconds);
 
         LRESULT default_raw_input_proc(RAWINPUT * *raw_input,
-                                       int input,
-                                       unsigned int cb_size_header);
+                                       int32_t input,
+                                       uint32_t cb_size_header);
 
-        unsigned short get_rawinput_code_wparam(WPARAM w_param);
+        uint16_t get_rawinput_code_wparam(WPARAM w_param);
 
-        unsigned int get_raw_input_buffer(RAWINPUT *data,
-                                          unsigned int *cb_size,
-                                          unsigned int cb_size_header);
+        uint32_t get_raw_input_buffer(RAWINPUT *data,
+                                          uint32_t *cb_size,
+                                          uint32_t cb_size_header);
 
-        unsigned int get_raw_input_data(HRAWINPUT raw_input,
-                                        unsigned int command,
+        uint32_t get_raw_input_data(HRAWINPUT raw_input,
+                                        uint32_t command,
                                         void *data,
-                                        unsigned int *cb_size,
-                                        unsigned int cb_size_header);
+                                        uint32_t *cb_size,
+                                        uint32_t cb_size_header);
 
-        unsigned int get_raw_input_device_info(HANDLE device_handle,
-                                               unsigned int command,
+        uint32_t get_raw_input_device_info(HANDLE device_handle,
+                                               uint32_t command,
                                                void *data,
-                                               unsigned int *cb_size);
+                                               uint32_t *cb_size);
 
-        unsigned int get_raw_input_device_list(RAWINPUTDEVICELIST *raw_input_device_list,
-                                               unsigned int *num_devices,
-                                               unsigned int cb_size);
+        uint32_t get_raw_input_device_list(RAWINPUTDEVICELIST *raw_input_device_list,
+                                               uint32_t *num_devices,
+                                               uint32_t cb_size);
 
-        unsigned int get_registered_raw_input_devices(RAWINPUTDEVICE *raw_input_devices,
-                                                      unsigned int *num_devices,
-                                                      unsigned int cb_size);
+        uint32_t get_registered_raw_input_devices(RAWINPUTDEVICE *raw_input_devices,
+                                                      uint32_t *num_devices,
+                                                      uint32_t cb_size);
 
 
         RAWINPUT *next_raw_input_block(RAWINPUT *raw_input);
 
         bool register_raw_input_devices(const RAWINPUTDEVICE *raw_input_devices,
-                                        unsigned int num_devices,
-                                        unsigned int cb_size);
+                                        uint32_t num_devices,
+                                        uint32_t cb_size);
 
         [[nodiscard]] unsigned long err_code() const;
 

@@ -23,32 +23,32 @@ namespace YanLib::ui::gdi {
         ~arc() = default;
 
         static bool make_arc(HDC dc_handle,
-                             int x1, int y1,
-                             int x2, int y2,
-                             int x3, int y3,
-                             int x4, int y4);
+                             int32_t x1, int32_t y1,
+                             int32_t x2, int32_t y2,
+                             int32_t x3, int32_t y3,
+                             int32_t x4, int32_t y4);
 
         static bool arc_to(HDC dc_handle,
-                           int left, int top,
-                           int right, int bottom,
-                           int xr1, int yr1,
-                           int xr2, int yr2);
+                           int32_t left, int32_t top,
+                           int32_t right, int32_t bottom,
+                           int32_t xr1, int32_t yr1,
+                           int32_t xr2, int32_t yr2);
 
         static bool angle_arc(HDC dc_handle,
-                              int x,
-                              int y,
+                              int32_t x,
+                              int32_t y,
                               unsigned long r,
                               FLOAT start_angle,
                               FLOAT sweep_angle);
 
-        static int get_arc_direction(HDC dc_handle);
+        static int32_t get_arc_direction(HDC dc_handle);
 
-        static int set_arc_direction(HDC dc_handle, int direction);
+        static int32_t set_arc_direction(HDC dc_handle, int32_t direction);
 
         static bool poly_draw(HDC dc_handle,
                               const POINT *point,
                               const uint8_t *point_type,
-                              int num);
+                              int32_t num);
     };
 }
 #endif //ARC_H

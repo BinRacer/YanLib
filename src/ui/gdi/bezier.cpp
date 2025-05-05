@@ -16,7 +16,7 @@ namespace YanLib::ui::gdi {
     bool bezier::poly_draw(HDC dc_handle,
                            const POINT *point,
                            const uint8_t *point_type,
-                           int num) {
+                           int32_t num) {
         return PolyDraw(dc_handle,
                         point,
                         point_type,

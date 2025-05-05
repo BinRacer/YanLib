@@ -27,17 +27,17 @@ namespace YanLib::ui {
 
         bool open_clipboard(HWND hwnd = nullptr);
 
-        unsigned int register_clipboard_format(const wchar_t *format);
+        uint32_t register_clipboard_format(const wchar_t *format);
 
         bool empty_clipboard();
 
         bool close_clipboard();
 
-        HANDLE get_clipboard_data(unsigned int format);
+        HANDLE get_clipboard_data(uint32_t format);
 
-        HANDLE set_clipboard_data(unsigned int format, HANDLE mem_handle);
+        HANDLE set_clipboard_data(uint32_t format, HANDLE mem_handle);
 
-        int get_clipboard_format_name(unsigned int format, wchar_t *format_name, int cch_max);
+        int32_t get_clipboard_format_name(uint32_t format, wchar_t *format_name, int32_t cch_max);
 
         HWND get_open_clipboard_window();
 
@@ -47,13 +47,13 @@ namespace YanLib::ui {
 
         HWND get_clipboard_viewer();
 
-        int get_priority_clipboard_format(unsigned int *format_priority_list, int formats);
+        int32_t get_priority_clipboard_format(uint32_t *format_priority_list, int32_t formats);
 
-        bool get_updated_clipboard_formats(unsigned int *formats,
-                                           unsigned int formats_count,
-                                           unsigned int *formats_out);
+        bool get_updated_clipboard_formats(uint32_t *formats,
+                                           uint32_t formats_count,
+                                           uint32_t *formats_out);
 
-        bool is_clipboard_format_available(unsigned int format);
+        bool is_clipboard_format_available(uint32_t format);
 
         bool add_clipboard_format_listener(HWND hwnd);
 
@@ -61,9 +61,9 @@ namespace YanLib::ui {
 
         bool change_clipboard_chain(HWND hwnd_remove, HWND hwnd_new_next);
 
-        unsigned int enum_clipboard_formats(unsigned int format);
+        uint32_t enum_clipboard_formats(uint32_t format);
 
-        int count_clipboard_formats();
+        int32_t count_clipboard_formats();
 
         [[nodiscard]] unsigned long err_code() const;
 

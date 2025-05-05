@@ -158,9 +158,9 @@ namespace YanLib::sys {
 
         bool is_io_pending(HANDLE thread_handle);
 
-        int get_priority(HANDLE thread_handle);
+        int32_t get_priority(HANDLE thread_handle);
 
-        bool set_priority(HANDLE thread_handle, int priority);
+        bool set_priority(HANDLE thread_handle, int32_t priority);
 
         unsigned long get_proc_priority(HANDLE proc_handle);
 
@@ -210,12 +210,12 @@ namespace YanLib::sys {
                       unsigned long thread_information_size);
 
         bool query_idle_processor_cycle_time(
-            unsigned short group,
+            uint16_t group,
             unsigned long *buffer_length,
-            unsigned long long *processor_idle_cycle_time);
+            uint64_t *processor_idle_cycle_time);
 
         bool query_cycle_time(HANDLE thread_handle,
-                              unsigned long long *cycle_time);
+                              uint64_t *cycle_time);
 
         DWORD_PTR set_affinity_mask(HANDLE thread_handle,
                                     DWORD_PTR thread_affinity_mask);

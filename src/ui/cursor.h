@@ -26,10 +26,10 @@ namespace YanLib::ui {
         ~cursor() = default;
 
         HCURSOR create_cursor(HINSTANCE instance_handle,
-                              int x_hotspot,
-                              int y_hotspot,
-                              int width,
-                              int height,
+                              int32_t x_hotspot,
+                              int32_t y_hotspot,
+                              int32_t width,
+                              int32_t height,
                               const void *and_plane,
                               const void *xor_plane);
 
@@ -49,27 +49,27 @@ namespace YanLib::ui {
 
         bool get_cursor_pos(POINT *point);
 
-        bool set_cursor_pos(int x, int y);
+        bool set_cursor_pos(int32_t x, int32_t y);
 
         bool get_clip_cursor(RECT *rect);
 
         bool get_physical_cursor_pos(POINT *point);
 
-        bool set_physical_cursor_pos(int x, int y);
+        bool set_physical_cursor_pos(int32_t x, int32_t y);
 
-        bool get_pointer_cursor_id(unsigned int pointer_id, unsigned int *cursor_id);
+        bool get_pointer_cursor_id(uint32_t pointer_id, uint32_t *cursor_id);
 
         bool get_pointer_device_cursors(HANDLE device_handle,
-                                        unsigned int *cursor_count,
+                                        uint32_t *cursor_count,
                                         POINTER_DEVICE_CURSOR_INFO *device_cursors);
 
         bool set_system_cursor(HCURSOR cursor_handle, unsigned long id);
 
-        unsigned int set_thread_cursor_creation_scaling(unsigned int cursor_dpi);
+        uint32_t set_thread_cursor_creation_scaling(uint32_t cursor_dpi);
 
-        int show_cursor();
+        int32_t show_cursor();
 
-        int hide_cursor();
+        int32_t hide_cursor();
 
         bool destroy_cursor(HCURSOR cursor_handle);
 

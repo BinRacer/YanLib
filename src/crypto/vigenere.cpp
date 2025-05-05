@@ -19,11 +19,11 @@ namespace YanLib::crypto {
         for (auto c: data) {
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 const uint8_t base = (c >= 'a') ? 'a' : 'A';
-                const int offset = (key[key_index % key.size()] >= 'A' &&
+                const int32_t offset = (key[key_index % key.size()] >= 'A' &&
                                     key[key_index % key.size()] <= 'Z')
                                        ? (key[key_index % key.size()] - 'A')
                                        : (key[key_index % key.size()] - 'a');
-                const int shifted = (c - base + offset) % 26;
+                const int32_t shifted = (c - base + offset) % 26;
                 result.push_back(static_cast<uint8_t>(base + shifted));
                 key_index++;
             } else {
@@ -48,11 +48,11 @@ namespace YanLib::crypto {
         for (auto c: data) {
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 const uint8_t base = (c >= 'a') ? 'a' : 'A';
-                const int offset = (key[key_index % key.size()] >= 'A' &&
+                const int32_t offset = (key[key_index % key.size()] >= 'A' &&
                                     key[key_index % key.size()] <= 'Z')
                                        ? (key[key_index % key.size()] - 'A')
                                        : (key[key_index % key.size()] - 'a');
-                const int shifted = (c - base - offset + 26) % 26;
+                const int32_t shifted = (c - base - offset + 26) % 26;
                 result.push_back(static_cast<uint8_t>(base + shifted));
                 key_index++;
             } else {

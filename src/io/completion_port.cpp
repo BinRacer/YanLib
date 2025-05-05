@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::io {
-    completion_port::completion_port(int max_concurrency) {
+    completion_port::completion_port(int32_t max_concurrency) {
         max_concurrent_threads = max_concurrency;
     }
 

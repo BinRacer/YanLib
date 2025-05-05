@@ -319,6 +319,215 @@ namespace YanLib::ui {
         return true;
     }
 
+    bool window::close_window(HWND hwnd) {
+        if (!CloseWindow(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::exit_windows(uint32_t flag, unsigned long reason) {
+        if (!ExitWindowsEx(flag, reason)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::destroy_window(HWND hwnd) {
+        if (!DestroyWindow(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+
+    bool window::enable_window(HWND hwnd, bool enable) {
+        return EnableWindow(hwnd, enable ? TRUE : FALSE);
+    }
+
+    bool window::enum_windows(WNDENUMPROC enum_func, LPARAM l_param) {
+        if (!EnumWindows(enum_func, l_param)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::enum_child_windows(HWND hwnd_parent,
+                                    WNDENUMPROC enum_func,
+                                    LPARAM l_param) {
+        return EnumChildWindows(hwnd_parent, enum_func, l_param);
+    }
+
+    bool window::enum_thread_windows(unsigned long tid,
+                                     WNDENUMPROC fn,
+                                     LPARAM l_param) {
+        return EnumThreadWindows(tid, fn, l_param);
+    }
+
+    HWND window::find_window(const wchar_t *class_name,
+                             const wchar_t *window_name) {
+        return FindWindowW(class_name, window_name);
+    }
+
+    HWND window::find_window(HWND hwnd_parent,
+                             HWND hwnd_child_after,
+                             const wchar_t *class_name,
+                             const wchar_t *window_name) {
+        HWND hwnd = FindWindowExW(hwnd_parent,
+                                  hwnd_child_after,
+                                  class_name,
+                                  window_name);
+        if (!hwnd) {
+            error_code = GetLastError();
+        }
+        return hwnd;
+    }
+
+    bool window::flash_window(HWND hwnd, bool invert) {
+        return FlashWindow(hwnd, invert ? TRUE : FALSE);
+    }
+
+    bool window::flash_window(FLASHWINFO *flash_info) {
+        return FlashWindowEx(flash_info);
+    }
+
+    bool window::move_window(HWND hwnd,
+                             int32_t x,
+                             int32_t y,
+                             int32_t width,
+                             int32_t height,
+                             bool is_repaint) {
+        if (!MoveWindow(hwnd,
+                        x,
+                        y,
+                        width,
+                        height,
+                        is_repaint ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::print_window(HWND hwnd, HDC dc_handle, uint32_t flag) {
+        return PrintWindow(hwnd, dc_handle, flag);
+    }
+
+    bool window::redraw_window(HWND hwnd,
+                               const RECT *rect,
+                               HRGN region_handle,
+                               uint32_t flag) {
+        return RedrawWindow(hwnd,
+                            rect,
+                            region_handle,
+                            flag);
+    }
+
+    bool window::maximize_window(HWND hwnd) {
+        return ShowWindow(hwnd, SW_MAXIMIZE);
+    }
+
+    bool window::minimize_window(HWND hwnd) {
+        return ShowWindow(hwnd, SW_MINIMIZE);
+    }
+
+    bool window::hide_window(HWND hwnd) {
+        return ShowWindow(hwnd, SW_HIDE);
+    }
+
+    bool window::restore_window(HWND hwnd) {
+        return ShowWindow(hwnd, SW_RESTORE);
+    }
+
+    bool window::restore_icon_window(HWND hwnd) {
+        if (!OpenIcon(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    uint16_t window::tile_windows(HWND hwnd_parent,
+                                  uint32_t how,
+                                  const RECT *rect,
+                                  uint32_t kids_num,
+                                  const HWND *kids) {
+        uint16_t result = TileWindows(hwnd_parent, how, rect, kids_num, kids);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::is_hung_app_window(HWND hwnd) {
+        return IsHungAppWindow(hwnd);
+    }
+
+    bool window::is_window(HWND hwnd) {
+        return IsWindow(hwnd);
+    }
+
+    bool window::is_window_arranged(HWND hwnd) {
+        bool is_ok = false;
+        HMODULE hmodule = nullptr;
+        do {
+            hmodule = LoadLibraryW(L"user32.dll");
+            if (!hmodule) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef BOOL (CALLBACK *fn)(HWND);
+            fn IsWindowArranged = reinterpret_cast<fn>(
+                GetProcAddress(hmodule,
+                               "IsWindowArranged"));
+            if (!IsWindowArranged) {
+                error_code = GetLastError();
+                break;
+            }
+            if (!IsWindowArranged(hwnd)) {
+                error_code = GetLastError();
+                is_ok = true;
+                break;
+            }
+        } while (false);
+        if (hmodule) {
+            FreeLibrary(hmodule);
+        }
+        return is_ok;
+    }
+
+    bool window::is_window_enabled(HWND hwnd) {
+        return IsWindowEnabled(hwnd);
+    }
+
+    bool window::is_window_unicode(HWND hwnd) {
+        return IsWindowUnicode(hwnd);
+    }
+
+    bool window::is_window_visible(HWND hwnd) {
+        return IsWindowVisible(hwnd);
+    }
+
+    bool window::is_window_minimize(HWND hwnd) {
+        return IsIconic(hwnd);
+    }
+
+    bool window::is_window_maximize(HWND hwnd) {
+        return IsZoomed(hwnd);
+    }
+
+    bool window::is_child_window(HWND hwnd_parent, HWND hwnd) {
+        return IsChild(hwnd_parent, hwnd);
+    }
+
+    bool window::is_any_popup() {
+        return AnyPopup();
+    }
+
     uint32_t window::arrange_minimize_windows(HWND hwnd) {
         uint32_t height = ArrangeIconicWindows(hwnd);
         if (!height) {
@@ -401,6 +610,36 @@ namespace YanLib::ui {
         return true;
     }
 
+    HWND window::child_window_from_point(HWND hwnd_parent, POINT point) {
+        return ChildWindowFromPoint(hwnd_parent, point);
+    }
+
+    HWND window::child_window_from_point(HWND hwnd_parent, POINT point, uint32_t flag) {
+        return ChildWindowFromPointEx(hwnd_parent, point, flag);
+    }
+
+    HWND window::real_child_window_from_point(HWND hwnd_parent,
+                                              POINT parent_client_coords) {
+        return RealChildWindowFromPoint(hwnd_parent, parent_client_coords);
+    }
+
+    HWND window::window_from_physical_point(POINT point) {
+        return WindowFromPhysicalPoint(point);
+    }
+
+    HWND window::window_from_point(POINT point) {
+        return WindowFromPoint(point);
+    }
+
+    int32_t window::map_window_points(HWND hwnd_from,
+                                      HWND hwnd_to,
+                                      POINT *point,
+                                      uint32_t count) {
+        int32_t result = MapWindowPoints(hwnd_from, hwnd_to, point, count);
+        error_code = GetLastError();
+        return result;
+    }
+
     bool window::bring_window_to_top(HWND hwnd) {
         if (!BringWindowToTop(hwnd)) {
             error_code = GetLastError();
@@ -444,128 +683,23 @@ namespace YanLib::ui {
     }
 
     uint16_t window::cascade_windows(HWND hwnd_parent,
-                                           uint32_t how,
-                                           const RECT *rect,
-                                           uint32_t kids_count,
-                                           const HWND *kids) {
+                                     uint32_t how,
+                                     const RECT *rect,
+                                     uint32_t kids_count,
+                                     const HWND *kids) {
         uint16_t count = CascadeWindows(hwnd_parent,
-                                              how,
-                                              rect,
-                                              kids_count,
-                                              kids);
+                                        how,
+                                        rect,
+                                        kids_count,
+                                        kids);
         if (!count) {
             error_code = GetLastError();
         }
         return count;
     }
 
-    HWND window::child_window_from_point(HWND hwnd_parent, POINT point) {
-        return ChildWindowFromPoint(hwnd_parent, point);
-    }
-
-    HWND window::child_window_from_point(HWND hwnd_parent, POINT point, uint32_t flag) {
-        return ChildWindowFromPointEx(hwnd_parent, point, flag);
-    }
-
-    HWND window::real_child_window_from_point(HWND hwnd_parent,
-                                              POINT parent_client_coords) {
-        return RealChildWindowFromPoint(hwnd_parent, parent_client_coords);
-    }
-
-    HWND window::window_from_physical_point(POINT point) {
-        return WindowFromPhysicalPoint(point);
-    }
-
-    HWND window::window_from_point(POINT point) {
-        return WindowFromPoint(point);
-    }
-
-    int32_t window::map_window_points(HWND hwnd_from,
-                                  HWND hwnd_to,
-                                  POINT *point,
-                                  uint32_t count) {
-        int32_t result = MapWindowPoints(hwnd_from, hwnd_to, point, count);
-        error_code = GetLastError();
-        return result;
-    }
-
-    bool window::close_window(HWND hwnd) {
-        if (!CloseWindow(hwnd)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::destroy_window(HWND hwnd) {
-        if (!DestroyWindow(hwnd)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
     void window::disable_process_windows_ghosting() {
         DisableProcessWindowsGhosting();
-    }
-
-    bool window::enable_window(HWND hwnd, bool enable) {
-        return EnableWindow(hwnd, enable ? TRUE : FALSE);
-    }
-
-    bool window::enum_windows(WNDENUMPROC enum_func, LPARAM l_param) {
-        if (!EnumWindows(enum_func, l_param)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::enum_child_windows(HWND hwnd_parent,
-                                    WNDENUMPROC enum_func,
-                                    LPARAM l_param) {
-        return EnumChildWindows(hwnd_parent, enum_func, l_param);
-    }
-
-    bool window::enum_thread_windows(unsigned long tid,
-                                     WNDENUMPROC fn,
-                                     LPARAM l_param) {
-        return EnumThreadWindows(tid, fn, l_param);
-    }
-
-    bool window::exit_windows(uint32_t flag, unsigned long reason) {
-        if (!ExitWindowsEx(flag, reason)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    HWND window::find_window(const wchar_t *class_name,
-                             const wchar_t *window_name) {
-        return FindWindowW(class_name, window_name);
-    }
-
-    HWND window::find_window(HWND hwnd_parent,
-                             HWND hwnd_child_after,
-                             const wchar_t *class_name,
-                             const wchar_t *window_name) {
-        HWND hwnd = FindWindowExW(hwnd_parent,
-                                  hwnd_child_after,
-                                  class_name,
-                                  window_name);
-        if (!hwnd) {
-            error_code = GetLastError();
-        }
-        return hwnd;
-    }
-
-    bool window::flash_window(HWND hwnd, bool invert) {
-        return FlashWindow(hwnd, invert ? TRUE : FALSE);
-    }
-
-    bool window::flash_window(FLASHWINFO *flash_info) {
-        return FlashWindowEx(flash_info);
     }
 
     HWND window::get_active_window() {
@@ -762,8 +896,8 @@ namespace YanLib::ui {
     }
 
     uint32_t window::get_window_module_file_name(HWND hwnd,
-                                                     wchar_t *file_name,
-                                                     uint32_t cch_size) {
+                                                 wchar_t *file_name,
+                                                 uint32_t cch_size) {
         return GetWindowModuleFileNameW(hwnd, file_name, cch_size);
     }
 
@@ -886,13 +1020,9 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window::inherit_window_monitor(HWND hwnd, HWND hwnd_inherit) {
-        return InheritWindowMonitor(hwnd, hwnd_inherit);
-    }
-
     int32_t window::internal_get_window_text(HWND hwnd,
-                                         wchar_t *text,
-                                         int32_t cch_size) {
+                                             wchar_t *text,
+                                             int32_t cch_size) {
         int32_t result = InternalGetWindowText(hwnd, text, cch_size);
         if (!result) {
             error_code = GetLastError();
@@ -900,88 +1030,9 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window::is_hung_app_window(HWND hwnd) {
-        return IsHungAppWindow(hwnd);
-    }
-
-    bool window::is_window(HWND hwnd) {
-        return IsWindow(hwnd);
-    }
-
-    bool window::is_window_arranged(HWND hwnd) {
-        bool is_ok = false;
-        HMODULE hmodule = nullptr;
-        do {
-            hmodule = LoadLibraryW(L"user32.dll");
-            if (!hmodule) {
-                error_code = GetLastError();
-                break;
-            }
-            typedef BOOL (CALLBACK *fn)(HWND);
-            fn IsWindowArranged = reinterpret_cast<fn>(
-                GetProcAddress(hmodule,
-                               "IsWindowArranged"));
-            if (!IsWindowArranged) {
-                error_code = GetLastError();
-                break;
-            }
-            if (!IsWindowArranged(hwnd)) {
-                error_code = GetLastError();
-                is_ok = true;
-                break;
-            }
-        } while (false);
-        if (hmodule) {
-            FreeLibrary(hmodule);
-        }
-        return is_ok;
-    }
-
-    bool window::is_window_enabled(HWND hwnd) {
-        return IsWindowEnabled(hwnd);
-    }
-
-    bool window::is_window_unicode(HWND hwnd) {
-        return IsWindowUnicode(hwnd);
-    }
-
-    bool window::is_window_visible(HWND hwnd) {
-        return IsWindowVisible(hwnd);
-    }
-
-    bool window::is_any_popup() {
-        return AnyPopup();
-    }
-
-    HMONITOR window::monitor_from_window(HWND hwnd, unsigned long flag) {
-        return MonitorFromWindow(hwnd, flag);
-    }
-
-    bool window::move_window(HWND hwnd,
-                             int32_t x,
-                             int32_t y,
-                             int32_t width,
-                             int32_t height,
-                             bool is_repaint) {
-        if (!MoveWindow(hwnd,
-                        x,
-                        y,
-                        width,
-                        height,
-                        is_repaint ? TRUE : FALSE)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::print_window(HWND hwnd, HDC dc_handle, uint32_t flag) {
-        return PrintWindow(hwnd, dc_handle, flag);
-    }
-
     uint32_t window::real_get_window_class(HWND hwnd,
-                                               wchar_t *class_name,
-                                               uint32_t cch_size) {
+                                           wchar_t *class_name,
+                                           uint32_t cch_size) {
         uint32_t result = RealGetWindowClassW(hwnd, class_name, cch_size);
         if (!result) {
             error_code = GetLastError();
@@ -989,30 +1040,8 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window::redraw_window(HWND hwnd,
-                               const RECT *rect,
-                               HRGN region_handle,
-                               uint32_t flag) {
-        return RedrawWindow(hwnd,
-                            rect,
-                            region_handle,
-                            flag);
-    }
-
     void window::switch_to_this_window(HWND hwnd, bool unknown) {
         SwitchToThisWindow(hwnd, unknown ? TRUE : FALSE);
-    }
-
-    uint16_t window::tile_windows(HWND hwnd_parent,
-                                        uint32_t how,
-                                        const RECT *rect,
-                                        uint32_t kids_num,
-                                        const HWND *kids) {
-        uint16_t result = TileWindows(hwnd_parent, how, rect, kids_num, kids);
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
     }
 
     bool window::win_help(HWND hwnd,
@@ -1027,22 +1056,6 @@ namespace YanLib::ui {
             return false;
         }
         return true;
-    }
-
-    bool window::restore_window(HWND hwnd) {
-        if (!OpenIcon(hwnd)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool window::is_window_minimize(HWND hwnd) {
-        return IsIconic(hwnd);
-    }
-
-    bool window::is_window_maximize(HWND hwnd) {
-        return IsZoomed(hwnd);
     }
 
     unsigned long window::err_code() const {

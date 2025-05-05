@@ -155,6 +155,88 @@ namespace YanLib::ui {
 
         bool animate_window(HWND hwnd, unsigned long time, unsigned long flag);
 
+        bool close_window(HWND hwnd);
+
+        bool exit_windows(uint32_t flag, unsigned long reason);
+
+        bool destroy_window(HWND hwnd);
+
+        bool enable_window(HWND hwnd, bool enable);
+
+        bool enum_windows(WNDENUMPROC enum_func, LPARAM l_param);
+
+        bool enum_child_windows(HWND hwnd_parent,
+                                WNDENUMPROC enum_func,
+                                LPARAM l_param);
+
+        bool enum_thread_windows(unsigned long tid,
+                                 WNDENUMPROC fn,
+                                 LPARAM l_param);
+
+        HWND find_window(const wchar_t *class_name,
+                         const wchar_t *window_name);
+
+        HWND find_window(HWND hwnd_parent,
+                         HWND hwnd_child_after,
+                         const wchar_t *class_name,
+                         const wchar_t *window_name);
+
+        bool flash_window(HWND hwnd, bool invert);
+
+        bool flash_window(FLASHWINFO *flash_info);
+
+        bool move_window(HWND hwnd,
+                         int32_t x,
+                         int32_t y,
+                         int32_t width,
+                         int32_t height,
+                         bool is_repaint);
+
+        bool print_window(HWND hwnd,
+                          HDC dc_handle,
+                          uint32_t flag);
+
+        bool redraw_window(HWND hwnd,
+                           const RECT *rect,
+                           HRGN region_handle,
+                           uint32_t flag);
+
+        bool maximize_window(HWND hwnd);
+
+        bool minimize_window(HWND hwnd);
+
+        bool hide_window(HWND hwnd);
+
+        bool restore_window(HWND hwnd);
+
+        bool restore_icon_window(HWND hwnd);
+
+        uint16_t tile_windows(HWND hwnd_parent,
+                              uint32_t how,
+                              const RECT *rect,
+                              uint32_t kids_num,
+                              const HWND *kids);
+
+        bool is_hung_app_window(HWND hwnd);
+
+        bool is_window(HWND hwnd);
+
+        bool is_window_arranged(HWND hwnd);
+
+        bool is_window_enabled(HWND hwnd);
+
+        bool is_window_unicode(HWND hwnd);
+
+        bool is_window_visible(HWND hwnd);
+
+        bool is_window_minimize(HWND hwnd);
+
+        bool is_window_maximize(HWND hwnd);
+
+        bool is_child_window(HWND hwnd_parent, HWND hwnd);
+
+        bool is_any_popup();
+
         uint32_t arrange_minimize_windows(HWND hwnd);
 
         HDWP begin_defer_window_pos(int32_t num_windows);
@@ -184,6 +266,22 @@ namespace YanLib::ui {
                                              RECT *exclude_rect,
                                              RECT *popup_window_position);
 
+        HWND child_window_from_point(HWND hwnd_parent, POINT point);
+
+        HWND child_window_from_point(HWND hwnd_parent, POINT point, uint32_t flag);
+
+        HWND real_child_window_from_point(HWND hwnd_parent,
+                                          POINT parent_client_coords);
+
+        HWND window_from_physical_point(POINT point);
+
+        HWND window_from_point(POINT point);
+
+        int32_t map_window_points(HWND hwnd_from,
+                                  HWND hwnd_to,
+                                  POINT *point,
+                                  uint32_t count);
+
         bool bring_window_to_top(HWND hwnd);
 
         LRESULT call_window_proc(WNDPROC prev_wnd_func,
@@ -209,58 +307,12 @@ namespace YanLib::ui {
                                        LPARAM l_param);
 
         uint16_t cascade_windows(HWND hwnd_parent,
-                                       uint32_t how,
-                                       const RECT *rect,
-                                       uint32_t kids_count,
-                                       const HWND *kids);
-
-        HWND child_window_from_point(HWND hwnd_parent, POINT point);
-
-        HWND child_window_from_point(HWND hwnd_parent, POINT point, uint32_t flag);
-
-        HWND real_child_window_from_point(HWND hwnd_parent,
-                                          POINT parent_client_coords);
-
-        HWND window_from_physical_point(POINT point);
-
-        HWND window_from_point(POINT point);
-
-        int32_t map_window_points(HWND hwnd_from,
-                              HWND hwnd_to,
-                              POINT *point,
-                              uint32_t count);
-
-        bool close_window(HWND hwnd);
-
-        bool destroy_window(HWND hwnd);
+                                 uint32_t how,
+                                 const RECT *rect,
+                                 uint32_t kids_count,
+                                 const HWND *kids);
 
         void disable_process_windows_ghosting();
-
-        bool enable_window(HWND hwnd, bool enable);
-
-        bool enum_windows(WNDENUMPROC enum_func, LPARAM l_param);
-
-        bool enum_child_windows(HWND hwnd_parent,
-                                WNDENUMPROC enum_func,
-                                LPARAM l_param);
-
-        bool enum_thread_windows(unsigned long tid,
-                                 WNDENUMPROC fn,
-                                 LPARAM l_param);
-
-        bool exit_windows(uint32_t flag, unsigned long reason);
-
-        HWND find_window(const wchar_t *class_name,
-                         const wchar_t *window_name);
-
-        HWND find_window(HWND hwnd_parent,
-                         HWND hwnd_child_after,
-                         const wchar_t *class_name,
-                         const wchar_t *window_name);
-
-        bool flash_window(HWND hwnd, bool invert);
-
-        bool flash_window(FLASHWINFO *flash_info);
 
         HWND get_active_window();
 
@@ -336,8 +388,8 @@ namespace YanLib::ui {
                                      LONG_PTR value);
 
         uint32_t get_window_module_file_name(HWND hwnd,
-                                                 wchar_t *file_name,
-                                                 uint32_t cch_size = MAX_PATH);
+                                             wchar_t *file_name,
+                                             uint32_t cch_size = MAX_PATH);
 
         bool get_window_placement(HWND hwnd,
                                   WINDOWPLACEMENT *window_placement);
@@ -363,14 +415,14 @@ namespace YanLib::ui {
         int32_t get_window_region(HWND hwnd, HRGN region_handle);
 
         int32_t set_window_region(HWND hwnd,
-                              HRGN region_handle,
-                              bool is_redraw);
+                                  HRGN region_handle,
+                                  bool is_redraw);
 
         int32_t get_window_region_box(HWND hwnd, RECT *rect);
 
         int32_t get_window_text(HWND hwnd,
-                            wchar_t *text,
-                            int32_t cch_size);
+                                wchar_t *text,
+                                int32_t cch_size);
 
         bool set_window_text(HWND hwnd,
                              const wchar_t *text);
@@ -382,68 +434,20 @@ namespace YanLib::ui {
 
         uint16_t get_window_word(HWND hwnd, int32_t index);
 
-        bool inherit_window_monitor(HWND hwnd,
-                                    HWND hwnd_inherit);
-
         int32_t internal_get_window_text(HWND hwnd,
-                                     wchar_t *text,
-                                     int32_t cch_size);
-
-        bool is_hung_app_window(HWND hwnd);
-
-        bool is_window(HWND hwnd);
-
-        bool is_window_arranged(HWND hwnd);
-
-        bool is_window_enabled(HWND hwnd);
-
-        bool is_window_unicode(HWND hwnd);
-
-        bool is_window_visible(HWND hwnd);
-
-        bool is_any_popup();
-
-        HMONITOR monitor_from_window(HWND hwnd,
-                                     unsigned long flag);
-
-        bool move_window(HWND hwnd,
-                         int32_t x,
-                         int32_t y,
-                         int32_t width,
-                         int32_t height,
-                         bool is_repaint);
-
-        bool print_window(HWND hwnd,
-                          HDC dc_handle,
-                          uint32_t flag);
+                                         wchar_t *text,
+                                         int32_t cch_size);
 
         uint32_t real_get_window_class(HWND hwnd,
-                                           wchar_t *class_name,
-                                           uint32_t cch_size = MAX_PATH);
-
-        bool redraw_window(HWND hwnd,
-                           const RECT *rect,
-                           HRGN region_handle,
-                           uint32_t flag);
+                                       wchar_t *class_name,
+                                       uint32_t cch_size = MAX_PATH);
 
         void switch_to_this_window(HWND hwnd, bool unknown = false);
-
-        uint16_t tile_windows(HWND hwnd_parent,
-                                    uint32_t how,
-                                    const RECT *rect,
-                                    uint32_t kids_num,
-                                    const HWND *kids);
 
         bool win_help(HWND hwnd,
                       const wchar_t *help,
                       uint32_t cmd,
                       ULONG_PTR data);
-
-        bool restore_window(HWND hwnd);
-
-        bool is_window_minimize(HWND hwnd);
-
-        bool is_window_maximize(HWND hwnd);
 
         [[nodiscard]] unsigned long err_code() const;
 

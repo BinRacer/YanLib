@@ -30,6 +30,8 @@ namespace YanLib::ui::gdi {
 
         static HMONITOR monitor_from_rect(const RECT *rect, unsigned long flag);
 
+        static HMONITOR monitor_from_window(HWND hwnd, unsigned long flag);
+
         static bool get_monitor_info(HMONITOR monitor_handle,
                                      MONITORINFO *monitor_info);
 
@@ -38,6 +40,8 @@ namespace YanLib::ui::gdi {
 
         static bool physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
                                                                   POINT *point);
+
+        static bool inherit_window_monitor(HWND hwnd, HWND hwnd_inherit);
     };
 }
 #endif //MONITOR_H

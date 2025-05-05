@@ -20,6 +20,10 @@ namespace YanLib::ui::gdi {
         return MonitorFromRect(rect, flag);
     }
 
+    HMONITOR monitor::monitor_from_window(HWND hwnd, unsigned long flag) {
+        return MonitorFromWindow(hwnd, flag);
+    }
+
     bool monitor::get_monitor_info(HMONITOR monitor_handle,
                                    MONITORINFO *monitor_info) {
         return GetMonitorInfoW(monitor_handle, monitor_info);
@@ -33,5 +37,9 @@ namespace YanLib::ui::gdi {
     bool monitor::physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
                                                                 POINT *point) {
         return PhysicalToLogicalPointForPerMonitorDPI(hwnd, point);
+    }
+
+    bool monitor::inherit_window_monitor(HWND hwnd, HWND hwnd_inherit) {
+        return InheritWindowMonitor(hwnd, hwnd_inherit);
     }
 }

@@ -62,6 +62,7 @@ namespace YanLib::ui::gdi {
         log_font.lfItalic = is_italic ? TRUE : FALSE;
         log_font.lfUnderline = is_underline ? TRUE : FALSE;
         log_font.lfStrikeOut = is_strike_out ? TRUE : FALSE;
+        log_font.lfCharSet = char_set;
         log_font.lfOutPrecision = out_precision;
         log_font.lfClipPrecision = clip_precision;
         log_font.lfQuality = quality;
@@ -102,9 +103,9 @@ namespace YanLib::ui::gdi {
     }
 
     int32_t font::enum_font_families(HDC dc_handle,
-                                 LOGFONTW *log_font,
-                                 FONTENUMPROCW font_enum_proc,
-                                 LPARAM l_param) {
+                                     LOGFONTW *log_font,
+                                     FONTENUMPROCW font_enum_proc,
+                                     LPARAM l_param) {
         return EnumFontFamiliesExW(dc_handle,
                                    log_font,
                                    font_enum_proc,

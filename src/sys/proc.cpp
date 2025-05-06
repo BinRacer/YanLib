@@ -310,7 +310,7 @@ namespace YanLib::sys {
                                      app_name,
                                      cmdline,
                                      create_flag,
-                                     env,
+                                     environment,
                                      curr_dir,
                                      &si,
                                      &pi)) {

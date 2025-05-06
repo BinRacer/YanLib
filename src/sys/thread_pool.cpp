@@ -178,7 +178,7 @@ namespace YanLib::sys {
                                         unsigned long window_length) {
         return SetThreadpoolTimerEx(timer,
                                     due_time,
-                                    window_length,
+                                    ms_period,
                                     window_length);
     }
 

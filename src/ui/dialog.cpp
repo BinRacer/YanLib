@@ -337,9 +337,9 @@ namespace YanLib::ui {
     }
 
     DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS
-    dialog::get_dialog_control_dpi_change_behavior(HWND hwnd) {
+    dialog::get_dialog_control_dpi_change_behavior(HWND hwnd_dialog) {
         DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS result =
-                GetDialogControlDpiChangeBehavior(hwnd);
+                GetDialogControlDpiChangeBehavior(hwnd_dialog);
         if (!result) {
             error_code = GetLastError();
         }

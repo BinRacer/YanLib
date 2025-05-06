@@ -8,6 +8,7 @@
 #define WINNT
 #endif
 #include <Windows.h>
+#include <shellscalingapi.h>
 #include <string>
 
 namespace YanLib::ui {
@@ -516,6 +517,12 @@ namespace YanLib::ui {
                                     void *param,
                                     uint32_t win_ini);
 
+        bool system_parameters_info_for_dpi(uint32_t ui_action,
+                                            uint32_t ui_param,
+                                            void *param,
+                                            uint32_t win_ini,
+                                            uint32_t dpi);
+
         bool get_user_object_security(HANDLE obj_handle,
                                       PSECURITY_INFORMATION si_requested,
                                       PSECURITY_DESCRIPTOR sid,
@@ -583,6 +590,72 @@ namespace YanLib::ui {
                                 COMBOBOXINFO *combobox_info);
 
         unsigned long get_listbox_info(HWND hwnd);
+
+        bool are_dpi_awareness_contexts_equal(DPI_AWARENESS_CONTEXT dpi_context1,
+                                              DPI_AWARENESS_CONTEXT dpi_context2);
+
+        bool enable_non_client_dpi_scaling(HWND hwnd);
+
+        bool is_process_dpi_aware();
+
+        bool is_valid_dpi_awareness_context(DPI_AWARENESS_CONTEXT value);
+
+        uint32_t get_dpi_for_system();
+
+        uint32_t get_dpi_from_dpi_awareness_context(DPI_AWARENESS_CONTEXT value);
+
+        DPI_AWARENESS get_awareness_from_dpi_awareness_context(
+            DPI_AWARENESS_CONTEXT value);
+
+        DPI_AWARENESS_CONTEXT get_dpi_awareness_context_for_process(
+            HANDLE proc_handle);
+
+        int32_t get_system_metrics_for_dpi(int32_t index, uint32_t dpi);
+
+        uint32_t get_system_dpi_for_process(HANDLE proc_handle);
+
+        HRESULT get_process_dpi_awareness(HANDLE proc_handle,
+                                          PROCESS_DPI_AWARENESS *value);
+
+        HRESULT set_process_dpi_awareness(PROCESS_DPI_AWARENESS value);
+
+        bool set_process_dpi_awareness_context(DPI_AWARENESS_CONTEXT value);
+
+        DPI_AWARENESS_CONTEXT get_thread_dpi_awareness_context();
+
+        DPI_AWARENESS_CONTEXT set_thread_dpi_awareness_context(
+            DPI_AWARENESS_CONTEXT dpi_context);
+
+        DPI_HOSTING_BEHAVIOR get_thread_dpi_hosting_behavior();
+
+        DPI_HOSTING_BEHAVIOR set_thread_dpi_hosting_behavior(
+            DPI_HOSTING_BEHAVIOR value);
+
+        int16_t get_app_command_lparam(LPARAM l_param);
+
+        uint16_t get_device_lparam(LPARAM l_param);
+
+        uint16_t get_flags_lparam(LPARAM l_param);
+
+        int16_t get_nchittest_wparam(WPARAM w_param);
+
+        int16_t get_wheel_delta_wparam(WPARAM w_param);
+
+        wchar_t *make_int_resource(uint16_t value);
+
+        bool is_int_resource(uint16_t value);
+
+        WPARAM make_wparam(long low, long high);
+
+        LPARAM make_lparam(long low, long high);
+
+        LRESULT make_lresult(long low, long high);
+
+        uint16_t get_xbutton_wparam(WPARAM w_param);
+
+        POINT points_to_point(POINTS points);
+
+        POINTS point_to_points(POINT point);
 
         [[nodiscard]] unsigned long err_code() const;
 

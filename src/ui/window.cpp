@@ -1250,6 +1250,22 @@ namespace YanLib::ui {
         return true;
     }
 
+    bool window::system_parameters_info_for_dpi(uint32_t ui_action,
+                                                uint32_t ui_param,
+                                                void *param,
+                                                uint32_t win_ini,
+                                                uint32_t dpi) {
+        if (!SystemParametersInfoForDpi(ui_action,
+                                        ui_param,
+                                        param,
+                                        win_ini,
+                                        dpi)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     bool window::get_user_object_security(HANDLE obj_handle,
                                           PSECURITY_INFORMATION si_requested,
                                           PSECURITY_DESCRIPTOR sid,
@@ -1438,6 +1454,153 @@ namespace YanLib::ui {
 
     unsigned long window::get_listbox_info(HWND hwnd) {
         return GetListBoxInfo(hwnd);
+    }
+
+    bool window::are_dpi_awareness_contexts_equal(
+        DPI_AWARENESS_CONTEXT dpi_context1,
+        DPI_AWARENESS_CONTEXT dpi_context2) {
+        return AreDpiAwarenessContextsEqual(dpi_context1,
+                                            dpi_context2);
+    }
+
+    bool window::enable_non_client_dpi_scaling(HWND hwnd) {
+        if (!EnableNonClientDpiScaling(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::is_process_dpi_aware() {
+        return IsProcessDPIAware();
+    }
+
+    bool window::is_valid_dpi_awareness_context(DPI_AWARENESS_CONTEXT value) {
+        return IsValidDpiAwarenessContext(value);
+    }
+
+    uint32_t window::get_dpi_for_system() {
+        return GetDpiForSystem();
+    }
+
+    uint32_t window::get_dpi_from_dpi_awareness_context(
+        DPI_AWARENESS_CONTEXT value) {
+        return GetDpiFromDpiAwarenessContext(value);
+    }
+
+    DPI_AWARENESS window::get_awareness_from_dpi_awareness_context(
+        DPI_AWARENESS_CONTEXT value) {
+        return GetAwarenessFromDpiAwarenessContext(value);
+    }
+
+    DPI_AWARENESS_CONTEXT window::get_dpi_awareness_context_for_process(
+        HANDLE proc_handle) {
+        return GetDpiAwarenessContextForProcess(proc_handle);
+    }
+
+    int32_t window::get_system_metrics_for_dpi(int32_t index, uint32_t dpi) {
+        int32_t result = GetSystemMetricsForDpi(index, dpi);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    uint32_t window::get_system_dpi_for_process(HANDLE proc_handle) {
+        return GetSystemDpiForProcess(proc_handle);
+    }
+
+    HRESULT window::get_process_dpi_awareness(HANDLE proc_handle,
+                                              PROCESS_DPI_AWARENESS *value) {
+        return GetProcessDpiAwareness(proc_handle, value);
+    }
+
+    HRESULT window::set_process_dpi_awareness(PROCESS_DPI_AWARENESS value) {
+        return SetProcessDpiAwareness(value);
+    }
+
+    bool window::set_process_dpi_awareness_context(DPI_AWARENESS_CONTEXT value) {
+        if (!SetProcessDpiAwarenessContext(value)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    DPI_AWARENESS_CONTEXT window::get_thread_dpi_awareness_context() {
+        return GetThreadDpiAwarenessContext();
+    }
+
+    DPI_AWARENESS_CONTEXT window::set_thread_dpi_awareness_context(
+        DPI_AWARENESS_CONTEXT dpi_context) {
+        return SetThreadDpiAwarenessContext(dpi_context);
+    }
+
+    DPI_HOSTING_BEHAVIOR window::get_thread_dpi_hosting_behavior() {
+        return GetThreadDpiHostingBehavior();
+    }
+
+    DPI_HOSTING_BEHAVIOR window::set_thread_dpi_hosting_behavior(
+        DPI_HOSTING_BEHAVIOR value) {
+        return SetThreadDpiHostingBehavior(value);
+    }
+
+    int16_t window::get_app_command_lparam(LPARAM l_param) {
+        return GET_APPCOMMAND_LPARAM(l_param);
+    }
+
+    uint16_t window::get_device_lparam(LPARAM l_param) {
+        return GET_DEVICE_LPARAM(l_param);
+    }
+
+    uint16_t window::get_flags_lparam(LPARAM l_param) {
+        return GET_FLAGS_LPARAM(l_param);
+    }
+
+    int16_t window::get_nchittest_wparam(WPARAM w_param) {
+        return GET_NCHITTEST_WPARAM(w_param);
+    }
+
+    int16_t window::get_wheel_delta_wparam(WPARAM w_param) {
+        return GET_WHEEL_DELTA_WPARAM(w_param);
+    }
+
+    wchar_t *window::make_int_resource(uint16_t value) {
+        return MAKEINTRESOURCEW(value);
+    }
+
+    bool window::is_int_resource(uint16_t value) {
+        return IS_INTRESOURCE(value);
+    }
+
+    WPARAM window::make_wparam(long low, long high) {
+        return MAKEWPARAM(low, high);
+    }
+
+    LPARAM window::make_lparam(long low, long high) {
+        return MAKELPARAM(low, high);
+    }
+
+    LRESULT window::make_lresult(long low, long high) {
+        return MAKELRESULT(low, high);
+    }
+
+    uint16_t window::get_xbutton_wparam(WPARAM w_param) {
+        return GET_APPCOMMAND_LPARAM(w_param);
+    }
+
+    POINT window::points_to_point(POINTS points) {
+        POINT point = {};
+        point.x = points.x;
+        point.y = points.y;
+        return point;
+    }
+
+    POINTS window::point_to_points(POINT point) {
+        POINTS points = {};
+        points.x = point.x;
+        points.y = point.y;
+        return points;
     }
 
     unsigned long window::err_code() const {

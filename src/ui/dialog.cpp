@@ -150,6 +150,20 @@ namespace YanLib::ui {
         return true;
     }
 
+    bool dialog::check_radio_button(HWND hwnd_dialog,
+                                    int32_t first_button,
+                                    int32_t last_button,
+                                    int32_t check_button) {
+        if (!CheckRadioButton(hwnd_dialog,
+                              first_button,
+                              last_button,
+                              check_button)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     LRESULT dialog::default_dialog_proc(HWND hwnd_dialog,
                                         uint32_t msg,
                                         WPARAM w_param,
@@ -161,15 +175,15 @@ namespace YanLib::ui {
     }
 
     int32_t dialog::dialog_dir_list(HWND hwnd_dialog,
-                                wchar_t *path_spec,
-                                int32_t id_listbox,
-                                int32_t id_static_path,
-                                uint32_t file_type) {
+                                    wchar_t *path_spec,
+                                    int32_t id_listbox,
+                                    int32_t id_static_path,
+                                    uint32_t file_type) {
         int32_t result = DlgDirListW(hwnd_dialog,
-                                 path_spec,
-                                 id_listbox,
-                                 id_static_path,
-                                 file_type);
+                                     path_spec,
+                                     id_listbox,
+                                     id_static_path,
+                                     file_type);
         if (!result) {
             error_code = GetLastError();
         }
@@ -177,15 +191,15 @@ namespace YanLib::ui {
     }
 
     int32_t dialog::dialog_dir_list_combobox(HWND hwnd_dialog,
-                                         wchar_t *path_spec,
-                                         int32_t id_combobox,
-                                         int32_t id_static_path,
-                                         uint32_t filetype) {
+                                             wchar_t *path_spec,
+                                             int32_t id_combobox,
+                                             int32_t id_static_path,
+                                             uint32_t filetype) {
         int32_t result = DlgDirListComboBoxW(hwnd_dialog,
-                                         path_spec,
-                                         id_combobox,
-                                         id_static_path,
-                                         filetype);
+                                             path_spec,
+                                             id_combobox,
+                                             id_static_path,
+                                             filetype);
         if (!result) {
             error_code = GetLastError();
         }
@@ -237,13 +251,13 @@ namespace YanLib::ui {
     }
 
     std::pair<uint32_t, bool> dialog::get_dialog_item_int(HWND hwnd_dialog,
-                                                              int32_t id_dialog_item,
-                                                              bool is_signed) {
+                                                          int32_t id_dialog_item,
+                                                          bool is_signed) {
         int32_t is_translated = 0;
         uint32_t result = GetDlgItemInt(hwnd_dialog,
-                                            id_dialog_item,
-                                            &is_translated,
-                                            is_signed ? TRUE : FALSE);
+                                        id_dialog_item,
+                                        &is_translated,
+                                        is_signed ? TRUE : FALSE);
         if (!is_translated) {
             error_code = GetLastError();
         }
@@ -265,13 +279,13 @@ namespace YanLib::ui {
     }
 
     uint32_t dialog::get_dialog_item_text(HWND hwnd_dialog,
-                                              int32_t id_dialog_item,
-                                              wchar_t *text,
-                                              int32_t cch_max) {
+                                          int32_t id_dialog_item,
+                                          wchar_t *text,
+                                          int32_t cch_max) {
         uint32_t result = GetDlgItemTextW(hwnd_dialog,
-                                              id_dialog_item,
-                                              text,
-                                              cch_max);
+                                          id_dialog_item,
+                                          text,
+                                          cch_max);
         if (!result) {
             error_code = GetLastError();
         }

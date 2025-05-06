@@ -488,6 +488,102 @@ namespace YanLib::ui {
                               wchar_t *item_text,
                               uint32_t cch_item_text);
 
+        UINT_PTR set_timer(HWND hwnd,
+                           UINT_PTR event_id,
+                           uint32_t elapse,
+                           TIMERPROC timer_func);
+
+        UINT_PTR set_coalescable_timer(HWND hwnd,
+                                       UINT_PTR event_id,
+                                       uint32_t elapse,
+                                       TIMERPROC timer_func,
+                                       unsigned long tolerance_delay);
+
+        bool kill_timer(HWND hwnd, UINT_PTR event_id);
+
+        bool shutdown_block_reason_create(HWND hwnd, const wchar_t *reason);
+
+        bool shutdown_block_reason_destroy(HWND hwnd);
+
+        bool shutdown_block_reason_query(HWND hwnd,
+                                         wchar_t *buf,
+                                         unsigned long *cch_size);
+
+        int get_system_metrics(int index);
+
+        bool system_parameters_info(uint32_t ui_action,
+                                    uint32_t ui_param,
+                                    void *param,
+                                    uint32_t win_ini);
+
+        bool get_user_object_security(HANDLE obj_handle,
+                                      PSECURITY_INFORMATION si_requested,
+                                      PSECURITY_DESCRIPTOR sid,
+                                      unsigned long length,
+                                      unsigned long *length_needed);
+
+        unsigned long msg_wait_for_multiple_objects(unsigned long count,
+                                                    const HANDLE *handles,
+                                                    bool wait_all,
+                                                    unsigned long milli_seconds,
+                                                    unsigned long wake_mask);
+
+        unsigned long msg_wait_for_multiple_objects(unsigned long count,
+                                                    const HANDLE *handles,
+                                                    unsigned long milli_seconds,
+                                                    unsigned long wake_mask,
+                                                    unsigned long flag);
+
+        bool set_user_object_security(HANDLE obj_handle,
+                                      PSECURITY_INFORMATION si_requested,
+                                      PSECURITY_DESCRIPTOR sid);
+
+        HDEVNOTIFY register_device_notification(HANDLE recipient_handle,
+                                                void *notification_filter,
+                                                unsigned long flag);
+
+        bool unregister_device_notification(HDEVNOTIFY device_notify_handle);
+
+        HPOWERNOTIFY register_power_setting_notification(
+            HANDLE recipient_handle,
+            const GUID *power_setting_guid,
+            unsigned long flag);
+
+        bool unregister_power_setting_notification(HPOWERNOTIFY power_notify_handle);
+
+        HPOWERNOTIFY register_suspend_resume_notification(HANDLE recipient_handle,
+                                                          unsigned long flag);
+
+        bool unregister_suspend_resume_notification(
+            HPOWERNOTIFY power_notify_handle);
+
+        bool register_for_tooltip_dismiss_notification(
+            HWND hwnd,
+            TOOLTIP_DISMISS_FLAGS flag);
+
+        bool sound_sentry();
+
+        bool user_handle_grant_access(HANDLE user_handle,
+                                      HANDLE job_handle,
+                                      bool is_grant);
+
+        bool set_additional_foreground_boost_processes(
+            HWND top_level_window_handle,
+            unsigned long process_handle_count,
+            HANDLE *process_handle_array);
+
+        bool get_title_bar_info(HWND hwnd,
+                                TITLEBARINFO *title_bar_info);
+
+        bool get_auto_rotation_state(AR_STATE *state);
+
+        uint32_t get_kb_code_page();
+
+        bool get_combo_box_info(HWND combo_hwnd,
+                                COMBOBOXINFO *combobox_info);
+
+        unsigned long get_listbox_info(HWND hwnd);
+
         [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;

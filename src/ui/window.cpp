@@ -1171,6 +1171,275 @@ namespace YanLib::ui {
         return true;
     }
 
+    UINT_PTR window::set_timer(HWND hwnd,
+                               UINT_PTR event_id,
+                               uint32_t elapse,
+                               TIMERPROC timer_func) {
+        UINT_PTR result = SetTimer(hwnd, event_id, elapse, timer_func);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    UINT_PTR window::set_coalescable_timer(HWND hwnd,
+                                           UINT_PTR event_id,
+                                           uint32_t elapse,
+                                           TIMERPROC timer_func,
+                                           unsigned long tolerance_delay) {
+        UINT_PTR result = SetCoalescableTimer(hwnd,
+                                              event_id,
+                                              elapse,
+                                              timer_func,
+                                              tolerance_delay);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::kill_timer(HWND hwnd, UINT_PTR event_id) {
+        if (!KillTimer(hwnd, event_id)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::shutdown_block_reason_create(HWND hwnd, const wchar_t *reason) {
+        if (!ShutdownBlockReasonCreate(hwnd, reason)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::shutdown_block_reason_destroy(HWND hwnd) {
+        if (!ShutdownBlockReasonDestroy(hwnd)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::shutdown_block_reason_query(HWND hwnd,
+                                             wchar_t *buf,
+                                             unsigned long *cch_size) {
+        if (!ShutdownBlockReasonQuery(hwnd, buf, cch_size)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    int window::get_system_metrics(int index) {
+        return GetSystemMetrics(index);
+    }
+
+    bool window::system_parameters_info(uint32_t ui_action,
+                                        uint32_t ui_param,
+                                        void *param,
+                                        uint32_t win_ini) {
+        if (!SystemParametersInfoW(ui_action,
+                                   ui_param,
+                                   param,
+                                   win_ini)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::get_user_object_security(HANDLE obj_handle,
+                                          PSECURITY_INFORMATION si_requested,
+                                          PSECURITY_DESCRIPTOR sid,
+                                          unsigned long length,
+                                          unsigned long *length_needed) {
+        if (!GetUserObjectSecurity(obj_handle,
+                                   si_requested,
+                                   sid,
+                                   length,
+                                   length_needed)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    unsigned long window::msg_wait_for_multiple_objects(
+        unsigned long count,
+        const HANDLE *handles,
+        bool wait_all,
+        unsigned long milli_seconds,
+        unsigned long wake_mask) {
+        unsigned long result =
+                MsgWaitForMultipleObjects(count,
+                                          handles,
+                                          wait_all ? TRUE : FALSE,
+                                          milli_seconds,
+                                          wake_mask);
+        if (result == WAIT_FAILED) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    unsigned long window::msg_wait_for_multiple_objects(
+        unsigned long count,
+        const HANDLE *handles,
+        unsigned long milli_seconds,
+        unsigned long wake_mask,
+        unsigned long flag) {
+        unsigned long result =
+                MsgWaitForMultipleObjectsEx(count,
+                                            handles,
+                                            milli_seconds,
+                                            wake_mask,
+                                            flag);
+        if (result == WAIT_FAILED) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::set_user_object_security(HANDLE obj_handle,
+                                          PSECURITY_INFORMATION si_requested,
+                                          PSECURITY_DESCRIPTOR sid) {
+        if (!SetUserObjectSecurity(obj_handle,
+                                   si_requested,
+                                   sid)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    HDEVNOTIFY window::register_device_notification(HANDLE recipient_handle,
+                                                    void *notification_filter,
+                                                    unsigned long flag) {
+        HDEVNOTIFY result = RegisterDeviceNotificationW(recipient_handle,
+                                                        notification_filter,
+                                                        flag);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::unregister_device_notification(HDEVNOTIFY device_notify_handle) {
+        if (!UnregisterDeviceNotification(device_notify_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    HPOWERNOTIFY window::register_power_setting_notification(
+        HANDLE recipient_handle,
+        const GUID *power_setting_guid,
+        unsigned long flag) {
+        HPOWERNOTIFY result =
+                RegisterPowerSettingNotification(recipient_handle,
+                                                 power_setting_guid,
+                                                 flag);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::unregister_power_setting_notification(
+        HPOWERNOTIFY power_notify_handle) {
+        if (!UnregisterPowerSettingNotification(power_notify_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    HPOWERNOTIFY window::register_suspend_resume_notification(
+        HANDLE recipient_handle,
+        unsigned long flag) {
+        HPOWERNOTIFY result =
+                RegisterSuspendResumeNotification(recipient_handle,
+                                                  flag);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool window::unregister_suspend_resume_notification(
+        HPOWERNOTIFY power_notify_handle) {
+        if (!UnregisterSuspendResumeNotification(power_notify_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::register_for_tooltip_dismiss_notification(
+        HWND hwnd,
+        TOOLTIP_DISMISS_FLAGS flag) {
+        return RegisterForTooltipDismissNotification(hwnd, flag);
+    }
+
+    bool window::sound_sentry() {
+        return SoundSentry();
+    }
+
+    bool window::user_handle_grant_access(HANDLE user_handle,
+                                          HANDLE job_handle,
+                                          bool is_grant) {
+        if (!UserHandleGrantAccess(user_handle, job_handle, is_grant)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::set_additional_foreground_boost_processes(
+        HWND top_level_window_handle,
+        unsigned long process_handle_count,
+        HANDLE *process_handle_array) {
+        if (!SetAdditionalForegroundBoostProcesses(top_level_window_handle,
+                                                   process_handle_count,
+                                                   process_handle_array)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::get_title_bar_info(HWND hwnd, TITLEBARINFO *title_bar_info) {
+        if (!GetTitleBarInfo(hwnd, title_bar_info)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool window::get_auto_rotation_state(AR_STATE *state) {
+        return GetAutoRotationState(state);
+    }
+
+    uint32_t window::get_kb_code_page() {
+        return GetKBCodePage();
+    }
+
+    bool window::get_combo_box_info(HWND combo_hwnd,
+                                    COMBOBOXINFO *combobox_info) {
+        if (!GetComboBoxInfo(combo_hwnd, combobox_info)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    unsigned long window::get_listbox_info(HWND hwnd) {
+        return GetListBoxInfo(hwnd);
+    }
+
     unsigned long window::err_code() const {
         return error_code;
     }

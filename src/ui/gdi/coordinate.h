@@ -26,6 +26,10 @@ namespace YanLib::ui::gdi {
 
         static bool screen_to_client(HWND hwnd, POINT *point);
 
+        static bool logic_point_to_physical_point(HWND hwnd, POINT *point);
+
+        static bool physical_point_to_logic_point(HWND hwnd, POINT *point);
+
         static bool device_point_to_logic_point(HDC dc_handle,
                                                 POINT *point,
                                                 int32_t num);
@@ -72,9 +76,9 @@ namespace YanLib::ui::gdi {
 
         // std::pair<result, error_code>
         static std::pair<int32_t, unsigned long> map_window_points(HWND hwnd_from,
-                                                               HWND hwnd_to,
-                                                               POINT *point,
-                                                               uint32_t num);
+                                                                   HWND hwnd_to,
+                                                                   POINT *point,
+                                                                   uint32_t num);
 
         static bool modify_world_transform(HDC dc_handle,
                                            const XFORM *xfrom,

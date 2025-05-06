@@ -28,8 +28,8 @@ namespace YanLib::ui {
     }
 
     int32_t accelerator::translate_accelerator(HWND hwnd,
-                                           HACCEL accel_handle,
-                                           MSG *msg) {
+                                               HACCEL accel_handle,
+                                               MSG *msg) {
         int32_t result = TranslateAcceleratorW(hwnd, accel_handle, msg);
         if (!result) {
             error_code = GetLastError();
@@ -37,9 +37,13 @@ namespace YanLib::ui {
         return result;
     }
 
+    bool accelerator::translate_mdi_sys_accel(HWND hwnd_client, MSG *msg) {
+        return TranslateMDISysAccel(hwnd_client, msg);
+    }
+
     int32_t accelerator::copy_accelerator_table(HACCEL accel_handle_src,
-                                            ACCEL *accel_handle_dst,
-                                            int32_t accel_entries) {
+                                                ACCEL *accel_handle_dst,
+                                                int32_t accel_entries) {
         return CopyAcceleratorTableW(accel_handle_src,
                                      accel_handle_dst,
                                      accel_entries);

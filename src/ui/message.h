@@ -137,18 +137,19 @@ namespace YanLib::ui {
                                           CHANGEFILTERSTRUCT *change_filter_struct);
 
         int32_t message_box(HWND hwnd,
-                        const wchar_t *text,
-                        const wchar_t *caption,
-                        uint32_t type);
+                            const wchar_t *text,
+                            const wchar_t *caption,
+                            uint32_t type);
 
         int32_t message_box(HWND hwnd,
-                        const wchar_t *text,
-                        const wchar_t *caption,
-                        uint32_t type,
-                        uint16_t language_id);
+                            const wchar_t *text,
+                            const wchar_t *caption,
+                            uint32_t type,
+                            uint16_t language_id);
 
         int32_t message_box_indirect(const MSGBOXPARAMSW *msgbox_param);
 
+        unsigned long get_queue_status(uint32_t flag);
 
         [[nodiscard]] unsigned long err_code() const;
 

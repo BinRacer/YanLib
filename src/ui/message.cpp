@@ -11,9 +11,9 @@ namespace YanLib::ui {
                               uint32_t msg_filter_min,
                               uint32_t msg_filter_max) {
         int32_t result = GetMessageW(msg,
-                                 hwnd,
-                                 msg_filter_min,
-                                 msg_filter_max);
+                                     hwnd,
+                                     msg_filter_min,
+                                     msg_filter_max);
         if (result == -1) {
             error_code = GetLastError();
             return false;
@@ -292,13 +292,13 @@ namespace YanLib::ui {
     }
 
     int32_t message::message_box(HWND hwnd,
-                             const wchar_t *text,
-                             const wchar_t *caption,
-                             uint32_t type) {
+                                 const wchar_t *text,
+                                 const wchar_t *caption,
+                                 uint32_t type) {
         int32_t result = MessageBoxW(hwnd,
-                                 text,
-                                 caption,
-                                 type);
+                                     text,
+                                     caption,
+                                     type);
         if (!result) {
             error_code = GetLastError();
         }
@@ -306,15 +306,15 @@ namespace YanLib::ui {
     }
 
     int32_t message::message_box(HWND hwnd,
-                             const wchar_t *text,
-                             const wchar_t *caption,
-                             uint32_t type,
-                             uint16_t language_id) {
+                                 const wchar_t *text,
+                                 const wchar_t *caption,
+                                 uint32_t type,
+                                 uint16_t language_id) {
         int32_t result = MessageBoxExW(hwnd,
-                                   text,
-                                   caption,
-                                   type,
-                                   language_id);
+                                       text,
+                                       caption,
+                                       type,
+                                       language_id);
         if (!result) {
             error_code = GetLastError();
         }
@@ -325,6 +325,9 @@ namespace YanLib::ui {
         return MessageBoxIndirectW(msgbox_param);
     }
 
+    unsigned long message::get_queue_status(uint32_t flag) {
+        return GetQueueStatus(flag);
+    }
 
     unsigned long message::err_code() const {
         return error_code;

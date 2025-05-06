@@ -73,22 +73,27 @@ namespace YanLib::ui {
 
         bool check_dialog_button(HWND hwnd_dialog, int32_t id_button, uint32_t check);
 
+        bool check_radio_button(HWND hwnd_dialog,
+                                int32_t first_button,
+                                int32_t last_button,
+                                int32_t check_button);
+
         LRESULT default_dialog_proc(HWND hwnd_dialog,
                                     uint32_t msg,
                                     WPARAM w_param,
                                     LPARAM l_param);
 
         int32_t dialog_dir_list(HWND hwnd_dialog,
-                            wchar_t *path_spec,
-                            int32_t id_listbox,
-                            int32_t id_static_path,
-                            uint32_t file_type);
+                                wchar_t *path_spec,
+                                int32_t id_listbox,
+                                int32_t id_static_path,
+                                uint32_t file_type);
 
         int32_t dialog_dir_list_combobox(HWND hwnd_dialog,
-                                     wchar_t *path_spec,
-                                     int32_t id_combobox,
-                                     int32_t id_static_path,
-                                     uint32_t filetype);
+                                         wchar_t *path_spec,
+                                         int32_t id_combobox,
+                                         int32_t id_static_path,
+                                         uint32_t filetype);
 
         bool dialog_dir_select_combobox(HWND hwnd_dialog,
                                         wchar_t *text,
@@ -105,8 +110,8 @@ namespace YanLib::ui {
         HWND get_dialog_item(HWND hwnd_dialog, int32_t id_dialog_item);
 
         std::pair<uint32_t, bool> get_dialog_item_int(HWND hwnd_dialog,
-                                                          int32_t id_dialog_item,
-                                                          bool is_signed);
+                                                      int32_t id_dialog_item,
+                                                      bool is_signed);
 
         bool set_dialog_item_int(HWND hwnd_dialog,
                                  int32_t id_dialog_item,
@@ -114,9 +119,9 @@ namespace YanLib::ui {
                                  bool is_signed);
 
         uint32_t get_dialog_item_text(HWND hwnd_dialog,
-                                          int32_t id_dialog_item,
-                                          wchar_t *text,
-                                          int32_t cch_max);
+                                      int32_t id_dialog_item,
+                                      wchar_t *text,
+                                      int32_t cch_max);
 
         bool set_dialog_item_text(HWND hwnd_dialog,
                                   int32_t id_dialog_item,

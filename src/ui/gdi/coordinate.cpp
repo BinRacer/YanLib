@@ -13,6 +13,14 @@ namespace YanLib::ui::gdi {
         return ScreenToClient(hwnd, point);
     }
 
+    bool coordinate::logic_point_to_physical_point(HWND hwnd, POINT *point) {
+        return LogicalToPhysicalPoint(hwnd, point);
+    }
+
+    bool coordinate::physical_point_to_logic_point(HWND hwnd, POINT *point) {
+        return PhysicalToLogicalPoint(hwnd, point);
+    }
+
     bool coordinate::device_point_to_logic_point(HDC dc_handle,
                                                  POINT *point,
                                                  int32_t num) {
@@ -96,9 +104,9 @@ namespace YanLib::ui::gdi {
     }
 
     std::pair<int32_t, unsigned long> coordinate::map_window_points(HWND hwnd_from,
-                                                                HWND hwnd_to,
-                                                                POINT *point,
-                                                                uint32_t num) {
+                                                                    HWND hwnd_to,
+                                                                    POINT *point,
+                                                                    uint32_t num) {
         SetLastError(0);
         unsigned long result = MapWindowPoints(hwnd_from, hwnd_to, point, num);
         unsigned long error_code = GetLastError();

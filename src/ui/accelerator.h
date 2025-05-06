@@ -34,9 +34,11 @@ namespace YanLib::ui {
 
         int32_t translate_accelerator(HWND hwnd, HACCEL accel_handle, MSG *msg);
 
+        bool translate_mdi_sys_accel(HWND hwnd_client, MSG *msg);
+
         int32_t copy_accelerator_table(HACCEL accel_handle_src,
-                                   ACCEL *accel_handle_dst,
-                                   int32_t accel_entries);
+                                       ACCEL *accel_handle_dst,
+                                       int32_t accel_entries);
 
         [[nodiscard]] unsigned long err_code() const;
 

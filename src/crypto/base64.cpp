@@ -108,25 +108,26 @@ namespace YanLib::crypto {
 
     bool base64::encode_file(const std::wstring &input_file,
                              const std::wstring &output_file) {
-        io::fs input;
-        io::fs output;
-        HANDLE input_handle = input.open(input_file.data());
-        HANDLE output_handle = output.create(output_file.data());
-        if (!input_handle || !output_handle) {
+        io::fs input(input_file.data());
+        io::fs output(output_file.data(),
+                      io::DesiredAccess::READ_WRITE,
+                      io::ShareMode::READ_WRITE,
+                      nullptr,
+                      io::CreationDisposition::FILE_CREATE_ALWAYS);
+        if (!input.is_ok() || !output.is_ok()) {
             return false;
         }
-        const unsigned long buffer_size = input.size(input_handle);
-        uint8_t *buf = new uint8_t[buffer_size];
-        memset(buf, 0, buffer_size);
+        const unsigned long buffer_size = input.size();
+        std::vector<uint8_t> buf(buffer_size, '0');
         unsigned long bytes_read = 0;
         unsigned long bytes_written = 0;
         do {
-            if (!input.read(input_handle, buf, buffer_size, &bytes_read)) {
+            if (!input.read(buf.data(), buffer_size, &bytes_read)) {
                 break;
             }
             if (bytes_read <= 0) break;
-            std::vector<uint8_t> encode_data = encode(buf, bytes_read);
-            if (!output.write(output_handle, encode_data.data(),
+            std::vector<uint8_t> encode_data = encode(buf.data(), bytes_read);
+            if (!output.write(encode_data.data(),
                               encode_data.size(),
                               &bytes_written)) {
                 break;
@@ -138,25 +139,26 @@ namespace YanLib::crypto {
 
     bool base64::decode_file(const std::wstring &input_file,
                              const std::wstring &output_file) {
-        io::fs input;
-        io::fs output;
-        HANDLE input_handle = input.open(input_file.data());
-        HANDLE output_handle = output.create(output_file.data());
-        if (!input_handle || !output_handle) {
+        io::fs input(input_file.data());
+        io::fs output(output_file.data(),
+                      io::DesiredAccess::READ_WRITE,
+                      io::ShareMode::READ_WRITE,
+                      nullptr,
+                      io::CreationDisposition::FILE_CREATE_ALWAYS);
+        if (!input.is_ok() || !output.is_ok()) {
             return false;
         }
-        const unsigned long buffer_size = input.size(input_handle);
-        uint8_t *buf = new uint8_t[buffer_size];
-        memset(buf, 0, buffer_size);
+        const unsigned long buffer_size = input.size();
+        std::vector<uint8_t> buf(buffer_size, '0');
         unsigned long bytes_read = 0;
         unsigned long bytes_written = 0;
         do {
-            if (!input.read(input_handle, buf, buffer_size, &bytes_read)) {
+            if (!input.read(buf.data(), buffer_size, &bytes_read)) {
                 break;
             }
             if (bytes_read <= 0) break;
-            std::vector<uint8_t> encode_data = decode(buf, bytes_read);
-            if (!output.write(output_handle, encode_data.data(),
+            std::vector<uint8_t> encode_data = decode(buf.data(), bytes_read);
+            if (!output.write(encode_data.data(),
                               encode_data.size(),
                               &bytes_written)) {
                 break;

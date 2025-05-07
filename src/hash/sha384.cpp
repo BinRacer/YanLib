@@ -85,14 +85,13 @@ namespace YanLib::hash {
 
     bool sha384::process_file() {
         do {
-            io::fs file;
-            HANDLE file_handle = file.open(file_name.data());
-            if (!file_handle) {
+            io::fs file(file_name.data());
+            if (!file.is_ok()) {
                 error_code = file.err_code();
                 break;
             }
-            if (file.size(file_handle) <= 4096) {
-                std::vector<uint8_t> data = file.read_bytes_to_end(file_handle);
+            if (file.size() <= 4096) {
+                std::vector<uint8_t> data = file.read_bytes_to_end();
                 if (!CryptHashData(crypt_hash_handle,
                                    data.data(),
                                    data.size(),
@@ -103,14 +102,13 @@ namespace YanLib::hash {
             } else {
                 bool is_error = false;
                 constexpr size_t BLOCKSIZE = 4096;
-                size_t total_size = file.size(file_handle);
+                size_t total_size = file.size();
                 size_t offset = 0;
                 while (offset < total_size) {
                     size_t block_size = (total_size - offset) > BLOCKSIZE
                                             ? BLOCKSIZE
                                             : total_size - offset;
-                    std::vector<uint8_t> data = file.read_bytes(file_handle,
-                                                                block_size);
+                    std::vector<uint8_t> data = file.read_bytes(block_size);
                     if (!CryptHashData(crypt_hash_handle,
                                        data.data(),
                                        data.size(),

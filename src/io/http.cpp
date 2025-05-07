@@ -184,13 +184,13 @@ namespace YanLib::io {
 
         // convert to utf-8
         int32_t len = WideCharToMultiByte(CP_UTF8,
-                                      0,
-                                      buffer.data(),
-                                      -1,
-                                      nullptr,
-                                      0,
-                                      nullptr,
-                                      nullptr);
+                                          0,
+                                          buffer.data(),
+                                          -1,
+                                          nullptr,
+                                          0,
+                                          nullptr,
+                                          nullptr);
         std::string utf8_str(len, 0);
         WideCharToMultiByte(CP_UTF8,
                             0,
@@ -269,13 +269,13 @@ namespace YanLib::io {
 
         // convert to utf-8
         int32_t len = WideCharToMultiByte(CP_UTF8,
-                                      0,
-                                      buffer.data(),
-                                      -1,
-                                      nullptr,
-                                      0,
-                                      nullptr,
-                                      nullptr);
+                                          0,
+                                          buffer.data(),
+                                          -1,
+                                          nullptr,
+                                          0,
+                                          nullptr,
+                                          nullptr);
         std::string utf8_str(len, 0);
         WideCharToMultiByte(CP_UTF8,
                             0,
@@ -655,9 +655,12 @@ namespace YanLib::io {
         unsigned long error = 0;
         http client(input_url);
         unsigned long content_length = 0;
-        fs file;
-        HANDLE file_handle = file.create(file_name);
-        if (!file_handle) {
+        fs file(file_name,
+                DesiredAccess::READ_WRITE,
+                ShareMode::READ_WRITE,
+                nullptr,
+                CreationDisposition::FILE_CREATE_ALWAYS);
+        if (!file.is_ok()) {
             return file.err_code();
         }
         do {
@@ -692,8 +695,7 @@ namespace YanLib::io {
                     break;
                 }
                 if (bytes_read <= 0) break;
-                if (!file.write(file_handle,
-                                buf,
+                if (!file.write(buf,
                                 bytes_read,
                                 &bytes_written)) {
                     error = file.err_code();
@@ -711,9 +713,8 @@ namespace YanLib::io {
                                const wchar_t *file_name) {
         unsigned long error = 0;
         http client(input_url);
-        fs file;
-        HANDLE file_handle = file.open(file_name);
-        if (!file_handle) {
+        fs file(file_name);
+        if (!file.is_ok()) {
             return file.err_code();
         }
         do {
@@ -736,7 +737,7 @@ namespace YanLib::io {
 
             INTERNET_BUFFERSW buffers_in = {};
             buffers_in.dwStructSize = sizeof(INTERNET_BUFFERSW);
-            buffers_in.dwBufferTotal = file.size(file_handle);
+            buffers_in.dwBufferTotal = file.size();
             if (!client.send_request_ex(&buffers_in,
                                         nullptr,
                                         0,
@@ -745,25 +746,22 @@ namespace YanLib::io {
             }
 
             unsigned long buf_size = 4096;
-            uint8_t *buf = new uint8_t[buf_size];
-            memset(buf, 0, buf_size);
+            std::vector<uint8_t> buf(buf_size, '\0');
             unsigned long bytes_read = 0;
             unsigned long bytes_written = 0;
             do {
-                if (!file.read(file_handle,
-                               buf,
+                if (!file.read(buf.data(),
                                bytes_read,
                                &bytes_read)) {
                     error = file.err_code();
                     break;
                 }
                 if (bytes_read <= 0) break;
-                if (!client.write(buf, bytes_read, &bytes_written)) {
+                if (!client.write(buf.data(), bytes_read, &bytes_written)) {
                     error = client.err_code();
                     break;
                 }
             } while (bytes_read > 0 && bytes_written > 0);
-            delete[] buf;
             if (!client.end_request_ex()) {
                 break;
             }

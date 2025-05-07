@@ -456,56 +456,54 @@ namespace YanLib::io {
     unsigned long ftp::download2(HINTERNET remote_file,
                                  const wchar_t *local_file) {
         unsigned long error = 0;
-        fs file;
-        HANDLE file_handle = file.create(local_file);
-        if (!file_handle) {
+        fs file(local_file,
+                DesiredAccess::READ_WRITE,
+                ShareMode::READ_WRITE,
+                nullptr,
+                CreationDisposition::FILE_CREATE_ALWAYS);
+        if (!file.is_ok()) {
             return file.err_code();
         }
         constexpr unsigned long buf_size = 4096;
-        uint8_t *buf = new uint8_t[buf_size];
-        memset(buf, 0, buf_size);
+        std::vector<uint8_t> buf(buf_size, '0');
         unsigned long bytes_read = 0;
         unsigned long bytes_written = 0;
         do {
-            if (!read(remote_file, buf, buf_size, &bytes_read)) {
+            if (!read(remote_file, buf.data(), buf_size, &bytes_read)) {
                 error = err_code();
                 break;
             }
             if (bytes_read <= 0) break;
-            if (!file.write(file_handle, buf, bytes_read, &bytes_written)) {
+            if (!file.write(buf.data(), bytes_read, &bytes_written)) {
                 error = file.err_code();
                 break;
             }
         } while (bytes_read > 0 && bytes_written > 0);
-        delete[] buf;
         return error;
     }
 
     unsigned long ftp::upload2(HINTERNET remote_file,
                                const wchar_t *local_file) {
         unsigned long error = 0;
-        fs file;
-        HANDLE file_handle = file.open(local_file);
-        if (!file_handle) {
+        fs file(local_file);
+        if (!file.is_ok()) {
             return file.err_code();
         }
         constexpr unsigned long buf_size = 4096;
-        uint8_t *buf = new uint8_t[buf_size];
-        memset(buf, 0, buf_size);
+        std::vector<uint8_t> buf(buf_size, '0');
         unsigned long bytes_read = 0;
         unsigned long bytes_written = 0;
         do {
-            if (!file.read(file_handle, buf, buf_size, &bytes_read)) {
+            if (!file.read(buf.data(), buf_size, &bytes_read)) {
                 error = file.err_code();
                 break;
             }
             if (bytes_read <= 0) break;
-            if (!write(remote_file, buf, bytes_read, &bytes_written)) {
+            if (!write(remote_file, buf.data(), bytes_read, &bytes_written)) {
                 error = err_code();
                 break;
             }
         } while (bytes_read > 0 && bytes_written > 0);
-        delete[] buf;
         return error;
     }
 

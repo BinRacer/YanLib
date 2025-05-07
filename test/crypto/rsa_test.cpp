@@ -15,7 +15,7 @@ protected:
 TEST_F(crypto_rsa, rsa_384) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_384BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_384BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -32,7 +32,7 @@ TEST_F(crypto_rsa, rsa_384) {
 TEST_F(crypto_rsa, rsa_512) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_512BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_512BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -49,7 +49,7 @@ TEST_F(crypto_rsa, rsa_512) {
 TEST_F(crypto_rsa, rsa_768) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_768BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_768BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -66,7 +66,7 @@ TEST_F(crypto_rsa, rsa_768) {
 TEST_F(crypto_rsa, rsa_1024) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_1024BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_1024BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -83,7 +83,7 @@ TEST_F(crypto_rsa, rsa_1024) {
 TEST_F(crypto_rsa, rsa_1536) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_1536BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_1536BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -100,7 +100,7 @@ TEST_F(crypto_rsa, rsa_1536) {
 TEST_F(crypto_rsa, rsa_2048) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_2048BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_2048BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -117,7 +117,7 @@ TEST_F(crypto_rsa, rsa_2048) {
 TEST_F(crypto_rsa, rsa_3072) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_3072BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_3072BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -134,7 +134,7 @@ TEST_F(crypto_rsa, rsa_3072) {
 TEST_F(crypto_rsa, rsa_4096) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RSA_4096BIT_KEY);
+    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_4096BIT_KEY);
     EXPECT_TRUE(is_ok);
     auto pub_key = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
@@ -151,7 +151,7 @@ TEST_F(crypto_rsa, rsa_4096) {
 // TEST_F(crypto_rsa, rsa_8192) {
 //     EXPECT_GT(data.size(), 0);
 //     crypto::rsa rsa;
-//     bool is_ok = rsa.generate_key(crypto::RSA_8192BIT_KEY);
+//     bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_8192BIT_KEY);
 //     EXPECT_TRUE(is_ok);
 //     auto pub_key = rsa.pub_blob();
 //     auto priv_key = rsa.priv_blob();
@@ -168,7 +168,7 @@ TEST_F(crypto_rsa, rsa_4096) {
 // TEST_F(crypto_rsa, rsa_16384) {
 //     EXPECT_GT(data.size(), 0);
 //     crypto::rsa rsa;
-//     bool is_ok = rsa.generate_key(crypto::RSA_16384BIT_KEY);
+//     bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_16384BIT_KEY);
 //     EXPECT_TRUE(is_ok);
 //     auto pub_key = rsa.pub_blob();
 //     auto priv_key = rsa.priv_blob();

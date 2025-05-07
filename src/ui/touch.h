@@ -6,108 +6,149 @@
 #define TOUCH_H
 #include <Windows.h>
 #include <string>
+#include <vector>
 
 namespace YanLib::ui {
-    class touch {
-    private:
-        unsigned long error_code = 0;
-
-    public:
-        touch(const touch &other) = delete;
-
-        touch(touch &&other) = delete;
-
-        touch &operator=(const touch &other) = delete;
-
-        touch &operator=(touch &&other) = delete;
-
-        touch() = default;
-
-        ~touch() = default;
-
-        bool register_touch_hit_testing_window(HWND hwnd, unsigned long value);
-
-        bool register_touch_window(HWND hwnd, unsigned long flag);
-
-        bool unregister_touch_window(HWND hwnd);
-
-        bool is_touch_window(HWND hwnd, unsigned long *flag);
-
-        HSYNTHETICPOINTERDEVICE create_synthetic_pointer_device(
-            POINTER_INPUT_TYPE pointer_type,
-            unsigned long max_count,
-            POINTER_FEEDBACK_MODE mode);
-
-        void destroy_synthetic_pointer_device(HSYNTHETICPOINTERDEVICE device_handle);
-
-        bool close_touch_input_handle(HTOUCHINPUT touch_input_handle);
-
-        bool get_touch_input_info(HTOUCHINPUT touch_input_handle,
-                                  uint32_t inputs_count,
-                                  TOUCHINPUT *inputs,
-                                  int32_t cb_size);
-
-        bool get_pointer_frame_touch_info(uint32_t pointer_id,
-                                          uint32_t *pointer_count,
-                                          POINTER_TOUCH_INFO *touch_info);
-
-        bool get_pointer_frame_touch_info_history(uint32_t pointer_id,
-                                                  uint32_t *entries_count,
-                                                  uint32_t *pointer_count,
-                                                  POINTER_TOUCH_INFO *touch_info);
-
-        bool get_pointer_touch_info(uint32_t pointer_id,
-                                    POINTER_TOUCH_INFO *touch_info);
-
-        bool get_pointer_touch_info_history(uint32_t pointer_id,
-                                            uint32_t *entries_count,
-                                            POINTER_TOUCH_INFO *touch_info);
-
-        uint16_t get_pointer_id_wparam(WPARAM w_param);
-
-        bool get_gesture_extra_args(HGESTUREINFO gesture_info_handle,
-                                    uint32_t extra_args_size,
-                                    uint8_t *extra_args_buf);
-
-        bool get_gesture_info(HGESTUREINFO gesture_info_handle,
-                              GESTUREINFO *gesture_info);
-
-        bool close_gesture_info_handle(HGESTUREINFO gesture_info_handle);
-
-        bool initialize_touch_injection(uint32_t max_count, unsigned long mode);
-
-        bool inject_synthetic_pointer_input(HSYNTHETICPOINTERDEVICE device_handle,
-                                            const POINTER_TYPE_INFO *pointer_info,
-                                            uint32_t count);
-
-        bool inject_touch_input(uint32_t count, const POINTER_TOUCH_INFO *contacts);
-
-        LRESULT pack_touch_hit_testing_proximity_evaluation(
-            const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
-            const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
-
-        bool evaluate_proximity_to_polygon(
-            uint32_t num_vertices,
-            const POINT *control_polygon,
-            const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
-            TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
-
-        bool evaluate_proximity_to_rect(
-            const RECT *control_bounding_box,
-            const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
-            TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
-
-        long touch_coord_to_pixel(long coordinate);
-
-        uint16_t gid_rotate_angle_to_argument(double param);
-
-        double gid_rotate_angle_from_argument(uint16_t param);
-
-        [[nodiscard]] unsigned long err_code() const;
-
-        [[nodiscard]] std::string err_string() const;
-
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
+#ifndef REGISTERFLAG
+#define REGISTERFLAG
+enum class RegisterFlag : uint32_t {
+    Default   = 0,
+    FineTouch = TWF_FINETOUCH,
+    WantPalm  = TWF_WANTPALM,
+};
+inline RegisterFlag operator|(RegisterFlag f1, RegisterFlag f2) {
+    return static_cast<RegisterFlag>(
+        static_cast<uint32_t>(f1) | static_cast<uint32_t>(f2));
 }
-#endif //TOUCH_H
+#endif
+#ifndef POINTERTYPE
+#define POINTERTYPE
+
+enum class PointerInputType : uint32_t {
+    Pointer  = PT_POINTER,
+    Touch    = PT_TOUCH,
+    Pen      = PT_PEN,
+    Mouse    = PT_MOUSE,
+    TouchPad = PT_TOUCHPAD,
+};
+#endif
+#ifndef POINTERFEEDBACK
+#define POINTERFEEDBACK
+enum class PointerFeedback {
+    Default  = POINTER_FEEDBACK_DEFAULT,
+    Indirect = POINTER_FEEDBACK_INDIRECT,
+    None     = POINTER_FEEDBACK_NONE,
+};
+inline PointerFeedback operator|(PointerFeedback f1, PointerFeedback f2) {
+    return static_cast<PointerFeedback>(
+        static_cast<uint32_t>(f1) | static_cast<uint32_t>(f2));
+}
+#endif
+#ifndef TOUCHHITTESTING
+#define TOUCHHITTESTING
+enum class TouchHitTesting : uint32_t {
+    Default = TOUCH_HIT_TESTING_DEFAULT,
+    Client  = TOUCH_HIT_TESTING_CLIENT,
+    None    = TOUCH_HIT_TESTING_NONE,
+};
+#endif
+class touch {
+private:
+    uint32_t error_code = 0;
+
+public:
+    touch(const touch &other)            = delete;
+
+    touch(touch &&other)                 = delete;
+
+    touch &operator=(const touch &other) = delete;
+
+    touch &operator=(touch &&other)      = delete;
+
+    touch()                              = default;
+
+    ~touch()                             = default;
+
+    HSYNTHETICPOINTERDEVICE
+    create_synthetic_pointer_device(
+        PointerInputType pointer_type = PointerInputType::Pen,
+        uint32_t         max_count    = 1,
+        PointerFeedback  mode         = PointerFeedback::Indirect);
+
+    void destroy_synthetic_pointer_device(
+        HSYNTHETICPOINTERDEVICE device_handle);
+
+    bool inject_synthetic_pointer_input(HSYNTHETICPOINTERDEVICE device_handle,
+        const std::vector<POINTER_TYPE_INFO>                   &pointer_info);
+
+    bool register_hit_testing(HWND hwnd,
+        TouchHitTesting            flag = TouchHitTesting::Client);
+
+    bool register_window(HWND hwnd, RegisterFlag flag = RegisterFlag::WantPalm);
+
+    bool unregister_window(HWND hwnd);
+
+    bool what_flag(HWND hwnd, RegisterFlag *flag);
+
+    bool close_input_handle(HTOUCHINPUT touch_input_handle);
+
+    bool get_input_info(HTOUCHINPUT touch_input_handle,
+        std::vector<TOUCHINPUT>    &input);
+
+    bool get_pointer_frame_info(uint32_t pointer_id,
+        uint32_t                        *real_num,
+        POINTER_TOUCH_INFO               touch_info[]);
+
+    bool get_pointer_frame_info_history(uint32_t pointer_id,
+        uint32_t                                *row,
+        uint32_t                                *col,
+        POINTER_TOUCH_INFO                       touch_info[]);
+
+    bool get_pointer_info(uint32_t pointer_id, POINTER_TOUCH_INFO *touch_info);
+
+    bool get_pointer_info_history(uint32_t pointer_id,
+        uint32_t                          *real_num,
+        POINTER_TOUCH_INFO                 touch_info[]);
+
+    uint16_t get_pointer_id(WPARAM wparam);
+
+    bool init_injection(uint32_t max_count, PointerFeedback mode);
+
+    bool inject_input(const std::vector<POINTER_TOUCH_INFO> &contacts);
+
+    LRESULT pack_hit_testing_proximity_evaluation(
+        const TOUCH_HIT_TESTING_INPUT                *hit_testing_input,
+        const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
+
+    bool evaluate_proximity_to_polygon(
+        const std::vector<POINT>               &control_polygon,
+        const TOUCH_HIT_TESTING_INPUT          *hit_testing_input,
+        TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
+
+    bool evaluate_proximity_to_rect(const RECT *control_bounding_box,
+        const TOUCH_HIT_TESTING_INPUT          *hit_testing_input,
+        TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
+
+    long coord_to_pixel(long coordinate);
+
+    uint16_t gid_rotate_angle_to_argument(double param);
+
+    double gid_rotate_angle_from_argument(uint16_t param);
+
+    bool get_gesture_extra_args(HGESTUREINFO gesture_info_handle,
+        uint8_t                             *buf,
+        uint32_t                             size);
+
+    bool get_gesture_info(HGESTUREINFO gesture_info_handle,
+        GESTUREINFO                   *gesture_info);
+
+    bool close_gesture_info_handle(HGESTUREINFO gesture_info_handle);
+
+    [[nodiscard]] uint32_t err_code() const;
+
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // TOUCH_H

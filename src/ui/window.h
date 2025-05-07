@@ -9,659 +9,691 @@
 #endif
 #include <Windows.h>
 #include <shellscalingapi.h>
+#include <vector>
 #include <string>
+#include "helper/convert.h"
 
 namespace YanLib::ui {
-    class window {
-    private:
-        unsigned long error_code = 0;
+class window {
+private:
+    uint32_t error_code = 0;
+
+public:
+    window(const window &other)            = delete;
+
+    window(window &&other)                 = delete;
+
+    window &operator=(const window &other) = delete;
+
+    window &operator=(window &&other)      = delete;
+
+    window()                               = default;
+
+    ~window()                              = default;
+
+    HWND create(const char *class_name,
+        const char         *window_name,
+        HINSTANCE           instance_handle,
+        void               *param       = nullptr,
+        HWND                hwnd_parent = nullptr,
+        HMENU               menu_handle = nullptr,
+        int32_t             x           = CW_USEDEFAULT,
+        int32_t             y           = CW_USEDEFAULT,
+        int32_t             width       = CW_USEDEFAULT,
+        int32_t             height      = CW_USEDEFAULT,
+        uint32_t            style       = WS_OVERLAPPEDWINDOW,
+        uint32_t            ext_style   = 0);
+
+    HWND create(const wchar_t *class_name,
+        const wchar_t         *window_name,
+        HINSTANCE              instance_handle,
+        void                  *param       = nullptr,
+        HWND                   hwnd_parent = nullptr,
+        HMENU                  menu_handle = nullptr,
+        int32_t                x           = CW_USEDEFAULT,
+        int32_t                y           = CW_USEDEFAULT,
+        int32_t                width       = CW_USEDEFAULT,
+        int32_t                height      = CW_USEDEFAULT,
+        uint32_t               style       = WS_OVERLAPPEDWINDOW,
+        uint32_t               ext_style   = 0);
+
+    HWND create_mdi(const char *class_name,
+        const char             *window_name,
+        HINSTANCE               instance_handle,
+        LPARAM                  lparam,
+        HWND                    hwnd_parent,
+        int32_t                 x      = CW_USEDEFAULT,
+        int32_t                 y      = CW_USEDEFAULT,
+        int32_t                 width  = CW_USEDEFAULT,
+        int32_t                 height = CW_USEDEFAULT,
+        uint32_t style = MDIS_ALLCHILDSTYLES | WS_OVERLAPPEDWINDOW);
 
-    public:
-        window(const window &other) = delete;
+    HWND create_mdi(const wchar_t *class_name,
+        const wchar_t             *window_name,
+        HINSTANCE                  instance_handle,
+        LPARAM                     lparam,
+        HWND                       hwnd_parent,
+        int32_t                    x      = CW_USEDEFAULT,
+        int32_t                    y      = CW_USEDEFAULT,
+        int32_t                    width  = CW_USEDEFAULT,
+        int32_t                    height = CW_USEDEFAULT,
+        uint32_t style = MDIS_ALLCHILDSTYLES | WS_OVERLAPPEDWINDOW);
 
-        window(window &&other) = delete;
+    WNDCLASSEXA make_class(const char *class_name,
+        WNDPROC                        window_proc,
+        HINSTANCE                      instance_handle,
+        uint32_t                       style     = CS_HREDRAW | CS_VREDRAW,
+        const char                    *menu_name = nullptr,
+        int32_t                        class_extra_size  = 0,
+        int32_t                        window_extra_size = 0,
+        HICON   icon_handle             = LoadIconW(nullptr, IDI_APPLICATION),
+        HCURSOR cursor_handle           = LoadCursorW(nullptr, IDC_ARROW),
+        HBRUSH  brush_background_handle = static_cast<HBRUSH>(
+            GetStockObject(WHITE_BRUSH)),
+        HICON icon_small_handle = nullptr);
 
-        window &operator=(const window &other) = delete;
+    WNDCLASSEXW make_class(const wchar_t *class_name,
+        WNDPROC                           window_proc,
+        HINSTANCE                         instance_handle,
+        uint32_t                          style     = CS_HREDRAW | CS_VREDRAW,
+        const wchar_t                    *menu_name = nullptr,
+        int32_t                           class_extra_size  = 0,
+        int32_t                           window_extra_size = 0,
+        HICON   icon_handle             = LoadIconW(nullptr, IDI_APPLICATION),
+        HCURSOR cursor_handle           = LoadCursorW(nullptr, IDC_ARROW),
+        HBRUSH  brush_background_handle = static_cast<HBRUSH>(
+            GetStockObject(WHITE_BRUSH)),
+        HICON icon_small_handle = nullptr);
 
-        window &operator=(window &&other) = delete;
+    ATOM register_class(const WNDCLASSEXA *window_class);
 
-        window() = default;
+    ATOM register_class(const WNDCLASSEXW *window_class);
 
-        ~window() = default;
+    bool unregister_class(const char *class_name, HINSTANCE instance_handle);
 
-        HWND create_window(const wchar_t *class_name,
-                           const wchar_t *window_name,
-                           HINSTANCE instance_handle,
-                           void *param = nullptr,
-                           HWND hwnd_parent = nullptr,
-                           HMENU menu_handle = nullptr,
-                           int32_t x = CW_USEDEFAULT,
-                           int32_t y = CW_USEDEFAULT,
-                           int32_t width = CW_USEDEFAULT,
-                           int32_t height = CW_USEDEFAULT,
-                           unsigned long style = WS_OVERLAPPEDWINDOW,
-                           unsigned long ext_style = 0);
+    bool unregister_class(const wchar_t *class_name, HINSTANCE instance_handle);
 
-        HWND create_mdi_window(const wchar_t *class_name,
-                               const wchar_t *window_name,
-                               HINSTANCE instance_handle,
-                               LPARAM l_param,
-                               HWND hwnd_parent,
-                               int32_t x = CW_USEDEFAULT,
-                               int32_t y = CW_USEDEFAULT,
-                               int32_t width = CW_USEDEFAULT,
-                               int32_t height = CW_USEDEFAULT,
-                               unsigned long style = MDIS_ALLCHILDSTYLES |
-                                                     WS_OVERLAPPEDWINDOW);
+    bool get_class_info(HINSTANCE instance_handle,
+        const char               *class_name,
+        WNDCLASSA                *wnd_class);
 
-        WNDCLASSEXW make_window_class(const wchar_t *class_name,
-                                      WNDPROC window_proc,
-                                      HINSTANCE instance_handle,
-                                      uint32_t style = CS_HREDRAW | CS_VREDRAW,
-                                      const wchar_t *menu_name = nullptr,
-                                      int32_t cb_class_extra = 0,
-                                      int32_t cb_window_extra = 0,
-                                      HICON icon_handle = LoadIconW(
-                                          nullptr,
-                                          IDI_APPLICATION),
-                                      HCURSOR cursor_handle = LoadCursorW(
-                                          nullptr,
-                                          IDC_ARROW),
-                                      HBRUSH brush_background_handle =
-                                              static_cast<HBRUSH>(
-                                                  GetStockObject(WHITE_BRUSH)),
-                                      HICON icon_small_handle = nullptr);
+    bool get_class_info(HINSTANCE instance_handle,
+        const wchar_t            *class_name,
+        WNDCLASSW                *wnd_class);
 
-        ATOM register_class(const WNDCLASSEXW *window_class);
+    bool get_class_info(HINSTANCE instance_handle,
+        const char               *class_name,
+        WNDCLASSEXA              *wnd_class);
 
-        bool unregister_class(const wchar_t *class_name,
-                              HINSTANCE instance_handle);
+    bool get_class_info(HINSTANCE instance_handle,
+        const wchar_t            *class_name,
+        WNDCLASSEXW              *wnd_class);
 
-        bool get_class_info(HINSTANCE instance_handle,
-                            const wchar_t *class_name,
-                            WNDCLASSW *wnd_class);
+    uint32_t get_class_long(HWND hwnd, int32_t index);
 
-        bool get_class_info(HINSTANCE instance_handle,
-                            const wchar_t *class_name,
-                            WNDCLASSEXW *wnd_class);
+    uint32_t set_class_long(HWND hwnd, int32_t index, long value);
 
-        unsigned long get_class_long(HWND hwnd, int32_t index);
+    ULONG_PTR get_class_long_ptr(HWND hwnd, int32_t index);
 
-        unsigned long set_class_long(HWND hwnd, int32_t index, long value);
+    ULONG_PTR set_class_long_ptr(HWND hwnd, int32_t index, LONG_PTR value);
 
-        ULONG_PTR get_class_long_ptr(HWND hwnd, int32_t index);
+    uint16_t get_class_word(HWND hwnd, int32_t index);
 
-        ULONG_PTR set_class_long_ptr(HWND hwnd, int32_t index, LONG_PTR value);
+    uint16_t set_class_word(HWND hwnd, int32_t index, uint16_t value);
 
-        uint16_t get_class_word(HWND hwnd, int32_t index);
+    int32_t get_class_name(HWND hwnd, std::string &class_name);
 
-        uint16_t set_class_word(HWND hwnd, int32_t index, uint16_t value);
+    int32_t get_class_name(HWND hwnd, std::wstring &class_name);
 
-        int32_t get_class_name(HWND hwnd, wchar_t *class_name, int32_t cch_size);
+    int32_t enum_props(HWND hwnd, PROPENUMPROCA enum_func);
 
-        int32_t enum_props(HWND hwnd, PROPENUMPROCW enum_func);
+    int32_t enum_props(HWND hwnd, PROPENUMPROCW enum_func);
 
-        int32_t enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM l_param);
+    int32_t enum_props(HWND hwnd, PROPENUMPROCEXA enum_func, LPARAM lparam);
 
-        HANDLE get_prop(HWND hwnd, const wchar_t *text);
+    int32_t enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM lparam);
 
-        bool set_prop(HWND hwnd, const wchar_t *text, HANDLE data_handle);
+    HANDLE get_prop(HWND hwnd, const char *text);
 
-        HANDLE remove_prop(HWND hwnd, const wchar_t *text);
+    HANDLE get_prop(HWND hwnd, const wchar_t *text);
 
-        bool register_shell_hook_window(HWND hwnd);
+    bool set_prop(HWND hwnd, const char *text, HANDLE data_handle);
 
-        bool deregister_shell_hook_window(HWND hwnd);
+    bool set_prop(HWND hwnd, const wchar_t *text, HANDLE data_handle);
 
-        HHOOK set_windows_hook(int32_t id_hook,
-                               HOOKPROC fn,
-                               HINSTANCE hmod,
-                               unsigned long tid);
+    HANDLE remove_prop(HWND hwnd, const char *text);
 
-        bool unhook_windows_hook(HHOOK hhk);
+    HANDLE remove_prop(HWND hwnd, const wchar_t *text);
 
-        LRESULT call_next_hook(HHOOK hhk,
-                               int32_t code,
-                               WPARAM w_param,
-                               LPARAM l_param);
+    bool register_shell_hook(HWND hwnd);
 
-        HWINEVENTHOOK set_win_event_hook(unsigned long event_min,
-                                         unsigned long event_max,
-                                         HMODULE hmod_win_event_proc,
-                                         WINEVENTPROC fn_win_event_proc,
-                                         unsigned long pid,
-                                         unsigned long tid,
-                                         unsigned long flag);
+    bool unregister_shell_hook(HWND hwnd);
 
-        bool unhook_win_event(HWINEVENTHOOK hwin_event_hook);
+    HHOOK set_windows_hook(int32_t id_hook,
+        HOOKPROC                   fn,
+        HINSTANCE                  hmod,
+        uint32_t                   tid);
 
-        bool is_win_event_hook_installed(unsigned long event);
+    bool unset_windows_hook(HHOOK hhk);
 
-        void notify_win_event(unsigned long event,
-                              HWND hwnd,
-                              int32_t object_id,
-                              int32_t child_id);
+    LRESULT
+    call_next_hook(HHOOK hhk, int32_t code, WPARAM wparam, LPARAM lparam);
 
-        bool show_window(HWND hwnd, int32_t cmd_show) const;
+    HWINEVENTHOOK set_event_hook(uint32_t event_min,
+        uint32_t                          event_max,
+        HMODULE                           hmod_win_event_proc,
+        WINEVENTPROC                      fn_win_event_proc,
+        uint32_t                          pid,
+        uint32_t                          tid,
+        uint32_t                          flag);
 
-        bool show_window_async(HWND hwnd, int32_t cmd_show) const;
+    bool unset_event_hook(HWINEVENTHOOK hwin_event_hook);
 
-        bool update_window(HWND hwnd) const;
+    bool is_event_hook_installed(uint32_t event);
 
-        bool update_layered_window(HWND hwnd,
-                                   HDC hdc_dst,
-                                   POINT *point_dst,
-                                   SIZE *size,
-                                   HDC hdc_src,
-                                   POINT *point_src,
-                                   COLORREF color_ref,
-                                   BLENDFUNCTION *blend_fn,
-                                   unsigned long flag);
+    void notify_event(uint32_t event,
+        HWND                   hwnd,
+        int32_t                object_id,
+        int32_t                child_id);
 
-        bool lock_window_update(HWND hwnd);
+    bool show(HWND hwnd, int32_t cmd_show) const;
 
-        bool unlock_window_update();
+    bool show_async(HWND hwnd, int32_t cmd_show) const;
 
-        bool animate_window(HWND hwnd, unsigned long time, unsigned long flag);
+    bool update(HWND hwnd) const;
 
-        bool close_window(HWND hwnd);
+    bool update_layered(HWND hwnd,
+        HDC                  hdc_dst,
+        POINT               *coordinate_dst,
+        SIZE                *size,
+        HDC                  hdc_src,
+        POINT               *coordinate_src,
+        COLORREF             color_ref,
+        BLENDFUNCTION       *blend_fn,
+        uint32_t             flag);
 
-        bool close_window(HWND hwnd, bool is_force);
+    bool lock_update(HWND hwnd);
 
-        bool exit_windows(uint32_t flag, unsigned long reason);
+    bool unlock_update();
 
-        bool destroy_window(HWND hwnd);
+    bool animate(HWND hwnd, uint32_t time, uint32_t flag);
 
-        bool enable_window(HWND hwnd, bool enable);
+    bool close(HWND hwnd);
 
-        bool enum_windows(WNDENUMPROC enum_func, LPARAM l_param);
+    bool close(HWND hwnd, bool is_force);
 
-        bool enum_child_windows(HWND hwnd_parent,
-                                WNDENUMPROC enum_func,
-                                LPARAM l_param);
+    bool exit(uint32_t flag, uint32_t reason);
 
-        bool enum_thread_windows(unsigned long tid,
-                                 WNDENUMPROC fn,
-                                 LPARAM l_param);
+    bool destroy(HWND hwnd);
 
-        HWND find_window(const wchar_t *class_name,
-                         const wchar_t *window_name);
+    bool enable(HWND hwnd, bool enable);
 
-        HWND find_window(HWND hwnd_parent,
-                         HWND hwnd_child_after,
-                         const wchar_t *class_name,
-                         const wchar_t *window_name);
+    bool enum_windows(WNDENUMPROC enum_func, LPARAM lparam);
 
-        bool flash_window(HWND hwnd, bool invert);
+    bool
+    enum_child_windows(HWND hwnd_parent, WNDENUMPROC enum_func, LPARAM lparam);
 
-        bool flash_window(FLASHWINFO *flash_info);
+    bool enum_windows(uint32_t tid, WNDENUMPROC fn, LPARAM lparam);
 
-        bool move_window(HWND hwnd,
-                         int32_t x,
-                         int32_t y,
-                         int32_t width,
-                         int32_t height,
-                         bool is_repaint);
+    HWND find(const char *class_name, const char *window_name);
 
-        bool print_window(HWND hwnd,
-                          HDC dc_handle,
-                          uint32_t flag);
+    HWND find(const wchar_t *class_name, const wchar_t *window_name);
 
-        bool redraw_window(HWND hwnd,
-                           const RECT *rect,
-                           HRGN region_handle,
-                           uint32_t flag);
+    HWND find(HWND  hwnd_parent,
+        HWND        hwnd_child_after,
+        const char *class_name,
+        const char *window_name);
 
-        bool maximize_window(HWND hwnd);
+    HWND find(HWND     hwnd_parent,
+        HWND           hwnd_child_after,
+        const wchar_t *class_name,
+        const wchar_t *window_name);
 
-        bool minimize_window(HWND hwnd);
+    bool flash(HWND hwnd, bool invert);
 
-        bool hide_window(HWND hwnd);
+    bool flash(FLASHWINFO *flash_info);
 
-        bool restore_window(HWND hwnd);
+    bool move(HWND hwnd,
+        int32_t    x,
+        int32_t    y,
+        int32_t    width,
+        int32_t    height,
+        bool       is_repaint);
 
-        bool restore_icon_window(HWND hwnd);
+    bool print(HWND hwnd, HDC dc_handle, uint32_t flag);
 
-        uint16_t tile_windows(HWND hwnd_parent,
-                              uint32_t how,
-                              const RECT *rect,
-                              uint32_t kids_num,
-                              const HWND *kids);
+    bool redraw(HWND hwnd, const RECT *rect, HRGN region_handle, uint32_t flag);
 
-        HWND get_parent_window(HWND hwnd);
+    bool maximize(HWND hwnd);
 
-        HWND set_parent_window(HWND hwnd_child, HWND hwnd_new_parent);
+    bool minimize(HWND hwnd);
 
-        HWND get_ancestor_window(HWND hwnd, uint32_t flag);
+    bool hide(HWND hwnd);
 
-        bool show_popup_window(HWND hwnd);
+    bool restore(HWND hwnd);
 
-        bool hide_popup_window(HWND hwnd);
+    bool restore_minimize(HWND hwnd);
 
-        HWND get_last_active_popup_window(HWND hwnd);
+    uint16_t tile(HWND           hwnd_parent,
+        uint32_t                 how,
+        const RECT              *rect,
+        const std::vector<HWND> &child);
 
-        bool is_hung_app_window(HWND hwnd);
+    HWND get_parent(HWND hwnd);
 
-        bool is_window(HWND hwnd);
+    HWND set_parent(HWND hwnd_child, HWND hwnd_new_parent);
 
-        bool is_window_arranged(HWND hwnd);
+    HWND get_ancestor(HWND hwnd, uint32_t flag);
 
-        bool is_window_enabled(HWND hwnd);
+    bool show_popup(HWND hwnd);
 
-        bool is_window_unicode(HWND hwnd);
+    bool hide_popup(HWND hwnd);
 
-        bool is_window_visible(HWND hwnd);
+    HWND get_last_active_popup(HWND hwnd);
 
-        bool is_window_minimize(HWND hwnd);
+    bool is_pending(HWND hwnd);
 
-        bool is_window_maximize(HWND hwnd);
+    bool is_window(HWND hwnd);
 
-        bool is_child_window(HWND hwnd_parent, HWND hwnd);
+    bool is_arranged(HWND hwnd);
 
-        bool is_any_popup();
+    bool is_enabled(HWND hwnd);
 
-        uint32_t arrange_minimize_windows(HWND hwnd);
+    bool is_unicode(HWND hwnd);
 
-        bool get_process_default_layout(unsigned long *default_layout);
+    bool is_visible(HWND hwnd);
 
-        bool set_process_default_layout(unsigned long default_layout);
+    bool is_minimize(HWND hwnd);
 
-        HDWP begin_defer_window_pos(int32_t num_windows);
+    bool is_maximize(HWND hwnd);
 
-        HDWP defer_window_pos(HDWP hwin_pos_info,
-                              HWND hwnd,
-                              HWND hwnd_insert_after,
-                              int32_t x,
-                              int32_t y,
-                              int32_t cx,
-                              int32_t cy,
-                              uint32_t flag);
+    bool is_child(HWND hwnd_parent, HWND hwnd);
 
-        bool end_defer_window_pos(HDWP hwin_pos_info);
+    bool is_popup_exist();
 
-        bool set_window_pos(HWND hwnd,
-                            HWND hwnd_insert_after,
-                            int32_t x,
-                            int32_t y,
-                            int32_t cx,
-                            int32_t cy,
-                            uint32_t flag);
+    uint32_t arrange_minimize(HWND hwnd);
 
-        bool calculate_popup_window_position(const POINT *anchor_point,
-                                             const SIZE *window_size,
-                                             uint32_t flag,
-                                             RECT *exclude_rect,
-                                             RECT *popup_window_position);
+    bool get_proc_default_layout(uint32_t *default_layout);
 
-        HWND child_window_from_point(HWND hwnd_parent, POINT point);
+    bool set_proc_default_layout(uint32_t default_layout);
 
-        HWND child_window_from_point(HWND hwnd_parent, POINT point, uint32_t flag);
+    HDWP prepare(int32_t num_windows);
 
-        HWND real_child_window_from_point(HWND hwnd_parent,
-                                          POINT parent_client_coords);
+    HDWP add(HDWP hwin_pos_info,
+        HWND      hwnd,
+        HWND      hwnd_insert_after,
+        int32_t   x,
+        int32_t   y,
+        int32_t   cx,
+        int32_t   cy,
+        uint32_t  flag);
 
-        HWND window_from_physical_point(POINT point);
+    bool apply(HDWP hwin_pos_info);
 
-        HWND window_from_point(POINT point);
+    bool set_pos(HWND hwnd,
+        HWND          hwnd_insert_after,
+        int32_t       x,
+        int32_t       y,
+        int32_t       cx,
+        int32_t       cy,
+        uint32_t      flag);
 
-        int32_t map_window_points(HWND hwnd_from,
-                                  HWND hwnd_to,
-                                  POINT *point,
-                                  uint32_t count);
+    bool calc_popup_pos(const POINT *anchor_coordinate,
+        const SIZE                  *window_size,
+        uint32_t                     flag,
+        RECT                        *exclude_rect,
+        RECT                        *popup_window_position);
 
-        bool bring_window_to_top(HWND hwnd);
+    HWND find_top_child(HWND hwnd_parent, POINT coordinate);
 
-        LRESULT call_window_proc(WNDPROC prev_wnd_func,
-                                 HWND hwnd,
-                                 uint32_t msg,
-                                 WPARAM w_param,
-                                 LPARAM l_param);
+    HWND find_top_child(HWND hwnd_parent, POINT coordinate, uint32_t flag);
 
-        LRESULT default_window_proc(HWND hwnd,
-                                    uint32_t msg,
-                                    WPARAM w_param,
-                                    LPARAM l_param);
+    HWND find_real_child(HWND hwnd_parent, POINT coordinate);
 
-        LRESULT default_frame_proc(HWND hwnd,
-                                   HWND hwnd_mdi_client,
-                                   uint32_t msg,
-                                   WPARAM w_param,
-                                   LPARAM l_param);
+    HWND find_by_physical_point(POINT coordinate);
 
-        LRESULT default_mdi_child_proc(HWND hwnd,
-                                       uint32_t msg,
-                                       WPARAM w_param,
-                                       LPARAM l_param);
+    HWND find_by_logical_point(POINT coordinate);
 
-        uint16_t cascade_windows(HWND hwnd_parent,
-                                 uint32_t how,
-                                 const RECT *rect,
-                                 uint32_t kids_count,
-                                 const HWND *kids);
+    int32_t transform_coordinate(HWND hwnd_from,
+        HWND                          hwnd_to,
+        std::vector<POINT>           &coordinates);
 
-        void disable_process_windows_ghosting();
+    bool adjust_to_top(HWND hwnd);
 
-        HWND get_active_window();
+    LRESULT call_proc(WNDPROC prev_wnd_func,
+        HWND                  hwnd,
+        uint32_t              msg,
+        WPARAM                wparam,
+        LPARAM                lparam);
 
-        HWND set_active_window(HWND hwnd);
+    LRESULT
+    default_proc(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam);
 
-        uint32_t get_dpi_for_window(HWND hwnd);
+    LRESULT default_mdi_proc(HWND hwnd,
+        HWND                      hwnd_mdi_client,
+        uint32_t                  msg,
+        WPARAM                    wparam,
+        LPARAM                    lparam);
 
-        HWND get_foreground_window();
+    LRESULT default_mdi_child_proc(HWND hwnd,
+        uint32_t                        msg,
+        WPARAM                          wparam,
+        LPARAM                          lparam);
 
-        bool set_foreground_window(HWND hwnd);
+    uint16_t cascade(HWND  hwnd_parent,
+        uint32_t           how,
+        const RECT        *rect,
+        std::vector<HWND> &child);
 
-        bool allow_set_foreground_window(unsigned long pid);
+    void disable_proc_ghosting();
 
-        bool lock_set_foreground_window();
+    HWND get_active();
 
-        bool unlock_set_foreground_window();
+    HWND set_active(HWND hwnd);
 
-        bool get_layered_window_attrs(HWND hwnd,
-                                      COLORREF *color_ref,
-                                      uint8_t *alpha,
-                                      unsigned long *flag);
+    uint32_t get_dpi(HWND hwnd);
 
-        bool set_layered_window_attrs(HWND hwnd,
-                                      COLORREF color_ref,
-                                      uint8_t alpha,
-                                      unsigned long flag);
+    HWND get_foreground();
 
-        HWND get_window(HWND hwnd, uint32_t cmd);
+    bool set_foreground(HWND hwnd);
 
-        HWND get_next_window(HWND hwnd, uint32_t cmd);
+    bool allow_set_foreground(uint32_t pid);
 
-        HWND get_shell_window();
+    bool lock_set_foreground();
 
-        HWND get_top_window(HWND hwnd);
+    bool unlock_set_foreground();
 
-        unsigned long get_window_context_help_id(HWND hwnd);
+    bool get_layered_attrs(HWND hwnd,
+        COLORREF               *color_ref,
+        uint8_t                *alpha,
+        uint32_t               *flag);
 
-        bool set_window_context_help_id(HWND hwnd,
-                                        unsigned long param);
+    bool set_layered_attrs(HWND hwnd,
+        COLORREF                color_ref,
+        uint8_t                 alpha,
+        uint32_t                flag);
 
-        bool get_window_display_affinity(HWND hwnd, unsigned long *affinity);
+    HWND find(HWND hwnd, uint32_t cmd);
 
-        bool set_window_display_affinity(HWND hwnd, unsigned long affinity);
+    HWND find_next(HWND hwnd, uint32_t cmd);
 
-        DPI_AWARENESS_CONTEXT get_window_dpi_awareness_context(HWND hwnd);
+    HWND find_shell();
 
-        DPI_HOSTING_BEHAVIOR get_window_dpi_hosting_behavior(HWND hwnd);
+    HWND find_top(HWND hwnd);
 
-        bool get_window_feedback_setting(HWND hwnd,
-                                         FEEDBACK_TYPE feedback,
-                                         unsigned long flag,
-                                         uint32_t *size,
-                                         void *config);
+    uint32_t get_context_help_id(HWND hwnd);
 
-        bool set_window_feedback_setting(HWND hwnd,
-                                         FEEDBACK_TYPE feedback,
-                                         unsigned long flag,
-                                         uint32_t size,
-                                         const void *config);
+    bool set_context_help_id(HWND hwnd, uint32_t param);
 
-        bool get_window_info(HWND hwnd, WINDOWINFO *window_info);
+    bool get_display_affinity(HWND hwnd, uint32_t *affinity);
 
-        long get_window_long(HWND hwnd, int32_t index);
+    bool set_display_affinity(HWND hwnd, uint32_t affinity);
 
-        long set_window_long(HWND hwnd,
-                             int32_t index,
-                             long value);
+    DPI_AWARENESS_CONTEXT get_dpi_aware_context(HWND hwnd);
 
-        LONG_PTR get_window_long_ptr(HWND hwnd, int32_t index);
+    DPI_HOSTING_BEHAVIOR get_dpi_hosting_behavior(HWND hwnd);
 
-        LONG_PTR set_window_long_ptr(HWND hwnd,
-                                     int32_t index,
-                                     LONG_PTR value);
+    bool get_feedback_setting(HWND hwnd,
+        FEEDBACK_TYPE              feedback,
+        uint32_t                   flag,
+        int                       *real_config);
 
-        uint32_t get_window_module_file_name(HWND hwnd,
-                                             wchar_t *file_name,
-                                             uint32_t cch_size = MAX_PATH);
+    bool set_feedback_setting(HWND hwnd,
+        FEEDBACK_TYPE              feedback,
+        uint32_t                   size,
+        const int                 *config);
 
-        bool get_window_placement(HWND hwnd,
-                                  WINDOWPLACEMENT *window_placement);
+    bool get_info(HWND hwnd, WINDOWINFO *window_info);
 
-        bool set_window_placement(HWND hwnd,
-                                  const WINDOWPLACEMENT *window_placement);
+    long get_long(HWND hwnd, int32_t index);
 
-        bool get_window_rect(HWND hwnd, RECT *rect);
+    long set_long(HWND hwnd, int32_t index, long value);
 
-        bool adjust_window_rect(RECT *rect, unsigned long style, bool menu);
+    LONG_PTR get_long_ptr(HWND hwnd, int32_t index);
 
-        bool adjust_window_rect(RECT *rect,
-                                unsigned long style,
-                                bool menu,
-                                unsigned long ext_style);
+    LONG_PTR set_long_ptr(HWND hwnd, int32_t index, LONG_PTR value);
 
-        bool adjust_window_rect_for_dpi(RECT *rect,
-                                        unsigned long style,
-                                        bool menu,
-                                        unsigned long ext_style,
-                                        uint32_t dpi);
+    uint32_t get_module_file_name(HWND hwnd, std::string &file_name);
 
-        int32_t get_window_region(HWND hwnd, HRGN region_handle);
+    uint32_t get_module_file_name(HWND hwnd, std::wstring &file_name);
 
-        int32_t set_window_region(HWND hwnd,
-                                  HRGN region_handle,
-                                  bool is_redraw);
+    bool get_placement(HWND hwnd, WINDOWPLACEMENT *window_placement);
 
-        int32_t get_window_region_box(HWND hwnd, RECT *rect);
+    bool set_placement(HWND hwnd, const WINDOWPLACEMENT *window_placement);
 
-        int32_t get_window_text(HWND hwnd,
-                                wchar_t *text,
-                                int32_t cch_size);
+    bool get_rect(HWND hwnd, RECT *rect);
 
-        bool set_window_text(HWND hwnd,
-                             const wchar_t *text);
+    bool adjust_rect(RECT *rect, uint32_t style, bool menu);
 
-        int32_t get_window_text_length(HWND hwnd);
+    bool adjust_rect(RECT *rect, uint32_t style, bool menu, uint32_t ext_style);
 
-        unsigned long get_window_thread_process_id(HWND hwnd,
-                                                   unsigned long *pid);
+    bool adjust_rect_for_dpi(RECT *rect,
+        uint32_t                   style,
+        bool                       menu,
+        uint32_t                   ext_style,
+        uint32_t                   dpi);
 
-        uint16_t get_window_word(HWND hwnd, int32_t index);
+    int32_t get_region(HWND hwnd, HRGN region_handle);
 
-        int32_t internal_get_window_text(HWND hwnd,
-                                         wchar_t *text,
-                                         int32_t cch_size);
+    int32_t set_region(HWND hwnd, HRGN region_handle, bool is_redraw);
 
-        uint32_t real_get_window_class(HWND hwnd,
-                                       wchar_t *class_name,
-                                       uint32_t cch_size = MAX_PATH);
+    int32_t get_region_box(HWND hwnd, RECT *rect);
 
-        void switch_to_this_window(HWND hwnd, bool unknown = false);
+    int32_t get_text(HWND hwnd, std::string &text);
 
-        bool win_help(HWND hwnd,
-                      const wchar_t *help,
-                      uint32_t cmd,
-                      ULONG_PTR data);
+    int32_t get_text(HWND hwnd, std::wstring &text);
 
-        unsigned long get_gui_resources(HANDLE proc_handle, unsigned long flag);
+    bool set_text(HWND hwnd, const char *text);
 
-        bool get_gui_thread_info(unsigned long tid,
-                                 GUITHREADINFO *gui_thread_info);
+    bool set_text(HWND hwnd, const wchar_t *text);
 
-        bool is_gui_thread(bool is_convert);
+    int32_t get_text_length(HWND hwnd);
 
-        bool get_alt_tab_info(HWND hwnd,
-                              int32_t item_index,
-                              ALTTABINFO *alt_tab_info,
-                              wchar_t *item_text,
-                              uint32_t cch_item_text);
+    uint32_t get_thread_id(HWND hwnd);
 
-        UINT_PTR set_timer(HWND hwnd,
-                           UINT_PTR event_id,
-                           uint32_t elapse,
-                           TIMERPROC timer_func);
+    uint32_t get_proc_id(HWND hwnd);
 
-        UINT_PTR set_coalescable_timer(HWND hwnd,
-                                       UINT_PTR event_id,
-                                       uint32_t elapse,
-                                       TIMERPROC timer_func,
-                                       unsigned long tolerance_delay);
+    // std::pair<tid, pid>
+    std::pair<uint32_t, uint32_t> get_window_tid_and_pid(HWND hwnd);
 
-        bool kill_timer(HWND hwnd, UINT_PTR event_id);
+    uint16_t get_word(HWND hwnd, int32_t index);
 
-        bool shutdown_block_reason_create(HWND hwnd, const wchar_t *reason);
+    int32_t get_direct_text(HWND hwnd, std::string &text);
 
-        bool shutdown_block_reason_destroy(HWND hwnd);
+    int32_t get_direct_text(HWND hwnd, std::wstring &text);
 
-        bool shutdown_block_reason_query(HWND hwnd,
-                                         wchar_t *buf,
-                                         unsigned long *cch_size);
+    uint32_t get_class(HWND hwnd, std::string &class_name);
 
-        int get_system_metrics(int index);
+    uint32_t get_class(HWND hwnd, std::wstring &class_name);
 
-        bool system_parameters_info(uint32_t ui_action,
-                                    uint32_t ui_param,
-                                    void *param,
-                                    uint32_t win_ini);
+    void switch_window(HWND hwnd, bool unknown = false);
 
-        bool system_parameters_info_for_dpi(uint32_t ui_action,
-                                            uint32_t ui_param,
-                                            void *param,
-                                            uint32_t win_ini,
-                                            uint32_t dpi);
+    bool show_help(HWND hwnd, const char *help, uint32_t cmd, ULONG_PTR data);
 
-        bool get_user_object_security(HANDLE obj_handle,
-                                      PSECURITY_INFORMATION si_requested,
-                                      PSECURITY_DESCRIPTOR sid,
-                                      unsigned long length,
-                                      unsigned long *length_needed);
+    bool
+    show_help(HWND hwnd, const wchar_t *help, uint32_t cmd, ULONG_PTR data);
 
-        unsigned long msg_wait_for_multiple_objects(unsigned long count,
-                                                    const HANDLE *handles,
-                                                    bool wait_all,
-                                                    unsigned long milli_seconds,
-                                                    unsigned long wake_mask);
+    uint32_t get_gui_resources(HANDLE proc_handle, uint32_t flag);
 
-        unsigned long msg_wait_for_multiple_objects(unsigned long count,
-                                                    const HANDLE *handles,
-                                                    unsigned long milli_seconds,
-                                                    unsigned long wake_mask,
-                                                    unsigned long flag);
+    bool get_gui_thread_info(uint32_t tid, GUITHREADINFO *gui_thread_info);
 
-        bool set_user_object_security(HANDLE obj_handle,
-                                      PSECURITY_INFORMATION si_requested,
-                                      PSECURITY_DESCRIPTOR sid);
+    bool is_gui_thread(bool is_convert);
 
-        HDEVNOTIFY register_device_notification(HANDLE recipient_handle,
-                                                void *notification_filter,
-                                                unsigned long flag);
+    bool get_alt_tab_info(HWND hwnd,
+        int32_t                item_index,
+        ALTTABINFO            *alt_tab_info,
+        std::string           &item_text);
 
-        bool unregister_device_notification(HDEVNOTIFY device_notify_handle);
+    bool get_alt_tab_info(HWND hwnd,
+        int32_t                item_index,
+        ALTTABINFO            *alt_tab_info,
+        std::wstring          &item_text);
 
-        HPOWERNOTIFY register_power_setting_notification(
-            HANDLE recipient_handle,
-            const GUID *power_setting_guid,
-            unsigned long flag);
+    UINT_PTR set_timer(HWND hwnd,
+        UINT_PTR            event_id,
+        uint32_t            elapse,
+        TIMERPROC           timer_func);
 
-        bool unregister_power_setting_notification(HPOWERNOTIFY power_notify_handle);
+    UINT_PTR set_coalescable_timer(HWND hwnd,
+        UINT_PTR                        event_id,
+        uint32_t                        elapse,
+        TIMERPROC                       timer_func,
+        uint32_t                        tolerance_delay);
 
-        HPOWERNOTIFY register_suspend_resume_notification(HANDLE recipient_handle,
-                                                          unsigned long flag);
+    bool kill_timer(HWND hwnd, UINT_PTR event_id);
 
-        bool unregister_suspend_resume_notification(
-            HPOWERNOTIFY power_notify_handle);
+    bool create_shutdown_reason(HWND hwnd, std::string &reason);
 
-        bool register_for_tooltip_dismiss_notification(
-            HWND hwnd,
-            TOOLTIP_DISMISS_FLAGS flag);
+    bool create_shutdown_reason(HWND hwnd, const std::wstring &reason);
 
-        bool sound_sentry();
+    bool destroy_shutdown_reason(HWND hwnd);
 
-        bool user_handle_grant_access(HANDLE user_handle,
-                                      HANDLE job_handle,
-                                      bool is_grant);
+    bool
+    query_shutdown_reason(HWND hwnd, std::string &reason, uint32_t *real_size);
 
-        bool set_additional_foreground_boost_processes(
-            HWND top_level_window_handle,
-            unsigned long process_handle_count,
-            HANDLE *process_handle_array);
+    bool
+    query_shutdown_reason(HWND hwnd, std::wstring &reason, uint32_t *real_size);
 
-        bool get_title_bar_info(HWND hwnd,
-                                TITLEBARINFO *title_bar_info);
+    int get_system_metrics(int flag);
 
-        bool get_auto_rotation_state(AR_STATE *state);
+    bool system_params_info(uint32_t ui_action,
+        uint32_t                     ui_param,
+        void                        *param,
+        uint32_t                     win_ini);
 
-        uint32_t get_kb_code_page();
+    bool system_paras_info_for_dpi(uint32_t ui_action,
+        uint32_t                            ui_param,
+        void                               *param,
+        uint32_t                            win_ini,
+        uint32_t                            dpi);
 
-        bool get_combo_box_info(HWND combo_hwnd,
-                                COMBOBOXINFO *combobox_info);
+    bool get_user_object_security(HANDLE obj_handle,
+        PSECURITY_INFORMATION            si,
+        PSECURITY_DESCRIPTOR             sd,
+        uint32_t                         size,
+        uint32_t                        *real_size);
 
-        unsigned long get_listbox_info(HWND hwnd);
+    bool set_user_object_security(HANDLE obj_handle,
+        PSECURITY_INFORMATION            si,
+        PSECURITY_DESCRIPTOR             sd);
 
-        bool are_dpi_awareness_contexts_equal(DPI_AWARENESS_CONTEXT dpi_context1,
-                                              DPI_AWARENESS_CONTEXT dpi_context2);
+    uint32_t wait_for_multiple_objects(std::vector<HANDLE> &handles,
+        bool                                                wait_all,
+        uint32_t                                            milli_seconds,
+        uint32_t                                            wake_mask);
 
-        bool enable_non_client_dpi_scaling(HWND hwnd);
+    uint32_t wait_for_multiple_objects(std::vector<HANDLE> &handles,
+        uint32_t                                            milli_seconds,
+        uint32_t                                            wake_mask,
+        uint32_t                                            flag);
 
-        bool is_process_dpi_aware();
+    HDEVNOTIFY register_device_notify(HANDLE recipient_handle,
+        void                                *notification_filter,
+        uint32_t                             flag);
 
-        bool is_valid_dpi_awareness_context(DPI_AWARENESS_CONTEXT value);
+    bool unregister_device_notify(HDEVNOTIFY device_notify_handle);
 
-        uint32_t get_dpi_for_system();
+    HPOWERNOTIFY register_power_setting_notify(HANDLE recipient_handle,
+        const GUID                                   *power_setting_guid,
+        uint32_t                                      flag);
 
-        uint32_t get_dpi_from_dpi_awareness_context(DPI_AWARENESS_CONTEXT value);
+    bool unregister_power_setting_notify(HPOWERNOTIFY power_notify_handle);
 
-        DPI_AWARENESS get_awareness_from_dpi_awareness_context(
-            DPI_AWARENESS_CONTEXT value);
+    HPOWERNOTIFY register_suspend_resume_notify(HANDLE recipient_handle,
+        uint32_t                                       flag);
 
-        DPI_AWARENESS_CONTEXT get_dpi_awareness_context_for_process(
-            HANDLE proc_handle);
+    bool unregister_suspend_resume_notify(HPOWERNOTIFY power_notify_handle);
 
-        int32_t get_system_metrics_for_dpi(int32_t index, uint32_t dpi);
+    bool register_tooltip_dismiss_notify(HWND hwnd);
 
-        uint32_t get_system_dpi_for_process(HANDLE proc_handle);
+    bool unregister_tooltip_dismiss_notify(HWND hwnd);
 
-        HRESULT get_process_dpi_awareness(HANDLE proc_handle,
-                                          PROCESS_DPI_AWARENESS *value);
+    bool sound_sentry();
 
-        HRESULT set_process_dpi_awareness(PROCESS_DPI_AWARENESS value);
+    bool grant_access(HANDLE user_handle, HANDLE job_handle, bool is_grant);
 
-        bool set_process_dpi_awareness_context(DPI_AWARENESS_CONTEXT value);
+    bool set_additional_foreground_boost_procs(HWND top_level_window_handle,
+        std::vector<HANDLE>                        &proc_handles);
 
-        DPI_AWARENESS_CONTEXT get_thread_dpi_awareness_context();
+    bool get_title_bar_info(HWND hwnd, TITLEBARINFO *title_bar_info);
 
-        DPI_AWARENESS_CONTEXT set_thread_dpi_awareness_context(
-            DPI_AWARENESS_CONTEXT dpi_context);
+    bool get_auto_rotation_state(AR_STATE *state);
 
-        DPI_HOSTING_BEHAVIOR get_thread_dpi_hosting_behavior();
+    helper::CodePage get_code_page();
 
-        DPI_HOSTING_BEHAVIOR set_thread_dpi_hosting_behavior(
-            DPI_HOSTING_BEHAVIOR value);
+    bool get_combobox_info(HWND combo_hwnd, COMBOBOXINFO *combobox_info);
 
-        int16_t get_app_command_lparam(LPARAM l_param);
+    uint32_t get_listbox_info(HWND hwnd);
 
-        uint16_t get_device_lparam(LPARAM l_param);
+    bool is_dpi_aware_contexts_equal(DPI_AWARENESS_CONTEXT context1,
+        DPI_AWARENESS_CONTEXT                              context2);
 
-        uint16_t get_flags_lparam(LPARAM l_param);
+    bool enable_non_client_dpi_scaling(HWND hwnd);
 
-        int16_t get_nchittest_wparam(WPARAM w_param);
+    bool is_proc_dpi_aware();
 
-        int16_t get_wheel_delta_wparam(WPARAM w_param);
+    bool is_valid_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
 
-        wchar_t *make_int_resource(uint16_t value);
+    uint32_t get_dpi_for_system();
 
-        bool is_int_resource(uint16_t value);
+    uint32_t get_dpi_from_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
 
-        WPARAM make_wparam(long low, long high);
+    DPI_AWARENESS get_aware_from_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
 
-        LPARAM make_lparam(long low, long high);
+    DPI_AWARENESS_CONTEXT get_proc_dpi_aware_context(HANDLE proc_handle);
 
-        LRESULT make_lresult(long low, long high);
+    bool set_proc_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
 
-        uint16_t get_xbutton_wparam(WPARAM w_param);
+    int32_t get_system_metrics_for_dpi(int32_t index, uint32_t dpi);
 
-        POINT points_to_point(POINTS points);
+    uint32_t get_system_dpi(HANDLE proc_handle);
 
-        POINTS point_to_points(POINT point);
+    HRESULT get_proc_dpi_aware(HANDLE proc_handle,
+        PROCESS_DPI_AWARENESS        *value);
 
-        [[nodiscard]] unsigned long err_code() const;
+    HRESULT set_proc_dpi_aware(PROCESS_DPI_AWARENESS value);
 
-        [[nodiscard]] std::string err_string() const;
+    DPI_AWARENESS_CONTEXT get_thread_dpi_aware_context();
 
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
-}
-#endif //WINDOW_H
+    DPI_AWARENESS_CONTEXT set_thread_dpi_aware_context(
+        DPI_AWARENESS_CONTEXT dpi_context);
+
+    DPI_HOSTING_BEHAVIOR get_thread_dpi_hosting_behavior();
+
+    DPI_HOSTING_BEHAVIOR set_thread_dpi_hosting_behavior(
+        DPI_HOSTING_BEHAVIOR value);
+
+    int16_t get_app_command(LPARAM lparam);
+
+    uint16_t get_device(LPARAM lparam);
+
+    uint16_t get_flags(LPARAM lparam);
+
+    int16_t get_nc_hit_test(WPARAM wparam);
+
+    int16_t get_wheel_delta(WPARAM wparam);
+
+    wchar_t *make_int_resource(uint16_t value);
+
+    bool is_int_resource(uint16_t value);
+
+    WPARAM make_wparam(long low, long high);
+
+    LPARAM make_lparam(long low, long high);
+
+    LRESULT make_lresult(long low, long high);
+
+    uint16_t get_xbutton(WPARAM wparam);
+
+    POINT points_to_point(POINTS points);
+
+    POINTS point_to_points(POINT point);
+
+    [[nodiscard]] uint32_t err_code() const;
+
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // WINDOW_H

@@ -8,78 +8,180 @@
 #include <string>
 
 namespace YanLib::ui {
-    class scroll {
-    private:
-        unsigned long error_code = 0;
+#ifndef SCROLLTYPE
+#define SCROLLTYPE
 
-    public:
-        scroll(const scroll &other) = delete;
+enum class ScrollType : uint32_t {
+    Horiz = SB_HORZ,
+    Vert  = SB_VERT,
+    Ctl   = SB_CTL,
+    Both  = SB_BOTH,
+};
 
-        scroll(scroll &&other) = delete;
-
-        scroll &operator=(const scroll &other) = delete;
-
-        scroll &operator=(scroll &&other) = delete;
-
-        scroll() = default;
-
-        ~scroll() = default;
-
-        bool enable_scroll_bar(HWND hwnd, uint32_t scroll_type, uint32_t arrow_type);
-
-        bool show_scroll_bar(HWND hwnd, int32_t scroll_type);
-
-        bool hide_scroll_bar(HWND hwnd, int32_t scroll_type);
-
-        bool get_scroll_bar_info(HWND hwnd,
-                                 long object_id,
-                                 SCROLLBARINFO *scroll_bar_info);
-
-        bool get_scroll_info(HWND hwnd, int32_t scroll_type, SCROLLINFO *scroll_info);
-
-        int32_t set_scroll_info(HWND hwnd,
-                                int32_t scroll_type,
-                                SCROLLINFO *scroll_info,
-                                bool is_redraw);
-
-        int32_t get_scroll_pos(HWND hwnd, int32_t scroll_info);
-
-        int32_t set_scroll_pos(HWND hwnd,
-                               int32_t scroll_type,
-                               int32_t pos,
-                               bool is_redraw);
-
-        bool get_scroll_range(HWND hwnd,
-                              int32_t scroll_type,
-                              int32_t *min_pos,
-                              int32_t *max_pos);
-
-        bool set_scroll_range(HWND hwnd,
-                              int32_t scroll_type,
-                              int32_t min_pos,
-                              int32_t max_pos,
-                              bool is_redraw);
-
-        bool scroll_window(HWND hwnd,
-                           int32_t x_amount,
-                           int32_t y_amount,
-                           const RECT *rect,
-                           const RECT *clip_rect);
-
-        int32_t scroll_window(HWND hwnd,
-                              int32_t dx,
-                              int32_t dy,
-                              const RECT *rect_scroll,
-                              const RECT *rect_clip,
-                              HRGN region_handle_update,
-                              RECT *rect_update,
-                              uint32_t flag);
-
-        [[nodiscard]] unsigned long err_code() const;
-
-        [[nodiscard]] std::string err_string() const;
-
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
+inline ScrollType operator|(ScrollType a, ScrollType b) {
+    return static_cast<ScrollType>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
 }
-#endif //SCROLL_H
+#endif
+#ifndef ARROWTYPE
+#define ARROWTYPE
+
+enum class ArrowType : uint32_t {
+    EnableBoth       = ESB_ENABLE_BOTH,
+    DisableBoth      = ESB_DISABLE_BOTH,
+    DisableLeft      = ESB_DISABLE_LEFT,
+    DisableRight     = ESB_DISABLE_RIGHT,
+    DisableUp        = ESB_DISABLE_UP,
+    DisableDown      = ESB_DISABLE_DOWN,
+    DisableLeftUp    = ESB_DISABLE_LTUP,
+    DisableRightDown = ESB_DISABLE_RTDN,
+};
+
+inline ArrowType operator|(ArrowType a, ArrowType b) {
+    return static_cast<ArrowType>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+
+#endif
+#ifndef SCROLLCOMMAND
+#define SCROLLCOMMAND
+
+enum class ScrollCommand : uint32_t {
+    LineUp        = SB_LINEUP,
+    LineLeft      = SB_LINELEFT,
+    LineDown      = SB_LINEDOWN,
+    LineRight     = SB_LINERIGHT,
+    PageUp        = SB_PAGEUP,
+    PageLeft      = SB_PAGELEFT,
+    PageDown      = SB_PAGEDOWN,
+    PageRight     = SB_PAGERIGHT,
+    ThumbPosition = SB_THUMBPOSITION,
+    ThumbTrack    = SB_THUMBTRACK,
+    Top           = SB_TOP,
+    Left          = SB_LEFT,
+    Bottom        = SB_BOTTOM,
+    Right         = SB_RIGHT,
+    EndScroll     = SB_ENDSCROLL,
+};
+
+inline ScrollCommand operator|(ScrollCommand a, ScrollCommand b) {
+    return static_cast<ScrollCommand>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+#endif
+#ifndef OBJECTID
+#define OBJECTID
+
+enum class ObjectID : int32_t {
+    Window            = OBJID_WINDOW,
+    SysMenu           = OBJID_SYSMENU,
+    TitleBar          = OBJID_TITLEBAR,
+    Menu              = OBJID_MENU,
+    Client            = OBJID_CLIENT,
+    VScroll           = OBJID_VSCROLL,
+    HScroll           = OBJID_HSCROLL,
+    SizeGrip          = OBJID_SIZEGRIP,
+    Caret             = OBJID_CARET,
+    Cursor            = OBJID_CURSOR,
+    Alert             = OBJID_ALERT,
+    Sound             = OBJID_SOUND,
+    QueryClassNameIDX = OBJID_QUERYCLASSNAMEIDX,
+    NativeOM          = OBJID_NATIVEOM,
+};
+#endif
+#ifndef SCROLLFLAG
+#define SCROLLFLAG
+
+enum class ScrollFlag : uint32_t {
+    ScrollChildren = SW_SCROLLCHILDREN,
+    InValidate     = SW_INVALIDATE,
+    Erase          = SW_ERASE,
+    SmoothScroll   = SW_SMOOTHSCROLL,
+};
+
+inline ScrollFlag operator|(ScrollFlag a, ScrollFlag b) {
+    return static_cast<ScrollFlag>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+
+#endif
+
+class scroll {
+private:
+    uint32_t error_code = 0;
+
+public:
+    scroll(const scroll &other)            = delete;
+
+    scroll(scroll &&other)                 = delete;
+
+    scroll &operator=(const scroll &other) = delete;
+
+    scroll &operator=(scroll &&other)      = delete;
+
+    scroll()                               = default;
+
+    ~scroll()                              = default;
+
+    bool enable(HWND hwnd,
+        ScrollType   scroll_type = ScrollType::Both,
+        ArrowType    arrow_type  = ArrowType::EnableBoth);
+
+    bool show(HWND hwnd, ScrollType scroll_type = ScrollType::Both);
+
+    bool hide(HWND hwnd, ScrollType scroll_type = ScrollType::Both);
+
+    bool get_info(HWND hwnd,
+        SCROLLBARINFO *scroll_bar_info,
+        ObjectID       object_id = ObjectID::VScroll);
+
+    bool get_info(HWND hwnd,
+        SCROLLINFO    *scroll_info,
+        ScrollType     scroll_type = ScrollType::Vert);
+
+    int32_t set_info(HWND hwnd,
+        SCROLLINFO       *scroll_info,
+        ScrollType        scroll_type = ScrollType::Vert,
+        bool              is_redraw   = true);
+
+    int32_t get_pos(HWND hwnd, ScrollType scroll_type = ScrollType::Vert);
+
+    int32_t set_pos(HWND hwnd,
+        int32_t          pos,
+        ScrollType       scroll_type = ScrollType::Vert,
+        bool             is_redraw   = true);
+
+    bool get_range(HWND hwnd,
+        int32_t        *min_pos,
+        int32_t        *max_pos,
+        ScrollType      scroll_type = ScrollType::Vert);
+
+    bool set_range(HWND hwnd,
+        int32_t         min_pos,
+        int32_t         max_pos,
+        ScrollType      scroll_type = ScrollType::Vert,
+        bool            is_redraw   = true);
+
+    bool scroll_window(HWND hwnd,
+        int32_t             x_amount,
+        int32_t             y_amount,
+        const RECT         *rect      = nullptr,
+        const RECT         *clip_rect = nullptr);
+
+    int32_t scroll_window_extend(HWND hwnd,
+        int32_t                       dx,
+        int32_t                       dy,
+        const RECT                   *rect_scroll          = nullptr,
+        const RECT                   *rect_clip            = nullptr,
+        HRGN                          region_handle_update = nullptr,
+        RECT                         *rect_update          = nullptr,
+        ScrollFlag flag = ScrollFlag::InValidate | ScrollFlag::Erase);
+
+    [[nodiscard]] uint32_t err_code() const;
+
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // SCROLL_H

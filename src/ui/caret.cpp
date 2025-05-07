@@ -6,84 +6,85 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    bool caret::create_caret(HWND hwnd,
-                             HBITMAP bitmap_handle,
-                             int32_t width,
-                             int32_t height) {
-        if (!CreateCaret(hwnd, bitmap_handle, width, height)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    uint32_t caret::get_caret_blink_time() {
-        uint32_t result = GetCaretBlinkTime();
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
-    bool caret::set_caret_blink_time(uint32_t milli_second) {
-        if (!SetCaretBlinkTime(milli_second)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool caret::get_caret_pos(POINT *point) {
-        if (!GetCaretPos(point)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool caret::set_caret_pos(int32_t x, int32_t y) {
-        if (!SetCaretPos(x, y)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool caret::show_caret(HWND hwnd) {
-        if (!ShowCaret(hwnd)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool caret::hide_caret(HWND hwnd) {
-        if (!HideCaret(hwnd)) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    bool caret::destroy_caret() {
-        if (!DestroyCaret()) {
-            error_code = GetLastError();
-            return false;
-        }
-        return true;
-    }
-
-    unsigned long caret::err_code() const {
-        return error_code;
-    }
-
-    std::string caret::err_string() const {
-        std::string result = helper::convert::err_string(error_code);
-        return result;
-    }
-
-    std::wstring caret::err_wstring() const {
-        std::wstring result = helper::convert::err_wstring(error_code);
-        return result;
+caret::~caret() {
+    if (is_create) {
+        DestroyCaret();
     }
 }
+
+caret::caret(HWND hwnd, HBITMAP bitmap_handle, int32_t width, int32_t height) {
+    window_handle = hwnd;
+    if (!CreateCaret(hwnd, bitmap_handle, width, height)) {
+        error_code = GetLastError();
+        is_create  = false;
+    } else {
+        is_create = true;
+    }
+}
+
+bool caret::is_ok() const {
+    return is_create;
+}
+
+uint32_t caret::get_blink_time() {
+    uint32_t result = GetCaretBlinkTime();
+    if (!result) {
+        error_code = GetLastError();
+    }
+    return result;
+}
+
+bool caret::set_blink_time(uint32_t milli_second) {
+    if (!SetCaretBlinkTime(milli_second)) {
+        error_code = GetLastError();
+        return false;
+    }
+    return true;
+}
+
+bool caret::get_pos(POINT *point) {
+    if (!GetCaretPos(point)) {
+        error_code = GetLastError();
+        return false;
+    }
+    return true;
+}
+
+bool caret::set_pos(int32_t x, int32_t y) {
+    if (!SetCaretPos(x, y)) {
+        error_code = GetLastError();
+        return false;
+    }
+    return true;
+}
+
+bool caret::show() {
+    if (!ShowCaret(window_handle)) {
+        error_code = GetLastError();
+        return false;
+    }
+    return true;
+}
+
+bool caret::hide() {
+    if (!HideCaret(window_handle)) {
+        error_code = GetLastError();
+        return false;
+    }
+    return true;
+}
+
+uint32_t caret::err_code() const {
+    return error_code;
+}
+
+std::string caret::err_string() const {
+    std::string result = helper::convert::err_string(error_code);
+    return result;
+}
+
+std::wstring caret::err_wstring() const {
+    std::wstring result = helper::convert::err_wstring(error_code);
+    return result;
+}
+} // namespace YanLib::ui

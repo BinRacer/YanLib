@@ -10,54 +10,54 @@
 #include "sync/rwlock.h"
 
 namespace YanLib::sys {
-    class fiber {
-    private:
-        std::vector<void *> fiber_addrs = {};
-        sync::rwlock fiber_lock = {};
-        unsigned long error_code = 0;
+class fiber {
+private:
+    std::vector<void *> fiber_addrs = {};
+    sync::rwlock        fiber_lock  = {};
+    uint32_t            error_code  = 0;
 
-    public:
-        fiber(const fiber &other) = delete;
+public:
+    fiber(const fiber &other)            = delete;
 
-        fiber(fiber &&other) = delete;
+    fiber(fiber &&other)                 = delete;
 
-        fiber &operator=(const fiber &other) = delete;
+    fiber &operator=(const fiber &other) = delete;
 
-        fiber &operator=(fiber &&other) = delete;
+    fiber &operator=(fiber &&other)      = delete;
 
-        fiber() = default;
+    fiber()                              = default;
 
-        ~fiber();
+    ~fiber();
 
-        void *create(LPFIBER_START_ROUTINE start_addr,
-                     void *params,
-                     size_t commit = 0,
-                     size_t reserve = 0,
-                     unsigned long flag = FIBER_FLAG_FLOAT_SWITCH);
+    void *create(LPFIBER_START_ROUTINE start_addr,
+        void                          *params,
+        size_t                         commit       = 0,
+        size_t                         reserve      = 0,
+        bool                           switch_float = true);
 
-        unsigned long fls_alloc(PFLS_CALLBACK_FUNCTION callback);
+    uint32_t fls_alloc(PFLS_CALLBACK_FUNCTION callback);
 
-        bool fls_free(unsigned long index);
+    bool fls_free(uint32_t index);
 
-        void *fls_get_value(unsigned long index);
+    void *fls_get_value(uint32_t index);
 
-        bool fls_set_value(unsigned long index, void *value);
+    bool fls_set_value(uint32_t index, void *value);
 
-        bool is_fiber();
+    bool is_fiber();
 
-        void switch_to_fiber(void *addr);
+    void switch_to_fiber(void *addr);
 
-        void yield();
+    void yield();
 
-        void *thread_to_fiber(void *params, unsigned long flag = FIBER_FLAG_FLOAT_SWITCH);
+    void *thread_to_fiber(void *params, bool switch_float = true);
 
-        bool fiber_to_thread();
+    bool fiber_to_thread();
 
-        [[nodiscard]] unsigned long err_code() const;
+    [[nodiscard]] uint32_t err_code() const;
 
-        [[nodiscard]] std::string err_string() const;
+    [[nodiscard]] std::string err_string() const;
 
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
-}
-#endif //FIBER_H
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::sys
+#endif // FIBER_H

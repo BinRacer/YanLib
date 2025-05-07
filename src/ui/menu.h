@@ -6,182 +6,363 @@
 #define MENU_H
 #include <Windows.h>
 #include <string>
+#include <vector>
+#include "sync/rwlock.h"
 
 namespace YanLib::ui {
-    class menu {
-    private:
-        unsigned long error_code = 0;
+#ifndef MENUFLAG
+#define MENUFLAG
 
-    public:
-        menu(const menu &other) = delete;
+enum class MenuFlag : uint32_t {
+    // MF_* flag
+    Insert          = MF_INSERT,
+    Change          = MF_CHANGE,
+    Append          = MF_APPEND,
+    Delete          = MF_DELETE,
+    Remove          = MF_REMOVE,
+    ByCommand       = MF_BYCOMMAND,
+    ByPosition      = MF_BYPOSITION,
+    Separator       = MF_SEPARATOR,
+    Enabled         = MF_ENABLED,
+    Grayed          = MF_GRAYED,
+    Disabled        = MF_DISABLED,
+    Unchecked       = MF_UNCHECKED,
+    Checked         = MF_CHECKED,
+    UseCheckBitmaps = MF_USECHECKBITMAPS,
+    String          = MF_STRING,
+    Bitmap          = MF_BITMAP,
+    OwnerDraw       = MF_OWNERDRAW,
+    Popup           = MF_POPUP,
+    MenuBarBreak    = MF_MENUBARBREAK,
+    MenuBreak       = MF_MENUBREAK,
+    UnHighlight     = MF_UNHILITE,
+    Highlight       = MF_HILITE,
+    Default         = MF_DEFAULT,
+    SysMenu         = MF_SYSMENU,
+    Help            = MF_HELP,
+    RightJustify    = MF_RIGHTJUSTIFY,
+    MouseSelect     = MF_MOUSESELECT,
+    End             = MF_END,
+    // MFT_* flag
+    TString         = MFT_STRING,
+    TBitmap         = MFT_BITMAP,
+    TMenuBarBreak   = MFT_MENUBARBREAK,
+    TMenuBreak      = MFT_MENUBREAK,
+    TOwnerDraw      = MFT_OWNERDRAW,
+    TRadioCheck     = MFT_RADIOCHECK,
+    TSeparator      = MFT_SEPARATOR,
+    TRightOrder     = MFT_RIGHTORDER,
+    TRightJustify   = MFT_RIGHTJUSTIFY,
+    // MFS_* flag
+    SGrayed         = MFS_GRAYED,
+    SDisabled       = MFS_DISABLED,
+    SChecked        = MFS_CHECKED,
+    SHighlight      = MFS_HILITE,
+    SEnabled        = MFS_ENABLED,
+    SUnchecked      = MFS_UNCHECKED,
+    SUnHighlight    = MFS_UNHILITE,
+    SDefault        = MFS_DEFAULT,
+};
 
-        menu(menu &&other) = delete;
-
-        menu &operator=(const menu &other) = delete;
-
-        menu &operator=(menu &&other) = delete;
-
-        menu() = default;
-
-        ~menu() = default;
-
-        HMENU create_menu();
-
-        HMENU create_popup_menu();
-
-        HMENU load_menu(HINSTANCE instance_handle,
-                        const wchar_t *menu_name);
-
-        HMENU load_menu_indirect(const MENUTEMPLATEW *menu_template);
-
-        bool append_menu(HMENU menu_handle,
-                         uint32_t flag,
-                         UINT_PTR id_new_item,
-                         const wchar_t *new_item);
-
-        bool insert_menu(HMENU menu_handle,
-                         uint32_t position,
-                         uint32_t flag,
-                         UINT_PTR id_new_item,
-                         const wchar_t *new_item);
-
-        bool remove_menu(HMENU menu_handle,
-                         uint32_t position,
-                         uint32_t flag);
-
-        bool delete_menu(HMENU menu_handle,
-                         uint32_t position,
-                         uint32_t flag);
-
-        bool modify_menu(HMENU menu_handle,
-                         uint32_t position,
-                         uint32_t flag,
-                         UINT_PTR id_new_item,
-                         const wchar_t *new_item);
-
-        HMENU get_menu(HWND hwnd);
-
-        bool set_menu(HWND hwnd, HMENU menu_handle);
-
-        bool set_menu_info(HMENU menu_handle, const MENUINFO *memu_info);
-
-        bool get_menu_info(HMENU menu_handle, MENUINFO *memu_info);
-
-        bool get_menu_bar_info(HWND hwnd,
-                               long id_object,
-                               long id_item,
-                               MENUBARINFO *menu_bar_info);
-
-        uint32_t get_menu_state(HMENU menu_handle, uint32_t id, uint32_t flag);
-
-        int32_t get_menu_string(HMENU menu_handle,
-                            uint32_t id_item,
-                            wchar_t *text,
-                            int32_t cch_max,
-                            uint32_t flag);
-
-        HMENU get_sub_menu(HMENU menu_handle, int32_t pos);
-
-        HMENU get_system_menu(HWND hwnd, bool revert);
-
-        long get_menu_check_mark_dimensions();
-
-        bool is_menu(HMENU menu_handle);
-
-        bool end_menu();
-
-        bool destroy_menu(HMENU menu_handle);
-
-        bool draw_menu_bar(HWND hwnd);
-
-        bool insert_menu_item(HMENU menu_handle,
-                              uint32_t item,
-                              bool is_pos,
-                              const MENUITEMINFOW *menu_item_info);
-
-        bool get_menu_item_info(HMENU menu_handle,
-                                uint32_t item,
-                                bool is_pos,
-                                MENUITEMINFOW *menu_item_info);
-
-        bool set_menu_item_info(HMENU menu_handle,
-                                uint32_t item,
-                                bool is_pos,
-                                const MENUITEMINFOW *menu_item_info);
-
-
-        uint32_t get_menu_default_item(HMENU menu_handle,
-                                           bool is_pos,
-                                           uint32_t flag);
-
-        bool set_menu_default_item(HMENU menu_handle,
-                                   uint32_t item,
-                                   bool is_pos);
-
-        unsigned long get_menu_context_help_id(HMENU menu_handle);
-
-        bool set_menu_context_help_id(HMENU menu_handle, unsigned long param);
-
-
-        int32_t get_menu_item_count(HMENU menu_handle);
-
-        uint32_t get_menu_item_id(HMENU menu_handle, int32_t pos);
-
-
-        bool get_menu_item_rect(HWND hwnd,
-                                HMENU menu_handle,
-                                uint32_t item,
-                                RECT *rect);
-
-        BOOL set_menu_item_bitmaps(HMENU menu_handle,
-                                   uint32_t position,
-                                   uint32_t flag,
-                                   HBITMAP bitmap_unchecked_handle,
-                                   HBITMAP bitmap_checked_handle);
-
-        int32_t menu_item_from_point(HWND hwnd,
-                                 HMENU menu_handle,
-                                 POINT point_screen);
-
-        bool hilite_menu_item(HWND hwnd,
-                              HMENU menu_handle,
-                              uint32_t id_hilite_item,
-                              uint32_t hilite);
-
-        unsigned long check_menu_item(HMENU menu_handle,
-                                      uint32_t id_check_item,
-                                      uint32_t check);
-
-        bool check_menu_radio_item(HMENU menu_handle,
-                                   uint32_t first,
-                                   uint32_t last,
-                                   uint32_t check,
-                                   uint32_t flag);
-
-        int32_t enable_menu_item(HMENU menu_handle,
-                             uint32_t id_enable_item,
-                             uint32_t enable);
-
-        bool track_popup_menu(HMENU menu_handle,
-                              uint32_t flag,
-                              int32_t x,
-                              int32_t y,
-                              int32_t reserved,
-                              HWND hwnd,
-                              const RECT *rect);
-
-        bool track_popup_menu(HMENU menu_handle,
-                              uint32_t flag,
-                              int32_t x,
-                              int32_t y,
-                              HWND hwnd,
-                              TPMPARAMS *tpm_params);
-
-        [[nodiscard]] unsigned long err_code() const;
-
-        [[nodiscard]] std::string err_string() const;
-
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
+inline MenuFlag operator|(MenuFlag a, MenuFlag b) {
+    return static_cast<MenuFlag>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
 }
-#endif //MENU_H
+#endif
+#ifndef OBJECTID
+#define OBJECTID
+
+enum class ObjectID : int32_t {
+    Window            = OBJID_WINDOW,
+    SysMenu           = OBJID_SYSMENU,
+    TitleBar          = OBJID_TITLEBAR,
+    Menu              = OBJID_MENU,
+    Client            = OBJID_CLIENT,
+    VScroll           = OBJID_VSCROLL,
+    HScroll           = OBJID_HSCROLL,
+    SizeGrip          = OBJID_SIZEGRIP,
+    Caret             = OBJID_CARET,
+    Cursor            = OBJID_CURSOR,
+    Alert             = OBJID_ALERT,
+    Sound             = OBJID_SOUND,
+    QueryClassNameIDX = OBJID_QUERYCLASSNAMEIDX,
+    NativeOM          = OBJID_NATIVEOM,
+};
+#endif
+#ifndef MENUSEARCH
+#define MENUSEARCH
+
+enum class MenuSearch : uint32_t {
+    Default      = 0,
+    ShowDisabled = GMDI_USEDISABLED,
+    Recursion    = GMDI_GOINTOPOPUPS,
+};
+
+inline MenuSearch operator|(MenuSearch a, MenuSearch b) {
+    return static_cast<MenuSearch>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+#endif
+#ifndef TRACKPOPUPMENU
+#define TRACKPOPUPMENU
+
+enum class TrackPopup : uint32_t {
+    LeftButton      = TPM_LEFTBUTTON,
+    RightButton     = TPM_RIGHTBUTTON,
+    LeftAlign       = TPM_LEFTALIGN,
+    CenterAlign     = TPM_CENTERALIGN,
+    RightAlign      = TPM_RIGHTALIGN,
+    TopAlign        = TPM_TOPALIGN,
+    VCenterAlign    = TPM_VCENTERALIGN,
+    BottomAlign     = TPM_BOTTOMALIGN,
+    Horizontal      = TPM_HORIZONTAL,
+    Vertical        = TPM_VERTICAL,
+    NoNotify        = TPM_NONOTIFY,
+    ReturnCmd       = TPM_RETURNCMD,
+    Recurse         = TPM_RECURSE,
+    HorPosAnimation = TPM_HORPOSANIMATION,
+    HorNegAnimation = TPM_HORNEGANIMATION,
+    VerPosAnimation = TPM_VERPOSANIMATION,
+    VerNegAnimation = TPM_VERNEGANIMATION,
+    NoAnimation     = TPM_NOANIMATION,
+    LayoutRtl       = TPM_LAYOUTRTL,
+    WorkArea        = TPM_WORKAREA,
+};
+
+inline TrackPopup operator|(TrackPopup a, TrackPopup b) {
+    return static_cast<TrackPopup>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+}
+
+#endif
+class menu {
+private:
+    std::vector<HMENU> menu_handles = {};
+    sync::rwlock       rwlock       = {};
+    uint32_t           error_code   = 0;
+
+public:
+    menu(const menu &other)            = delete;
+
+    menu(menu &&other)                 = delete;
+
+    menu &operator=(const menu &other) = delete;
+
+    menu &operator=(menu &&other)      = delete;
+
+    menu()                             = default;
+
+    ~menu();
+
+    HMENU create(bool is_popup = false);
+
+    HMENU load(HINSTANCE instance_handle, const char *menu_name);
+
+    HMENU load(HINSTANCE instance_handle, const wchar_t *menu_name);
+
+    struct MenuItemTemplate {
+        uint16_t     option;
+        uint16_t     id;
+        std::wstring text;
+    };
+
+    struct MenuItemTemplateEx {
+        uint32_t     type;
+        uint32_t     state;
+        uint32_t     id;
+        uint16_t     flags;
+        std::wstring text;
+    };
+
+    HMENU load(const std::vector<MenuItemTemplate> &menu_templates);
+
+    HMENU load(uint32_t                        help_id,
+        const std::vector<MenuItemTemplateEx> &menu_templates);
+
+    bool append(HMENU menu_handle,
+        UINT_PTR      item_id,
+        const char   *item_text,
+        MenuFlag      flag = MenuFlag::String);
+
+    bool append(HMENU  menu_handle,
+        UINT_PTR       item_id,
+        const wchar_t *item_text,
+        MenuFlag       flag = MenuFlag::String);
+
+    bool insert(HMENU menu_handle,
+        uint32_t      pos,
+        UINT_PTR      item_id,
+        const char   *item_text,
+        MenuFlag      flag = MenuFlag::ByPosition | MenuFlag::String);
+
+    bool insert(HMENU  menu_handle,
+        uint32_t       pos,
+        UINT_PTR       item_id,
+        const wchar_t *item_text,
+        MenuFlag       flag = MenuFlag::ByPosition | MenuFlag::String);
+
+    bool remove(HMENU menu_handle, uint32_t pos, bool by_pos = true);
+
+    bool release(HMENU menu_handle, uint32_t pos, bool by_pos = true);
+
+    bool close();
+
+    bool destroy(HMENU menu_handle);
+
+    bool modify(HMENU menu_handle,
+        uint32_t      pos,
+        UINT_PTR      item_id,
+        const char   *item_text,
+        MenuFlag      flag = MenuFlag::ByPosition | MenuFlag::String);
+
+    bool modify(HMENU  menu_handle,
+        uint32_t       pos,
+        UINT_PTR       item_id,
+        const wchar_t *item_text,
+        MenuFlag       flag = MenuFlag::ByPosition | MenuFlag::String);
+
+    HMENU get_menu(HWND hwnd);
+
+    bool set_menu(HWND hwnd, HMENU menu_handle);
+
+    bool get_info(HMENU menu_handle, MENUINFO *memu_info);
+
+    bool set_info(HMENU menu_handle, const MENUINFO *memu_info);
+
+    bool get_bar_info(HWND hwnd,
+        long               item_id,
+        MENUBARINFO       *menu_bar_info,
+        ObjectID           flag = ObjectID::Menu);
+
+    uint32_t get_state(HMENU menu_handle, uint32_t pos, bool by_pos = true);
+
+    int32_t get_string(HMENU menu_handle,
+        uint32_t             pos,
+        std::string         &text,
+        bool                 by_pos = true);
+
+    int32_t get_string(HMENU menu_handle,
+        uint32_t             pos,
+        std::wstring        &text,
+        bool                 by_pos = true);
+
+    HMENU get_sub_menu(HMENU menu_handle, int32_t pos);
+
+    HMENU get_system_menu(HWND hwnd, bool revert = false);
+
+    // std::pair<width, height>
+    std::pair<int16_t, int16_t> get_marker_bitmap_size();
+
+    bool is_menu(HMENU menu_handle);
+
+    bool draw_bar(HWND hwnd);
+
+    bool insert_item(HMENU   menu_handle,
+        uint32_t             pos,
+        const MENUITEMINFOA *menu_item_info,
+        bool                 is_pos = true);
+
+    bool insert_item(HMENU   menu_handle,
+        uint32_t             pos,
+        const MENUITEMINFOW *menu_item_info,
+        bool                 is_pos = true);
+
+    bool get_item_info(HMENU menu_handle,
+        uint32_t             pos,
+        MENUITEMINFOA       *menu_item_info,
+        bool                 is_pos = true);
+
+    bool get_item_info(HMENU menu_handle,
+        uint32_t             pos,
+        MENUITEMINFOW       *menu_item_info,
+        bool                 is_pos = true);
+
+    bool set_item_info(HMENU menu_handle,
+        uint32_t             pos,
+        const MENUITEMINFOA *menu_item_info,
+        bool                 is_pos = true);
+
+    bool set_item_info(HMENU menu_handle,
+        uint32_t             pos,
+        const MENUITEMINFOW *menu_item_info,
+        bool                 is_pos = true);
+
+    uint32_t get_default_item(HMENU menu_handle,
+        bool                        is_pos = true,
+        MenuSearch                  search = MenuSearch::Recursion);
+
+    bool set_default_item(HMENU menu_handle, uint32_t pos, bool is_pos = true);
+
+    uint32_t get_context_help_id(HMENU menu_handle);
+
+    bool set_context_help_id(HMENU menu_handle, uint32_t help_id);
+
+    int32_t get_item_count(HMENU menu_handle);
+
+    uint32_t get_item_id(HMENU menu_handle, int32_t pos);
+
+    bool get_item_rect(HWND hwnd, HMENU menu_handle, uint32_t pos, RECT *rect);
+
+    bool set_item_bitmaps(HMENU menu_handle,
+        uint32_t                pos,
+        HBITMAP                 unchecked_handle,
+        HBITMAP                 checked_handle,
+        bool                    is_pos = true);
+
+    int32_t get_item(HWND hwnd, HMENU menu_handle, POINT screen);
+
+    bool high_light_item(HWND hwnd,
+        HMENU                 menu_handle,
+        uint32_t              pos,
+        MenuFlag flag = MenuFlag::ByPosition | MenuFlag::Highlight);
+
+    bool unhigh_light_item(HWND hwnd,
+        HMENU                   menu_handle,
+        uint32_t                pos,
+        MenuFlag flag = MenuFlag::ByPosition | MenuFlag::UnHighlight);
+
+    MenuFlag check_item(HMENU menu_handle,
+        uint32_t              pos,
+        MenuFlag              flag = MenuFlag::ByPosition | MenuFlag::Checked);
+
+    MenuFlag uncheck_item(HMENU menu_handle,
+        uint32_t                pos,
+        MenuFlag flag = MenuFlag::ByPosition | MenuFlag::Unchecked);
+
+    bool check_radio(HMENU menu_handle,
+        uint32_t           first,
+        uint32_t           last,
+        uint32_t           check,
+        bool               is_pos = true);
+
+    MenuFlag enable_item(HMENU menu_handle,
+        uint32_t               pos,
+        MenuFlag               flag = MenuFlag::ByPosition | MenuFlag::Enabled);
+
+    MenuFlag disable_item(HMENU menu_handle,
+        uint32_t                pos,
+        MenuFlag flag = MenuFlag::ByPosition | MenuFlag::Disabled);
+
+    bool track_popup(HMENU menu_handle,
+        int32_t            x,
+        int32_t            y,
+        HWND               hwnd,
+        TrackPopup flag = TrackPopup::RightAlign | TrackPopup::BottomAlign |
+                          TrackPopup::ReturnCmd | TrackPopup::LeftButton);
+
+    bool track_popup(HMENU menu_handle,
+        int32_t            x,
+        int32_t            y,
+        HWND               hwnd,
+        TPMPARAMS         *tpm_params = nullptr,
+        TrackPopup flag = TrackPopup::RightAlign | TrackPopup::BottomAlign |
+                          TrackPopup::ReturnCmd | TrackPopup::LeftButton);
+
+    [[nodiscard]] uint32_t err_code() const;
+
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // MENU_H

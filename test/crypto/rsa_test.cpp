@@ -15,9 +15,9 @@ protected:
 TEST_F(crypto_rsa, rsa_384) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_384BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit384);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -25,16 +25,17 @@ TEST_F(crypto_rsa, rsa_384) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_512) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_512BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit512);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -42,16 +43,17 @@ TEST_F(crypto_rsa, rsa_512) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_768) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_768BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit768);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -59,16 +61,17 @@ TEST_F(crypto_rsa, rsa_768) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_1024) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_1024BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit1024);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -76,16 +79,17 @@ TEST_F(crypto_rsa, rsa_1024) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_1536) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_1536BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit1536);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -93,16 +97,17 @@ TEST_F(crypto_rsa, rsa_1536) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_2048) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_2048BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit2048);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -110,16 +115,17 @@ TEST_F(crypto_rsa, rsa_2048) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_3072) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_3072BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit3072);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -127,16 +133,17 @@ TEST_F(crypto_rsa, rsa_3072) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
 TEST_F(crypto_rsa, rsa_4096) {
     EXPECT_GT(data.size(), 0);
     crypto::rsa rsa;
-    bool is_ok = rsa.generate_key(crypto::RsaKeyBits::RSA_4096BIT_KEY);
+    bool        is_ok = rsa.generate_key(crypto::RsaKeyBits::Bit4096);
     EXPECT_TRUE(is_ok);
-    auto pub_key = rsa.pub_blob();
+    auto pub_key  = rsa.pub_blob();
     auto priv_key = rsa.priv_blob();
     EXPECT_GT(pub_key.size(), 0);
     EXPECT_GT(priv_key.size(), 0);
@@ -144,7 +151,8 @@ TEST_F(crypto_rsa, rsa_4096) {
     auto decode_data = rsa.decode(encode_data, priv_key);
     EXPECT_EQ(decode_data, data);
     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-    auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
+    auto decode_from_base64 =
+        rsa.decode_from_base64(encode_to_base64, priv_key);
     EXPECT_EQ(decode_from_base64, data);
 }
 
@@ -161,8 +169,8 @@ TEST_F(crypto_rsa, rsa_4096) {
 //     auto decode_data = rsa.decode(encode_data, priv_key);
 //     EXPECT_EQ(decode_data, data);
 //     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-//     auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
-//     EXPECT_EQ(decode_from_base64, data);
+//     auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64,
+//     priv_key); EXPECT_EQ(decode_from_base64, data);
 // }
 
 // TEST_F(crypto_rsa, rsa_16384) {
@@ -178,6 +186,6 @@ TEST_F(crypto_rsa, rsa_4096) {
 //     auto decode_data = rsa.decode(encode_data, priv_key);
 //     EXPECT_EQ(decode_data, data);
 //     auto encode_to_base64 = rsa.encode_to_base64(data, pub_key);
-//     auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64, priv_key);
-//     EXPECT_EQ(decode_from_base64, data);
+//     auto decode_from_base64 = rsa.decode_from_base64(encode_to_base64,
+//     priv_key); EXPECT_EQ(decode_from_base64, data);
 // }

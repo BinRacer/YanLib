@@ -9,59 +9,61 @@
 #include <vector>
 
 namespace YanLib::hash {
-    class sha1 {
-    private:
-        HCRYPTPROV crypt_prov_handle;
-        HCRYPTHASH crypt_hash_handle;
-        std::vector<uint8_t> data_bytes;
-        std::vector<uint8_t> hash_bytes;
-        std::wstring file_name;
-        bool is_file;
-        bool is_done = false;
-        unsigned long error_code;
+class sha1 {
+private:
+    HCRYPTPROV           crypt_prov_handle;
+    HCRYPTHASH           crypt_hash_handle;
+    std::vector<uint8_t> data_bytes;
+    std::vector<uint8_t> hash_bytes;
+    std::wstring         file_name;
+    bool                 is_file;
+    bool                 is_done = false;
+    uint32_t             error_code;
 
-        static std::string format_hex_fast(const std::vector<uint8_t> &data);
+    static std::string format_hex_fast(const std::vector<uint8_t> &data);
 
-        bool pre_process();
+    bool pre_process();
 
-        bool process_file();
+    bool process_file();
 
-        bool process_data();
+    bool process_data();
 
-        std::vector<uint8_t> process();
+    std::vector<uint8_t> process();
 
-        bool post_process();
+    bool post_process();
 
-    public:
-        sha1(const sha1 &other) = delete;
+public:
+    sha1(const sha1 &other)            = delete;
 
-        sha1(sha1 &&other) = delete;
+    sha1(sha1 &&other)                 = delete;
 
-        sha1 &operator=(const sha1 &other) = delete;
+    sha1 &operator=(const sha1 &other) = delete;
 
-        sha1 &operator=(sha1 &&other) = delete;
+    sha1 &operator=(sha1 &&other)      = delete;
 
-        sha1() = delete;
+    sha1()                             = delete;
 
-        explicit sha1(const std::vector<uint8_t> &data);
+    explicit sha1(const std::vector<uint8_t> &data);
 
-        explicit sha1(const std::string &data);
+    explicit sha1(const std::string &data);
 
-        explicit sha1(const std::wstring &filename);
+    explicit sha1(const char *filename);
 
-        ~sha1();
+    explicit sha1(const wchar_t *filename);
 
-        std::vector<uint8_t> hash();
+    ~sha1();
 
-        std::string hash_string();
+    std::vector<uint8_t> hash();
 
-        std::wstring hash_wstring();
+    std::string hash_string();
 
-        [[nodiscard]] unsigned long err_code() const;
+    std::wstring hash_wstring();
 
-        [[nodiscard]] std::string err_string() const;
+    [[nodiscard]] uint32_t err_code() const;
 
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
-}
-#endif //SHA1_H
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::hash
+#endif // SHA1_H

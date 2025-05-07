@@ -7,27 +7,24 @@
 #include <string>
 
 namespace YanLib::helper {
-    class string {
-    public:
-        string(const string &other) = delete;
+class string {
+public:
+    string(const string &other)            = delete;
 
-        string(string &&other) = delete;
+    string(string &&other)                 = delete;
 
-        string &operator=(const string &other) = delete;
+    string &operator=(const string &other) = delete;
 
-        string &operator=(string &&other) = delete;
+    string &operator=(string &&other)      = delete;
 
-        string() = delete;
+    string()                               = delete;
 
-        ~string() = delete;
+    ~string()                              = delete;
 
-        static bool strstri(const std::wstring &text,
-                                      const std::wstring &substr);
+    static bool strstri(const std::wstring &text, const std::wstring &substr);
 
-        static bool strstri(const wchar_t *text,
-                                      const wchar_t *substr);
-    };
-}
+    static bool strstri(const wchar_t *text, const wchar_t *substr);
+};
+} // namespace YanLib::helper
 
-
-#endif //STRING_H
+#endif // STRING_H

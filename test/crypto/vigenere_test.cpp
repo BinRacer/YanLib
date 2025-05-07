@@ -10,14 +10,15 @@ protected:
         key_str = "Thisisakey";
         key_vec.insert(key_vec.end(), key_str.begin(), key_str.end());
         ciphertext = "Altdw Oobpb!你好世界";
-        ciphertext_vec.insert(ciphertext_vec.end(), ciphertext.begin(), ciphertext.end());
+        ciphertext_vec.insert(
+            ciphertext_vec.end(), ciphertext.begin(), ciphertext.end());
     }
 
-    std::string data_str{};
+    std::string          data_str{};
     std::vector<uint8_t> data_vec{};
-    std::string key_str{};
+    std::string          key_str{};
     std::vector<uint8_t> key_vec{};
-    std::string ciphertext{};
+    std::string          ciphertext{};
     std::vector<uint8_t> ciphertext_vec{};
 };
 

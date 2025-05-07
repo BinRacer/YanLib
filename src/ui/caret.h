@@ -8,44 +8,49 @@
 #include <string>
 
 namespace YanLib::ui {
-    class caret {
-    private:
-        unsigned long error_code = 0;
+class caret {
+private:
+    HWND          window_handle = nullptr;
+    volatile bool is_create     = false;
+    uint32_t      error_code    = 0;
 
-    public:
-        caret(const caret &other) = delete;
+public:
+    caret(const caret &other)            = delete;
 
-        caret(caret &&other) = delete;
+    caret(caret &&other)                 = delete;
 
-        caret &operator=(const caret &other) = delete;
+    caret &operator=(const caret &other) = delete;
 
-        caret &operator=(caret &&other) = delete;
+    caret &operator=(caret &&other)      = delete;
 
-        caret() = default;
+    caret()                              = delete;
 
-        ~caret() = default;
+    ~caret();
 
-        bool create_caret(HWND hwnd, HBITMAP bitmap_handle, int32_t width, int32_t height);
+    explicit caret(HWND hwnd,
+        HBITMAP         bitmap_handle,
+        int32_t         width,
+        int32_t         height);
 
-        uint32_t get_caret_blink_time();
+    [[nodiscard]] bool is_ok() const;
 
-        bool set_caret_blink_time(uint32_t milli_second);
+    uint32_t get_blink_time();
 
-        bool get_caret_pos(POINT *point);
+    bool set_blink_time(uint32_t milli_second);
 
-        bool set_caret_pos(int32_t x, int32_t y);
+    bool get_pos(POINT *point);
 
-        bool show_caret(HWND hwnd);
+    bool set_pos(int32_t x, int32_t y);
 
-        bool hide_caret(HWND hwnd);
+    bool show();
 
-        bool destroy_caret();
+    bool hide();
 
-        [[nodiscard]] unsigned long err_code() const;
+    [[nodiscard]] uint32_t err_code() const;
 
-        [[nodiscard]] std::string err_string() const;
+    [[nodiscard]] std::string err_string() const;
 
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
-}
-#endif //CARET_H
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // CARET_H

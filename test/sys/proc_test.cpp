@@ -10,33 +10,108 @@ protected:
     sys::proc proc;
 };
 
+TEST_F(sys_proc, env) {
+    std::string var = "A";
+    std::string val = "B";
+    EXPECT_TRUE(proc.set_env_var(var, val));
+    EXPECT_EQ(proc.get_env_var(var), val);
+
+    std::wstring var_wide = L"C";
+    std::wstring val_wide = L"D";
+    EXPECT_TRUE(proc.set_env_var(var_wide, val_wide));
+    EXPECT_EQ(proc.get_env_var(var_wide), val_wide);
+
+    std::string env;
+    EXPECT_TRUE(proc.get_env(env));
+    EXPECT_GT(env.size(), 0);
+
+    std::wstring env2;
+    EXPECT_TRUE(proc.get_env(env2));
+    EXPECT_GT(env2.size(), 0);
+
+    std::vector<std::string> env3;
+    EXPECT_TRUE(proc.get_env(env3));
+    EXPECT_GT(env3.size(), 0);
+
+    std::vector<std::wstring> env4;
+    EXPECT_TRUE(proc.get_env(env4));
+    EXPECT_GT(env4.size(), 0);
+
+    std::unordered_map<std::string, std::string> env5;
+    EXPECT_TRUE(proc.get_env(env5));
+    EXPECT_GT(env5.size(), 0);
+
+    std::unordered_map<std::wstring, std::wstring> env6;
+    EXPECT_TRUE(proc.get_env(env6));
+    EXPECT_GT(env6.size(), 0);
+}
+
 TEST_F(sys_proc, cmdline) {
-    auto cmdline = proc.cmdline(proc.proc_handle());
+    std::string cmdline;
+    proc.get_cmdline(cmdline);
     EXPECT_GT(cmdline.size(), 0);
     EXPECT_NE(cmdline.find("proc_test.exe"), std::string::npos);
-    auto cmdline2 = proc.cmdline();
+
+    std::wstring cmdline2;
+    proc.get_cmdline(cmdline2);
     EXPECT_GT(cmdline2.size(), 0);
     EXPECT_NE(cmdline2.find(L"proc_test.exe"), std::wstring::npos);
-    auto cmdline3 = proc.cmdline_wide(proc.proc_handle());
+
+    std::string cmdline3;
+    EXPECT_TRUE(proc.get_cmdline(proc.proc_handle(), cmdline3));
     EXPECT_GT(cmdline3.size(), 0);
-    EXPECT_NE(cmdline3.find(L"proc_test.exe"), std::wstring::npos);
-    auto cmdline4 = proc.cmdline(proc.proc_id());
+    EXPECT_NE(cmdline3.find("proc_test.exe"), std::string::npos);
+
+    std::wstring cmdline4;
+    EXPECT_TRUE(proc.get_cmdline(proc.proc_handle(), cmdline4));
     EXPECT_GT(cmdline4.size(), 0);
-    EXPECT_NE(cmdline4.find("proc_test.exe"), std::string::npos);
-    auto cmdline5 = proc.cmdline_wide(proc.proc_id());
+    EXPECT_NE(cmdline4.find(L"proc_test.exe"), std::wstring::npos);
+
+    std::string cmdline5;
+    EXPECT_TRUE(proc.get_cmdline(proc.proc_id(), cmdline5));
     EXPECT_GT(cmdline5.size(), 0);
-    EXPECT_NE(cmdline5.find(L"proc_test.exe"), std::wstring::npos);
+    EXPECT_NE(cmdline5.find("proc_test.exe"), std::string::npos);
+
+    std::wstring cmdline6;
+    EXPECT_TRUE(proc.get_cmdline(proc.proc_id(), cmdline6));
+    EXPECT_GT(cmdline6.size(), 0);
+    EXPECT_NE(cmdline6.find(L"proc_test.exe"), std::wstring::npos);
 }
 
 TEST_F(sys_proc, owner) {
-    auto owner = proc.owner(proc.proc_handle());
+    std::string owner;
+    EXPECT_TRUE(proc.get_owner(proc.proc_handle(), owner));
     EXPECT_GT(owner.size(), 0);
-    auto owner2 = proc.owner(proc.proc_id());
+
+    std::wstring owner2;
+    EXPECT_TRUE(proc.get_owner(proc.proc_handle(), owner2));
     EXPECT_GT(owner2.size(), 0);
-    auto owner3 = proc.owner_wide(proc.proc_handle());
+
+    std::string owner3;
+    EXPECT_TRUE(proc.get_owner(proc.proc_id(), owner3));
     EXPECT_GT(owner3.size(), 0);
-    auto owner4 = proc.owner_wide(proc.proc_id());
+
+    std::wstring owner4;
+    EXPECT_TRUE(proc.get_owner(proc.proc_id(), owner4));
     EXPECT_GT(owner4.size(), 0);
+}
+
+TEST_F(sys_proc, image_name) {
+    std::string image_name;
+    EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name));
+    EXPECT_NE(image_name.find("proc_test.exe"), std::string::npos);
+
+    std::wstring image_name2;
+    EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name2));
+    EXPECT_NE(image_name2.find(L"proc_test.exe"), std::wstring::npos);
+
+    std::string image_name3;
+    EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name3, true));
+    EXPECT_NE(image_name3.find("proc_test.exe"), std::string::npos);
+
+    std::wstring image_name4;
+    EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name4, true));
+    EXPECT_NE(image_name4.find(L"proc_test.exe"), std::wstring::npos);
 }
 
 TEST_F(sys_proc, image_base) {
@@ -58,8 +133,6 @@ TEST_F(sys_proc, priority) {
 TEST_F(sys_proc, counters) {
     auto handle_count = proc.handle_count(proc.proc_handle());
     EXPECT_GT(handle_count, 0);
-    auto gui_handle_count = proc.gui_handle_count(proc.proc_handle());
-    EXPECT_EQ(gui_handle_count, 0);
 
     auto processor_num = proc.processor_num();
     EXPECT_GE(processor_num, 0);

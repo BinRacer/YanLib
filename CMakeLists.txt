@@ -36,8 +36,8 @@ add_library(YanLib STATIC
         src/mem/heap.h
         src/io/fs.cpp
         src/io/fs.h
-        src/io/completion_port.cpp
-        src/io/completion_port.h
+        src/io/comp_port.cpp
+        src/io/comp_port.h
         src/io/pe32.cpp
         src/io/pe32.h
         src/io/pe64.cpp

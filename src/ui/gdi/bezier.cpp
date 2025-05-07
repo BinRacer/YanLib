@@ -5,21 +5,21 @@
 #include "bezier.h"
 
 namespace YanLib::ui::gdi {
-    bool bezier::poly_bezier(HDC dc_handle, const POINT *point, unsigned long num) {
-        return PolyBezier(dc_handle, point, num);
-    }
-
-    bool bezier::poly_bezier_to(HDC dc_handle, const POINT *point, unsigned long num) {
-        return PolyBezierTo(dc_handle, point, num);
-    }
-
-    bool bezier::poly_draw(HDC dc_handle,
-                           const POINT *point,
-                           const uint8_t *point_type,
-                           int32_t num) {
-        return PolyDraw(dc_handle,
-                        point,
-                        point_type,
-                        num);
-    }
+bool bezier::poly_bezier(HDC dc_handle, const std::vector<POINT> &point) {
+    return PolyBezier(dc_handle, point.data(), point.size());
 }
+
+bool bezier::poly_bezier_to(HDC dc_handle, const std::vector<POINT> &point) {
+    return PolyBezierTo(dc_handle, point.data(), point.size());
+}
+
+bool bezier::poly_draw(HDC      dc_handle,
+    const std::vector<POINT>   &point,
+    const std::vector<uint8_t> &point_type) {
+    if (point.size() != point_type.size()) {
+        return false;
+    }
+    return PolyDraw(dc_handle, point.data(), point_type.data(),
+        static_cast<int>(point.size()));
+}
+} // namespace YanLib::ui::gdi

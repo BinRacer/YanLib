@@ -6,162 +6,245 @@
 #define DIALOG_H
 #include <Windows.h>
 #include <string>
+#include <vector>
+#include "sync/rwlock.h"
 
 namespace YanLib::ui {
-    class dialog {
-    private:
-        unsigned long error_code = 0;
+#ifndef BUTTONSTATE
+#define BUTTONSTATE
 
-    public:
-        dialog(const dialog &other) = delete;
+enum class ButtonState : uint32_t {
+    Unchecked     = BST_UNCHECKED,
+    Checked       = BST_CHECKED,
+    Indeterminate = BST_INDETERMINATE,
+};
+#endif
+#ifndef FILETYPE
+#define FILETYPE
 
-        dialog(dialog &&other) = delete;
+enum class FileType : uint32_t {
+    ReadWrite = DDL_READWRITE,
+    ReadOnly  = DDL_READONLY,
+    Hidden    = DDL_HIDDEN,
+    System    = DDL_SYSTEM,
+    Directory = DDL_DIRECTORY,
+    Archive   = DDL_ARCHIVE,
+    PostMsgs  = DDL_POSTMSGS,
+    Drives    = DDL_DRIVES,
+    Exclusive = DDL_EXCLUSIVE,
+};
 
-        dialog &operator=(const dialog &other) = delete;
-
-        dialog &operator=(dialog &&other) = delete;
-
-        dialog() = default;
-
-        ~dialog() = default;
-
-        INT_PTR create_dialog(HINSTANCE instance_handle,
-                              const wchar_t *template_name,
-                              HWND hwnd_parent,
-                              DLGPROC dialog_func);
-
-        INT_PTR create_dialog(HINSTANCE instance_handle,
-                              const wchar_t *template_name,
-                              HWND hwnd_parent,
-                              DLGPROC dialog_func,
-                              LPARAM init_param);
-
-        INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
-                                       const DLGTEMPLATE *dialog_template,
-                                       HWND hwnd_parent,
-                                       DLGPROC dialog_func);
-
-        INT_PTR create_dialog_indirect(HINSTANCE instance_handle,
-                                       const DLGTEMPLATE *dialog_template,
-                                       HWND hwnd_parent,
-                                       DLGPROC dialog_func,
-                                       LPARAM init_param);
-
-        HWND create_dialog_modeless(HINSTANCE instance_handle,
-                                    const wchar_t *template_name,
-                                    HWND hwnd_parent,
-                                    DLGPROC dialog_func);
-
-        HWND create_dialog_modeless(HINSTANCE instance_handle,
-                                    const wchar_t *template_name,
-                                    HWND hwnd_parent,
-                                    DLGPROC dialog_func,
-                                    LPARAM init_param);
-
-        HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                             const DLGTEMPLATE *dialog_template,
-                                             HWND hwnd_parent,
-                                             DLGPROC dialog_func);
-
-        HWND create_dialog_indirect_modeless(HINSTANCE instance_handle,
-                                             const DLGTEMPLATE *dialog_template,
-                                             HWND hwnd_parent,
-                                             DLGPROC dialog_func,
-                                             LPARAM init_param);
-
-        bool end_dialog(HWND hwnd_dialog, INT_PTR result);
-
-        bool check_dialog_button(HWND hwnd_dialog, int32_t id_button, uint32_t check);
-
-        bool check_radio_button(HWND hwnd_dialog,
-                                int32_t first_button,
-                                int32_t last_button,
-                                int32_t check_button);
-
-        LRESULT default_dialog_proc(HWND hwnd_dialog,
-                                    uint32_t msg,
-                                    WPARAM w_param,
-                                    LPARAM l_param);
-
-        int32_t dialog_dir_list(HWND hwnd_dialog,
-                                wchar_t *path_spec,
-                                int32_t id_listbox,
-                                int32_t id_static_path,
-                                uint32_t file_type);
-
-        int32_t dialog_dir_list_combobox(HWND hwnd_dialog,
-                                         wchar_t *path_spec,
-                                         int32_t id_combobox,
-                                         int32_t id_static_path,
-                                         uint32_t filetype);
-
-        bool dialog_dir_select_combobox(HWND hwnd_dialog,
-                                        wchar_t *text,
-                                        int32_t cch_size,
-                                        int32_t id_combobox);
-
-        bool dialog_dir_select(HWND hwnd_dialog,
-                               wchar_t *text,
-                               int32_t cch_size,
-                               int32_t id_listbox);
-
-        int32_t get_dialog_ctrl_id(HWND hwnd_ctrl);
-
-        HWND get_dialog_item(HWND hwnd_dialog, int32_t id_dialog_item);
-
-        std::pair<uint32_t, bool> get_dialog_item_int(HWND hwnd_dialog,
-                                                      int32_t id_dialog_item,
-                                                      bool is_signed);
-
-        bool set_dialog_item_int(HWND hwnd_dialog,
-                                 int32_t id_dialog_item,
-                                 uint32_t value,
-                                 bool is_signed);
-
-        uint32_t get_dialog_item_text(HWND hwnd_dialog,
-                                      int32_t id_dialog_item,
-                                      wchar_t *text,
-                                      int32_t cch_max);
-
-        bool set_dialog_item_text(HWND hwnd_dialog,
-                                  int32_t id_dialog_item,
-                                  const wchar_t *text);
-
-        HWND get_next_dialog_group_item(HWND hwnd_dialog,
-                                        HWND hwnd_ctrl,
-                                        bool previous);
-
-        HWND get_next_dialog_tab_item(HWND hwnd_dialog,
-                                      HWND hwnd_ctrl,
-                                      bool previous);
-
-        uint32_t is_dialog_button_checked(HWND hwnd_dialog, int32_t id_button);
-
-        long get_dialog_base_units();
-
-        DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS
-        get_dialog_control_dpi_change_behavior(HWND hwnd_dialog);
-
-        bool set_dialog_control_dpi_change_behavior(
-            HWND hwnd_dialog,
-            DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS mask,
-            DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS values);
-
-        DIALOG_DPI_CHANGE_BEHAVIORS
-        get_dialog_dpi_change_behavior(HWND hwnd_dialog);
-
-        bool set_dialog_dpi_change_behavior(
-            HWND hwnd_dialog,
-            DIALOG_DPI_CHANGE_BEHAVIORS mask,
-            DIALOG_DPI_CHANGE_BEHAVIORS values);
-
-        bool map_dialog_rect(HWND hwnd_dialog, RECT *rect);
-
-        [[nodiscard]] unsigned long err_code() const;
-
-        [[nodiscard]] std::string err_string() const;
-
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
+inline FileType operator|(FileType a, FileType b) {
+    return static_cast<FileType>(
+        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
 }
-#endif //DIALOG_H
+#endif
+#ifndef ITEMDPIBEHAVIORS
+#define ITEMDPIBEHAVIORS
+
+enum class ItemDpiBehavior : uint32_t {
+    Default           = DCDC_DEFAULT,
+    DisableFontUpdate = DCDC_DISABLE_FONT_UPDATE,
+    DisableReLayout   = DCDC_DISABLE_RELAYOUT,
+};
+#endif
+#ifndef DIALOGDPIBEHAVIORS
+#define DIALOGDPIBEHAVIORS
+
+enum class DialogDpiBehavior : uint32_t {
+    Default             = DDC_DEFAULT,
+    DisableAll          = DDC_DISABLE_ALL,
+    DisableResize       = DDC_DISABLE_RESIZE,
+    DisableItemReLayout = DDC_DISABLE_CONTROL_RELAYOUT,
+};
+#endif
+class dialog {
+private:
+    std::vector<HWND> dialog_modeless_handle = {};
+    sync::rwlock      rwlock                 = {};
+    uint32_t          error_code             = 0;
+
+public:
+    dialog(const dialog &other)            = delete;
+
+    dialog(dialog &&other)                 = delete;
+
+    dialog &operator=(const dialog &other) = delete;
+
+    dialog &operator=(dialog &&other)      = delete;
+
+    dialog()                               = default;
+
+    ~dialog();
+
+    INT_PTR create(HINSTANCE instance_handle,
+        const char          *template_name,
+        HWND                 hwnd_parent,
+        DLGPROC              dialog_func);
+
+    INT_PTR create(HINSTANCE instance_handle,
+        const wchar_t       *template_name,
+        HWND                 hwnd_parent,
+        DLGPROC              dialog_func);
+
+    INT_PTR create(HINSTANCE instance_handle,
+        const char          *template_name,
+        HWND                 hwnd_parent,
+        DLGPROC              dialog_func,
+        LPARAM               init_param);
+
+    INT_PTR create(HINSTANCE instance_handle,
+        const wchar_t       *template_name,
+        HWND                 hwnd_parent,
+        DLGPROC              dialog_func,
+        LPARAM               init_param);
+
+    INT_PTR create(HINSTANCE instance_handle,
+        const DLGTEMPLATE   *dialog_template,
+        HWND                 hwnd_parent,
+        DLGPROC              dialog_func);
+
+    INT_PTR create(HINSTANCE instance_handle,
+        const DLGTEMPLATE   *dialog_template,
+        HWND                 hwnd_parent,
+        DLGPROC              dialog_func,
+        LPARAM               init_param);
+
+    HWND create_modeless(HINSTANCE instance_handle,
+        const wchar_t             *template_name,
+        HWND                       hwnd_parent,
+        DLGPROC                    dialog_func);
+
+    HWND create_modeless(HINSTANCE instance_handle,
+        const wchar_t             *template_name,
+        HWND                       hwnd_parent,
+        DLGPROC                    dialog_func,
+        LPARAM                     init_param);
+
+    HWND create_modeless(HINSTANCE instance_handle,
+        const DLGTEMPLATE         *dialog_template,
+        HWND                       hwnd_parent,
+        DLGPROC                    dialog_func);
+
+    HWND create_modeless(HINSTANCE instance_handle,
+        const DLGTEMPLATE         *dialog_template,
+        HWND                       hwnd_parent,
+        DLGPROC                    dialog_func,
+        LPARAM                     init_param);
+
+    bool destroy(HWND hwnd_dialog, INT_PTR result);
+
+    bool destroy_modeless(HWND hwnd_dialog);
+
+    bool set_button_state(HWND hwnd_dialog,
+        int32_t                button_id,
+        ButtonState            state = ButtonState::Checked);
+
+    bool set_radio_state(HWND hwnd_dialog,
+        int32_t               first_button_id,
+        int32_t               last_button_id,
+        int32_t               check_button_id);
+
+    LRESULT
+    default_proc(HWND hwnd_dialog, uint32_t msg, WPARAM wparam, LPARAM lparam);
+
+    int32_t fill_listbox(HWND hwnd_dialog,
+        char                 *path_spec,
+        int32_t               listbox_id,
+        int32_t               static_id,
+        FileType file_type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite);
+
+    int32_t fill_listbox(HWND hwnd_dialog,
+        wchar_t              *path_spec,
+        int32_t               listbox_id,
+        int32_t               static_id,
+        FileType file_type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite);
+
+    int32_t fill_combobox(HWND hwnd_dialog,
+        char                  *path_spec,
+        int32_t                combobox_id,
+        int32_t                static_id,
+        FileType file_type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite);
+
+    int32_t fill_combobox(HWND hwnd_dialog,
+        wchar_t               *path_spec,
+        int32_t                combobox_id,
+        int32_t                static_id,
+        FileType file_type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite);
+
+    bool get_select_combobox(HWND hwnd_dialog,
+        std::string              &path,
+        int32_t                   combobox_id);
+
+    bool get_select_combobox(HWND hwnd_dialog,
+        std::wstring             &path,
+        int32_t                   combobox_id);
+
+    bool
+    get_select_listbox(HWND hwnd_dialog, std::string &path, int32_t listbox_id);
+
+    bool get_select_listbox(HWND hwnd_dialog,
+        std::wstring            &path,
+        int32_t                  listbox_id);
+
+    int32_t get_item_id(HWND hwnd_item);
+
+    HWND get_item_handle(HWND hwnd_dialog, int32_t item_id);
+
+    bool get_item_int(HWND hwnd_dialog,
+        int32_t            item_id,
+        uint32_t          *value,
+        bool               is_signed);
+
+    bool set_item_int(HWND hwnd_dialog,
+        int32_t            item_id,
+        uint32_t           value,
+        bool               is_signed);
+
+    uint32_t
+    get_item_text(HWND hwnd_dialog, int32_t item_id, std::string &text);
+
+    uint32_t
+    get_item_text(HWND hwnd_dialog, int32_t item_id, std::wstring &text);
+
+    bool set_item_text(HWND hwnd_dialog, int32_t item_id, const char *text);
+
+    bool set_item_text(HWND hwnd_dialog, int32_t item_id, const wchar_t *text);
+
+    HWND next_group_item(HWND hwnd_dialog,
+        HWND                  hwnd_item,
+        bool                  search_upward = false);
+
+    HWND
+    next_tab_item(HWND hwnd_dialog, HWND hwnd_item, bool search_upward = false);
+
+    ButtonState is_button_checked(HWND hwnd_dialog, int32_t button_id);
+
+    ItemDpiBehavior get_item_dpi_behavior(HWND hwnd_dialog);
+
+    bool set_item_dpi_behavior(HWND hwnd_dialog,
+        ItemDpiBehavior             mask,
+        ItemDpiBehavior             values);
+
+    DialogDpiBehavior get_dpi_behavior(HWND hwnd_dialog);
+
+    bool set_dpi_behavior(HWND hwnd_dialog,
+        DialogDpiBehavior      mask,
+        DialogDpiBehavior      values);
+
+    long get_base_units();
+
+    bool base_units_to_screen_point(HWND hwnd_dialog, RECT *rect);
+
+    [[nodiscard]] uint32_t err_code() const;
+
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // DIALOG_H

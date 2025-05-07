@@ -8,21 +8,26 @@ protected:
         data_str = "Hello World!你好世界";
         data_vec.insert(data_vec.end(), data_str.begin(), data_str.end());
         ciphertext = "SGVsbG8gV29ybGQh5L2g5aW95LiW55WM";
-        ciphertext_vec.insert(ciphertext_vec.end(), ciphertext.begin(), ciphertext.end());
+        ciphertext_vec.insert(
+            ciphertext_vec.end(), ciphertext.begin(), ciphertext.end());
 
-        url_str = "https://cn.bing.com/search?q=base64加密解密&PC=U316&FORM=CHROMN";
+        url_str =
+            "https://cn.bing.com/search?q=base64加密解密&PC=U316&FORM=CHROMN";
         url_vec.insert(url_vec.end(), url_str.begin(), url_str.end());
-        url_ciphertext = "aHR0cHM6Ly9jbi5iaW5nLmNvbS9zZWFyY2g_cT1iYXNlNjTliqDlr4bop6Plr4YmUEM9VTMxNiZGT1JNPUNIUk9NTg";
-        url_ciphertext_vec.insert(url_ciphertext_vec.end(), url_ciphertext.begin(), url_ciphertext.end());
+        url_ciphertext =
+            "aHR0cHM6Ly9jbi5iaW5nLmNvbS9zZWFyY2g_"
+            "cT1iYXNlNjTliqDlr4bop6Plr4YmUEM9VTMxNiZGT1JNPUNIUk9NTg";
+        url_ciphertext_vec.insert(url_ciphertext_vec.end(),
+            url_ciphertext.begin(), url_ciphertext.end());
     }
 
-    std::string data_str{};
+    std::string          data_str{};
     std::vector<uint8_t> data_vec{};
-    std::string ciphertext{};
+    std::string          ciphertext{};
     std::vector<uint8_t> ciphertext_vec{};
-    std::string url_str{};
+    std::string          url_str{};
     std::vector<uint8_t> url_vec{};
-    std::string url_ciphertext{};
+    std::string          url_ciphertext{};
     std::vector<uint8_t> url_ciphertext_vec{};
 };
 

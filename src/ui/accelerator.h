@@ -6,45 +6,48 @@
 #define ACCELERATOR_H
 #include <Windows.h>
 #include <string>
+#include <vector>
+#include "sync/rwlock.h"
 
 namespace YanLib::ui {
-    class accelerator {
-    private:
-        unsigned long error_code = 0;
+class accelerator {
+private:
+    std::vector<HACCEL> accel_handles = {};
+    sync::rwlock        rwlock        = {};
+    uint32_t            error_code    = 0;
 
-    public:
-        accelerator(const accelerator &other) = delete;
+public:
+    accelerator(const accelerator &other)            = delete;
 
-        accelerator(accelerator &&other) = delete;
+    accelerator(accelerator &&other)                 = delete;
 
-        accelerator &operator=(const accelerator &other) = delete;
+    accelerator &operator=(const accelerator &other) = delete;
 
-        accelerator &operator=(accelerator &&other) = delete;
+    accelerator &operator=(accelerator &&other)      = delete;
 
-        accelerator() = default;
+    accelerator()                                    = default;
 
-        ~accelerator() = default;
+    ~accelerator();
 
-        HACCEL create_accelerator_table(ACCEL *accel, int32_t count);
+    HACCEL create_table(std::vector<ACCEL> &accel);
 
-        HACCEL load_accelerators(HINSTANCE instance_handle,
-                                 const wchar_t *table_name);
+    HACCEL load(HINSTANCE instance_handle, const char *table_name);
 
-        bool destroy_accelerator_table(HACCEL accel_handle);
+    HACCEL load(HINSTANCE instance_handle, const wchar_t *table_name);
 
-        int32_t translate_accelerator(HWND hwnd, HACCEL accel_handle, MSG *msg);
+    bool destroy_table(HACCEL accel_handle);
 
-        bool translate_mdi_sys_accel(HWND hwnd_client, MSG *msg);
+    int32_t translate(HWND hwnd, HACCEL accel_handle, MSG *msg);
 
-        int32_t copy_accelerator_table(HACCEL accel_handle_src,
-                                       ACCEL *accel_handle_dst,
-                                       int32_t accel_entries);
+    bool translate_mdi_sys(HWND hwnd_client, MSG *msg);
 
-        [[nodiscard]] unsigned long err_code() const;
+    int32_t copy_table(HACCEL accel_handle_src, std::vector<ACCEL> &accel_dst);
 
-        [[nodiscard]] std::string err_string() const;
+    [[nodiscard]] uint32_t err_code() const;
 
-        [[nodiscard]] std::wstring err_wstring() const;
-    };
-}
-#endif //ACCELERATOR_H
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // ACCELERATOR_H

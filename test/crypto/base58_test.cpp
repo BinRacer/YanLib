@@ -8,12 +8,13 @@ protected:
         data_str = "Hello World!你好世界";
         data_vec.insert(data_vec.end(), data_str.begin(), data_str.end());
         ciphertext = "7bo9qr42A5krwASCgWQi7b9RCSQAbe9MV";
-        ciphertext_vec.insert(ciphertext_vec.end(), ciphertext.begin(), ciphertext.end());
+        ciphertext_vec.insert(
+            ciphertext_vec.end(), ciphertext.begin(), ciphertext.end());
     }
 
-    std::string data_str{};
+    std::string          data_str{};
     std::vector<uint8_t> data_vec{};
-    std::string ciphertext{};
+    std::string          ciphertext{};
     std::vector<uint8_t> ciphertext_vec{};
 };
 

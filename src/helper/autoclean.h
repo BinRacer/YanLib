@@ -6,39 +6,38 @@
 #define AUTOCLEAN_H
 
 namespace YanLib::helper {
-    template<typename T, bool is_file = false>
-    class autoclean {
-    private:
-        T _value;
+template <typename T, bool is_file = false> class autoclean {
+private:
+    T _value;
 
-        void cleanup();
+    void cleanup();
 
-    public:
-        autoclean(const autoclean &other) = delete;
+public:
+    autoclean(const autoclean &other)            = delete;
 
-        autoclean(autoclean &&other) = delete;
+    autoclean(autoclean &&other)                 = delete;
 
-        autoclean &operator=(const autoclean &other) = delete;
+    autoclean &operator=(const autoclean &other) = delete;
 
-        autoclean &operator=(autoclean &&other) = delete;
+    autoclean &operator=(autoclean &&other)      = delete;
 
-        autoclean() = delete;
+    autoclean()                                  = delete;
 
-        explicit autoclean(T value);
+    explicit autoclean(T value);
 
-        explicit autoclean(T &value);
+    explicit autoclean(T &value);
 
-        ~autoclean();
+    ~autoclean();
 
-        operator T &();
+    operator T &();
 
-        operator T *();
+    operator T *();
 
-        T &operator=(const T &other);
+    autoclean &operator=(const T &other);
 
-        T &operator=(T &&other);
+    autoclean &operator=(T &&other);
 
-        [[nodiscard]] bool is_ok() const;
-    };
-}
-#endif //AUTOCLEAN_H
+    [[nodiscard]] bool is_ok() const;
+};
+} // namespace YanLib::helper
+#endif // AUTOCLEAN_H

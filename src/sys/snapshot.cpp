@@ -118,7 +118,7 @@ namespace YanLib::sys {
             ls_procs();
         }
         for (auto process: procs) {
-            if (helper::string::strstr_case_insen(process.szExeFile,
+            if (helper::string::strstri(process.szExeFile,
                                                   proc_name)) {
                 return process;
             }
@@ -304,9 +304,9 @@ namespace YanLib::sys {
             ls_modules();
         }
         for (auto module: modules) {
-            if (helper::string::strstr_case_insen(module.szModule,
+            if (helper::string::strstri(module.szModule,
                                                   proc_name) ||
-                helper::string::strstr_case_insen(module.szExePath,
+                helper::string::strstri(module.szExePath,
                                                   proc_name)) {
                 return module;
             }

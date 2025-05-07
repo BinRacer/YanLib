@@ -5,16 +5,16 @@
 #include "convert.h"
 
 namespace YanLib::helper {
-    std::wstring convert::str_to_wstr(const std::string &str, uint32_t code_page) {
-        int32_t len = MultiByteToWideChar(code_page,
-                                      0,
-                                      str.data(),
-                                      -1,
-                                      nullptr,
-                                      0);
+    std::wstring convert::str_to_wstr(const std::string &str, CodePage code_page) {
+        int32_t len = MultiByteToWideChar(static_cast<uint32_t>(code_page),
+                                          0,
+                                          str.data(),
+                                          -1,
+                                          nullptr,
+                                          0);
         if (len <= 0) return {};
         std::wstring wstr(len, 0);
-        MultiByteToWideChar(code_page,
+        MultiByteToWideChar(static_cast<uint32_t>(code_page),
                             0,
                             str.data(),
                             -1, &wstr[0],
@@ -24,18 +24,18 @@ namespace YanLib::helper {
         return wstr;
     }
 
-    std::string convert::wstr_to_str(const std::wstring &wstr, uint32_t code_page) {
-        int32_t len = WideCharToMultiByte(code_page,
-                                      0,
-                                      wstr.data(),
-                                      -1,
-                                      nullptr,
-                                      0,
-                                      nullptr,
-                                      nullptr);
+    std::string convert::wstr_to_str(const std::wstring &wstr, CodePage code_page) {
+        int32_t len = WideCharToMultiByte(static_cast<uint32_t>(code_page),
+                                          0,
+                                          wstr.data(),
+                                          -1,
+                                          nullptr,
+                                          0,
+                                          nullptr,
+                                          nullptr);
         if (len <= 0) return {};
         std::string str(len, 0);
-        WideCharToMultiByte(code_page,
+        WideCharToMultiByte(static_cast<uint32_t>(code_page),
                             0,
                             wstr.data(),
                             -1,

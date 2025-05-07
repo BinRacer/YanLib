@@ -21,10 +21,10 @@ namespace YanLib::helper {
 
         ~string() = delete;
 
-        static bool strstr_case_insen(const std::wstring &text,
+        static bool strstri(const std::wstring &text,
                                       const std::wstring &substr);
 
-        static bool strstr_case_insen(const wchar_t *text,
+        static bool strstri(const wchar_t *text,
                                       const wchar_t *substr);
     };
 }

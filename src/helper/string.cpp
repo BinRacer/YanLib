@@ -7,7 +7,7 @@
 #include <cwctype>
 
 namespace YanLib::helper {
-    bool string::strstr_case_insen(const std::wstring &text,
+    bool string::strstri(const std::wstring &text,
                                    const std::wstring &substr) {
         if (substr.empty()) return false;
         if (text.empty()) return false;
@@ -23,7 +23,7 @@ namespace YanLib::helper {
         return it != text.end();
     }
 
-    bool string::strstr_case_insen(const wchar_t *text,
+    bool string::strstri(const wchar_t *text,
                                    const wchar_t *substr) {
         if (!text ||
             !substr ||

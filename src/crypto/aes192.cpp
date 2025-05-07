@@ -150,7 +150,7 @@ namespace YanLib::crypto {
 
     bool aes192::pre_process(const std::vector<uint8_t> &key_bytes,
                              const std::vector<uint8_t> &iv,
-                             AES_MODE mode) {
+                             AesMode mode) {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
@@ -173,27 +173,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            unsigned long aes_mode = 0;
-            switch (mode) {
-                case MODE_CBC:
-                    aes_mode = CRYPT_MODE_CBC;
-                    break;
-                case MODE_ECB:
-                    aes_mode = CRYPT_MODE_ECB;
-                    break;
-                // case MODE_OFB:
-                //     aes_mode = CRYPT_MODE_OFB;
-                //     break;
-                case MODE_CFB:
-                    aes_mode = CRYPT_MODE_CFB;
-                    break;
-                // case MODE_CTS:
-                //     aes_mode = CRYPT_MODE_CTS;
-                //     break;
-                default:
-                    aes_mode = CRYPT_MODE_CBC;
-            }
-
+            auto aes_mode = static_cast<unsigned long>(mode);
             if (!CryptSetKeyParam(crypt_key_handle,
                                   KP_MODE,
                                   reinterpret_cast<uint8_t *>(&aes_mode),
@@ -201,7 +181,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            if (mode != MODE_ECB) {
+            if (mode != AesMode::MODE_ECB) {
                 uint8_t local_iv[16];
                 memcpy(local_iv, iv.data(), 16);
                 if (!CryptSetKeyParam(crypt_key_handle,
@@ -218,16 +198,16 @@ namespace YanLib::crypto {
     }
 
     bool aes192::encode_process(std::vector<uint8_t> &data_bytes,
-                                AES_PADDING padding) {
+                                AesPadding padding) {
         do {
             switch (padding) {
-                case PKCS7_PADDING:
+                case AesPadding::PKCS7_PADDING:
                     make_pkcs7_padding(data_bytes);
                     break;
-                case ISO10126_PADDING:
+                case AesPadding::ISO10126_PADDING:
                     make_iso10126_padding(data_bytes);
                     break;
-                case ANSI_X923_PADDING:
+                case AesPadding::ANSI_X923_PADDING:
                     make_ansix923_padding(data_bytes);
                     break;
                 default:
@@ -267,7 +247,7 @@ namespace YanLib::crypto {
     }
 
     bool aes192::decode_process(std::vector<uint8_t> &data_bytes,
-                                AES_PADDING padding) {
+                                AesPadding padding) {
         do {
             unsigned long data_size = data_bytes.size();
             if (!CryptDecrypt(crypt_key_handle,
@@ -281,17 +261,17 @@ namespace YanLib::crypto {
             }
             bool is_false = false;
             switch (padding) {
-                case PKCS7_PADDING:
+                case AesPadding::PKCS7_PADDING:
                     if (!remove_pkcs7_padding(data_bytes, data_size)) {
                         is_false = true;
                     }
                     break;
-                case ISO10126_PADDING:
+                case AesPadding::ISO10126_PADDING:
                     if (!remove_iso10126_padding(data_bytes, data_size)) {
                         is_false = true;
                     }
                     break;
-                case ANSI_X923_PADDING:
+                case AesPadding::ANSI_X923_PADDING:
                     if (!remove_ansix923_padding(data_bytes, data_size)) {
                         is_false = true;
                     }
@@ -314,7 +294,7 @@ namespace YanLib::crypto {
     std::vector<uint8_t> aes192::encode_cbc(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AES_PADDING padding) {
+                                            AesPadding padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -327,7 +307,7 @@ namespace YanLib::crypto {
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
             std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, MODE_CBC)) {
+            if (!pre_process(key_bytes, local_iv, AesMode::MODE_CBC)) {
                 break;
             }
             if (!encode_process(data_bytes, padding)) {
@@ -342,7 +322,7 @@ namespace YanLib::crypto {
     std::vector<uint8_t> aes192::decode_cbc(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AES_PADDING padding) {
+                                            AesPadding padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -355,7 +335,7 @@ namespace YanLib::crypto {
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
             std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, MODE_CBC)) {
+            if (!pre_process(key_bytes, local_iv, AesMode::MODE_CBC)) {
                 break;
             }
             if (!decode_process(data_bytes, padding)) {
@@ -369,7 +349,7 @@ namespace YanLib::crypto {
 
     std::vector<uint8_t> aes192::encode_ecb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
-                                            AES_PADDING padding) {
+                                            AesPadding padding) {
         if (data.empty() ||
             key.empty() ||
             key.size() != 24) {
@@ -380,7 +360,7 @@ namespace YanLib::crypto {
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
             std::vector<uint8_t> iv;
-            if (!pre_process(key_bytes, iv, MODE_ECB)) {
+            if (!pre_process(key_bytes, iv, AesMode::MODE_ECB)) {
                 break;
             }
             if (!encode_process(data_bytes, padding)) {
@@ -394,7 +374,7 @@ namespace YanLib::crypto {
 
     std::vector<uint8_t> aes192::decode_ecb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
-                                            AES_PADDING padding) {
+                                            AesPadding padding) {
         if (data.empty() ||
             key.empty() ||
             key.size() != 24) {
@@ -405,7 +385,7 @@ namespace YanLib::crypto {
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
             std::vector<uint8_t> iv;
-            if (!pre_process(key_bytes, iv, MODE_ECB)) {
+            if (!pre_process(key_bytes, iv, AesMode::MODE_ECB)) {
                 break;
             }
             if (!decode_process(data_bytes, padding)) {
@@ -420,7 +400,7 @@ namespace YanLib::crypto {
     std::vector<uint8_t> aes192::encode_cfb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AES_PADDING padding) {
+                                            AesPadding padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -433,7 +413,7 @@ namespace YanLib::crypto {
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
             std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, MODE_CFB)) {
+            if (!pre_process(key_bytes, local_iv, AesMode::MODE_CFB)) {
                 break;
             }
             if (!encode_process(data_bytes, padding)) {
@@ -448,7 +428,7 @@ namespace YanLib::crypto {
     std::vector<uint8_t> aes192::decode_cfb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AES_PADDING padding) {
+                                            AesPadding padding) {
         if (data.empty() ||
             key.empty() ||
             iv.empty() ||
@@ -461,7 +441,7 @@ namespace YanLib::crypto {
             memcpy(data_bytes.data(), data.data(), data.size());
             std::vector<uint8_t> key_bytes(key.begin(), key.end());
             std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, MODE_CFB)) {
+            if (!pre_process(key_bytes, local_iv, AesMode::MODE_CFB)) {
                 break;
             }
             if (!decode_process(data_bytes, padding)) {

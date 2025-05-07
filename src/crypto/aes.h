@@ -12,18 +12,18 @@ namespace YanLib::crypto {
 #ifndef AESPADDING
 #define AESPADDING
 
-    enum AES_PADDING {
+    enum class AesPadding : uint8_t {
         PKCS7_PADDING,
         ISO10126_PADDING,
         ANSI_X923_PADDING,
     };
 
-    enum AES_MODE {
-        MODE_CBC,
-        MODE_ECB,
-        // MODE_OFB,
-        MODE_CFB,
-        // MODE_CTS,
+    enum class AesMode : unsigned long {
+        MODE_CBC = CRYPT_MODE_CBC,
+        MODE_ECB = CRYPT_MODE_ECB,
+        // MODE_OFB = CRYPT_MODE_OFB,
+        MODE_CFB = CRYPT_MODE_CFB,
+        // MODE_CTS = CRYPT_MODE_CTS,
     };
 #endif
     class aes {
@@ -64,13 +64,13 @@ namespace YanLib::crypto {
 
         bool pre_process(const std::vector<uint8_t> &key_bytes,
                          const std::vector<uint8_t> &iv,
-                         AES_MODE mode);
+                         AesMode mode);
 
         bool encode_process(std::vector<uint8_t> &data_bytes,
-                            AES_PADDING padding);
+                            AesPadding padding);
 
         bool decode_process(std::vector<uint8_t> &data_bytes,
-                            AES_PADDING padding);
+                            AesPadding padding);
 
     public:
         aes(const aes &other) = delete;
@@ -85,33 +85,39 @@ namespace YanLib::crypto {
 
         ~aes();
 
-        std::vector<uint8_t> encode_cbc(const std::vector<uint8_t> &data,
-                                        const std::vector<uint8_t> &key,
-                                        const std::vector<uint8_t> &iv,
-                                        AES_PADDING padding = PKCS7_PADDING);
+        std::vector<uint8_t> encode_cbc(
+            const std::vector<uint8_t> &data,
+            const std::vector<uint8_t> &key,
+            const std::vector<uint8_t> &iv,
+            AesPadding padding = AesPadding::PKCS7_PADDING);
 
-        std::vector<uint8_t> decode_cbc(const std::vector<uint8_t> &data,
-                                        const std::vector<uint8_t> &key,
-                                        const std::vector<uint8_t> &iv,
-                                        AES_PADDING padding = PKCS7_PADDING);
+        std::vector<uint8_t> decode_cbc(
+            const std::vector<uint8_t> &data,
+            const std::vector<uint8_t> &key,
+            const std::vector<uint8_t> &iv,
+            AesPadding padding = AesPadding::PKCS7_PADDING);
 
-        std::vector<uint8_t> encode_ecb(const std::vector<uint8_t> &data,
-                                        const std::vector<uint8_t> &key,
-                                        AES_PADDING padding = PKCS7_PADDING);
+        std::vector<uint8_t> encode_ecb(
+            const std::vector<uint8_t> &data,
+            const std::vector<uint8_t> &key,
+            AesPadding padding = AesPadding::PKCS7_PADDING);
 
-        std::vector<uint8_t> decode_ecb(const std::vector<uint8_t> &data,
-                                        const std::vector<uint8_t> &key,
-                                        AES_PADDING padding = PKCS7_PADDING);
+        std::vector<uint8_t> decode_ecb(
+            const std::vector<uint8_t> &data,
+            const std::vector<uint8_t> &key,
+            AesPadding padding = AesPadding::PKCS7_PADDING);
 
-        std::vector<uint8_t> encode_cfb(const std::vector<uint8_t> &data,
-                                        const std::vector<uint8_t> &key,
-                                        const std::vector<uint8_t> &iv,
-                                        AES_PADDING padding = PKCS7_PADDING);
+        std::vector<uint8_t> encode_cfb(
+            const std::vector<uint8_t> &data,
+            const std::vector<uint8_t> &key,
+            const std::vector<uint8_t> &iv,
+            AesPadding padding = AesPadding::PKCS7_PADDING);
 
-        std::vector<uint8_t> decode_cfb(const std::vector<uint8_t> &data,
-                                        const std::vector<uint8_t> &key,
-                                        const std::vector<uint8_t> &iv,
-                                        AES_PADDING padding = PKCS7_PADDING);
+        std::vector<uint8_t> decode_cfb(
+            const std::vector<uint8_t> &data,
+            const std::vector<uint8_t> &key,
+            const std::vector<uint8_t> &iv,
+            AesPadding padding = AesPadding::PKCS7_PADDING);
 
         std::vector<uint8_t> generate_iv_bytes();
 

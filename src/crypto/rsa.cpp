@@ -33,7 +33,7 @@ namespace YanLib::crypto {
         return hex_str;
     }
 
-    bool rsa::generate_key(RSA_KEY_LENGTH key_length) {
+    bool rsa::generate_key(RsaKeyBits key_bits) {
         do {
             wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
@@ -47,7 +47,8 @@ namespace YanLib::crypto {
             }
             if (!CryptGenKey(crypt_prov_handle,
                              AT_KEYEXCHANGE,
-                             CRYPT_EXPORTABLE | key_length,
+                             CRYPT_EXPORTABLE |
+                             static_cast<unsigned long>(key_bits),
                              &crypt_key_handle)) {
                 error_code = GetLastError();
                 break;

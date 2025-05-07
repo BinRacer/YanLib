@@ -12,7 +12,7 @@ namespace YanLib::crypto {
 #ifndef RSABITSLENGTH
 #define RSABITSLENGTH
 
-    enum RSA_KEY_LENGTH {
+    enum class RsaKeyBits : unsigned long {
         RSA_384BIT_KEY = 0x01800000, // 384 bits
         RSA_512BIT_KEY = 0x02000000, // 512 bits
         RSA_768BIT_KEY = 0x03000000, // 768 bits
@@ -50,7 +50,7 @@ namespace YanLib::crypto {
 
         ~rsa();
 
-        bool generate_key(RSA_KEY_LENGTH key_length = RSA_4096BIT_KEY);
+        bool generate_key(RsaKeyBits key_bits = RsaKeyBits::RSA_4096BIT_KEY);
 
         std::vector<uint8_t> encode(const std::vector<uint8_t> &data,
                                     const std::vector<uint8_t> &pub_blob);

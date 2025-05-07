@@ -106,14 +106,6 @@ namespace YanLib::crypto {
         return result;
     }
 
-    std::string base64::encode_wstring(const std::wstring &data) {
-        return encode_string(helper::convert::wstr_to_str(data));
-    }
-
-    std::string base64::decode_wstring(const std::wstring &data) {
-        return decode_string(helper::convert::wstr_to_str(data));
-    }
-
     bool base64::encode_file(const std::wstring &input_file,
                              const std::wstring &output_file) {
         io::fs input;

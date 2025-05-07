@@ -23,12 +23,12 @@ TEST_F(crypto_aes192, cbc_pkcs7) {
     EXPECT_GT(key.size(), 0);
     EXPECT_GT(iv.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_cbc(data, key, iv, crypto::AES_PADDING::PKCS7_PADDING);
+    auto encode = aes.encode_cbc(data, key, iv, crypto::AesPadding::PKCS7_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
     EXPECT_EQ(encode_hex,
               "d22345a705a00bcc4457a83cb386c7641fc410cb4cdcb2b7f2c4a7b370717f3c4dfa94cef8977ef9bb78dd46ea65d048");
-    auto decode = aes.decode_cbc(encode, key, iv, crypto::AES_PADDING::PKCS7_PADDING);
+    auto decode = aes.decode_cbc(encode, key, iv, crypto::AesPadding::PKCS7_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -38,10 +38,10 @@ TEST_F(crypto_aes192, cbc_iso10126) {
     EXPECT_GT(key.size(), 0);
     EXPECT_GT(iv.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_cbc(data, key, iv, crypto::AES_PADDING::ISO10126_PADDING);
+    auto encode = aes.encode_cbc(data, key, iv, crypto::AesPadding::ISO10126_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
-    auto decode = aes.decode_cbc(encode, key, iv, crypto::AES_PADDING::ISO10126_PADDING);
+    auto decode = aes.decode_cbc(encode, key, iv, crypto::AesPadding::ISO10126_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -51,12 +51,12 @@ TEST_F(crypto_aes192, cbc_ansi_x923) {
     EXPECT_GT(key.size(), 0);
     EXPECT_GT(iv.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_cbc(data, key, iv, crypto::AES_PADDING::ANSI_X923_PADDING);
+    auto encode = aes.encode_cbc(data, key, iv, crypto::AesPadding::ANSI_X923_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
     EXPECT_EQ(encode_hex,
               "d22345a705a00bcc4457a83cb386c7641fc410cb4cdcb2b7f2c4a7b370717f3c09a3140184fb2029987f0858553ab9b0");
-    auto decode = aes.decode_cbc(encode, key, iv, crypto::AES_PADDING::ANSI_X923_PADDING);
+    auto decode = aes.decode_cbc(encode, key, iv, crypto::AesPadding::ANSI_X923_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -65,12 +65,12 @@ TEST_F(crypto_aes192, ecb_pkcs7) {
     EXPECT_GT(data.size(), 0);
     EXPECT_GT(key.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_ecb(data, key, crypto::AES_PADDING::PKCS7_PADDING);
+    auto encode = aes.encode_ecb(data, key, crypto::AesPadding::PKCS7_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
     EXPECT_EQ(encode_hex,
               "d63ca8059e16d64e124e8567f74f7a8c93c628cdf3707dcfac8c805445213d8c3e9b8d74e18f754c9a4f34ebd8adbacf");
-    auto decode = aes.decode_ecb(encode, key, crypto::AES_PADDING::PKCS7_PADDING);
+    auto decode = aes.decode_ecb(encode, key, crypto::AesPadding::PKCS7_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -79,10 +79,10 @@ TEST_F(crypto_aes192, ecb_iso10126) {
     EXPECT_GT(data.size(), 0);
     EXPECT_GT(key.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_ecb(data, key, crypto::AES_PADDING::ISO10126_PADDING);
+    auto encode = aes.encode_ecb(data, key, crypto::AesPadding::ISO10126_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
-    auto decode = aes.decode_ecb(encode, key,crypto::AES_PADDING::ISO10126_PADDING);
+    auto decode = aes.decode_ecb(encode, key,crypto::AesPadding::ISO10126_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -91,12 +91,12 @@ TEST_F(crypto_aes192, ecb_ansi_x923) {
     EXPECT_GT(data.size(), 0);
     EXPECT_GT(key.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_ecb(data, key, crypto::AES_PADDING::ANSI_X923_PADDING);
+    auto encode = aes.encode_ecb(data, key, crypto::AesPadding::ANSI_X923_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
     EXPECT_EQ(encode_hex,
               "d63ca8059e16d64e124e8567f74f7a8c93c628cdf3707dcfac8c805445213d8cf87413dad4289d951644a5cbd25dc6c0");
-    auto decode = aes.decode_ecb(encode, key, crypto::AES_PADDING::ANSI_X923_PADDING);
+    auto decode = aes.decode_ecb(encode, key, crypto::AesPadding::ANSI_X923_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -106,12 +106,12 @@ TEST_F(crypto_aes192, cfb_pkcs7) {
     EXPECT_GT(key.size(), 0);
     EXPECT_GT(iv.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_cfb(data, key, iv, crypto::AES_PADDING::PKCS7_PADDING);
+    auto encode = aes.encode_cfb(data, key, iv, crypto::AesPadding::PKCS7_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
     EXPECT_EQ(encode_hex,
               "dd8b490a5ec973835dd0d3a675d4d643616cbc744a7793c4075da8a2ff4e7788ab12d82eae5fd985a1af66002b36fdbc");
-    auto decode = aes.decode_cfb(encode, key, iv, crypto::AES_PADDING::PKCS7_PADDING);
+    auto decode = aes.decode_cfb(encode, key, iv, crypto::AesPadding::PKCS7_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -121,10 +121,10 @@ TEST_F(crypto_aes192, cfb_iso10126) {
     EXPECT_GT(key.size(), 0);
     EXPECT_GT(iv.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_cfb(data, key, iv, crypto::AES_PADDING::ISO10126_PADDING);
+    auto encode = aes.encode_cfb(data, key, iv, crypto::AesPadding::ISO10126_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
-    auto decode = aes.decode_cfb(encode, key, iv, crypto::AES_PADDING::ISO10126_PADDING);
+    auto decode = aes.decode_cfb(encode, key, iv, crypto::AesPadding::ISO10126_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }
@@ -134,12 +134,12 @@ TEST_F(crypto_aes192, cfb_ansi_x923) {
     EXPECT_GT(key.size(), 0);
     EXPECT_GT(iv.size(), 0);
     crypto::aes192 aes;
-    auto encode = aes.encode_cfb(data, key, iv, crypto::AES_PADDING::ANSI_X923_PADDING);
+    auto encode = aes.encode_cfb(data, key, iv, crypto::AesPadding::ANSI_X923_PADDING);
     auto encode_hex = aes.hex_string();
     EXPECT_GT(encode.size(), 0);
     EXPECT_EQ(encode_hex,
               "dd8b490a5ec973835dd0d3a675d4d643616cbc744a7793c4075da8a2ff4e7788ab12d82ea293aefede5518968604e754");
-    auto decode = aes.decode_cfb(encode, key, iv, crypto::AES_PADDING::ANSI_X923_PADDING);
+    auto decode = aes.decode_cfb(encode, key, iv, crypto::AesPadding::ANSI_X923_PADDING);
     EXPECT_GT(decode.size(), 0);
     EXPECT_EQ(decode, data);
 }

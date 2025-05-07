@@ -34,10 +34,6 @@ namespace YanLib::crypto {
 
         static std::string decode_string(const std::string &data);
 
-        static std::string encode_wstring(const std::wstring &data);
-
-        static std::string decode_wstring(const std::wstring &data);
-
         static bool encode_file(const std::wstring &input_file,
                                 const std::wstring &output_file);
 

@@ -489,10 +489,6 @@ namespace YanLib::crypto {
         return {};
     }
 
-    std::wstring aes192::hex_wstring() const {
-        return helper::convert::str_to_wstr(hex_string());
-    }
-
     unsigned long aes192::err_code() const {
         return error_code;
     }

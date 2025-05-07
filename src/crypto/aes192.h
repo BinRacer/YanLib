@@ -125,8 +125,6 @@ namespace YanLib::crypto {
 
         [[nodiscard]] std::string hex_string() const;
 
-        [[nodiscard]] std::wstring hex_wstring() const;
-
         [[nodiscard]] unsigned long err_code() const;
 
         [[nodiscard]] std::string err_string() const;

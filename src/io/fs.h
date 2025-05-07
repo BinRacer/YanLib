@@ -52,7 +52,14 @@ namespace YanLib::io {
         TRY_EXCLUSIVE_LOCK = LOCKFILE_EXCLUSIVE_LOCK | LOCKFILE_FAIL_IMMEDIATELY,
     };
 
-    struct VolumeInfo {
+    struct VolumeInfoA {
+        char volume_name[MAX_PATH + 1];
+        char file_system_name[MAX_PATH + 1];
+        unsigned long serial_number;
+        unsigned long file_system_flag;
+    };
+
+    struct VolumeInfoW {
         wchar_t volume_name[MAX_PATH + 1];
         wchar_t file_system_name[MAX_PATH + 1];
         unsigned long serial_number;
@@ -179,7 +186,9 @@ namespace YanLib::io {
         bool set_io_overlapped_range(uint8_t *overlapped_range_start,
                                      unsigned long length);
 
-        bool get_volume_info(VolumeInfo *volume_info);
+        bool get_volume_info(VolumeInfoA *volume_info);
+
+        bool get_volume_info(VolumeInfoW *volume_info);
 
         std::string get_final_path_name(
             unsigned long flag = FILE_NAME_NORMALIZED);

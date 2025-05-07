@@ -29,20 +29,20 @@ protected:
     }
 
     void SetUp() override {
-        temp_path = fs_util.get_temp_path();
+        temp_path = fs_util.get_temp_path_wide();
         EXPECT_GT(temp_path.size(), 0);
-        while (temp_path.back() == '\\') {
+        while (temp_path.back() == L'\\') {
             temp_path.pop_back();
         }
 
         fs_test_dir.append(temp_path);
-        fs_test_dir.append("\\fs_test");
+        fs_test_dir.append(L"\\fs_test");
 
         read_notepad.append(fs_test_dir);
-        read_notepad.append("\\notepad.exe.read");
+        read_notepad.append(L"\\notepad.exe.read");
 
         write_notepad.append(fs_test_dir);
-        write_notepad.append("\\notepad.exe.write");
+        write_notepad.append(L"\\notepad.exe.write");
 
         if (!fs_util.is_exists(fs_test_dir.data())) {
             EXPECT_TRUE(fs_util.mkdir(fs_test_dir.data()));
@@ -54,11 +54,11 @@ protected:
         EXPECT_TRUE(fs_util.is_exists(read_notepad.data()));
     }
 
-    std::string temp_path;
-    const char *notepad = "C:\\Windows\\System32\\notepad.exe";
-    std::string read_notepad;
-    std::string write_notepad;
-    std::string fs_test_dir;
+    std::wstring temp_path;
+    const wchar_t *notepad = L"C:\\Windows\\System32\\notepad.exe";
+    std::wstring read_notepad;
+    std::wstring write_notepad;
+    std::wstring fs_test_dir;
     io::fs_util fs_util;
 };
 
@@ -67,7 +67,7 @@ TEST_F(io_fs, read_check) {
     int64_t file_size = read_file.size();
     EXPECT_GT(file_size, 0);
 
-    std::vector<uint8_t> buffer(32, '\0');
+    std::vector<uint8_t> buffer(32, L'\0');
     DWORD bytes_read = 0;
     EXPECT_TRUE(read_file.read(buffer.data(), buffer.size(), &bytes_read));
 
@@ -91,7 +91,7 @@ TEST_F(io_fs, write_check) {
                       io::ShareMode::READ_WRITE,
                       nullptr,
                       io::CreationDisposition::FILE_CREATE_ALWAYS);
-    std::vector<uint8_t> buffer(32, '\0');
+    std::vector<uint8_t> buffer(32, L'\0');
     DWORD bytes_read = 0;
     DWORD bytes_written = 0;
     EXPECT_EQ(read_file.seek(0, io::MoveMethod::BEGIN), 0);
@@ -147,22 +147,22 @@ TEST_F(io_fs, attr_check) {
 
 TEST_F(io_fs, volume_info_check) {
     io::fs read_file(read_notepad.data());
-    auto info = std::make_unique<io::VolumeInfoA>();
+    auto info = std::make_unique<io::VolumeInfoW>();
     EXPECT_TRUE(read_file.get_volume_info(info.get()));
-    EXPECT_EQ(strcmp(info->volume_name, "Windows"), 0);
-    EXPECT_EQ(strcmp(info->file_system_name, "NTFS"), 0);
+    EXPECT_EQ(wcscmp(info->volume_name, L"Windows"), 0);
+    EXPECT_EQ(wcscmp(info->file_system_name, L"NTFS"), 0);
     // EXPECT_EQ(info->serial_number, 485725206);
 }
 
 TEST_F(io_fs, type_check) {
     io::fs read_file(read_notepad.data());
     EXPECT_EQ(read_file.file_type(), FILE_TYPE_DISK);
-    EXPECT_EQ(fs_util.get_drive_type("C:\\"), DRIVE_FIXED);
+    EXPECT_EQ(fs_util.get_drive_type(L"C:\\"), DRIVE_FIXED);
 }
 
 TEST_F(io_fs, path_name) {
     io::fs read_file(read_notepad.data());
-    auto path_name = read_file.get_final_path_name();
+    auto path_name = read_file.get_final_path_name_wide();
     EXPECT_TRUE(path_name.substr(4) == read_notepad);
 
     EXPECT_TRUE(read_file.is_short_name_enabled());
@@ -170,43 +170,43 @@ TEST_F(io_fs, path_name) {
 
 TEST_F(io_fs, volume_name) {
     auto volume_path_name = fs_util.get_volume_path_name(read_notepad.data());
-    EXPECT_EQ(strcmp(volume_path_name.data(), "C:\\"), 0);
+    EXPECT_EQ(wcscmp(volume_path_name.data(), L"C:\\"), 0);
 
-    auto volume_names = fs_util.ls_volume_name();
+    auto volume_names = fs_util.ls_volume_name_wide();
     EXPECT_GT(volume_names.size(), 0);
     auto volume_path_names_for_volume_name = fs_util.get_volume_path_names_for_volume_name(volume_names[0].data());
-    EXPECT_EQ(strcmp(volume_path_names_for_volume_name.data(), "C:\\"), 0);
+    EXPECT_EQ(wcscmp(volume_path_names_for_volume_name.data(), L"C:\\"), 0);
 
-    auto volume_name_for_volume_mount_point = fs_util.get_volume_name_for_volume_mount_point("C:\\");
-    EXPECT_NE(volume_name_for_volume_mount_point.find("\\\\?\\Volume{"), std::string::npos);
+    auto volume_name_for_volume_mount_point = fs_util.get_volume_name_for_volume_mount_point(L"C:\\");
+    EXPECT_NE(volume_name_for_volume_mount_point.find(L"\\\\?\\Volume{"), std::wstring::npos);
 }
 
 TEST_F(io_fs, temp_name) {
-    auto temp = fs_util.get_temp_path();
-    EXPECT_NE(temp.find(temp_path), std::string::npos);
+    auto temp = fs_util.get_temp_path_wide();
+    EXPECT_NE(temp.find(temp_path), std::wstring::npos);
 
-    auto temp_name = fs_util.get_temp_file_name(temp_path.data(), "aaa");
-    EXPECT_NE(temp_name.find(temp_path), std::string::npos);
-    EXPECT_NE(temp_name.find("aaa"), std::string::npos);
-    EXPECT_NE(temp_name.find("tmp"), std::string::npos);
+    auto temp_name = fs_util.get_temp_file_name(temp_path.data(), L"aaa");
+    EXPECT_NE(temp_name.find(temp_path), std::wstring::npos);
+    EXPECT_NE(temp_name.find(L"aaa"), std::wstring::npos);
+    EXPECT_NE(temp_name.find(L"tmp"), std::wstring::npos);
 }
 
 TEST_F(io_fs, long_short_check) {
-    auto long_name = fs_util.get_long_path_name("C:\\PROGRA~1");
-    EXPECT_NE(long_name.find("C:\\Program Files"), std::string::npos);
-    auto short_name = fs_util.get_short_path_name("C:\\Program Files\\");
-    EXPECT_NE(short_name.find("C:\\PROGRA~1"), std::string::npos);
+    auto long_name = fs_util.get_long_path_name(L"C:\\PROGRA~1");
+    EXPECT_NE(long_name.find(L"C:\\Program Files"), std::wstring::npos);
+    auto short_name = fs_util.get_short_path_name(L"C:\\Program Files\\");
+    EXPECT_NE(short_name.find(L"C:\\PROGRA~1"), std::wstring::npos);
 }
 
 TEST_F(io_fs, disk_check) {
-    auto logical_drive_strings = fs_util.get_logical_drive_strings();
-    EXPECT_NE(logical_drive_strings.find("C:\\"), std::string::npos);
+    auto logical_drive_strings = fs_util.get_logical_drive_strings_wide();
+    EXPECT_NE(logical_drive_strings.find(L"C:\\"), std::wstring::npos);
 
     EXPECT_TRUE(fs_util.get_logica_drives() & 4);
 
-    constexpr char windows_name[] = "C:\\Windows\\System32\\..\\..\\";
+    constexpr wchar_t windows_name[] = L"C:\\Windows\\System32\\..\\..\\";
     auto full_path_name = fs_util.get_full_path_name(windows_name);
-    EXPECT_NE(full_path_name.find("C:\\"), std::string::npos);
+    EXPECT_NE(full_path_name.find(L"C:\\"), std::wstring::npos);
 
     auto disk_space_info = std::make_unique<DISK_SPACE_INFORMATION>();
     EXPECT_TRUE(fs_util.get_disk_space_info(temp_path.data(), disk_space_info.get()));
@@ -221,24 +221,24 @@ TEST_F(io_fs, disk_check) {
 }
 
 TEST_F(io_fs, device_check) {
-    auto dos_device = fs_util.get_dos_device("C:");
-    EXPECT_NE(dos_device.find("\\Device\\HarddiskVolume"), std::string::npos);
+    auto dos_device = fs_util.get_dos_device(L"C:");
+    EXPECT_NE(dos_device.find(L"\\Device\\HarddiskVolume"), std::wstring::npos);
 
-    auto dos_device_list = fs_util.get_dos_device();
+    auto dos_device_list = fs_util.get_dos_device_wide();
     EXPECT_GT(dos_device_list.size(), 0);
 }
 
 TEST_F(io_fs, list_check) {
-    auto volume_name_list = fs_util.ls_volume_name();
+    auto volume_name_list = fs_util.ls_volume_name_wide();
     EXPECT_GT(volume_name_list.size(), 0);
     for (const auto &volume_name: volume_name_list) {
-        EXPECT_NE(volume_name.find("\\\\?\\Volume{"), std::string::npos);
+        EXPECT_NE(volume_name.find(L"\\\\?\\Volume{"), std::wstring::npos);
     }
 
-    auto device_name_list = fs_util.ls_device_name();
+    auto device_name_list = fs_util.ls_device_name_wide();
     EXPECT_GT(device_name_list.size(), 0);
     for (const auto &device_name: device_name_list) {
-        EXPECT_NE(device_name.find("\\Device\\HarddiskVolume"), std::string::npos);
+        EXPECT_NE(device_name.find(L"\\Device\\HarddiskVolume"), std::wstring::npos);
     }
 
     auto list_detail = fs_util.ls_detail(temp_path.data());
@@ -259,59 +259,59 @@ TEST_F(io_fs, list_check) {
 
 TEST_F(io_fs, mkdir_and_rm_check) {
     for (int i = 0; i < 5; i++) {
-        EXPECT_GT(fs_util.get_temp_file_name(fs_test_dir.data(), "aaa").size(), 0);
+        EXPECT_GT(fs_util.get_temp_file_name(fs_test_dir.data(), L"aaa").size(), 0);
     }
     for (int i = 0; i < 5; i++) {
         auto temp_name = fs_test_dir;
-        temp_name.append("\\dir");
-        temp_name.append(std::to_string(i));
+        temp_name.append(L"\\dir");
+        temp_name.append(std::to_wstring(i));
         EXPECT_TRUE(fs_util.mkdir(temp_name.data()));
     }
 
     for (int i = 0; i < 5; i++) {
         auto temp_name = fs_test_dir;
-        temp_name.append("\\multi");
-        temp_name.append(std::to_string(i));
-        temp_name.append("\\one");
-        temp_name.append("\\two");
-        temp_name.append("\\three");
+        temp_name.append(L"\\multi");
+        temp_name.append(std::to_wstring(i));
+        temp_name.append(L"\\one");
+        temp_name.append(L"\\two");
+        temp_name.append(L"\\three");
         EXPECT_TRUE(fs_util.mkdir_all(temp_name.data()));
     }
 
 
     auto files = fs_util.ls_all_files(fs_test_dir.data());
     for (auto file: files) {
-        if (file.find("notepad") == std::string::npos) {
+        if (file.find(L"notepad") == std::wstring::npos) {
             EXPECT_TRUE(fs_util.rm_file(file.data()));
         }
     }
 
     auto dirs = fs_util.ls_full_path(fs_test_dir.data());
     for (auto dir: dirs) {
-        if (dir.find("dir") != std::string::npos) {
+        if (dir.find(L"dir") != std::wstring::npos) {
             EXPECT_TRUE(fs_util.rm_dir(dir.data()));
         }
-        if (dir.find("multi") != std::string::npos) {
+        if (dir.find(L"multi") != std::wstring::npos) {
             EXPECT_TRUE(fs_util.rm_dir_all(dir.data()));
         }
     }
 }
 
 TEST_F(io_fs, copy_check) {
-    std::string copy_name = read_notepad;
-    copy_name.append(".copy");
+    std::wstring copy_name = read_notepad;
+    copy_name.append(L".copy");
     EXPECT_TRUE(fs_util.copy(read_notepad.data(), copy_name.data()));
 
-    std::string copy_name2 = read_notepad;
-    copy_name2.append(".copy2");
+    std::wstring copy_name2 = read_notepad;
+    copy_name2.append(L".copy2");
     EXPECT_TRUE(fs_util.copy_all(read_notepad.data(), copy_name2.data()));
 }
 
 TEST_F(io_fs, rename_check) {
-    std::string raw_name = read_notepad;
-    raw_name.append(".copy");
-    std::string rename_name = read_notepad;
-    rename_name.append(".rename");
+    std::wstring raw_name = read_notepad;
+    raw_name.append(L".copy");
+    std::wstring rename_name = read_notepad;
+    rename_name.append(L".rename");
     EXPECT_TRUE(fs_util.rename(raw_name.data(), rename_name.data()));
     EXPECT_TRUE(fs_util.replace(rename_name.data(), raw_name.c_str()));
 }

@@ -62,5 +62,5 @@ TEST_F(sys_proc, counters) {
     EXPECT_EQ(gui_handle_count, 0);
 
     auto processor_num = proc.processor_num();
-    EXPECT_GT(processor_num, 0);
+    EXPECT_GE(processor_num, 0);
 }

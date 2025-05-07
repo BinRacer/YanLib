@@ -3,6 +3,9 @@
 //
 
 #include "fs.h"
+
+#include <memory>
+
 #include "helper/convert.h"
 #include <shlwapi.h>
 
@@ -396,8 +399,32 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::get_volume_info(VolumeInfo *volume_info) {
-        memset(volume_info, 0, sizeof(VolumeInfo));
+    bool fs::get_volume_info(VolumeInfoA *volume_info) {
+        memset(volume_info, 0, sizeof(VolumeInfoA));
+        auto volume_info_wide = std::make_unique<VolumeInfoW>();
+        memset(volume_info_wide.get(), 0, sizeof(VolumeInfoW));
+        if (get_volume_info(volume_info_wide.get())) {
+            auto volume_name = helper::convert::wstr_to_str(
+                volume_info_wide->volume_name);
+            auto file_system_name = helper::convert::wstr_to_str(
+                volume_info_wide->file_system_name);
+            memcpy_s(volume_info->volume_name,
+                     MAX_PATH,
+                     volume_name.data(),
+                     volume_name.size());
+            memcpy_s(volume_info->file_system_name,
+                     MAX_PATH,
+                     file_system_name.data(),
+                     file_system_name.size());
+            volume_info->serial_number = volume_info_wide->serial_number;
+            volume_info->file_system_flag = volume_info_wide->file_system_flag;
+            return true;
+        }
+        return false;
+    }
+
+    bool fs::get_volume_info(VolumeInfoW *volume_info) {
+        memset(volume_info, 0, sizeof(VolumeInfoW));
         unsigned long size = 0;
         if (!GetVolumeInformationByHandleW(
             file_handle,
@@ -415,24 +442,7 @@ namespace YanLib::io {
     }
 
     std::string fs::get_final_path_name(unsigned long flag) {
-        unsigned long size = GetFinalPathNameByHandleA(file_handle,
-                                                       nullptr,
-                                                       0,
-                                                       flag);
-        std::string buffer(size, '\0');
-        size = GetFinalPathNameByHandleA(file_handle,
-                                         buffer.data(),
-                                         buffer.size(),
-                                         flag);
-        if (!size) {
-            error_code = GetLastError();
-            return {};
-        }
-        buffer.resize(size);
-        while (buffer.back() == '\0') {
-            buffer.pop_back();
-        }
-        return buffer;
+        return helper::convert::wstr_to_str(get_final_path_name_wide(flag));
     }
 
     std::wstring fs::get_final_path_name_wide(unsigned long flag) {

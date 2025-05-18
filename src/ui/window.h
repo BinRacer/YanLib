@@ -79,37 +79,6 @@ public:
         int32_t                    height = CW_USEDEFAULT,
         uint32_t style = MDIS_ALLCHILDSTYLES | WS_OVERLAPPEDWINDOW);
 
-    bool register_shell_hook(HWND window_handle);
-
-    bool unregister_shell_hook(HWND window_handle);
-
-    HHOOK set_windows_hook(int32_t id_hook,
-        HOOKPROC                   fn,
-        HINSTANCE                  hmod,
-        uint32_t                   tid);
-
-    bool unset_windows_hook(HHOOK hhk);
-
-    LRESULT
-    call_next_hook(HHOOK hhk, int32_t code, WPARAM wparam, LPARAM lparam);
-
-    HWINEVENTHOOK set_event_hook(uint32_t event_min,
-        uint32_t                          event_max,
-        HMODULE                           hmod_win_event_proc,
-        WINEVENTPROC                      fn_win_event_proc,
-        uint32_t                          pid,
-        uint32_t                          tid,
-        uint32_t                          flag);
-
-    bool unset_event_hook(HWINEVENTHOOK hwin_event_hook);
-
-    bool is_event_hook_installed(uint32_t event);
-
-    void notify_event(uint32_t event,
-        HWND                   window_handle,
-        int32_t                object_id,
-        int32_t                child_id);
-
     bool show(HWND window_handle, int32_t cmd_show) const;
 
     bool show_async(HWND window_handle, int32_t cmd_show) const;

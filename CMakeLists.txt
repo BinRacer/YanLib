@@ -118,6 +118,8 @@ add_library(YanLib STATIC
         src/ui/window_class.h
         src/ui/window_prop.cpp
         src/ui/window_prop.h
+        src/ui/window_hook.cpp
+        src/ui/window_hook.h
         src/ui/message.cpp
         src/ui/message.h
         src/ui/dialog.cpp

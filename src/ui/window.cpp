@@ -83,64 +83,6 @@ HWND window::create_mdi(const wchar_t *class_name,
     return result;
 }
 
-bool window::register_shell_hook(HWND window_handle) {
-    return RegisterShellHookWindow(window_handle);
-}
-
-bool window::unregister_shell_hook(HWND window_handle) {
-    return DeregisterShellHookWindow(window_handle);
-}
-
-HHOOK window::set_windows_hook(int32_t id_hook,
-    HOOKPROC                           fn,
-    HINSTANCE                          hmod,
-    uint32_t                           tid) {
-    HHOOK result = SetWindowsHookExW(id_hook, fn, hmod, tid);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-bool window::unset_windows_hook(HHOOK hhk) {
-    if (!UnhookWindowsHookEx(hhk)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-LRESULT
-window::call_next_hook(HHOOK hhk, int32_t code, WPARAM wparam, LPARAM lparam) {
-    return CallNextHookEx(hhk, code, wparam, lparam);
-}
-
-HWINEVENTHOOK window::set_event_hook(uint32_t event_min,
-    uint32_t                                  event_max,
-    HMODULE                                   hmod_win_event_proc,
-    WINEVENTPROC                              fn_win_event_proc,
-    uint32_t                                  pid,
-    uint32_t                                  tid,
-    uint32_t                                  flag) {
-    return SetWinEventHook(event_min, event_max, hmod_win_event_proc,
-        fn_win_event_proc, pid, tid, flag);
-}
-
-bool window::unset_event_hook(HWINEVENTHOOK hwin_event_hook) {
-    return UnhookWinEvent(hwin_event_hook);
-}
-
-bool window::is_event_hook_installed(uint32_t event) {
-    return IsWinEventHookInstalled(event);
-}
-
-void window::notify_event(uint32_t event,
-    HWND                           window_handle,
-    int32_t                        object_id,
-    int32_t                        child_id) {
-    NotifyWinEvent(event, window_handle, object_id, child_id);
-}
-
 bool window::show(HWND window_handle, int32_t cmd_show) const {
     return ShowWindow(window_handle, cmd_show);
 }

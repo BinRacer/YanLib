@@ -79,28 +79,6 @@ public:
         int32_t                    height = CW_USEDEFAULT,
         uint32_t style = MDIS_ALLCHILDSTYLES | WS_OVERLAPPEDWINDOW);
 
-    int32_t enum_props(HWND window_handle, PROPENUMPROCA enum_func);
-
-    int32_t enum_props(HWND window_handle, PROPENUMPROCW enum_func);
-
-    int32_t
-    enum_props(HWND window_handle, PROPENUMPROCEXA enum_func, LPARAM lparam);
-
-    int32_t
-    enum_props(HWND window_handle, PROPENUMPROCEXW enum_func, LPARAM lparam);
-
-    HANDLE get_prop(HWND window_handle, const char *text);
-
-    HANDLE get_prop(HWND window_handle, const wchar_t *text);
-
-    bool set_prop(HWND window_handle, const char *text, HANDLE data_handle);
-
-    bool set_prop(HWND window_handle, const wchar_t *text, HANDLE data_handle);
-
-    HANDLE remove_prop(HWND window_handle, const char *text);
-
-    HANDLE remove_prop(HWND window_handle, const wchar_t *text);
-
     bool register_shell_hook(HWND window_handle);
 
     bool unregister_shell_hook(HWND window_handle);

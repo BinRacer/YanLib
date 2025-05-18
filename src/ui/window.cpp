@@ -83,62 +83,6 @@ HWND window::create_mdi(const wchar_t *class_name,
     return result;
 }
 
-int32_t window::enum_props(HWND window_handle, PROPENUMPROCA enum_func) {
-    return EnumPropsA(window_handle, enum_func);
-}
-
-int32_t window::enum_props(HWND window_handle, PROPENUMPROCW enum_func) {
-    return EnumPropsW(window_handle, enum_func);
-}
-
-int32_t window::enum_props(HWND window_handle,
-    PROPENUMPROCEXA             enum_func,
-    LPARAM                      lparam) {
-    return EnumPropsExA(window_handle, enum_func, lparam);
-}
-
-int32_t window::enum_props(HWND window_handle,
-    PROPENUMPROCEXW             enum_func,
-    LPARAM                      lparam) {
-    return EnumPropsExW(window_handle, enum_func, lparam);
-}
-
-HANDLE window::get_prop(HWND window_handle, const char *text) {
-    return GetPropA(window_handle, text);
-}
-
-HANDLE window::get_prop(HWND window_handle, const wchar_t *text) {
-    return GetPropW(window_handle, text);
-}
-
-bool window::set_prop(HWND window_handle,
-    const char            *text,
-    HANDLE                 data_handle) {
-    if (!SetPropA(window_handle, text, data_handle)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-bool window::set_prop(HWND window_handle,
-    const wchar_t         *text,
-    HANDLE                 data_handle) {
-    if (!SetPropW(window_handle, text, data_handle)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-HANDLE window::remove_prop(HWND window_handle, const char *text) {
-    return RemovePropA(window_handle, text);
-}
-
-HANDLE window::remove_prop(HWND window_handle, const wchar_t *text) {
-    return RemovePropW(window_handle, text);
-}
-
 bool window::register_shell_hook(HWND window_handle) {
     return RegisterShellHookWindow(window_handle);
 }

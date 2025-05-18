@@ -641,10 +641,6 @@ bool window::set_display_affinity(HWND window_handle, uint32_t affinity) {
     return true;
 }
 
-DPI_HOSTING_BEHAVIOR window::get_dpi_hosting_behavior(HWND window_handle) {
-    return GetWindowDpiHostingBehavior(window_handle);
-}
-
 bool window::get_feedback_setting(HWND window_handle,
     FEEDBACK_TYPE                      feedback,
     uint32_t                           flag,
@@ -1274,15 +1270,6 @@ int32_t window::get_system_metrics_for_dpi(int32_t index, uint32_t dpi) {
 
 uint32_t window::get_system_dpi(HANDLE proc_handle) {
     return GetSystemDpiForProcess(proc_handle);
-}
-
-DPI_HOSTING_BEHAVIOR window::get_thread_dpi_hosting_behavior() {
-    return GetThreadDpiHostingBehavior();
-}
-
-DPI_HOSTING_BEHAVIOR window::set_thread_dpi_hosting_behavior(
-    DPI_HOSTING_BEHAVIOR value) {
-    return SetThreadDpiHostingBehavior(value);
 }
 
 int16_t window::get_app_command(LPARAM lparam) {

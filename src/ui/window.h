@@ -202,19 +202,6 @@ public:
 
     bool set_proc_default_layout(uint32_t default_layout);
 
-    HDWP prepare(int32_t num_windows);
-
-    HDWP add(HDWP hwin_pos_info,
-        HWND      window_handle,
-        HWND      insert_after_window_handle,
-        int32_t   x,
-        int32_t   y,
-        int32_t   cx,
-        int32_t   cy,
-        uint32_t  flag);
-
-    bool apply(HDWP hwin_pos_info);
-
     bool set_pos(HWND window_handle,
         HWND          insert_after_window_handle,
         int32_t       x,

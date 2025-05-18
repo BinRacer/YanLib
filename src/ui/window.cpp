@@ -410,38 +410,6 @@ bool window::set_proc_default_layout(uint32_t default_layout) {
     return true;
 }
 
-HDWP window::prepare(int32_t num_windows) {
-    HDWP hdwp = BeginDeferWindowPos(num_windows);
-    if (!hdwp) {
-        error_code = GetLastError();
-    }
-    return hdwp;
-}
-
-HDWP window::add(HDWP hwin_pos_info,
-    HWND              window_handle,
-    HWND              insert_after_window_handle,
-    int32_t           x,
-    int32_t           y,
-    int32_t           cx,
-    int32_t           cy,
-    uint32_t          flag) {
-    HDWP result = DeferWindowPos(hwin_pos_info, window_handle,
-        insert_after_window_handle, x, y, cx, cy, flag);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-bool window::apply(HDWP hwin_pos_info) {
-    if (!EndDeferWindowPos(hwin_pos_info)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
 bool window::set_pos(HWND window_handle,
     HWND                  insert_after_window_handle,
     int32_t               x,

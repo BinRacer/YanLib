@@ -641,10 +641,6 @@ bool window::set_display_affinity(HWND window_handle, uint32_t affinity) {
     return true;
 }
 
-DPI_AWARENESS_CONTEXT window::get_dpi_aware_context(HWND window_handle) {
-    return GetWindowDpiAwarenessContext(window_handle);
-}
-
 DPI_HOSTING_BEHAVIOR window::get_dpi_hosting_behavior(HWND window_handle) {
     return GetWindowDpiHostingBehavior(window_handle);
 }
@@ -1256,11 +1252,6 @@ uint32_t window::get_listbox_info(HWND window_handle) {
     return GetListBoxInfo(window_handle);
 }
 
-bool window::is_dpi_aware_contexts_equal(DPI_AWARENESS_CONTEXT context1,
-    DPI_AWARENESS_CONTEXT                                      context2) {
-    return AreDpiAwarenessContextsEqual(context1, context2);
-}
-
 bool window::enable_non_client_dpi_scaling(HWND window_handle) {
     if (!EnableNonClientDpiScaling(window_handle)) {
         error_code = GetLastError();
@@ -1269,29 +1260,8 @@ bool window::enable_non_client_dpi_scaling(HWND window_handle) {
     return true;
 }
 
-bool window::is_proc_dpi_aware() {
-    return IsProcessDPIAware();
-}
-
-bool window::is_valid_dpi_aware_context(DPI_AWARENESS_CONTEXT value) {
-    return IsValidDpiAwarenessContext(value);
-}
-
 uint32_t window::get_dpi_for_system() {
     return GetDpiForSystem();
-}
-
-uint32_t window::get_dpi_from_dpi_aware_context(DPI_AWARENESS_CONTEXT value) {
-    return GetDpiFromDpiAwarenessContext(value);
-}
-
-DPI_AWARENESS window::get_aware_from_dpi_aware_context(
-    DPI_AWARENESS_CONTEXT value) {
-    return GetAwarenessFromDpiAwarenessContext(value);
-}
-
-DPI_AWARENESS_CONTEXT window::get_proc_dpi_aware_context(HANDLE proc_handle) {
-    return GetDpiAwarenessContextForProcess(proc_handle);
 }
 
 int32_t window::get_system_metrics_for_dpi(int32_t index, uint32_t dpi) {
@@ -1304,32 +1274,6 @@ int32_t window::get_system_metrics_for_dpi(int32_t index, uint32_t dpi) {
 
 uint32_t window::get_system_dpi(HANDLE proc_handle) {
     return GetSystemDpiForProcess(proc_handle);
-}
-
-HRESULT window::get_proc_dpi_aware(HANDLE proc_handle,
-    PROCESS_DPI_AWARENESS                *value) {
-    return GetProcessDpiAwareness(proc_handle, value);
-}
-
-HRESULT window::set_proc_dpi_aware(PROCESS_DPI_AWARENESS value) {
-    return SetProcessDpiAwareness(value);
-}
-
-bool window::set_proc_dpi_aware_context(DPI_AWARENESS_CONTEXT value) {
-    if (!SetProcessDpiAwarenessContext(value)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-DPI_AWARENESS_CONTEXT window::get_thread_dpi_aware_context() {
-    return GetThreadDpiAwarenessContext();
-}
-
-DPI_AWARENESS_CONTEXT window::set_thread_dpi_aware_context(
-    DPI_AWARENESS_CONTEXT dpi_context) {
-    return SetThreadDpiAwarenessContext(dpi_context);
 }
 
 DPI_HOSTING_BEHAVIOR window::get_thread_dpi_hosting_behavior() {

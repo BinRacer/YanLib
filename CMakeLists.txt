@@ -122,6 +122,8 @@ add_library(YanLib STATIC
         src/ui/window_hook.h
         src/ui/window_pos.cpp
         src/ui/window_pos.h
+        src/ui/window_aware.cpp
+        src/ui/window_aware.h
         src/ui/message.cpp
         src/ui/message.h
         src/ui/dialog.cpp

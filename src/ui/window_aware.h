@@ -1,0 +1,62 @@
+//
+// Created by forkernel on 2025/5/18.
+//
+
+#ifndef WINDOW_AWARE_H
+#define WINDOW_AWARE_H
+#include <Windows.h>
+#include <shellscalingapi.h>
+#include <string>
+
+namespace YanLib::ui {
+class window_aware {
+private:
+    uint32_t error_code = 0;
+
+public:
+    window_aware(const window_aware &other)            = delete;
+
+    window_aware(window_aware &&other)                 = delete;
+
+    window_aware &operator=(const window_aware &other) = delete;
+
+    window_aware &operator=(window_aware &&other)      = delete;
+
+    window_aware()                                     = default;
+
+    ~window_aware()                                    = default;
+
+    DPI_AWARENESS_CONTEXT get_dpi_context(HWND window_handle);
+
+    bool is_dpi_context_equal(DPI_AWARENESS_CONTEXT context1,
+        DPI_AWARENESS_CONTEXT                       context2);
+
+    bool is_proc_dpi();
+
+    bool is_valid_dpi_context(DPI_AWARENESS_CONTEXT context);
+
+    uint32_t dpi_context_to_dpi(DPI_AWARENESS_CONTEXT context);
+
+    DPI_AWARENESS dpi_context_to_dpi_aware(DPI_AWARENESS_CONTEXT context);
+
+    DPI_AWARENESS_CONTEXT get_proc_dpi_context(HANDLE proc_handle);
+
+    bool set_proc_dpi_context(DPI_AWARENESS_CONTEXT value);
+
+    HRESULT get_proc_dpi_aware(HANDLE proc_handle,
+        PROCESS_DPI_AWARENESS        *dpi_aware);
+
+    HRESULT set_proc_dpi_aware(PROCESS_DPI_AWARENESS dpi_aware);
+
+    DPI_AWARENESS_CONTEXT get_thread_dpi_context();
+
+    DPI_AWARENESS_CONTEXT set_thread_dpi_context(DPI_AWARENESS_CONTEXT context);
+
+    [[nodiscard]] uint32_t err_code() const;
+
+    [[nodiscard]] std::string err_string() const;
+
+    [[nodiscard]] std::wstring err_wstring() const;
+};
+} // namespace YanLib::ui
+#endif // WINDOW_AWARE_H

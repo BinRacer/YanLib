@@ -8,7 +8,6 @@
 #define WINNT
 #endif
 #include <Windows.h>
-#include <shellscalingapi.h>
 #include <vector>
 #include <string>
 #include "helper/convert.h"
@@ -305,8 +304,6 @@ public:
 
     bool set_display_affinity(HWND window_handle, uint32_t affinity);
 
-    DPI_AWARENESS_CONTEXT get_dpi_aware_context(HWND window_handle);
-
     DPI_HOSTING_BEHAVIOR get_dpi_hosting_behavior(HWND window_handle);
 
     bool get_feedback_setting(HWND window_handle,
@@ -509,38 +506,13 @@ public:
 
     uint32_t get_listbox_info(HWND window_handle);
 
-    bool is_dpi_aware_contexts_equal(DPI_AWARENESS_CONTEXT context1,
-        DPI_AWARENESS_CONTEXT                              context2);
-
     bool enable_non_client_dpi_scaling(HWND window_handle);
 
-    bool is_proc_dpi_aware();
-
-    bool is_valid_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
-
     uint32_t get_dpi_for_system();
-
-    uint32_t get_dpi_from_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
-
-    DPI_AWARENESS get_aware_from_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
-
-    DPI_AWARENESS_CONTEXT get_proc_dpi_aware_context(HANDLE proc_handle);
-
-    bool set_proc_dpi_aware_context(DPI_AWARENESS_CONTEXT value);
 
     int32_t get_system_metrics_for_dpi(int32_t index, uint32_t dpi);
 
     uint32_t get_system_dpi(HANDLE proc_handle);
-
-    HRESULT get_proc_dpi_aware(HANDLE proc_handle,
-        PROCESS_DPI_AWARENESS        *value);
-
-    HRESULT set_proc_dpi_aware(PROCESS_DPI_AWARENESS value);
-
-    DPI_AWARENESS_CONTEXT get_thread_dpi_aware_context();
-
-    DPI_AWARENESS_CONTEXT set_thread_dpi_aware_context(
-        DPI_AWARENESS_CONTEXT dpi_context);
 
     DPI_HOSTING_BEHAVIOR get_thread_dpi_hosting_behavior();
 

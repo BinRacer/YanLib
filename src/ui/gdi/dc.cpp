@@ -37,16 +37,16 @@ HDC dc::create_ic(const wchar_t *driver_name,
     return CreateICW(driver_name, device_name, port, device_mode);
 }
 
-HDC dc::get_dc(HWND hwnd) {
-    return GetDC(hwnd);
+HDC dc::get_dc(HWND window_handle) {
+    return GetDC(window_handle);
 }
 
-HDC dc::get_dc(HWND hwnd, HRGN region_clip_handle, uint32_t flag) {
-    return GetDCEx(hwnd, region_clip_handle, flag);
+HDC dc::get_dc(HWND window_handle, HRGN region_clip_handle, uint32_t flag) {
+    return GetDCEx(window_handle, region_clip_handle, flag);
 }
 
-int32_t dc::release_dc(HWND hwnd, HDC dc_handle) {
-    return ReleaseDC(hwnd, dc_handle);
+int32_t dc::release_dc(HWND window_handle, HDC dc_handle) {
+    return ReleaseDC(window_handle, dc_handle);
 }
 
 bool dc::delete_dc(HDC dc_handle) {
@@ -82,8 +82,8 @@ uint32_t dc::set_layout(HDC dc_handle, uint32_t value) {
     return SetLayout(dc_handle, value);
 }
 
-HDC dc::get_window_dc(HWND hwnd) {
-    return GetWindowDC(hwnd);
+HDC dc::get_window_dc(HWND window_handle) {
+    return GetWindowDC(window_handle);
 }
 
 HWND dc::window_from_dc(HDC dc_handle) {

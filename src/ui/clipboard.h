@@ -27,7 +27,7 @@ public:
 
     ~clipboard();
 
-    explicit clipboard(HWND hwnd = nullptr);
+    explicit clipboard(HWND window_handle = nullptr);
 
     [[nodiscard]] bool is_ok() const;
 
@@ -60,11 +60,11 @@ public:
 
     bool is_format_available(uint32_t format);
 
-    bool add_format_listener(HWND hwnd);
+    bool add_format_listener(HWND window_handle);
 
-    bool remove_format_listener(HWND hwnd);
+    bool remove_format_listener(HWND window_handle);
 
-    bool change_chain(HWND hwnd_remove, HWND hwnd_new_next);
+    bool change_chain(HWND remove_window_handle, HWND next_window_handle);
 
     uint32_t enum_formats(uint32_t format);
 

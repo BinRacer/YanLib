@@ -34,34 +34,34 @@ public:
     HWND create(const char *class_name,
         const char         *window_name,
         HINSTANCE           instance_handle,
-        void               *param       = nullptr,
-        HWND                hwnd_parent = nullptr,
-        HMENU               menu_handle = nullptr,
-        int32_t             x           = CW_USEDEFAULT,
-        int32_t             y           = CW_USEDEFAULT,
-        int32_t             width       = CW_USEDEFAULT,
-        int32_t             height      = CW_USEDEFAULT,
-        uint32_t            style       = WS_OVERLAPPEDWINDOW,
-        uint32_t            ext_style   = 0);
+        void               *param                = nullptr,
+        HWND                parent_window_handle = nullptr,
+        HMENU               menu_handle          = nullptr,
+        int32_t             x                    = CW_USEDEFAULT,
+        int32_t             y                    = CW_USEDEFAULT,
+        int32_t             width                = CW_USEDEFAULT,
+        int32_t             height               = CW_USEDEFAULT,
+        uint32_t            style                = WS_OVERLAPPEDWINDOW,
+        uint32_t            ext_style            = 0);
 
     HWND create(const wchar_t *class_name,
         const wchar_t         *window_name,
         HINSTANCE              instance_handle,
-        void                  *param       = nullptr,
-        HWND                   hwnd_parent = nullptr,
-        HMENU                  menu_handle = nullptr,
-        int32_t                x           = CW_USEDEFAULT,
-        int32_t                y           = CW_USEDEFAULT,
-        int32_t                width       = CW_USEDEFAULT,
-        int32_t                height      = CW_USEDEFAULT,
-        uint32_t               style       = WS_OVERLAPPEDWINDOW,
-        uint32_t               ext_style   = 0);
+        void                  *param                = nullptr,
+        HWND                   parent_window_handle = nullptr,
+        HMENU                  menu_handle          = nullptr,
+        int32_t                x                    = CW_USEDEFAULT,
+        int32_t                y                    = CW_USEDEFAULT,
+        int32_t                width                = CW_USEDEFAULT,
+        int32_t                height               = CW_USEDEFAULT,
+        uint32_t               style                = WS_OVERLAPPEDWINDOW,
+        uint32_t               ext_style            = 0);
 
     HWND create_mdi(const char *class_name,
         const char             *window_name,
         HINSTANCE               instance_handle,
         LPARAM                  lparam,
-        HWND                    hwnd_parent,
+        HWND                    parent_window_handle,
         int32_t                 x      = CW_USEDEFAULT,
         int32_t                 y      = CW_USEDEFAULT,
         int32_t                 width  = CW_USEDEFAULT,
@@ -72,102 +72,38 @@ public:
         const wchar_t             *window_name,
         HINSTANCE                  instance_handle,
         LPARAM                     lparam,
-        HWND                       hwnd_parent,
+        HWND                       parent_window_handle,
         int32_t                    x      = CW_USEDEFAULT,
         int32_t                    y      = CW_USEDEFAULT,
         int32_t                    width  = CW_USEDEFAULT,
         int32_t                    height = CW_USEDEFAULT,
         uint32_t style = MDIS_ALLCHILDSTYLES | WS_OVERLAPPEDWINDOW);
 
-    WNDCLASSEXA make_class(const char *class_name,
-        WNDPROC                        window_proc,
-        HINSTANCE                      instance_handle,
-        uint32_t                       style     = CS_HREDRAW | CS_VREDRAW,
-        const char                    *menu_name = nullptr,
-        int32_t                        class_extra_size  = 0,
-        int32_t                        window_extra_size = 0,
-        HICON   icon_handle             = LoadIconW(nullptr, IDI_APPLICATION),
-        HCURSOR cursor_handle           = LoadCursorW(nullptr, IDC_ARROW),
-        HBRUSH  brush_background_handle = static_cast<HBRUSH>(
-            GetStockObject(WHITE_BRUSH)),
-        HICON icon_small_handle = nullptr);
+    int32_t enum_props(HWND window_handle, PROPENUMPROCA enum_func);
 
-    WNDCLASSEXW make_class(const wchar_t *class_name,
-        WNDPROC                           window_proc,
-        HINSTANCE                         instance_handle,
-        uint32_t                          style     = CS_HREDRAW | CS_VREDRAW,
-        const wchar_t                    *menu_name = nullptr,
-        int32_t                           class_extra_size  = 0,
-        int32_t                           window_extra_size = 0,
-        HICON   icon_handle             = LoadIconW(nullptr, IDI_APPLICATION),
-        HCURSOR cursor_handle           = LoadCursorW(nullptr, IDC_ARROW),
-        HBRUSH  brush_background_handle = static_cast<HBRUSH>(
-            GetStockObject(WHITE_BRUSH)),
-        HICON icon_small_handle = nullptr);
+    int32_t enum_props(HWND window_handle, PROPENUMPROCW enum_func);
 
-    ATOM register_class(const WNDCLASSEXA *window_class);
+    int32_t
+    enum_props(HWND window_handle, PROPENUMPROCEXA enum_func, LPARAM lparam);
 
-    ATOM register_class(const WNDCLASSEXW *window_class);
+    int32_t
+    enum_props(HWND window_handle, PROPENUMPROCEXW enum_func, LPARAM lparam);
 
-    bool unregister_class(const char *class_name, HINSTANCE instance_handle);
+    HANDLE get_prop(HWND window_handle, const char *text);
 
-    bool unregister_class(const wchar_t *class_name, HINSTANCE instance_handle);
+    HANDLE get_prop(HWND window_handle, const wchar_t *text);
 
-    bool get_class_info(HINSTANCE instance_handle,
-        const char               *class_name,
-        WNDCLASSA                *wnd_class);
+    bool set_prop(HWND window_handle, const char *text, HANDLE data_handle);
 
-    bool get_class_info(HINSTANCE instance_handle,
-        const wchar_t            *class_name,
-        WNDCLASSW                *wnd_class);
+    bool set_prop(HWND window_handle, const wchar_t *text, HANDLE data_handle);
 
-    bool get_class_info(HINSTANCE instance_handle,
-        const char               *class_name,
-        WNDCLASSEXA              *wnd_class);
+    HANDLE remove_prop(HWND window_handle, const char *text);
 
-    bool get_class_info(HINSTANCE instance_handle,
-        const wchar_t            *class_name,
-        WNDCLASSEXW              *wnd_class);
+    HANDLE remove_prop(HWND window_handle, const wchar_t *text);
 
-    uint32_t get_class_long(HWND hwnd, int32_t index);
+    bool register_shell_hook(HWND window_handle);
 
-    uint32_t set_class_long(HWND hwnd, int32_t index, long value);
-
-    ULONG_PTR get_class_long_ptr(HWND hwnd, int32_t index);
-
-    ULONG_PTR set_class_long_ptr(HWND hwnd, int32_t index, LONG_PTR value);
-
-    uint16_t get_class_word(HWND hwnd, int32_t index);
-
-    uint16_t set_class_word(HWND hwnd, int32_t index, uint16_t value);
-
-    int32_t get_class_name(HWND hwnd, std::string &class_name);
-
-    int32_t get_class_name(HWND hwnd, std::wstring &class_name);
-
-    int32_t enum_props(HWND hwnd, PROPENUMPROCA enum_func);
-
-    int32_t enum_props(HWND hwnd, PROPENUMPROCW enum_func);
-
-    int32_t enum_props(HWND hwnd, PROPENUMPROCEXA enum_func, LPARAM lparam);
-
-    int32_t enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM lparam);
-
-    HANDLE get_prop(HWND hwnd, const char *text);
-
-    HANDLE get_prop(HWND hwnd, const wchar_t *text);
-
-    bool set_prop(HWND hwnd, const char *text, HANDLE data_handle);
-
-    bool set_prop(HWND hwnd, const wchar_t *text, HANDLE data_handle);
-
-    HANDLE remove_prop(HWND hwnd, const char *text);
-
-    HANDLE remove_prop(HWND hwnd, const wchar_t *text);
-
-    bool register_shell_hook(HWND hwnd);
-
-    bool unregister_shell_hook(HWND hwnd);
+    bool unregister_shell_hook(HWND window_handle);
 
     HHOOK set_windows_hook(int32_t id_hook,
         HOOKPROC                   fn,
@@ -192,17 +128,17 @@ public:
     bool is_event_hook_installed(uint32_t event);
 
     void notify_event(uint32_t event,
-        HWND                   hwnd,
+        HWND                   window_handle,
         int32_t                object_id,
         int32_t                child_id);
 
-    bool show(HWND hwnd, int32_t cmd_show) const;
+    bool show(HWND window_handle, int32_t cmd_show) const;
 
-    bool show_async(HWND hwnd, int32_t cmd_show) const;
+    bool show_async(HWND window_handle, int32_t cmd_show) const;
 
-    bool update(HWND hwnd) const;
+    bool update(HWND window_handle) const;
 
-    bool update_layered(HWND hwnd,
+    bool update_layered(HWND window_handle,
         HDC                  hdc_dst,
         POINT               *coordinate_dst,
         SIZE                *size,
@@ -212,26 +148,27 @@ public:
         BLENDFUNCTION       *blend_fn,
         uint32_t             flag);
 
-    bool lock_update(HWND hwnd);
+    bool lock_update(HWND window_handle);
 
     bool unlock_update();
 
-    bool animate(HWND hwnd, uint32_t time, uint32_t flag);
+    bool animate(HWND window_handle, uint32_t time, uint32_t flag);
 
-    bool close(HWND hwnd);
+    bool close(HWND window_handle);
 
-    bool close(HWND hwnd, bool is_force);
+    bool close(HWND window_handle, bool is_force);
 
     bool exit(uint32_t flag, uint32_t reason);
 
-    bool destroy(HWND hwnd);
+    bool destroy(HWND window_handle);
 
-    bool enable(HWND hwnd, bool enable);
+    bool enable(HWND window_handle, bool enable);
 
     bool enum_windows(WNDENUMPROC enum_func, LPARAM lparam);
 
-    bool
-    enum_child_windows(HWND hwnd_parent, WNDENUMPROC enum_func, LPARAM lparam);
+    bool enum_child_windows(HWND parent_window_handle,
+        WNDENUMPROC              enum_func,
+        LPARAM                   lparam);
 
     bool enum_windows(uint32_t tid, WNDENUMPROC fn, LPARAM lparam);
 
@@ -239,79 +176,80 @@ public:
 
     HWND find(const wchar_t *class_name, const wchar_t *window_name);
 
-    HWND find(HWND  hwnd_parent,
-        HWND        hwnd_child_after,
+    HWND find(HWND  parent_window_handle,
         const char *class_name,
         const char *window_name);
 
-    HWND find(HWND     hwnd_parent,
-        HWND           hwnd_child_after,
+    HWND find(HWND     parent_window_handle,
         const wchar_t *class_name,
         const wchar_t *window_name);
 
-    bool flash(HWND hwnd, bool invert);
+    bool flash(HWND window_handle, bool invert);
 
     bool flash(FLASHWINFO *flash_info);
 
-    bool move(HWND hwnd,
+    bool move(HWND window_handle,
         int32_t    x,
         int32_t    y,
         int32_t    width,
         int32_t    height,
         bool       is_repaint);
 
-    bool print(HWND hwnd, HDC dc_handle, uint32_t flag);
+    bool print(HWND window_handle, HDC dc_handle, uint32_t flag);
 
-    bool redraw(HWND hwnd, const RECT *rect, HRGN region_handle, uint32_t flag);
+    bool redraw(HWND window_handle,
+        const RECT  *rect,
+        HRGN         region_handle,
+        uint32_t     flag);
 
-    bool maximize(HWND hwnd);
+    bool maximize(HWND window_handle);
 
-    bool minimize(HWND hwnd);
+    bool minimize(HWND window_handle);
 
-    bool hide(HWND hwnd);
+    bool hide(HWND window_handle);
 
-    bool restore(HWND hwnd);
+    bool restore(HWND window_handle);
 
-    bool restore_minimize(HWND hwnd);
+    bool restore_minimize(HWND window_handle);
 
-    uint16_t tile(HWND           hwnd_parent,
+    uint16_t tile(HWND           parent_window_handle,
         uint32_t                 how,
         const RECT              *rect,
         const std::vector<HWND> &child);
 
-    HWND get_parent(HWND hwnd);
+    HWND get_parent(HWND window_handle);
 
-    HWND set_parent(HWND hwnd_child, HWND hwnd_new_parent);
+    HWND set_parent(HWND windows_handle, HWND parent_window_handle);
 
-    HWND get_ancestor(HWND hwnd, uint32_t flag);
+    HWND get_ancestor(HWND window_handle, uint32_t flag);
 
-    bool show_popup(HWND hwnd);
+    bool show_popup(HWND window_handle);
 
-    bool hide_popup(HWND hwnd);
+    bool hide_popup(HWND window_handle);
 
-    HWND get_last_active_popup(HWND hwnd);
+    HWND get_last_active_popup(HWND window_handle);
 
-    bool is_pending(HWND hwnd);
+    bool is_pending(HWND window_handle);
 
-    bool is_window(HWND hwnd);
+    bool is_window(HWND window_handle);
 
-    bool is_arranged(HWND hwnd);
+    bool is_arranged(HWND window_handle);
 
-    bool is_enabled(HWND hwnd);
+    bool is_enabled(HWND window_handle);
 
-    bool is_unicode(HWND hwnd);
+    bool is_unicode(HWND window_handle);
 
-    bool is_visible(HWND hwnd);
+    bool is_visible(HWND window_handle);
 
-    bool is_minimize(HWND hwnd);
+    bool is_minimize(HWND window_handle);
 
-    bool is_maximize(HWND hwnd);
+    bool is_maximize(HWND window_handle);
 
-    bool is_child(HWND hwnd_parent, HWND hwnd);
+    bool is_child(HWND parent_window_handle, HWND window_handle);
 
     bool is_popup_exist();
 
-    uint32_t arrange_minimize(HWND hwnd);
+    uint32_t arrange_minimize(HWND window_handle);
 
     bool get_proc_default_layout(uint32_t *default_layout);
 
@@ -320,8 +258,8 @@ public:
     HDWP prepare(int32_t num_windows);
 
     HDWP add(HDWP hwin_pos_info,
-        HWND      hwnd,
-        HWND      hwnd_insert_after,
+        HWND      window_handle,
+        HWND      insert_after_window_handle,
         int32_t   x,
         int32_t   y,
         int32_t   cx,
@@ -330,8 +268,8 @@ public:
 
     bool apply(HDWP hwin_pos_info);
 
-    bool set_pos(HWND hwnd,
-        HWND          hwnd_insert_after,
+    bool set_pos(HWND window_handle,
+        HWND          insert_after_window_handle,
         int32_t       x,
         int32_t       y,
         int32_t       cx,
@@ -344,43 +282,47 @@ public:
         RECT                        *exclude_rect,
         RECT                        *popup_window_position);
 
-    HWND find_top_child(HWND hwnd_parent, POINT coordinate);
+    HWND find_top_child(HWND parent_window_handle, POINT coordinate);
 
-    HWND find_top_child(HWND hwnd_parent, POINT coordinate, uint32_t flag);
+    HWND
+    find_top_child(HWND parent_window_handle, POINT coordinate, uint32_t flag);
 
-    HWND find_real_child(HWND hwnd_parent, POINT coordinate);
+    HWND find_real_child(HWND parent_window_handle, POINT coordinate);
 
     HWND find_by_physical_point(POINT coordinate);
 
     HWND find_by_logical_point(POINT coordinate);
 
-    int32_t transform_coordinate(HWND hwnd_from,
-        HWND                          hwnd_to,
+    int32_t transform_coordinate(HWND from_window_handle,
+        HWND                          to_window_handle,
         std::vector<POINT>           &coordinates);
 
-    bool adjust_to_top(HWND hwnd);
+    bool adjust_to_top(HWND window_handle);
 
     LRESULT call_proc(WNDPROC prev_wnd_func,
-        HWND                  hwnd,
+        HWND                  window_handle,
         uint32_t              msg,
         WPARAM                wparam,
         LPARAM                lparam);
 
     LRESULT
-    default_proc(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam);
+    default_proc(HWND window_handle,
+        uint32_t      msg,
+        WPARAM        wparam,
+        LPARAM        lparam);
 
-    LRESULT default_mdi_proc(HWND hwnd,
-        HWND                      hwnd_mdi_client,
+    LRESULT default_mdi_proc(HWND window_handle,
+        HWND                      client_mdi_window_handle,
         uint32_t                  msg,
         WPARAM                    wparam,
         LPARAM                    lparam);
 
-    LRESULT default_mdi_child_proc(HWND hwnd,
+    LRESULT default_mdi_child_proc(HWND window_handle,
         uint32_t                        msg,
         WPARAM                          wparam,
         LPARAM                          lparam);
 
-    uint16_t cascade(HWND  hwnd_parent,
+    uint16_t cascade(HWND  parent_window_handle,
         uint32_t           how,
         const RECT        *rect,
         std::vector<HWND> &child);
@@ -389,13 +331,13 @@ public:
 
     HWND get_active();
 
-    HWND set_active(HWND hwnd);
+    HWND set_active(HWND window_handle);
 
-    uint32_t get_dpi(HWND hwnd);
+    uint32_t get_dpi(HWND window_handle);
 
     HWND get_foreground();
 
-    bool set_foreground(HWND hwnd);
+    bool set_foreground(HWND window_handle);
 
     bool allow_set_foreground(uint32_t pid);
 
@@ -403,65 +345,66 @@ public:
 
     bool unlock_set_foreground();
 
-    bool get_layered_attrs(HWND hwnd,
+    bool get_layered_attrs(HWND window_handle,
         COLORREF               *color_ref,
         uint8_t                *alpha,
         uint32_t               *flag);
 
-    bool set_layered_attrs(HWND hwnd,
+    bool set_layered_attrs(HWND window_handle,
         COLORREF                color_ref,
         uint8_t                 alpha,
         uint32_t                flag);
 
-    HWND find(HWND hwnd, uint32_t cmd);
+    HWND find(HWND window_handle, uint32_t cmd);
 
-    HWND find_next(HWND hwnd, uint32_t cmd);
+    HWND find_next(HWND window_handle, uint32_t cmd);
 
     HWND find_shell();
 
-    HWND find_top(HWND hwnd);
+    HWND find_top(HWND window_handle);
 
-    uint32_t get_context_help_id(HWND hwnd);
+    uint32_t get_context_help_id(HWND window_handle);
 
-    bool set_context_help_id(HWND hwnd, uint32_t param);
+    bool set_context_help_id(HWND window_handle, uint32_t param);
 
-    bool get_display_affinity(HWND hwnd, uint32_t *affinity);
+    bool get_display_affinity(HWND window_handle, uint32_t *affinity);
 
-    bool set_display_affinity(HWND hwnd, uint32_t affinity);
+    bool set_display_affinity(HWND window_handle, uint32_t affinity);
 
-    DPI_AWARENESS_CONTEXT get_dpi_aware_context(HWND hwnd);
+    DPI_AWARENESS_CONTEXT get_dpi_aware_context(HWND window_handle);
 
-    DPI_HOSTING_BEHAVIOR get_dpi_hosting_behavior(HWND hwnd);
+    DPI_HOSTING_BEHAVIOR get_dpi_hosting_behavior(HWND window_handle);
 
-    bool get_feedback_setting(HWND hwnd,
+    bool get_feedback_setting(HWND window_handle,
         FEEDBACK_TYPE              feedback,
         uint32_t                   flag,
         int                       *real_config);
 
-    bool set_feedback_setting(HWND hwnd,
+    bool set_feedback_setting(HWND window_handle,
         FEEDBACK_TYPE              feedback,
         uint32_t                   size,
         const int                 *config);
 
-    bool get_info(HWND hwnd, WINDOWINFO *window_info);
+    bool get_info(HWND window_handle, WINDOWINFO *window_info);
 
-    long get_long(HWND hwnd, int32_t index);
+    long get_long(HWND window_handle, int32_t index);
 
-    long set_long(HWND hwnd, int32_t index, long value);
+    long set_long(HWND window_handle, int32_t index, long value);
 
-    LONG_PTR get_long_ptr(HWND hwnd, int32_t index);
+    LONG_PTR get_long_ptr(HWND window_handle, int32_t index);
 
-    LONG_PTR set_long_ptr(HWND hwnd, int32_t index, LONG_PTR value);
+    LONG_PTR set_long_ptr(HWND window_handle, int32_t index, LONG_PTR value);
 
-    uint32_t get_module_file_name(HWND hwnd, std::string &file_name);
+    uint32_t get_module_file_name(HWND window_handle, std::string &file_name);
 
-    uint32_t get_module_file_name(HWND hwnd, std::wstring &file_name);
+    uint32_t get_module_file_name(HWND window_handle, std::wstring &file_name);
 
-    bool get_placement(HWND hwnd, WINDOWPLACEMENT *window_placement);
+    bool get_placement(HWND window_handle, WINDOWPLACEMENT *window_placement);
 
-    bool set_placement(HWND hwnd, const WINDOWPLACEMENT *window_placement);
+    bool set_placement(HWND    window_handle,
+        const WINDOWPLACEMENT *window_placement);
 
-    bool get_rect(HWND hwnd, RECT *rect);
+    bool get_rect(HWND window_handle, RECT *rect);
 
     bool adjust_rect(RECT *rect, uint32_t style, bool menu);
 
@@ -473,45 +416,50 @@ public:
         uint32_t                   ext_style,
         uint32_t                   dpi);
 
-    int32_t get_region(HWND hwnd, HRGN region_handle);
+    int32_t get_region(HWND window_handle, HRGN region_handle);
 
-    int32_t set_region(HWND hwnd, HRGN region_handle, bool is_redraw);
+    int32_t set_region(HWND window_handle, HRGN region_handle, bool is_redraw);
 
-    int32_t get_region_box(HWND hwnd, RECT *rect);
+    int32_t get_region_box(HWND window_handle, RECT *rect);
 
-    int32_t get_text(HWND hwnd, std::string &text);
+    int32_t get_text(HWND window_handle, std::string &text);
 
-    int32_t get_text(HWND hwnd, std::wstring &text);
+    int32_t get_text(HWND window_handle, std::wstring &text);
 
-    bool set_text(HWND hwnd, const char *text);
+    bool set_text(HWND window_handle, const char *text);
 
-    bool set_text(HWND hwnd, const wchar_t *text);
+    bool set_text(HWND window_handle, const wchar_t *text);
 
-    int32_t get_text_length(HWND hwnd);
+    int32_t get_text_length(HWND window_handle);
 
-    uint32_t get_thread_id(HWND hwnd);
+    uint32_t get_thread_id(HWND window_handle);
 
-    uint32_t get_proc_id(HWND hwnd);
+    uint32_t get_proc_id(HWND window_handle);
 
     // std::pair<tid, pid>
-    std::pair<uint32_t, uint32_t> get_window_tid_and_pid(HWND hwnd);
+    std::pair<uint32_t, uint32_t> get_window_tid_and_pid(HWND window_handle);
 
-    uint16_t get_word(HWND hwnd, int32_t index);
+    uint16_t get_word(HWND window_handle, int32_t index);
 
-    int32_t get_direct_text(HWND hwnd, std::string &text);
+    int32_t get_direct_text(HWND window_handle, std::string &text);
 
-    int32_t get_direct_text(HWND hwnd, std::wstring &text);
+    int32_t get_direct_text(HWND window_handle, std::wstring &text);
 
-    uint32_t get_class(HWND hwnd, std::string &class_name);
+    uint32_t get_class(HWND window_handle, std::string &class_name);
 
-    uint32_t get_class(HWND hwnd, std::wstring &class_name);
+    uint32_t get_class(HWND window_handle, std::wstring &class_name);
 
-    void switch_window(HWND hwnd, bool unknown = false);
+    void switch_window(HWND window_handle, bool unknown = false);
 
-    bool show_help(HWND hwnd, const char *help, uint32_t cmd, ULONG_PTR data);
+    bool show_help(HWND window_handle,
+        const char     *help,
+        uint32_t        cmd,
+        ULONG_PTR       data);
 
-    bool
-    show_help(HWND hwnd, const wchar_t *help, uint32_t cmd, ULONG_PTR data);
+    bool show_help(HWND window_handle,
+        const wchar_t  *help,
+        uint32_t        cmd,
+        ULONG_PTR       data);
 
     uint32_t get_gui_resources(HANDLE proc_handle, uint32_t flag);
 
@@ -519,40 +467,42 @@ public:
 
     bool is_gui_thread(bool is_convert);
 
-    bool get_alt_tab_info(HWND hwnd,
+    bool get_alt_tab_info(HWND window_handle,
         int32_t                item_index,
         ALTTABINFO            *alt_tab_info,
         std::string           &item_text);
 
-    bool get_alt_tab_info(HWND hwnd,
+    bool get_alt_tab_info(HWND window_handle,
         int32_t                item_index,
         ALTTABINFO            *alt_tab_info,
         std::wstring          &item_text);
 
-    UINT_PTR set_timer(HWND hwnd,
+    UINT_PTR set_timer(HWND window_handle,
         UINT_PTR            event_id,
         uint32_t            elapse,
         TIMERPROC           timer_func);
 
-    UINT_PTR set_coalescable_timer(HWND hwnd,
+    UINT_PTR set_coalescable_timer(HWND window_handle,
         UINT_PTR                        event_id,
         uint32_t                        elapse,
         TIMERPROC                       timer_func,
         uint32_t                        tolerance_delay);
 
-    bool kill_timer(HWND hwnd, UINT_PTR event_id);
+    bool kill_timer(HWND window_handle, UINT_PTR event_id);
 
-    bool create_shutdown_reason(HWND hwnd, std::string &reason);
+    bool create_shutdown_reason(HWND window_handle, std::string &reason);
 
-    bool create_shutdown_reason(HWND hwnd, const std::wstring &reason);
+    bool create_shutdown_reason(HWND window_handle, const std::wstring &reason);
 
-    bool destroy_shutdown_reason(HWND hwnd);
+    bool destroy_shutdown_reason(HWND window_handle);
 
-    bool
-    query_shutdown_reason(HWND hwnd, std::string &reason, uint32_t *real_size);
+    bool query_shutdown_reason(HWND window_handle,
+        std::string                &reason,
+        uint32_t                   *real_size);
 
-    bool
-    query_shutdown_reason(HWND hwnd, std::wstring &reason, uint32_t *real_size);
+    bool query_shutdown_reason(HWND window_handle,
+        std::wstring               &reason,
+        uint32_t                   *real_size);
 
     int get_system_metrics(int flag);
 
@@ -604,9 +554,9 @@ public:
 
     bool unregister_suspend_resume_notify(HPOWERNOTIFY power_notify_handle);
 
-    bool register_tooltip_dismiss_notify(HWND hwnd);
+    bool register_tooltip_dismiss_notify(HWND window_handle);
 
-    bool unregister_tooltip_dismiss_notify(HWND hwnd);
+    bool unregister_tooltip_dismiss_notify(HWND window_handle);
 
     bool sound_sentry();
 
@@ -615,20 +565,20 @@ public:
     bool set_additional_foreground_boost_procs(HWND top_level_window_handle,
         std::vector<HANDLE>                        &proc_handles);
 
-    bool get_title_bar_info(HWND hwnd, TITLEBARINFO *title_bar_info);
+    bool get_title_bar_info(HWND window_handle, TITLEBARINFO *title_bar_info);
 
     bool get_auto_rotation_state(AR_STATE *state);
 
     helper::CodePage get_code_page();
 
-    bool get_combobox_info(HWND combo_hwnd, COMBOBOXINFO *combobox_info);
+    bool get_combobox_info(HWND combo_handle, COMBOBOXINFO *combobox_info);
 
-    uint32_t get_listbox_info(HWND hwnd);
+    uint32_t get_listbox_info(HWND window_handle);
 
     bool is_dpi_aware_contexts_equal(DPI_AWARENESS_CONTEXT context1,
         DPI_AWARENESS_CONTEXT                              context2);
 
-    bool enable_non_client_dpi_scaling(HWND hwnd);
+    bool enable_non_client_dpi_scaling(HWND window_handle);
 
     bool is_proc_dpi_aware();
 

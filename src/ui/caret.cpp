@@ -12,9 +12,12 @@ caret::~caret() {
     }
 }
 
-caret::caret(HWND hwnd, HBITMAP bitmap_handle, int32_t width, int32_t height) {
-    window_handle = hwnd;
-    if (!CreateCaret(hwnd, bitmap_handle, width, height)) {
+caret::caret(HWND window_handle,
+    HBITMAP       bitmap_handle,
+    int32_t       width,
+    int32_t       height) {
+    _window_handle = window_handle;
+    if (!CreateCaret(window_handle, bitmap_handle, width, height)) {
         error_code = GetLastError();
         is_create  = false;
     } else {
@@ -59,7 +62,7 @@ bool caret::set_pos(int32_t x, int32_t y) {
 }
 
 bool caret::show() {
-    if (!ShowCaret(window_handle)) {
+    if (!ShowCaret(_window_handle)) {
         error_code = GetLastError();
         return false;
     }
@@ -67,7 +70,7 @@ bool caret::show() {
 }
 
 bool caret::hide() {
-    if (!HideCaret(window_handle)) {
+    if (!HideCaret(_window_handle)) {
         error_code = GetLastError();
         return false;
     }

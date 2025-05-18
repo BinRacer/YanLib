@@ -114,6 +114,8 @@ add_library(YanLib STATIC
         src/sys/processor.h
         src/ui/window.cpp
         src/ui/window.h
+        src/ui/window_class.cpp
+        src/ui/window_class.h
         src/ui/message.cpp
         src/ui/message.h
         src/ui/dialog.cpp
@@ -140,6 +142,8 @@ add_library(YanLib STATIC
         src/ui/touch.h
         src/ui/accelerator.cpp
         src/ui/accelerator.h
+        src/ui/scroll.cpp
+        src/ui/scroll.h
         src/ui/gdi/bitmap.cpp
         src/ui/gdi/bitmap.h
         src/ui/gdi/display.cpp
@@ -180,8 +184,6 @@ add_library(YanLib STATIC
         src/ui/gdi/meta.h
         src/ui/gdi/paint.cpp
         src/ui/gdi/paint.h
-        src/ui/scroll.cpp
-        src/ui/scroll.h
 )
 
 target_include_directories(YanLib

@@ -97,7 +97,7 @@ public:
 
     bool is_pointer_enabled();
 
-    bool drag_track(HWND hwnd, POINT point);
+    bool drag_track(HWND window_handle, POINT point);
 
     uint32_t get_double_click_time();
 
@@ -105,7 +105,7 @@ public:
 
     HWND get_capture();
 
-    HWND set_capture(HWND hwnd);
+    HWND set_capture(HWND window_handle);
 
     bool release_capture();
 
@@ -121,10 +121,10 @@ public:
 
     bool swap_button(bool is_swap);
 
-    bool register_pointer(HWND hwnd,
+    bool register_pointer(HWND window_handle,
         PointerInputType       type = PointerInputType::Touch);
 
-    bool unregister_pointer(HWND hwnd,
+    bool unregister_pointer(HWND window_handle,
         PointerInputType         type = PointerInputType::Touch);
 
     bool get_last_input_info(LASTINPUTINFO *last_input_info);
@@ -188,7 +188,7 @@ public:
         std::vector<MOUSEMOVEPOINT> &point,
         uint32_t                     resolution);
 
-    bool register_pointer_device_notify(HWND hwnd, bool notify_range);
+    bool register_pointer_device_notify(HWND window_handle, bool notify_range);
 
     bool is_pointer_flag_set(WPARAM wparam, PointerFlag flag);
 

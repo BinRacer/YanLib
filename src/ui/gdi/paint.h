@@ -23,12 +23,14 @@ public:
 
     ~paint()                             = default;
 
-    static HDC begin_paint(HWND hwnd, PAINTSTRUCT *paint_struct);
+    static HDC begin_paint(HWND window_handle, PAINTSTRUCT *paint_struct);
 
-    static bool end_paint(HWND hwnd, const PAINTSTRUCT *paint_struct);
+    static bool end_paint(HWND window_handle, const PAINTSTRUCT *paint_struct);
 
-    static bool
-    draw_caption(HWND hwnd, HDC dc_handle, const RECT *rect, uint32_t flag);
+    static bool draw_caption(HWND window_handle,
+        HDC                       dc_handle,
+        const RECT               *rect,
+        uint32_t                  flag);
 
     static bool
     draw_edge(HDC dc_handle, RECT *rect, uint32_t edge, uint32_t flag);

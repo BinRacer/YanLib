@@ -369,10 +369,10 @@ bool proc::shell_exec(const char *file_name,
     const char                   *params,
     const char                   *dir,
     WindowFlag                    show_flag,
-    HWND                          hwnd,
+    HWND                          window_handle,
     const char                   *operation) {
-    HINSTANCE instance = ShellExecuteA(hwnd, operation, file_name, params, dir,
-        static_cast<int32_t>(show_flag));
+    HINSTANCE instance = ShellExecuteA(window_handle, operation, file_name,
+        params, dir, static_cast<int32_t>(show_flag));
     auto      ret      = reinterpret_cast<uintptr_t>(instance);
     ret                = ret & 0x00000000FFFFFFFF;
     if (ret <= 32 && ret > 0) {
@@ -390,10 +390,10 @@ bool proc::shell_exec(const wchar_t *file_name,
     const wchar_t                   *params,
     const wchar_t                   *dir,
     WindowFlag                       show_flag,
-    HWND                             hwnd,
+    HWND                             window_handle,
     const wchar_t                   *operation) {
-    HINSTANCE instance = ShellExecuteW(hwnd, operation, file_name, params, dir,
-        static_cast<int32_t>(show_flag));
+    HINSTANCE instance = ShellExecuteW(window_handle, operation, file_name,
+        params, dir, static_cast<int32_t>(show_flag));
     auto      ret      = reinterpret_cast<uintptr_t>(instance);
     ret                = ret & 0x00000000FFFFFFFF;
     if (ret <= 32 && ret > 0) {

@@ -10,9 +10,9 @@
 namespace YanLib::ui {
 class caret {
 private:
-    HWND          window_handle = nullptr;
-    volatile bool is_create     = false;
-    uint32_t      error_code    = 0;
+    HWND          _window_handle = nullptr;
+    volatile bool is_create      = false;
+    uint32_t      error_code     = 0;
 
 public:
     caret(const caret &other)            = delete;
@@ -27,7 +27,7 @@ public:
 
     ~caret();
 
-    explicit caret(HWND hwnd,
+    explicit caret(HWND window_handle,
         HBITMAP         bitmap_handle,
         int32_t         width,
         int32_t         height);

@@ -60,11 +60,12 @@ public:
     static bool
     union_rect(RECT *rect_dst, const RECT *rect_src1, const RECT *rect_src2);
 
-    static bool validate_rect(HWND hwnd, const RECT *rect);
+    static bool validate_rect(HWND window_handle, const RECT *rect);
 
-    static bool invalidate_rect(HWND hwnd, const RECT *rect, bool is_erase);
+    static bool
+    invalidate_rect(HWND window_handle, const RECT *rect, bool is_erase);
 
-    static bool draw_animated_rects(HWND hwnd,
+    static bool draw_animated_rects(HWND window_handle,
         int32_t                          animate_id,
         const RECT                      *rect_from,
         const RECT                      *rect_to);
@@ -76,10 +77,11 @@ public:
     static uint32_t
     set_bounds_rect(HDC dc_handle, const RECT *rect, uint32_t flag);
 
-    static bool get_update_rect(HWND hwnd, RECT *rect, bool is_erase);
+    static bool get_update_rect(HWND window_handle, RECT *rect, bool is_erase);
 
     // std::pair<result, error_code>
-    static std::pair<bool, uint32_t> get_client_rect(HWND hwnd, RECT *rect);
+    static std::pair<bool, uint32_t> get_client_rect(HWND window_handle,
+        RECT                                             *rect);
 };
 } // namespace YanLib::ui::gdi
 #endif // RECT_H

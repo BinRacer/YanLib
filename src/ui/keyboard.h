@@ -431,9 +431,12 @@ public:
         KeyboardLayout         layout = KeyboardLayout::Activate |
                                 KeyboardLayout::SubstituteOk);
 
-    bool register_hot_key(HWND hwnd, int32_t id, ModKey mod_key, VirtualKey vk);
+    bool register_hot_key(HWND window_handle,
+        int32_t                id,
+        ModKey                 mod_key,
+        VirtualKey             vk);
 
-    bool unregister_hot_key(HWND hwnd, int32_t id);
+    bool unregister_hot_key(HWND window_handle, int32_t id);
 
     HKL activate_layout(HKL layout_handle,
         KeyboardLayout      layout = KeyboardLayout::Activate |
@@ -501,7 +504,7 @@ public:
 
     HWND get_focus();
 
-    HWND set_focus(HWND hwnd);
+    HWND set_focus(HWND window_handle);
 
     int32_t to_ascii(VirtualKey vk,
         uint32_t                scan_code,

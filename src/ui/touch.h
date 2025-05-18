@@ -81,14 +81,15 @@ public:
     bool inject_synthetic_pointer_input(HSYNTHETICPOINTERDEVICE device_handle,
         const std::vector<POINTER_TYPE_INFO>                   &pointer_info);
 
-    bool register_hit_testing(HWND hwnd,
+    bool register_hit_testing(HWND window_handle,
         TouchHitTesting            flag = TouchHitTesting::Client);
 
-    bool register_window(HWND hwnd, RegisterFlag flag = RegisterFlag::WantPalm);
+    bool register_window(HWND window_handle,
+        RegisterFlag          flag = RegisterFlag::WantPalm);
 
-    bool unregister_window(HWND hwnd);
+    bool unregister_window(HWND window_handle);
 
-    bool what_flag(HWND hwnd, RegisterFlag *flag);
+    bool what_flag(HWND window_handle, RegisterFlag *flag);
 
     bool close_input_handle(HTOUCHINPUT touch_input_handle);
 

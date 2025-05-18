@@ -110,19 +110,19 @@ long display::change_display_settings(DEVMODEW *device_mode, uint32_t flag) {
 
 long display::change_display_settings(const char *device_name,
     DEVMODEA                                     *device_mode,
-    HWND                                          hwnd,
+    HWND                                          window_handle,
     uint32_t                                      flag,
     void                                         *lparam) {
     return ChangeDisplaySettingsExA(
-        device_name, device_mode, hwnd, flag, lparam);
+        device_name, device_mode, window_handle, flag, lparam);
 }
 
 long display::change_display_settings(const wchar_t *device_name,
     DEVMODEW                                        *device_mode,
-    HWND                                             hwnd,
+    HWND                                             window_handle,
     uint32_t                                         flag,
     void                                            *lparam) {
     return ChangeDisplaySettingsExW(
-        device_name, device_mode, hwnd, flag, lparam);
+        device_name, device_mode, window_handle, flag, lparam);
 }
 } // namespace YanLib::ui::gdi

@@ -26,8 +26,8 @@ bool mouse::is_pointer_enabled() {
     return IsMouseInPointerEnabled();
 }
 
-bool mouse::drag_track(HWND hwnd, POINT point) {
-    return DragDetect(hwnd, point);
+bool mouse::drag_track(HWND window_handle, POINT point) {
+    return DragDetect(window_handle, point);
 }
 
 uint32_t mouse::get_double_click_time() {
@@ -46,8 +46,8 @@ HWND mouse::get_capture() {
     return GetCapture();
 }
 
-HWND mouse::set_capture(HWND hwnd) {
-    return SetCapture(hwnd);
+HWND mouse::set_capture(HWND window_handle) {
+    return SetCapture(window_handle);
 }
 
 bool mouse::release_capture() {
@@ -86,18 +86,18 @@ bool mouse::swap_button(bool is_swap) {
     return SwapMouseButton(is_swap ? TRUE : FALSE);
 }
 
-bool mouse::register_pointer(HWND hwnd, PointerInputType type) {
+bool mouse::register_pointer(HWND window_handle, PointerInputType type) {
     if (!RegisterPointerInputTarget(
-            hwnd, static_cast<POINTER_INPUT_TYPE>(type))) {
+            window_handle, static_cast<POINTER_INPUT_TYPE>(type))) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool mouse::unregister_pointer(HWND hwnd, PointerInputType type) {
+bool mouse::unregister_pointer(HWND window_handle, PointerInputType type) {
     if (!UnregisterPointerInputTarget(
-            hwnd, static_cast<POINTER_INPUT_TYPE>(type))) {
+            window_handle, static_cast<POINTER_INPUT_TYPE>(type))) {
         error_code = GetLastError();
         return false;
     }
@@ -272,8 +272,9 @@ int32_t mouse::get_move_points(uint32_t cb_size,
     return result;
 }
 
-bool mouse::register_pointer_device_notify(HWND hwnd, bool notify_range) {
-    if (!RegisterPointerDeviceNotifications(hwnd, notify_range)) {
+bool mouse::register_pointer_device_notify(HWND window_handle,
+    bool                                        notify_range) {
+    if (!RegisterPointerDeviceNotifications(window_handle, notify_range)) {
         error_code = GetLastError();
         return false;
     }

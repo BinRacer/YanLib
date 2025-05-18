@@ -356,18 +356,18 @@ public:
         WindowFlag            show_flag = WindowFlag::ShowDefault);
 
     bool shell_exec(const char *file_name,
-        const char             *params    = nullptr,
-        const char             *dir       = nullptr,
-        WindowFlag              show_flag = WindowFlag::ShowDefault,
-        HWND                    hwnd      = nullptr,
-        const char             *operation = nullptr);
+        const char             *params        = nullptr,
+        const char             *dir           = nullptr,
+        WindowFlag              show_flag     = WindowFlag::ShowDefault,
+        HWND                    window_handle = nullptr,
+        const char             *operation     = nullptr);
 
     bool shell_exec(const wchar_t *file_name,
-        const wchar_t             *params    = nullptr,
-        const wchar_t             *dir       = nullptr,
-        WindowFlag                 show_flag = WindowFlag::ShowDefault,
-        HWND                       hwnd      = nullptr,
-        const wchar_t             *operation = nullptr);
+        const wchar_t             *params        = nullptr,
+        const wchar_t             *dir           = nullptr,
+        WindowFlag                 show_flag     = WindowFlag::ShowDefault,
+        HWND                       window_handle = nullptr,
+        const wchar_t             *operation     = nullptr);
 
     bool runas_elevated(const char *app_name, const char *cmdline = nullptr);
 

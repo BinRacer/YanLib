@@ -59,16 +59,17 @@ bool accelerator::destroy_table(HACCEL accel_handle) {
     return DestroyAcceleratorTable(accel_handle);
 }
 
-int32_t accelerator::translate(HWND hwnd, HACCEL accel_handle, MSG *msg) {
-    int32_t result = TranslateAcceleratorW(hwnd, accel_handle, msg);
+int32_t
+accelerator::translate(HWND window_handle, HACCEL accel_handle, MSG *msg) {
+    int32_t result = TranslateAcceleratorW(window_handle, accel_handle, msg);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-bool accelerator::translate_mdi_sys(HWND hwnd_client, MSG *msg) {
-    return TranslateMDISysAccel(hwnd_client, msg);
+bool accelerator::translate_mdi_sys(HWND client_window_handle, MSG *msg) {
+    return TranslateMDISysAccel(client_window_handle, msg);
 }
 
 int32_t accelerator::copy_table(HACCEL accel_handle_src,

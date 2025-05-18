@@ -44,11 +44,12 @@ public:
         const wchar_t                  *port,
         const DEVMODEW                 *device_mode);
 
-    static HDC get_dc(HWND hwnd);
+    static HDC get_dc(HWND window_handle);
 
-    static HDC get_dc(HWND hwnd, HRGN region_clip_handle, uint32_t flag);
+    static HDC
+    get_dc(HWND window_handle, HRGN region_clip_handle, uint32_t flag);
 
-    static int32_t release_dc(HWND hwnd, HDC dc_handle);
+    static int32_t release_dc(HWND window_handle, HDC dc_handle);
 
     static bool delete_dc(HDC dc_handle);
 
@@ -66,7 +67,7 @@ public:
 
     static uint32_t set_layout(HDC dc_handle, uint32_t value);
 
-    static HDC get_window_dc(HWND hwnd);
+    static HDC get_window_dc(HWND window_handle);
 
     static HWND window_from_dc(HDC dc_handle);
 

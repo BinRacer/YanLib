@@ -9,7 +9,7 @@ HWND window::create(const char *class_name,
     const char                 *window_name,
     HINSTANCE                   instance_handle,
     void                       *param,
-    HWND                        hwnd_parent,
+    HWND                        parent_window_handle,
     HMENU                       menu_handle,
     int32_t                     x,
     int32_t                     y,
@@ -17,20 +17,20 @@ HWND window::create(const char *class_name,
     int32_t                     height,
     uint32_t                    style,
     uint32_t                    ext_style) {
-    HWND hwnd_handle =
+    HWND result =
         CreateWindowExA(ext_style, class_name, window_name, style, x, y, width,
-            height, hwnd_parent, menu_handle, instance_handle, param);
-    if (!hwnd_handle) {
+            height, parent_window_handle, menu_handle, instance_handle, param);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd_handle;
+    return result;
 }
 
 HWND window::create(const wchar_t *class_name,
     const wchar_t                 *window_name,
     HINSTANCE                      instance_handle,
     void                          *param,
-    HWND                           hwnd_parent,
+    HWND                           parent_window_handle,
     HMENU                          menu_handle,
     int32_t                        x,
     int32_t                        y,
@@ -38,301 +38,113 @@ HWND window::create(const wchar_t *class_name,
     int32_t                        height,
     uint32_t                       style,
     uint32_t                       ext_style) {
-    HWND hwnd_handle =
+    HWND result =
         CreateWindowExW(ext_style, class_name, window_name, style, x, y, width,
-            height, hwnd_parent, menu_handle, instance_handle, param);
-    if (!hwnd_handle) {
+            height, parent_window_handle, menu_handle, instance_handle, param);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd_handle;
+    return result;
 }
 
 HWND window::create_mdi(const char *class_name,
     const char                     *window_name,
     HINSTANCE                       instance_handle,
     LPARAM                          lparam,
-    HWND                            hwnd_parent,
+    HWND                            parent_window_handle,
     int32_t                         x,
     int32_t                         y,
     int32_t                         width,
     int32_t                         height,
     uint32_t                        style) {
-    HWND hwnd_handle = CreateMDIWindowA(class_name, window_name, style, x, y,
-        width, height, hwnd_parent, instance_handle, lparam);
-    if (!hwnd_handle) {
+    HWND result = CreateMDIWindowA(class_name, window_name, style, x, y, width,
+        height, parent_window_handle, instance_handle, lparam);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd_handle;
+    return result;
 }
 
 HWND window::create_mdi(const wchar_t *class_name,
     const wchar_t                     *window_name,
     HINSTANCE                          instance_handle,
     LPARAM                             lparam,
-    HWND                               hwnd_parent,
+    HWND                               parent_window_handle,
     int32_t                            x,
     int32_t                            y,
     int32_t                            width,
     int32_t                            height,
     uint32_t                           style) {
-    HWND hwnd_handle = CreateMDIWindowW(class_name, window_name, style, x, y,
-        width, height, hwnd_parent, instance_handle, lparam);
-    if (!hwnd_handle) {
-        error_code = GetLastError();
-    }
-    return hwnd_handle;
-}
-
-WNDCLASSEXA window::make_class(const char *class_name,
-    WNDPROC                                window_proc,
-    HINSTANCE                              instance_handle,
-    uint32_t                               style,
-    const char                            *menu_name,
-    int32_t                                class_extra_size,
-    int32_t                                window_extra_size,
-    HICON                                  icon_handle,
-    HCURSOR                                cursor_handle,
-    HBRUSH                                 brush_background_handle,
-    HICON                                  icon_small_handle) {
-    WNDCLASSEXA wnd_class   = {};
-    wnd_class.cbSize        = sizeof(WNDCLASSEXA);
-    wnd_class.style         = style;
-    wnd_class.lpfnWndProc   = window_proc;
-    wnd_class.cbClsExtra    = class_extra_size;
-    wnd_class.cbWndExtra    = window_extra_size;
-    wnd_class.hInstance     = instance_handle;
-    wnd_class.hIcon         = icon_handle;
-    wnd_class.hCursor       = cursor_handle;
-    wnd_class.hbrBackground = brush_background_handle;
-    wnd_class.lpszMenuName  = menu_name;
-    wnd_class.lpszClassName = class_name;
-    wnd_class.hIconSm       = icon_small_handle;
-    return wnd_class;
-}
-
-WNDCLASSEXW window::make_class(const wchar_t *class_name,
-    WNDPROC                                   window_proc,
-    HINSTANCE                                 instance_handle,
-    uint32_t                                  style,
-    const wchar_t                            *menu_name,
-    int32_t                                   class_extra_size,
-    int32_t                                   window_extra_size,
-    HICON                                     icon_handle,
-    HCURSOR                                   cursor_handle,
-    HBRUSH                                    brush_background_handle,
-    HICON                                     icon_small_handle) {
-    WNDCLASSEXW wnd_class   = {};
-    wnd_class.cbSize        = sizeof(WNDCLASSEXW);
-    wnd_class.style         = style;
-    wnd_class.lpfnWndProc   = window_proc;
-    wnd_class.cbClsExtra    = class_extra_size;
-    wnd_class.cbWndExtra    = window_extra_size;
-    wnd_class.hInstance     = instance_handle;
-    wnd_class.hIcon         = icon_handle;
-    wnd_class.hCursor       = cursor_handle;
-    wnd_class.hbrBackground = brush_background_handle;
-    wnd_class.lpszMenuName  = menu_name;
-    wnd_class.lpszClassName = class_name;
-    wnd_class.hIconSm       = icon_small_handle;
-    return wnd_class;
-}
-
-ATOM window::register_class(const WNDCLASSEXA *window_class) {
-    ATOM result = RegisterClassExA(window_class);
+    HWND result = CreateMDIWindowW(class_name, window_name, style, x, y, width,
+        height, parent_window_handle, instance_handle, lparam);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-ATOM window::register_class(const WNDCLASSEXW *window_class) {
-    ATOM result = RegisterClassExW(window_class);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
+int32_t window::enum_props(HWND window_handle, PROPENUMPROCA enum_func) {
+    return EnumPropsA(window_handle, enum_func);
 }
 
-bool window::unregister_class(const char *class_name,
-    HINSTANCE                             instance_handle) {
-    if (!UnregisterClassA(class_name, instance_handle)) {
+int32_t window::enum_props(HWND window_handle, PROPENUMPROCW enum_func) {
+    return EnumPropsW(window_handle, enum_func);
+}
+
+int32_t window::enum_props(HWND window_handle,
+    PROPENUMPROCEXA             enum_func,
+    LPARAM                      lparam) {
+    return EnumPropsExA(window_handle, enum_func, lparam);
+}
+
+int32_t window::enum_props(HWND window_handle,
+    PROPENUMPROCEXW             enum_func,
+    LPARAM                      lparam) {
+    return EnumPropsExW(window_handle, enum_func, lparam);
+}
+
+HANDLE window::get_prop(HWND window_handle, const char *text) {
+    return GetPropA(window_handle, text);
+}
+
+HANDLE window::get_prop(HWND window_handle, const wchar_t *text) {
+    return GetPropW(window_handle, text);
+}
+
+bool window::set_prop(HWND window_handle,
+    const char            *text,
+    HANDLE                 data_handle) {
+    if (!SetPropA(window_handle, text, data_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::unregister_class(const wchar_t *class_name,
-    HINSTANCE                                instance_handle) {
-    if (!UnregisterClassW(class_name, instance_handle)) {
+bool window::set_prop(HWND window_handle,
+    const wchar_t         *text,
+    HANDLE                 data_handle) {
+    if (!SetPropW(window_handle, text, data_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::get_class_info(HINSTANCE instance_handle,
-    const char                       *class_name,
-    WNDCLASSA                        *wnd_class) {
-    if (!GetClassInfoA(instance_handle, class_name, wnd_class)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
+HANDLE window::remove_prop(HWND window_handle, const char *text) {
+    return RemovePropA(window_handle, text);
 }
 
-bool window::get_class_info(HINSTANCE instance_handle,
-    const wchar_t                    *class_name,
-    WNDCLASSW                        *wnd_class) {
-    if (!GetClassInfoW(instance_handle, class_name, wnd_class)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
+HANDLE window::remove_prop(HWND window_handle, const wchar_t *text) {
+    return RemovePropW(window_handle, text);
 }
 
-bool window::get_class_info(HINSTANCE instance_handle,
-    const char                       *class_name,
-    WNDCLASSEXA                      *wnd_class) {
-    if (!GetClassInfoExA(instance_handle, class_name, wnd_class)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
+bool window::register_shell_hook(HWND window_handle) {
+    return RegisterShellHookWindow(window_handle);
 }
 
-bool window::get_class_info(HINSTANCE instance_handle,
-    const wchar_t                    *class_name,
-    WNDCLASSEXW                      *wnd_class) {
-    if (!GetClassInfoExW(instance_handle, class_name, wnd_class)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-uint32_t window::get_class_long(HWND hwnd, int32_t index) {
-    uint32_t result = GetClassLongW(hwnd, index);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-uint32_t window::set_class_long(HWND hwnd, int32_t index, long value) {
-    uint32_t result = SetClassLongW(hwnd, index, value);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-ULONG_PTR window::get_class_long_ptr(HWND hwnd, int32_t index) {
-    ULONG_PTR result = GetClassLongPtrW(hwnd, index);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-ULONG_PTR window::set_class_long_ptr(HWND hwnd, int32_t index, LONG_PTR value) {
-    ULONG_PTR result = SetClassLongPtrW(hwnd, index, value);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-uint16_t window::get_class_word(HWND hwnd, int32_t index) {
-    uint16_t result = GetClassWord(hwnd, index);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-uint16_t window::set_class_word(HWND hwnd, int32_t index, uint16_t value) {
-    uint16_t result = SetClassWord(hwnd, index, value);
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-int32_t window::get_class_name(HWND hwnd, std::string &class_name) {
-    int32_t result = GetClassNameA(
-        hwnd, class_name.data(), static_cast<int>(class_name.size()));
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-int32_t window::get_class_name(HWND hwnd, std::wstring &class_name) {
-    int32_t result = GetClassNameW(
-        hwnd, class_name.data(), static_cast<int>(class_name.size()));
-    if (!result) {
-        error_code = GetLastError();
-    }
-    return result;
-}
-
-int32_t window::enum_props(HWND hwnd, PROPENUMPROCA enum_func) {
-    return EnumPropsA(hwnd, enum_func);
-}
-
-int32_t window::enum_props(HWND hwnd, PROPENUMPROCW enum_func) {
-    return EnumPropsW(hwnd, enum_func);
-}
-
-int32_t
-window::enum_props(HWND hwnd, PROPENUMPROCEXA enum_func, LPARAM lparam) {
-    return EnumPropsExA(hwnd, enum_func, lparam);
-}
-
-int32_t
-window::enum_props(HWND hwnd, PROPENUMPROCEXW enum_func, LPARAM lparam) {
-    return EnumPropsExW(hwnd, enum_func, lparam);
-}
-
-HANDLE window::get_prop(HWND hwnd, const char *text) {
-    return GetPropA(hwnd, text);
-}
-
-HANDLE window::get_prop(HWND hwnd, const wchar_t *text) {
-    return GetPropW(hwnd, text);
-}
-
-bool window::set_prop(HWND hwnd, const char *text, HANDLE data_handle) {
-    if (!SetPropA(hwnd, text, data_handle)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-bool window::set_prop(HWND hwnd, const wchar_t *text, HANDLE data_handle) {
-    if (!SetPropW(hwnd, text, data_handle)) {
-        error_code = GetLastError();
-        return false;
-    }
-    return true;
-}
-
-HANDLE window::remove_prop(HWND hwnd, const char *text) {
-    return RemovePropA(hwnd, text);
-}
-
-HANDLE window::remove_prop(HWND hwnd, const wchar_t *text) {
-    return RemovePropW(hwnd, text);
-}
-
-bool window::register_shell_hook(HWND hwnd) {
-    return RegisterShellHookWindow(hwnd);
-}
-
-bool window::unregister_shell_hook(HWND hwnd) {
-    return DeregisterShellHookWindow(hwnd);
+bool window::unregister_shell_hook(HWND window_handle) {
+    return DeregisterShellHookWindow(window_handle);
 }
 
 HHOOK window::set_windows_hook(int32_t id_hook,
@@ -379,25 +191,25 @@ bool window::is_event_hook_installed(uint32_t event) {
 }
 
 void window::notify_event(uint32_t event,
-    HWND                           hwnd,
+    HWND                           window_handle,
     int32_t                        object_id,
     int32_t                        child_id) {
-    NotifyWinEvent(event, hwnd, object_id, child_id);
+    NotifyWinEvent(event, window_handle, object_id, child_id);
 }
 
-bool window::show(HWND hwnd, int32_t cmd_show) const {
-    return ShowWindow(hwnd, cmd_show);
+bool window::show(HWND window_handle, int32_t cmd_show) const {
+    return ShowWindow(window_handle, cmd_show);
 }
 
-bool window::show_async(HWND hwnd, int32_t cmd_show) const {
-    return ShowWindowAsync(hwnd, cmd_show);
+bool window::show_async(HWND window_handle, int32_t cmd_show) const {
+    return ShowWindowAsync(window_handle, cmd_show);
 }
 
-bool window::update(HWND hwnd) const {
-    return UpdateWindow(hwnd);
+bool window::update(HWND window_handle) const {
+    return UpdateWindow(window_handle);
 }
 
-bool window::update_layered(HWND hwnd,
+bool window::update_layered(HWND window_handle,
     HDC                          hdc_dst,
     POINT                       *coordinate_dst,
     SIZE                        *size,
@@ -406,40 +218,40 @@ bool window::update_layered(HWND hwnd,
     COLORREF                     color_ref,
     BLENDFUNCTION               *blend_fn,
     uint32_t                     flag) {
-    if (!UpdateLayeredWindow(hwnd, hdc_dst, coordinate_dst, size, hdc_src,
-            coordinate_src, color_ref, blend_fn, flag)) {
+    if (!UpdateLayeredWindow(window_handle, hdc_dst, coordinate_dst, size,
+            hdc_src, coordinate_src, color_ref, blend_fn, flag)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::lock_update(HWND hwnd) {
-    return LockWindowUpdate(hwnd);
+bool window::lock_update(HWND window_handle) {
+    return LockWindowUpdate(window_handle);
 }
 
 bool window::unlock_update() {
     return LockWindowUpdate(nullptr);
 }
 
-bool window::animate(HWND hwnd, uint32_t time, uint32_t flag) {
-    if (!AnimateWindow(hwnd, time, flag)) {
+bool window::animate(HWND window_handle, uint32_t time, uint32_t flag) {
+    if (!AnimateWindow(window_handle, time, flag)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::close(HWND hwnd) {
-    if (!CloseWindow(hwnd)) {
+bool window::close(HWND window_handle) {
+    if (!CloseWindow(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::close(HWND hwnd, bool is_force) {
-    if (!EndTask(hwnd, FALSE, is_force ? TRUE : FALSE)) {
+bool window::close(HWND window_handle, bool is_force) {
+    if (!EndTask(window_handle, FALSE, is_force ? TRUE : FALSE)) {
         error_code = GetLastError();
         return false;
     }
@@ -454,16 +266,16 @@ bool window::exit(uint32_t flag, uint32_t reason) {
     return true;
 }
 
-bool window::destroy(HWND hwnd) {
-    if (!DestroyWindow(hwnd)) {
+bool window::destroy(HWND window_handle) {
+    if (!DestroyWindow(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::enable(HWND hwnd, bool enable) {
-    return EnableWindow(hwnd, enable ? TRUE : FALSE);
+bool window::enable(HWND window_handle, bool enable) {
+    return EnableWindow(window_handle, enable ? TRUE : FALSE);
 }
 
 bool window::enum_windows(WNDENUMPROC enum_func, LPARAM lparam) {
@@ -474,10 +286,10 @@ bool window::enum_windows(WNDENUMPROC enum_func, LPARAM lparam) {
     return true;
 }
 
-bool window::enum_child_windows(HWND hwnd_parent,
+bool window::enum_child_windows(HWND parent_window_handle,
     WNDENUMPROC                      enum_func,
     LPARAM                           lparam) {
-    return EnumChildWindows(hwnd_parent, enum_func, lparam);
+    return EnumChildWindows(parent_window_handle, enum_func, lparam);
 }
 
 bool window::enum_windows(uint32_t tid, WNDENUMPROC fn, LPARAM lparam) {
@@ -492,147 +304,146 @@ HWND window::find(const wchar_t *class_name, const wchar_t *window_name) {
     return FindWindowW(class_name, window_name);
 }
 
-HWND window::find(HWND hwnd_parent,
-    HWND               hwnd_child_after,
+HWND window::find(HWND parent_window_handle,
     const char        *class_name,
     const char        *window_name) {
-    HWND hwnd =
-        FindWindowExA(hwnd_parent, hwnd_child_after, class_name, window_name);
-    if (!hwnd) {
+    HWND result =
+        FindWindowExA(parent_window_handle, nullptr, class_name, window_name);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd;
+    return result;
 }
 
-HWND window::find(HWND hwnd_parent,
-    HWND               hwnd_child_after,
+HWND window::find(HWND parent_window_handle,
     const wchar_t     *class_name,
     const wchar_t     *window_name) {
-    HWND hwnd =
-        FindWindowExW(hwnd_parent, hwnd_child_after, class_name, window_name);
-    if (!hwnd) {
+    HWND result =
+        FindWindowExW(parent_window_handle, nullptr, class_name, window_name);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd;
+    return result;
 }
 
-bool window::flash(HWND hwnd, bool invert) {
-    return FlashWindow(hwnd, invert ? TRUE : FALSE);
+bool window::flash(HWND window_handle, bool invert) {
+    return FlashWindow(window_handle, invert ? TRUE : FALSE);
 }
 
 bool window::flash(FLASHWINFO *flash_info) {
     return FlashWindowEx(flash_info);
 }
 
-bool window::move(HWND hwnd,
+bool window::move(HWND window_handle,
     int32_t            x,
     int32_t            y,
     int32_t            width,
     int32_t            height,
     bool               is_repaint) {
-    if (!MoveWindow(hwnd, x, y, width, height, is_repaint ? TRUE : FALSE)) {
+    if (!MoveWindow(
+            window_handle, x, y, width, height, is_repaint ? TRUE : FALSE)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::print(HWND hwnd, HDC dc_handle, uint32_t flag) {
-    return PrintWindow(hwnd, dc_handle, flag);
+bool window::print(HWND window_handle, HDC dc_handle, uint32_t flag) {
+    return PrintWindow(window_handle, dc_handle, flag);
 }
 
-bool window::redraw(HWND hwnd,
+bool window::redraw(HWND window_handle,
     const RECT          *rect,
     HRGN                 region_handle,
     uint32_t             flag) {
-    return RedrawWindow(hwnd, rect, region_handle, flag);
+    return RedrawWindow(window_handle, rect, region_handle, flag);
 }
 
-bool window::maximize(HWND hwnd) {
-    return ShowWindow(hwnd, SW_MAXIMIZE);
+bool window::maximize(HWND window_handle) {
+    return ShowWindow(window_handle, SW_MAXIMIZE);
 }
 
-bool window::minimize(HWND hwnd) {
-    return ShowWindow(hwnd, SW_MINIMIZE);
+bool window::minimize(HWND window_handle) {
+    return ShowWindow(window_handle, SW_MINIMIZE);
 }
 
-bool window::hide(HWND hwnd) {
-    return ShowWindow(hwnd, SW_HIDE);
+bool window::hide(HWND window_handle) {
+    return ShowWindow(window_handle, SW_HIDE);
 }
 
-bool window::restore(HWND hwnd) {
-    return ShowWindow(hwnd, SW_RESTORE);
+bool window::restore(HWND window_handle) {
+    return ShowWindow(window_handle, SW_RESTORE);
 }
 
-bool window::restore_minimize(HWND hwnd) {
-    if (!OpenIcon(hwnd)) {
+bool window::restore_minimize(HWND window_handle) {
+    if (!OpenIcon(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-uint16_t window::tile(HWND   hwnd_parent,
+uint16_t window::tile(HWND   parent_window_handle,
     uint32_t                 how,
     const RECT              *rect,
     const std::vector<HWND> &child) {
-    uint16_t result =
-        TileWindows(hwnd_parent, how, rect, child.size(), child.data());
+    uint16_t result = TileWindows(
+        parent_window_handle, how, rect, child.size(), child.data());
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-HWND window::get_parent(HWND hwnd) {
-    HWND result = GetParent(hwnd);
+HWND window::get_parent(HWND window_handle) {
+    HWND result = GetParent(window_handle);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-HWND window::set_parent(HWND hwnd_child, HWND hwnd_new_parent) {
-    HWND result = SetParent(hwnd_child, hwnd_new_parent);
+HWND window::set_parent(HWND windows_handle, HWND parent_window_handle) {
+    HWND result = SetParent(windows_handle, parent_window_handle);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-HWND window::get_ancestor(HWND hwnd, uint32_t flag) {
-    return GetAncestor(hwnd, flag);
+HWND window::get_ancestor(HWND window_handle, uint32_t flag) {
+    return GetAncestor(window_handle, flag);
 }
 
-bool window::show_popup(HWND hwnd) {
-    if (!ShowOwnedPopups(hwnd, TRUE)) {
+bool window::show_popup(HWND window_handle) {
+    if (!ShowOwnedPopups(window_handle, TRUE)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::hide_popup(HWND hwnd) {
-    if (!ShowOwnedPopups(hwnd, FALSE)) {
+bool window::hide_popup(HWND window_handle) {
+    if (!ShowOwnedPopups(window_handle, FALSE)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-HWND window::get_last_active_popup(HWND hwnd) {
-    return GetLastActivePopup(hwnd);
+HWND window::get_last_active_popup(HWND window_handle) {
+    return GetLastActivePopup(window_handle);
 }
 
-bool window::is_pending(HWND hwnd) {
-    return IsHungAppWindow(hwnd);
+bool window::is_pending(HWND window_handle) {
+    return IsHungAppWindow(window_handle);
 }
 
-bool window::is_window(HWND hwnd) {
-    return IsWindow(hwnd);
+bool window::is_window(HWND window_handle) {
+    return IsWindow(window_handle);
 }
 
-bool window::is_arranged(HWND hwnd) {
+bool window::is_arranged(HWND window_handle) {
     bool    is_ok   = false;
     HMODULE hmodule = nullptr;
     do {
@@ -648,7 +459,7 @@ bool window::is_arranged(HWND hwnd) {
             error_code = GetLastError();
             break;
         }
-        if (!IsWindowArranged(hwnd)) {
+        if (!IsWindowArranged(window_handle)) {
             error_code = GetLastError();
             is_ok      = true;
             break;
@@ -660,36 +471,36 @@ bool window::is_arranged(HWND hwnd) {
     return is_ok;
 }
 
-bool window::is_enabled(HWND hwnd) {
-    return IsWindowEnabled(hwnd);
+bool window::is_enabled(HWND window_handle) {
+    return IsWindowEnabled(window_handle);
 }
 
-bool window::is_unicode(HWND hwnd) {
-    return IsWindowUnicode(hwnd);
+bool window::is_unicode(HWND window_handle) {
+    return IsWindowUnicode(window_handle);
 }
 
-bool window::is_visible(HWND hwnd) {
-    return IsWindowVisible(hwnd);
+bool window::is_visible(HWND window_handle) {
+    return IsWindowVisible(window_handle);
 }
 
-bool window::is_minimize(HWND hwnd) {
-    return IsIconic(hwnd);
+bool window::is_minimize(HWND window_handle) {
+    return IsIconic(window_handle);
 }
 
-bool window::is_maximize(HWND hwnd) {
-    return IsZoomed(hwnd);
+bool window::is_maximize(HWND window_handle) {
+    return IsZoomed(window_handle);
 }
 
-bool window::is_child(HWND hwnd_parent, HWND hwnd) {
-    return IsChild(hwnd_parent, hwnd);
+bool window::is_child(HWND parent_window_handle, HWND window_handle) {
+    return IsChild(parent_window_handle, window_handle);
 }
 
 bool window::is_popup_exist() {
     return AnyPopup();
 }
 
-uint32_t window::arrange_minimize(HWND hwnd) {
-    uint32_t height = ArrangeIconicWindows(hwnd);
+uint32_t window::arrange_minimize(HWND window_handle) {
+    uint32_t height = ArrangeIconicWindows(window_handle);
     if (!height) {
         error_code = GetLastError();
     }
@@ -722,19 +533,19 @@ HDWP window::prepare(int32_t num_windows) {
 }
 
 HDWP window::add(HDWP hwin_pos_info,
-    HWND              hwnd,
-    HWND              hwnd_insert_after,
+    HWND              window_handle,
+    HWND              insert_after_window_handle,
     int32_t           x,
     int32_t           y,
     int32_t           cx,
     int32_t           cy,
     uint32_t          flag) {
-    HDWP hdwp = DeferWindowPos(
-        hwin_pos_info, hwnd, hwnd_insert_after, x, y, cx, cy, flag);
-    if (!hdwp) {
+    HDWP result = DeferWindowPos(hwin_pos_info, window_handle,
+        insert_after_window_handle, x, y, cx, cy, flag);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hdwp;
+    return result;
 }
 
 bool window::apply(HDWP hwin_pos_info) {
@@ -745,14 +556,15 @@ bool window::apply(HDWP hwin_pos_info) {
     return true;
 }
 
-bool window::set_pos(HWND hwnd,
-    HWND                  hwnd_insert_after,
+bool window::set_pos(HWND window_handle,
+    HWND                  insert_after_window_handle,
     int32_t               x,
     int32_t               y,
     int32_t               cx,
     int32_t               cy,
     uint32_t              flag) {
-    if (!SetWindowPos(hwnd, hwnd_insert_after, x, y, cx, cy, flag)) {
+    if (!SetWindowPos(
+            window_handle, insert_after_window_handle, x, y, cx, cy, flag)) {
         error_code = GetLastError();
         return false;
     }
@@ -772,16 +584,18 @@ bool window::calc_popup_pos(const POINT *anchor_coordinate,
     return true;
 }
 
-HWND window::find_top_child(HWND hwnd_parent, POINT coordinate) {
-    return ChildWindowFromPoint(hwnd_parent, coordinate);
+HWND window::find_top_child(HWND parent_window_handle, POINT coordinate) {
+    return ChildWindowFromPoint(parent_window_handle, coordinate);
 }
 
-HWND window::find_top_child(HWND hwnd_parent, POINT coordinate, uint32_t flag) {
-    return ChildWindowFromPointEx(hwnd_parent, coordinate, flag);
+HWND window::find_top_child(HWND parent_window_handle,
+    POINT                        coordinate,
+    uint32_t                     flag) {
+    return ChildWindowFromPointEx(parent_window_handle, coordinate, flag);
 }
 
-HWND window::find_real_child(HWND hwnd_parent, POINT coordinate) {
-    return RealChildWindowFromPoint(hwnd_parent, coordinate);
+HWND window::find_real_child(HWND parent_window_handle, POINT coordinate) {
+    return RealChildWindowFromPoint(parent_window_handle, coordinate);
 }
 
 HWND window::find_by_physical_point(POINT coordinate) {
@@ -792,17 +606,17 @@ HWND window::find_by_logical_point(POINT coordinate) {
     return WindowFromPoint(coordinate);
 }
 
-int32_t window::transform_coordinate(HWND hwnd_from,
-    HWND                                  hwnd_to,
+int32_t window::transform_coordinate(HWND from_window_handle,
+    HWND                                  to_window_handle,
     std::vector<POINT>                   &coordinates) {
-    int32_t result = MapWindowPoints(
-        hwnd_from, hwnd_to, coordinates.data(), coordinates.size());
-    error_code = GetLastError();
+    int32_t result = MapWindowPoints(from_window_handle, to_window_handle,
+        coordinates.data(), coordinates.size());
+    error_code     = GetLastError();
     return result;
 }
 
-bool window::adjust_to_top(HWND hwnd) {
-    if (!BringWindowToTop(hwnd)) {
+bool window::adjust_to_top(HWND window_handle) {
+    if (!BringWindowToTop(window_handle)) {
         error_code = GetLastError();
         return false;
     }
@@ -810,39 +624,43 @@ bool window::adjust_to_top(HWND hwnd) {
 }
 
 LRESULT window::call_proc(WNDPROC prev_wnd_func,
-    HWND                          hwnd,
+    HWND                          window_handle,
     uint32_t                      msg,
     WPARAM                        wparam,
     LPARAM                        lparam) {
-    return CallWindowProcW(prev_wnd_func, hwnd, msg, wparam, lparam);
+    return CallWindowProcW(prev_wnd_func, window_handle, msg, wparam, lparam);
 }
 
 LRESULT
-window::default_proc(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam) {
-    return DefWindowProcW(hwnd, msg, wparam, lparam);
+window::default_proc(HWND window_handle,
+    uint32_t              msg,
+    WPARAM                wparam,
+    LPARAM                lparam) {
+    return DefWindowProcW(window_handle, msg, wparam, lparam);
 }
 
-LRESULT window::default_mdi_proc(HWND hwnd,
-    HWND                              hwnd_mdi_client,
+LRESULT window::default_mdi_proc(HWND window_handle,
+    HWND                              client_mdi_window_handle,
     uint32_t                          msg,
     WPARAM                            wparam,
     LPARAM                            lparam) {
-    return DefFrameProcW(hwnd, hwnd_mdi_client, msg, wparam, lparam);
+    return DefFrameProcW(
+        window_handle, client_mdi_window_handle, msg, wparam, lparam);
 }
 
-LRESULT window::default_mdi_child_proc(HWND hwnd,
+LRESULT window::default_mdi_child_proc(HWND window_handle,
     uint32_t                                msg,
     WPARAM                                  wparam,
     LPARAM                                  lparam) {
-    return DefMDIChildProcW(hwnd, msg, wparam, lparam);
+    return DefMDIChildProcW(window_handle, msg, wparam, lparam);
 }
 
-uint16_t window::cascade(HWND hwnd_parent,
+uint16_t window::cascade(HWND parent_window_handle,
     uint32_t                  how,
     const RECT               *rect,
     std::vector<HWND>        &child) {
-    uint16_t count =
-        CascadeWindows(hwnd_parent, how, rect, child.size(), child.data());
+    uint16_t count = CascadeWindows(
+        parent_window_handle, how, rect, child.size(), child.data());
     if (!count) {
         error_code = GetLastError();
     }
@@ -857,24 +675,24 @@ HWND window::get_active() {
     return GetActiveWindow();
 }
 
-HWND window::set_active(HWND hwnd) {
-    HWND hwnd_handle = SetActiveWindow(hwnd);
-    if (!hwnd_handle) {
+HWND window::set_active(HWND window_handle) {
+    HWND result = SetActiveWindow(window_handle);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd_handle;
+    return result;
 }
 
-uint32_t window::get_dpi(HWND hwnd) {
-    return GetDpiForWindow(hwnd);
+uint32_t window::get_dpi(HWND window_handle) {
+    return GetDpiForWindow(window_handle);
 }
 
 HWND window::get_foreground() {
     return GetForegroundWindow();
 }
 
-bool window::set_foreground(HWND hwnd) {
-    return SetForegroundWindow(hwnd);
+bool window::set_foreground(HWND window_handle) {
+    return SetForegroundWindow(window_handle);
 }
 
 bool window::allow_set_foreground(uint32_t pid) {
@@ -893,171 +711,179 @@ bool window::unlock_set_foreground() {
     return LockSetForegroundWindow(LSFW_UNLOCK);
 }
 
-bool window::get_layered_attrs(HWND hwnd,
+bool window::get_layered_attrs(HWND window_handle,
     COLORREF                       *color_ref,
     uint8_t                        *alpha,
     uint32_t                       *flag) {
-    if (!GetLayeredWindowAttributes(
-            hwnd, color_ref, alpha, reinterpret_cast<unsigned long *>(flag))) {
+    if (!GetLayeredWindowAttributes(window_handle, color_ref, alpha,
+            reinterpret_cast<unsigned long *>(flag))) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::set_layered_attrs(HWND hwnd,
+bool window::set_layered_attrs(HWND window_handle,
     COLORREF                        color_ref,
     uint8_t                         alpha,
     uint32_t                        flag) {
-    if (!SetLayeredWindowAttributes(hwnd, color_ref, alpha, flag)) {
+    if (!SetLayeredWindowAttributes(window_handle, color_ref, alpha, flag)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-HWND window::find(HWND hwnd, uint32_t cmd) {
-    HWND hwnd_handle = GetWindow(hwnd, cmd);
-    if (!hwnd_handle) {
+HWND window::find(HWND window_handle, uint32_t cmd) {
+    HWND result = GetWindow(window_handle, cmd);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd_handle;
+    return result;
 }
 
-HWND window::find_next(HWND hwnd, uint32_t cmd) {
-    return GetNextWindow(hwnd, cmd);
+HWND window::find_next(HWND window_handle, uint32_t cmd) {
+    return GetNextWindow(window_handle, cmd);
 }
 
 HWND window::find_shell() {
     return GetShellWindow();
 }
 
-HWND window::find_top(HWND hwnd) {
-    HWND hwnd_handle = GetTopWindow(hwnd);
-    if (!hwnd_handle) {
+HWND window::find_top(HWND window_handle) {
+    HWND result = GetTopWindow(window_handle);
+    if (!result) {
         error_code = GetLastError();
     }
-    return hwnd_handle;
+    return result;
 }
 
-uint32_t window::get_context_help_id(HWND hwnd) {
-    return GetWindowContextHelpId(hwnd);
+uint32_t window::get_context_help_id(HWND window_handle) {
+    return GetWindowContextHelpId(window_handle);
 }
 
-bool window::set_context_help_id(HWND hwnd, uint32_t param) {
-    if (!SetWindowContextHelpId(hwnd, param)) {
+bool window::set_context_help_id(HWND window_handle, uint32_t param) {
+    if (!SetWindowContextHelpId(window_handle, param)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::get_display_affinity(HWND hwnd, uint32_t *affinity) {
+bool window::get_display_affinity(HWND window_handle, uint32_t *affinity) {
     if (!GetWindowDisplayAffinity(
-            hwnd, reinterpret_cast<unsigned long *>(affinity))) {
+            window_handle, reinterpret_cast<unsigned long *>(affinity))) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::set_display_affinity(HWND hwnd, uint32_t affinity) {
-    if (!SetWindowDisplayAffinity(hwnd, affinity)) {
+bool window::set_display_affinity(HWND window_handle, uint32_t affinity) {
+    if (!SetWindowDisplayAffinity(window_handle, affinity)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-DPI_AWARENESS_CONTEXT window::get_dpi_aware_context(HWND hwnd) {
-    return GetWindowDpiAwarenessContext(hwnd);
+DPI_AWARENESS_CONTEXT window::get_dpi_aware_context(HWND window_handle) {
+    return GetWindowDpiAwarenessContext(window_handle);
 }
 
-DPI_HOSTING_BEHAVIOR window::get_dpi_hosting_behavior(HWND hwnd) {
-    return GetWindowDpiHostingBehavior(hwnd);
+DPI_HOSTING_BEHAVIOR window::get_dpi_hosting_behavior(HWND window_handle) {
+    return GetWindowDpiHostingBehavior(window_handle);
 }
 
-bool window::get_feedback_setting(HWND hwnd,
+bool window::get_feedback_setting(HWND window_handle,
     FEEDBACK_TYPE                      feedback,
     uint32_t                           flag,
     int                               *real_config) {
     uint32_t size = sizeof(int);
-    return GetWindowFeedbackSetting(hwnd, feedback, flag, &size, real_config);
+    return GetWindowFeedbackSetting(
+        window_handle, feedback, flag, &size, real_config);
 }
 
-bool window::set_feedback_setting(HWND hwnd,
+bool window::set_feedback_setting(HWND window_handle,
     FEEDBACK_TYPE                      feedback,
     uint32_t                           size,
     const int                         *config) {
-    return SetWindowFeedbackSetting(hwnd, feedback, 0, size, config);
+    return SetWindowFeedbackSetting(window_handle, feedback, 0, size, config);
 }
 
-bool window::get_info(HWND hwnd, WINDOWINFO *window_info) {
-    if (!GetWindowInfo(hwnd, window_info)) {
+bool window::get_info(HWND window_handle, WINDOWINFO *window_info) {
+    if (!GetWindowInfo(window_handle, window_info)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-long window::get_long(HWND hwnd, int32_t index) {
-    long result = GetWindowLongW(hwnd, index);
+long window::get_long(HWND window_handle, int32_t index) {
+    long result = GetWindowLongW(window_handle, index);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-long window::set_long(HWND hwnd, int32_t index, long value) {
-    long result = SetWindowLongW(hwnd, index, value);
+long window::set_long(HWND window_handle, int32_t index, long value) {
+    long result = SetWindowLongW(window_handle, index, value);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-LONG_PTR window::get_long_ptr(HWND hwnd, int32_t index) {
-    LONG_PTR result = GetWindowLongPtrW(hwnd, index);
+LONG_PTR window::get_long_ptr(HWND window_handle, int32_t index) {
+    LONG_PTR result = GetWindowLongPtrW(window_handle, index);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-LONG_PTR window::set_long_ptr(HWND hwnd, int32_t index, LONG_PTR value) {
-    LONG_PTR result = SetWindowLongPtrW(hwnd, index, value);
+LONG_PTR
+window::set_long_ptr(HWND window_handle, int32_t index, LONG_PTR value) {
+    LONG_PTR result = SetWindowLongPtrW(window_handle, index, value);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-uint32_t window::get_module_file_name(HWND hwnd, std::string &file_name) {
-    return GetWindowModuleFileNameA(hwnd, file_name.data(), file_name.size());
+uint32_t window::get_module_file_name(HWND window_handle,
+    std::string                           &file_name) {
+    return GetWindowModuleFileNameA(
+        window_handle, file_name.data(), file_name.size());
 }
 
-uint32_t window::get_module_file_name(HWND hwnd, std::wstring &file_name) {
-    return GetWindowModuleFileNameW(hwnd, file_name.data(), file_name.size());
+uint32_t window::get_module_file_name(HWND window_handle,
+    std::wstring                          &file_name) {
+    return GetWindowModuleFileNameW(
+        window_handle, file_name.data(), file_name.size());
 }
 
-bool window::get_placement(HWND hwnd, WINDOWPLACEMENT *window_placement) {
-    if (!GetWindowPlacement(hwnd, window_placement)) {
+bool window::get_placement(HWND window_handle,
+    WINDOWPLACEMENT            *window_placement) {
+    if (!GetWindowPlacement(window_handle, window_placement)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::set_placement(HWND hwnd, const WINDOWPLACEMENT *window_placement) {
-    if (!SetWindowPlacement(hwnd, window_placement)) {
+bool window::set_placement(HWND window_handle,
+    const WINDOWPLACEMENT      *window_placement) {
+    if (!SetWindowPlacement(window_handle, window_placement)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::get_rect(HWND hwnd, RECT *rect) {
-    if (!GetWindowRect(hwnd, rect)) {
+bool window::get_rect(HWND window_handle, RECT *rect) {
+    if (!GetWindowRect(window_handle, rect)) {
         error_code = GetLastError();
         return false;
     }
@@ -1096,102 +922,104 @@ bool window::adjust_rect_for_dpi(RECT *rect,
     return true;
 }
 
-int32_t window::get_region(HWND hwnd, HRGN region_handle) {
-    return GetWindowRgn(hwnd, region_handle);
+int32_t window::get_region(HWND window_handle, HRGN region_handle) {
+    return GetWindowRgn(window_handle, region_handle);
 }
 
-int32_t window::set_region(HWND hwnd, HRGN region_handle, bool is_redraw) {
-    return SetWindowRgn(hwnd, region_handle, is_redraw ? TRUE : FALSE);
+int32_t
+window::set_region(HWND window_handle, HRGN region_handle, bool is_redraw) {
+    return SetWindowRgn(window_handle, region_handle, is_redraw ? TRUE : FALSE);
 }
 
-int32_t window::get_region_box(HWND hwnd, RECT *rect) {
-    return GetWindowRgnBox(hwnd, rect);
+int32_t window::get_region_box(HWND window_handle, RECT *rect) {
+    return GetWindowRgnBox(window_handle, rect);
 }
 
-int32_t window::get_text(HWND hwnd, std::string &text) {
-    int32_t result =
-        GetWindowTextA(hwnd, text.data(), static_cast<int>(text.size()));
+int32_t window::get_text(HWND window_handle, std::string &text) {
+    int32_t result = GetWindowTextA(
+        window_handle, text.data(), static_cast<int>(text.size()));
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-int32_t window::get_text(HWND hwnd, std::wstring &text) {
-    int32_t result =
-        GetWindowTextW(hwnd, text.data(), static_cast<int>(text.size()));
+int32_t window::get_text(HWND window_handle, std::wstring &text) {
+    int32_t result = GetWindowTextW(
+        window_handle, text.data(), static_cast<int>(text.size()));
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-bool window::set_text(HWND hwnd, const char *text) {
-    if (!SetWindowTextA(hwnd, text)) {
+bool window::set_text(HWND window_handle, const char *text) {
+    if (!SetWindowTextA(window_handle, text)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::set_text(HWND hwnd, const wchar_t *text) {
-    if (!SetWindowTextW(hwnd, text)) {
+bool window::set_text(HWND window_handle, const wchar_t *text) {
+    if (!SetWindowTextW(window_handle, text)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-int32_t window::get_text_length(HWND hwnd) {
-    int32_t result = GetWindowTextLengthW(hwnd);
+int32_t window::get_text_length(HWND window_handle) {
+    int32_t result = GetWindowTextLengthW(window_handle);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-uint32_t window::get_thread_id(HWND hwnd) {
+uint32_t window::get_thread_id(HWND window_handle) {
     uint32_t pid = 0;
-    uint32_t tid =
-        GetWindowThreadProcessId(hwnd, reinterpret_cast<unsigned long *>(&pid));
+    uint32_t tid = GetWindowThreadProcessId(
+        window_handle, reinterpret_cast<unsigned long *>(&pid));
     if (!tid) {
         error_code = GetLastError();
     }
     return tid;
 }
 
-uint32_t window::get_proc_id(HWND hwnd) {
+uint32_t window::get_proc_id(HWND window_handle) {
     uint32_t pid = 0;
-    uint32_t tid =
-        GetWindowThreadProcessId(hwnd, reinterpret_cast<unsigned long *>(&pid));
+    uint32_t tid = GetWindowThreadProcessId(
+        window_handle, reinterpret_cast<unsigned long *>(&pid));
     if (!tid) {
         error_code = GetLastError();
     }
     return pid;
 }
 
-std::pair<uint32_t, uint32_t> window::get_window_tid_and_pid(HWND hwnd) {
+std::pair<uint32_t, uint32_t> window::get_window_tid_and_pid(
+    HWND window_handle) {
     uint32_t pid = 0;
-    uint32_t tid =
-        GetWindowThreadProcessId(hwnd, reinterpret_cast<unsigned long *>(&pid));
+    uint32_t tid = GetWindowThreadProcessId(
+        window_handle, reinterpret_cast<unsigned long *>(&pid));
     if (!tid) {
         error_code = GetLastError();
     }
     return std::make_pair(tid, pid);
 }
 
-uint16_t window::get_word(HWND hwnd, int32_t index) {
-    uint16_t result = GetWindowWord(hwnd, index);
+uint16_t window::get_word(HWND window_handle, int32_t index) {
+    uint16_t result = GetWindowWord(window_handle, index);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-int32_t window::get_direct_text(HWND hwnd, std::string &text) {
+int32_t window::get_direct_text(HWND window_handle, std::string &text) {
     std::wstring data(text.size(), L'\0');
-    int32_t      result =
-        InternalGetWindowText(hwnd, data.data(), static_cast<int>(data.size()));
+    int32_t      result = InternalGetWindowText(
+        window_handle, data.data(), static_cast<int>(data.size()));
     text = helper::convert::wstr_to_str(data);
     if (!result) {
         error_code = GetLastError();
@@ -1199,53 +1027,53 @@ int32_t window::get_direct_text(HWND hwnd, std::string &text) {
     return result;
 }
 
-int32_t window::get_direct_text(HWND hwnd, std::wstring &text) {
-    int32_t result =
-        InternalGetWindowText(hwnd, text.data(), static_cast<int>(text.size()));
+int32_t window::get_direct_text(HWND window_handle, std::wstring &text) {
+    int32_t result = InternalGetWindowText(
+        window_handle, text.data(), static_cast<int>(text.size()));
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-uint32_t window::get_class(HWND hwnd, std::string &class_name) {
-    uint32_t result =
-        RealGetWindowClassA(hwnd, class_name.data(), class_name.size());
+uint32_t window::get_class(HWND window_handle, std::string &class_name) {
+    uint32_t result = RealGetWindowClassA(
+        window_handle, class_name.data(), class_name.size());
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-uint32_t window::get_class(HWND hwnd, std::wstring &class_name) {
-    uint32_t result =
-        RealGetWindowClassW(hwnd, class_name.data(), class_name.size());
+uint32_t window::get_class(HWND window_handle, std::wstring &class_name) {
+    uint32_t result = RealGetWindowClassW(
+        window_handle, class_name.data(), class_name.size());
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-void window::switch_window(HWND hwnd, bool unknown) {
-    SwitchToThisWindow(hwnd, unknown ? TRUE : FALSE);
+void window::switch_window(HWND window_handle, bool unknown) {
+    SwitchToThisWindow(window_handle, unknown ? TRUE : FALSE);
 }
 
-bool window::show_help(HWND hwnd,
+bool window::show_help(HWND window_handle,
     const char             *help,
     uint32_t                cmd,
     ULONG_PTR               data) {
-    if (!WinHelpA(hwnd, help, cmd, data)) {
+    if (!WinHelpA(window_handle, help, cmd, data)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::show_help(HWND hwnd,
+bool window::show_help(HWND window_handle,
     const wchar_t          *help,
     uint32_t                cmd,
     ULONG_PTR               data) {
-    if (!WinHelpW(hwnd, help, cmd, data)) {
+    if (!WinHelpW(window_handle, help, cmd, data)) {
         error_code = GetLastError();
         return false;
     }
@@ -1276,104 +1104,105 @@ bool window::is_gui_thread(bool is_convert) {
     return result;
 }
 
-bool window::get_alt_tab_info(HWND hwnd,
+bool window::get_alt_tab_info(HWND window_handle,
     int32_t                        item_index,
     ALTTABINFO                    *alt_tab_info,
     std::string                   &item_text) {
-    if (!GetAltTabInfoA(hwnd, item_index, alt_tab_info, item_text.data(),
-            item_text.size())) {
+    if (!GetAltTabInfoA(window_handle, item_index, alt_tab_info,
+            item_text.data(), item_text.size())) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::get_alt_tab_info(HWND hwnd,
+bool window::get_alt_tab_info(HWND window_handle,
     int32_t                        item_index,
     ALTTABINFO                    *alt_tab_info,
     std::wstring                  &item_text) {
-    if (!GetAltTabInfoW(hwnd, item_index, alt_tab_info, item_text.data(),
-            item_text.size())) {
+    if (!GetAltTabInfoW(window_handle, item_index, alt_tab_info,
+            item_text.data(), item_text.size())) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-UINT_PTR window::set_timer(HWND hwnd,
+UINT_PTR window::set_timer(HWND window_handle,
     UINT_PTR                    event_id,
     uint32_t                    elapse,
     TIMERPROC                   timer_func) {
-    UINT_PTR result = SetTimer(hwnd, event_id, elapse, timer_func);
+    UINT_PTR result = SetTimer(window_handle, event_id, elapse, timer_func);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-UINT_PTR window::set_coalescable_timer(HWND hwnd,
+UINT_PTR window::set_coalescable_timer(HWND window_handle,
     UINT_PTR                                event_id,
     uint32_t                                elapse,
     TIMERPROC                               timer_func,
     uint32_t                                tolerance_delay) {
     UINT_PTR result = SetCoalescableTimer(
-        hwnd, event_id, elapse, timer_func, tolerance_delay);
+        window_handle, event_id, elapse, timer_func, tolerance_delay);
     if (!result) {
         error_code = GetLastError();
     }
     return result;
 }
 
-bool window::kill_timer(HWND hwnd, UINT_PTR event_id) {
-    if (!KillTimer(hwnd, event_id)) {
+bool window::kill_timer(HWND window_handle, UINT_PTR event_id) {
+    if (!KillTimer(window_handle, event_id)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::create_shutdown_reason(HWND hwnd, std::string &reason) {
+bool window::create_shutdown_reason(HWND window_handle, std::string &reason) {
     std::wstring data = helper::convert::str_to_wstr(reason);
-    if (!ShutdownBlockReasonCreate(hwnd, data.data())) {
+    if (!ShutdownBlockReasonCreate(window_handle, data.data())) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::create_shutdown_reason(HWND hwnd, const std::wstring &reason) {
-    if (!ShutdownBlockReasonCreate(hwnd, reason.data())) {
+bool window::create_shutdown_reason(HWND window_handle,
+    const std::wstring                  &reason) {
+    if (!ShutdownBlockReasonCreate(window_handle, reason.data())) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::destroy_shutdown_reason(HWND hwnd) {
-    if (!ShutdownBlockReasonDestroy(hwnd)) {
+bool window::destroy_shutdown_reason(HWND window_handle) {
+    if (!ShutdownBlockReasonDestroy(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::query_shutdown_reason(HWND hwnd,
+bool window::query_shutdown_reason(HWND window_handle,
     std::string                        &reason,
     uint32_t                           *real_size) {
     std::wstring data = helper::convert::str_to_wstr(reason);
     *real_size        = data.size();
-    if (!ShutdownBlockReasonQuery(
-            hwnd, data.data(), reinterpret_cast<unsigned long *>(real_size))) {
+    if (!ShutdownBlockReasonQuery(window_handle, data.data(),
+            reinterpret_cast<unsigned long *>(real_size))) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool window::query_shutdown_reason(HWND hwnd,
+bool window::query_shutdown_reason(HWND window_handle,
     std::wstring                       &reason,
     uint32_t                           *real_size) {
-    if (!ShutdownBlockReasonQuery(hwnd, reason.data(),
+    if (!ShutdownBlockReasonQuery(window_handle, reason.data(),
             reinterpret_cast<unsigned long *>(real_size))) {
         error_code = GetLastError();
         return false;
@@ -1512,12 +1341,12 @@ bool window::unregister_suspend_resume_notify(
     return true;
 }
 
-bool window::register_tooltip_dismiss_notify(HWND hwnd) {
-    return RegisterForTooltipDismissNotification(hwnd, TDF_REGISTER);
+bool window::register_tooltip_dismiss_notify(HWND window_handle) {
+    return RegisterForTooltipDismissNotification(window_handle, TDF_REGISTER);
 }
 
-bool window::unregister_tooltip_dismiss_notify(HWND hwnd) {
-    return RegisterForTooltipDismissNotification(hwnd, TDF_UNREGISTER);
+bool window::unregister_tooltip_dismiss_notify(HWND window_handle) {
+    return RegisterForTooltipDismissNotification(window_handle, TDF_UNREGISTER);
 }
 
 bool window::sound_sentry() {
@@ -1544,8 +1373,9 @@ bool window::set_additional_foreground_boost_procs(HWND top_level_window_handle,
     return true;
 }
 
-bool window::get_title_bar_info(HWND hwnd, TITLEBARINFO *title_bar_info) {
-    if (!GetTitleBarInfo(hwnd, title_bar_info)) {
+bool window::get_title_bar_info(HWND window_handle,
+    TITLEBARINFO                    *title_bar_info) {
+    if (!GetTitleBarInfo(window_handle, title_bar_info)) {
         error_code = GetLastError();
         return false;
     }
@@ -1560,16 +1390,16 @@ helper::CodePage window::get_code_page() {
     return static_cast<helper::CodePage>(GetKBCodePage());
 }
 
-bool window::get_combobox_info(HWND combo_hwnd, COMBOBOXINFO *combobox_info) {
-    if (!GetComboBoxInfo(combo_hwnd, combobox_info)) {
+bool window::get_combobox_info(HWND combo_handle, COMBOBOXINFO *combobox_info) {
+    if (!GetComboBoxInfo(combo_handle, combobox_info)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-uint32_t window::get_listbox_info(HWND hwnd) {
-    return GetListBoxInfo(hwnd);
+uint32_t window::get_listbox_info(HWND window_handle) {
+    return GetListBoxInfo(window_handle);
 }
 
 bool window::is_dpi_aware_contexts_equal(DPI_AWARENESS_CONTEXT context1,
@@ -1577,8 +1407,8 @@ bool window::is_dpi_aware_contexts_equal(DPI_AWARENESS_CONTEXT context1,
     return AreDpiAwarenessContextsEqual(context1, context2);
 }
 
-bool window::enable_non_client_dpi_scaling(HWND hwnd) {
-    if (!EnableNonClientDpiScaling(hwnd)) {
+bool window::enable_non_client_dpi_scaling(HWND window_handle) {
+    if (!EnableNonClientDpiScaling(window_handle)) {
         error_code = GetLastError();
         return false;
     }

@@ -12,8 +12,8 @@ clipboard::~clipboard() {
     }
 }
 
-clipboard::clipboard(HWND hwnd) {
-    if (!OpenClipboard(hwnd)) {
+clipboard::clipboard(HWND window_handle) {
+    if (!OpenClipboard(window_handle)) {
         error_code = GetLastError();
         is_create  = false;
     } else {
@@ -129,11 +129,11 @@ int32_t clipboard::get_format_name(uint32_t format, std::wstring &format_name) {
 }
 
 HWND clipboard::get_open_window() {
-    HWND hwnd = GetOpenClipboardWindow();
-    if (!hwnd) {
+    HWND window_handle = GetOpenClipboardWindow();
+    if (!window_handle) {
         error_code = GetLastError();
     }
-    return hwnd;
+    return window_handle;
 }
 
 HWND clipboard::get_owner_window() {
@@ -184,24 +184,25 @@ bool clipboard::is_format_available(uint32_t format) {
     return true;
 }
 
-bool clipboard::add_format_listener(HWND hwnd) {
-    if (!AddClipboardFormatListener(hwnd)) {
+bool clipboard::add_format_listener(HWND window_handle) {
+    if (!AddClipboardFormatListener(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool clipboard::remove_format_listener(HWND hwnd) {
-    if (!RemoveClipboardFormatListener(hwnd)) {
+bool clipboard::remove_format_listener(HWND window_handle) {
+    if (!RemoveClipboardFormatListener(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool clipboard::change_chain(HWND hwnd_remove, HWND hwnd_new_next) {
-    return ChangeClipboardChain(hwnd_remove, hwnd_new_next);
+bool clipboard::change_chain(HWND remove_window_handle,
+    HWND                          next_window_handle) {
+    return ChangeClipboardChain(remove_window_handle, next_window_handle);
 }
 
 uint32_t clipboard::enum_formats(uint32_t format) {

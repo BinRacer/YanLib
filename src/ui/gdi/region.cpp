@@ -120,21 +120,24 @@ int32_t region::get_region_box(HRGN region_handle, RECT *rect) {
     return GetRgnBox(region_handle, rect);
 }
 
-int32_t
-region::get_update_region(HWND hwnd, HRGN region_handle, bool is_erase) {
-    return GetUpdateRgn(hwnd, region_handle, is_erase ? TRUE : FALSE);
+int32_t region::get_update_region(HWND window_handle,
+    HRGN                               region_handle,
+    bool                               is_erase) {
+    return GetUpdateRgn(window_handle, region_handle, is_erase ? TRUE : FALSE);
 }
 
-bool region::validate_region(HWND hwnd, HRGN region_handle) {
-    return ValidateRgn(hwnd, region_handle);
+bool region::validate_region(HWND window_handle, HRGN region_handle) {
+    return ValidateRgn(window_handle, region_handle);
 }
 
-bool region::invalidate_region(HWND hwnd, HRGN region_handle, bool is_erase) {
-    return InvalidateRgn(hwnd, region_handle, is_erase ? TRUE : FALSE);
+bool region::invalidate_region(HWND window_handle,
+    HRGN                            region_handle,
+    bool                            is_erase) {
+    return InvalidateRgn(window_handle, region_handle, is_erase ? TRUE : FALSE);
 }
 
-int32_t region::exclude_update_region(HDC dc_handle, HWND hwnd) {
-    return ExcludeUpdateRgn(dc_handle, hwnd);
+int32_t region::exclude_update_region(HDC dc_handle, HWND window_handle) {
+    return ExcludeUpdateRgn(dc_handle, window_handle);
 }
 
 std::pair<uint32_t, uint32_t>

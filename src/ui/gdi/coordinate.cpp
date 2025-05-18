@@ -5,20 +5,22 @@
 #include "coordinate.h"
 
 namespace YanLib::ui::gdi {
-bool coordinate::client_to_screen(HWND hwnd, POINT *point) {
-    return ClientToScreen(hwnd, point);
+bool coordinate::client_to_screen(HWND window_handle, POINT *point) {
+    return ClientToScreen(window_handle, point);
 }
 
-bool coordinate::screen_to_client(HWND hwnd, POINT *point) {
-    return ScreenToClient(hwnd, point);
+bool coordinate::screen_to_client(HWND window_handle, POINT *point) {
+    return ScreenToClient(window_handle, point);
 }
 
-bool coordinate::logic_point_to_physical_point(HWND hwnd, POINT *point) {
-    return LogicalToPhysicalPoint(hwnd, point);
+bool coordinate::logic_point_to_physical_point(HWND window_handle,
+    POINT                                          *point) {
+    return LogicalToPhysicalPoint(window_handle, point);
 }
 
-bool coordinate::physical_point_to_logic_point(HWND hwnd, POINT *point) {
-    return PhysicalToLogicalPoint(hwnd, point);
+bool coordinate::physical_point_to_logic_point(HWND window_handle,
+    POINT                                          *point) {
+    return PhysicalToLogicalPoint(window_handle, point);
 }
 
 bool coordinate::device_point_to_logic_point(HDC dc_handle,
@@ -107,12 +109,13 @@ bool coordinate::set_world_transform(HDC dc_handle, const XFORM *xfrom) {
     return SetWorldTransform(dc_handle, xfrom);
 }
 
-std::pair<int32_t, uint32_t> coordinate::map_window_points(HWND hwnd_from,
-    HWND                                                        hwnd_to,
-    std::vector<POINT>                                         &point) {
+std::pair<int32_t, uint32_t> coordinate::map_window_points(
+    HWND                from_window_handle,
+    HWND                to_window_handle,
+    std::vector<POINT> &point) {
     SetLastError(0);
-    uint32_t result =
-        MapWindowPoints(hwnd_from, hwnd_to, point.data(), point.size());
+    uint32_t result = MapWindowPoints(
+        from_window_handle, to_window_handle, point.data(), point.size());
     uint32_t error_code = GetLastError();
     return std::make_pair(result, error_code);
 }

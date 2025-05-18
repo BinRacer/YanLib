@@ -23,13 +23,13 @@ public:
 
     ~coordinate()                                  = default;
 
-    static bool client_to_screen(HWND hwnd, POINT *point);
+    static bool client_to_screen(HWND window_handle, POINT *point);
 
-    static bool screen_to_client(HWND hwnd, POINT *point);
+    static bool screen_to_client(HWND window_handle, POINT *point);
 
-    static bool logic_point_to_physical_point(HWND hwnd, POINT *point);
+    static bool logic_point_to_physical_point(HWND window_handle, POINT *point);
 
-    static bool physical_point_to_logic_point(HWND hwnd, POINT *point);
+    static bool physical_point_to_logic_point(HWND window_handle, POINT *point);
 
     static bool device_point_to_logic_point(HDC dc_handle,
         std::vector<POINT>                     &point);
@@ -76,8 +76,10 @@ public:
     static bool set_world_transform(HDC dc_handle, const XFORM *xfrom);
 
     // std::pair<result, error_code>
-    static std::pair<int32_t, uint32_t>
-    map_window_points(HWND hwnd_from, HWND hwnd_to, std::vector<POINT> &point);
+    static std::pair<int32_t, uint32_t> map_window_points(
+        HWND                from_window_handle,
+        HWND                to_window_handle,
+        std::vector<POINT> &point);
 
     static bool
     modify_world_transform(HDC dc_handle, const XFORM *xfrom, uint32_t mode);

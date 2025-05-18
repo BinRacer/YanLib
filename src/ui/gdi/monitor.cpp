@@ -20,8 +20,8 @@ HMONITOR monitor::monitor_from_rect(const RECT *rect, uint32_t flag) {
     return MonitorFromRect(rect, flag);
 }
 
-HMONITOR monitor::monitor_from_window(HWND hwnd, uint32_t flag) {
-    return MonitorFromWindow(hwnd, flag);
+HMONITOR monitor::monitor_from_window(HWND window_handle, uint32_t flag) {
+    return MonitorFromWindow(window_handle, flag);
 }
 
 bool monitor::get_monitor_info(HMONITOR monitor_handle,
@@ -29,17 +29,18 @@ bool monitor::get_monitor_info(HMONITOR monitor_handle,
     return GetMonitorInfoW(monitor_handle, monitor_info);
 }
 
-bool monitor::logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
+bool monitor::logical_to_physical_point_for_per_monitor_dpi(HWND window_handle,
     POINT                                                       *point) {
-    return LogicalToPhysicalPointForPerMonitorDPI(hwnd, point);
+    return LogicalToPhysicalPointForPerMonitorDPI(window_handle, point);
 }
 
-bool monitor::physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
+bool monitor::physical_to_logical_point_for_per_monitor_dpi(HWND window_handle,
     POINT                                                       *point) {
-    return PhysicalToLogicalPointForPerMonitorDPI(hwnd, point);
+    return PhysicalToLogicalPointForPerMonitorDPI(window_handle, point);
 }
 
-bool monitor::inherit_window_monitor(HWND hwnd, HWND hwnd_inherit) {
-    return InheritWindowMonitor(hwnd, hwnd_inherit);
+bool monitor::inherit_window_monitor(HWND window_handle,
+    HWND                                  inherit_window_handle) {
+    return InheritWindowMonitor(window_handle, inherit_window_handle);
 }
 } // namespace YanLib::ui::gdi

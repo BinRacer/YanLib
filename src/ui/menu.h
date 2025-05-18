@@ -221,15 +221,15 @@ public:
         const wchar_t *item_text,
         MenuFlag       flag = MenuFlag::ByPosition | MenuFlag::String);
 
-    HMENU get_menu(HWND hwnd);
+    HMENU get_menu(HWND window_handle);
 
-    bool set_menu(HWND hwnd, HMENU menu_handle);
+    bool set_menu(HWND window_handle, HMENU menu_handle);
 
     bool get_info(HMENU menu_handle, MENUINFO *memu_info);
 
     bool set_info(HMENU menu_handle, const MENUINFO *memu_info);
 
-    bool get_bar_info(HWND hwnd,
+    bool get_bar_info(HWND window_handle,
         long               item_id,
         MENUBARINFO       *menu_bar_info,
         ObjectID           flag = ObjectID::Menu);
@@ -248,14 +248,14 @@ public:
 
     HMENU get_sub_menu(HMENU menu_handle, int32_t pos);
 
-    HMENU get_system_menu(HWND hwnd, bool revert = false);
+    HMENU get_system_menu(HWND window_handle, bool revert = false);
 
     // std::pair<width, height>
     std::pair<int16_t, int16_t> get_marker_bitmap_size();
 
     bool is_menu(HMENU menu_handle);
 
-    bool draw_bar(HWND hwnd);
+    bool draw_bar(HWND window_handle);
 
     bool insert_item(HMENU   menu_handle,
         uint32_t             pos,
@@ -301,7 +301,10 @@ public:
 
     uint32_t get_item_id(HMENU menu_handle, int32_t pos);
 
-    bool get_item_rect(HWND hwnd, HMENU menu_handle, uint32_t pos, RECT *rect);
+    bool get_item_rect(HWND window_handle,
+        HMENU               menu_handle,
+        uint32_t            pos,
+        RECT               *rect);
 
     bool set_item_bitmaps(HMENU menu_handle,
         uint32_t                pos,
@@ -309,14 +312,14 @@ public:
         HBITMAP                 checked_handle,
         bool                    is_pos = true);
 
-    int32_t get_item(HWND hwnd, HMENU menu_handle, POINT screen);
+    int32_t get_item(HWND window_handle, HMENU menu_handle, POINT screen);
 
-    bool high_light_item(HWND hwnd,
+    bool high_light_item(HWND window_handle,
         HMENU                 menu_handle,
         uint32_t              pos,
         MenuFlag flag = MenuFlag::ByPosition | MenuFlag::Highlight);
 
-    bool unhigh_light_item(HWND hwnd,
+    bool unhigh_light_item(HWND window_handle,
         HMENU                   menu_handle,
         uint32_t                pos,
         MenuFlag flag = MenuFlag::ByPosition | MenuFlag::UnHighlight);
@@ -346,14 +349,14 @@ public:
     bool track_popup(HMENU menu_handle,
         int32_t            x,
         int32_t            y,
-        HWND               hwnd,
+        HWND               window_handle,
         TrackPopup flag = TrackPopup::RightAlign | TrackPopup::BottomAlign |
                           TrackPopup::ReturnCmd | TrackPopup::LeftButton);
 
     bool track_popup(HMENU menu_handle,
         int32_t            x,
         int32_t            y,
-        HWND               hwnd,
+        HWND               window_handle,
         TPMPARAMS         *tpm_params = nullptr,
         TrackPopup flag = TrackPopup::RightAlign | TrackPopup::BottomAlign |
                           TrackPopup::ReturnCmd | TrackPopup::LeftButton);

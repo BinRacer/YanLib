@@ -5,19 +5,19 @@
 #include "paint.h"
 
 namespace YanLib::ui::gdi {
-HDC paint::begin_paint(HWND hwnd, PAINTSTRUCT *paint_struct) {
-    return BeginPaint(hwnd, paint_struct);
+HDC paint::begin_paint(HWND window_handle, PAINTSTRUCT *paint_struct) {
+    return BeginPaint(window_handle, paint_struct);
 }
 
-bool paint::end_paint(HWND hwnd, const PAINTSTRUCT *paint_struct) {
-    return EndPaint(hwnd, paint_struct);
+bool paint::end_paint(HWND window_handle, const PAINTSTRUCT *paint_struct) {
+    return EndPaint(window_handle, paint_struct);
 }
 
-bool paint::draw_caption(HWND hwnd,
+bool paint::draw_caption(HWND window_handle,
     HDC                       dc_handle,
     const RECT               *rect,
     uint32_t                  flag) {
-    return DrawCaption(hwnd, dc_handle, rect, flag);
+    return DrawCaption(window_handle, dc_handle, rect, flag);
 }
 
 bool paint::draw_edge(HDC dc_handle, RECT *rect, uint32_t edge, uint32_t flag) {

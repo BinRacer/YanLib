@@ -31,18 +31,21 @@ public:
 
     static HMONITOR monitor_from_rect(const RECT *rect, uint32_t flag);
 
-    static HMONITOR monitor_from_window(HWND hwnd, uint32_t flag);
+    static HMONITOR monitor_from_window(HWND window_handle, uint32_t flag);
 
     static bool get_monitor_info(HMONITOR monitor_handle,
         MONITORINFO                      *monitor_info);
 
-    static bool logical_to_physical_point_for_per_monitor_dpi(HWND hwnd,
-        POINT                                                     *point);
+    static bool logical_to_physical_point_for_per_monitor_dpi(
+        HWND   window_handle,
+        POINT *point);
 
-    static bool physical_to_logical_point_for_per_monitor_dpi(HWND hwnd,
-        POINT                                                     *point);
+    static bool physical_to_logical_point_for_per_monitor_dpi(
+        HWND   window_handle,
+        POINT *point);
 
-    static bool inherit_window_monitor(HWND hwnd, HWND hwnd_inherit);
+    static bool inherit_window_monitor(HWND window_handle,
+        HWND                                inherit_window_handle);
 };
 } // namespace YanLib::ui::gdi
 #endif // MONITOR_H

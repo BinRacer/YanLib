@@ -89,13 +89,14 @@ public:
     static int32_t get_region_box(HRGN region_handle, RECT *rect);
 
     static int32_t
-    get_update_region(HWND hwnd, HRGN region_handle, bool is_erase);
+    get_update_region(HWND window_handle, HRGN region_handle, bool is_erase);
 
-    static bool validate_region(HWND hwnd, HRGN region_handle);
+    static bool validate_region(HWND window_handle, HRGN region_handle);
 
-    static bool invalidate_region(HWND hwnd, HRGN region_handle, bool is_erase);
+    static bool
+    invalidate_region(HWND window_handle, HRGN region_handle, bool is_erase);
 
-    static int32_t exclude_update_region(HDC dc_handle, HWND hwnd);
+    static int32_t exclude_update_region(HDC dc_handle, HWND window_handle);
 
     // std::pair<result, error_code>
     static std::pair<uint32_t, uint32_t>

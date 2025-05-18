@@ -277,11 +277,11 @@ bool menu::modify(HMENU menu_handle,
     return true;
 }
 
-HMENU menu::get_menu(HWND hwnd) {
-    return GetMenu(hwnd);
+HMENU menu::get_menu(HWND window_handle) {
+    return GetMenu(window_handle);
 }
 
-bool menu::set_menu(HWND hwnd, HMENU menu_handle) {
+bool menu::set_menu(HWND window_handle, HMENU menu_handle) {
     if (!menu_handle || !IsMenu(menu_handle)) {
         return false;
     }
@@ -292,7 +292,7 @@ bool menu::set_menu(HWND hwnd, HMENU menu_handle) {
         *it = nullptr;
     }
     rwlock.write_unlock();
-    if (!SetMenu(hwnd, menu_handle)) {
+    if (!SetMenu(window_handle, menu_handle)) {
         error_code = GetLastError();
         return false;
     }
@@ -315,12 +315,12 @@ bool menu::set_info(HMENU menu_handle, const MENUINFO *memu_info) {
     return true;
 }
 
-bool menu::get_bar_info(HWND hwnd,
+bool menu::get_bar_info(HWND window_handle,
     long                     item_id,
     MENUBARINFO             *menu_bar_info,
     ObjectID                 flag) {
-    if (!GetMenuBarInfo(
-            hwnd, static_cast<int32_t>(flag), item_id, menu_bar_info)) {
+    if (!GetMenuBarInfo(window_handle, static_cast<int32_t>(flag), item_id,
+            menu_bar_info)) {
         error_code = GetLastError();
         return false;
     }
@@ -352,8 +352,8 @@ HMENU menu::get_sub_menu(HMENU menu_handle, int32_t pos) {
     return GetSubMenu(menu_handle, pos);
 }
 
-HMENU menu::get_system_menu(HWND hwnd, bool revert) {
-    return GetSystemMenu(hwnd, revert ? TRUE : FALSE);
+HMENU menu::get_system_menu(HWND window_handle, bool revert) {
+    return GetSystemMenu(window_handle, revert ? TRUE : FALSE);
 }
 
 std::pair<int16_t, int16_t> menu::get_marker_bitmap_size() {
@@ -367,8 +367,8 @@ bool menu::is_menu(HMENU menu_handle) {
     return IsMenu(menu_handle);
 }
 
-bool menu::draw_bar(HWND hwnd) {
-    if (!DrawMenuBar(hwnd)) {
+bool menu::draw_bar(HWND window_handle) {
+    if (!DrawMenuBar(window_handle)) {
         error_code = GetLastError();
         return false;
     }
@@ -489,11 +489,11 @@ uint32_t menu::get_item_id(HMENU menu_handle, int32_t pos) {
     return GetMenuItemID(menu_handle, pos);
 }
 
-bool menu::get_item_rect(HWND hwnd,
+bool menu::get_item_rect(HWND window_handle,
     HMENU                     menu_handle,
     uint32_t                  pos,
     RECT                     *rect) {
-    if (!GetMenuItemRect(hwnd, menu_handle, pos, rect)) {
+    if (!GetMenuItemRect(window_handle, menu_handle, pos, rect)) {
         error_code = GetLastError();
         return false;
     }
@@ -514,22 +514,24 @@ bool menu::set_item_bitmaps(HMENU menu_handle,
     return true;
 }
 
-int32_t menu::get_item(HWND hwnd, HMENU menu_handle, POINT screen) {
-    return MenuItemFromPoint(hwnd, menu_handle, screen);
+int32_t menu::get_item(HWND window_handle, HMENU menu_handle, POINT screen) {
+    return MenuItemFromPoint(window_handle, menu_handle, screen);
 }
 
-bool menu::high_light_item(HWND hwnd,
+bool menu::high_light_item(HWND window_handle,
     HMENU                       menu_handle,
     uint32_t                    pos,
     MenuFlag                    flag) {
-    return HiliteMenuItem(hwnd, menu_handle, pos, static_cast<uint32_t>(flag));
+    return HiliteMenuItem(
+        window_handle, menu_handle, pos, static_cast<uint32_t>(flag));
 }
 
-bool menu::unhigh_light_item(HWND hwnd,
+bool menu::unhigh_light_item(HWND window_handle,
     HMENU                         menu_handle,
     uint32_t                      pos,
     MenuFlag                      flag) {
-    return HiliteMenuItem(hwnd, menu_handle, pos, static_cast<uint32_t>(flag));
+    return HiliteMenuItem(
+        window_handle, menu_handle, pos, static_cast<uint32_t>(flag));
 }
 
 MenuFlag menu::check_item(HMENU menu_handle, uint32_t pos, MenuFlag flag) {
@@ -568,10 +570,10 @@ MenuFlag menu::disable_item(HMENU menu_handle, uint32_t pos, MenuFlag flag) {
 bool menu::track_popup(HMENU menu_handle,
     int32_t                  x,
     int32_t                  y,
-    HWND                     hwnd,
+    HWND                     window_handle,
     TrackPopup               flag) {
-    if (!TrackPopupMenu(
-            menu_handle, static_cast<uint32_t>(flag), x, y, 0, hwnd, nullptr)) {
+    if (!TrackPopupMenu(menu_handle, static_cast<uint32_t>(flag), x, y, 0,
+            window_handle, nullptr)) {
         error_code = GetLastError();
         return false;
     }
@@ -581,11 +583,11 @@ bool menu::track_popup(HMENU menu_handle,
 bool menu::track_popup(HMENU menu_handle,
     int32_t                  x,
     int32_t                  y,
-    HWND                     hwnd,
+    HWND                     window_handle,
     TPMPARAMS               *tpm_params,
     TrackPopup               flag) {
-    if (!TrackPopupMenuEx(
-            menu_handle, static_cast<uint32_t>(flag), x, y, hwnd, tpm_params)) {
+    if (!TrackPopupMenuEx(menu_handle, static_cast<uint32_t>(flag), x, y,
+            window_handle, tpm_params)) {
         error_code = GetLastError();
         return false;
     }

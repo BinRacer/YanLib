@@ -71,19 +71,21 @@ bool rect::union_rect(RECT *rect_dst,
     return UnionRect(rect_dst, rect_src1, rect_src2);
 }
 
-bool rect::validate_rect(HWND hwnd, const RECT *rect) {
-    return ValidateRect(hwnd, rect);
+bool rect::validate_rect(HWND window_handle, const RECT *rect) {
+    return ValidateRect(window_handle, rect);
 }
 
-bool rect::invalidate_rect(HWND hwnd, const RECT *rect, bool is_erase) {
-    return InvalidateRect(hwnd, rect, is_erase ? TRUE : FALSE);
+bool rect::invalidate_rect(HWND window_handle,
+    const RECT                 *rect,
+    bool                        is_erase) {
+    return InvalidateRect(window_handle, rect, is_erase ? TRUE : FALSE);
 }
 
-bool rect::draw_animated_rects(HWND hwnd,
+bool rect::draw_animated_rects(HWND window_handle,
     int32_t                         animate_id,
     const RECT                     *rect_from,
     const RECT                     *rect_to) {
-    return DrawAnimatedRects(hwnd, animate_id, rect_from, rect_to);
+    return DrawAnimatedRects(window_handle, animate_id, rect_from, rect_to);
 }
 
 bool rect::draw_focus_rect(HDC dc_handle, const RECT *rect) {
@@ -98,13 +100,14 @@ uint32_t rect::set_bounds_rect(HDC dc_handle, const RECT *rect, uint32_t flag) {
     return SetBoundsRect(dc_handle, rect, flag);
 }
 
-bool rect::get_update_rect(HWND hwnd, RECT *rect, bool is_erase) {
-    return GetUpdateRect(hwnd, rect, is_erase);
+bool rect::get_update_rect(HWND window_handle, RECT *rect, bool is_erase) {
+    return GetUpdateRect(window_handle, rect, is_erase);
 }
 
-std::pair<bool, uint32_t> rect::get_client_rect(HWND hwnd, RECT *rect) {
+std::pair<bool, uint32_t> rect::get_client_rect(HWND window_handle,
+    RECT                                            *rect) {
     uint32_t error_code = 0;
-    if (!GetClientRect(hwnd, rect)) {
+    if (!GetClientRect(window_handle, rect)) {
         error_code = GetLastError();
         return std::make_pair(false, error_code);
     }

@@ -6,11 +6,11 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-bool message::get(HWND hwnd,
+bool message::get(HWND window_handle,
     MSG               *msg,
     uint32_t           filter_min,
     uint32_t           filter_max) {
-    int32_t result = GetMessageW(msg, hwnd, filter_min, filter_max);
+    int32_t result = GetMessageW(msg, window_handle, filter_min, filter_max);
     if (result == -1) {
         error_code = GetLastError();
         return false;
@@ -40,17 +40,20 @@ long message::get_time() {
     return GetMessageTime();
 }
 
-bool message::peek(HWND hwnd,
+bool message::peek(HWND window_handle,
     MSG                *msg,
     uint32_t            filter_min,
     uint32_t            filter_max,
     MessageRemove       flag) {
-    return PeekMessageW(
-        msg, hwnd, filter_min, filter_max, static_cast<uint32_t>(flag));
+    return PeekMessageW(msg, window_handle, filter_min, filter_max,
+        static_cast<uint32_t>(flag));
 }
 
-bool message::post(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam) {
-    if (!PostMessageW(hwnd, msg, wparam, lparam)) {
+bool message::post(HWND window_handle,
+    uint32_t            msg,
+    WPARAM              wparam,
+    LPARAM              lparam) {
+    if (!PostMessageW(window_handle, msg, wparam, lparam)) {
         error_code = GetLastError();
         return false;
     }
@@ -97,33 +100,35 @@ bool message::reply(LRESULT result) {
     return ReplyMessage(result);
 }
 
-LRESULT message::send_dialog_item(HWND hwnd_dialog,
+LRESULT message::send_dialog_item(HWND dialog_handle,
     int32_t                            dialog_item_id,
     uint32_t                           msg,
     WPARAM                             wparam,
     LPARAM                             lparam) {
     return SendDlgItemMessageW(
-        hwnd_dialog, dialog_item_id, msg, wparam, lparam);
+        dialog_handle, dialog_item_id, msg, wparam, lparam);
 }
 
-LRESULT message::send(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam) {
-    return SendMessageW(hwnd, msg, wparam, lparam);
+LRESULT
+message::send(HWND window_handle, uint32_t msg, WPARAM wparam, LPARAM lparam) {
+    return SendMessageW(window_handle, msg, wparam, lparam);
 }
 
-bool message::send_callback(HWND hwnd,
+bool message::send_callback(HWND window_handle,
     uint32_t                     msg,
     WPARAM                       wparam,
     LPARAM                       lparam,
     SENDASYNCPROC                callback,
     ULONG_PTR                    data) {
-    if (!SendMessageCallbackW(hwnd, msg, wparam, lparam, callback, data)) {
+    if (!SendMessageCallbackW(
+            window_handle, msg, wparam, lparam, callback, data)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-LRESULT message::send_timeout(HWND hwnd,
+LRESULT message::send_timeout(HWND window_handle,
     uint32_t                       msg,
     WPARAM                         wparam,
     LPARAM                         lparam,
@@ -131,17 +136,17 @@ LRESULT message::send_timeout(HWND hwnd,
     uint32_t                       milli_second,
     SendTimeoutFlag                flag) {
     SetLastError(ERROR_SUCCESS);
-    LRESULT ret = SendMessageTimeoutW(hwnd, msg, wparam, lparam,
+    LRESULT ret = SendMessageTimeoutW(window_handle, msg, wparam, lparam,
         static_cast<uint32_t>(flag), milli_second, result);
     error_code  = GetLastError();
     return ret;
 }
 
-bool message::send_notify(HWND hwnd,
+bool message::send_notify(HWND window_handle,
     uint32_t                   msg,
     WPARAM                     wparam,
     LPARAM                     lparam) {
-    if (!SendNotifyMessageW(hwnd, msg, wparam, lparam)) {
+    if (!SendNotifyMessageW(window_handle, msg, wparam, lparam)) {
         error_code = GetLastError();
         return false;
     }
@@ -200,8 +205,8 @@ bool message::use_send_func(SendType *type) {
     return true;
 }
 
-bool message::is_dialog(HWND hwnd_dialog, MSG *msg) {
-    return IsDialogMessageW(hwnd_dialog, msg);
+bool message::is_dialog(HWND dialog_handle, MSG *msg) {
+    return IsDialogMessageW(dialog_handle, msg);
 }
 
 bool message::is_wow64() {
@@ -251,11 +256,11 @@ bool message::remove_window_filter(uint32_t message) {
     return true;
 }
 
-bool message::change_window_filter(HWND hwnd,
+bool message::change_window_filter(HWND window_handle,
     uint32_t                            message,
     CHANGEFILTERSTRUCT                 *change_filter_struct,
     FilterAction                        action) {
-    if (!ChangeWindowMessageFilterEx(hwnd, message,
+    if (!ChangeWindowMessageFilterEx(window_handle, message,
             static_cast<uint32_t>(action), change_filter_struct)) {
         error_code = GetLastError();
         return false;
@@ -263,50 +268,50 @@ bool message::change_window_filter(HWND hwnd,
     return true;
 }
 
-MessageBoxResult message::box(HWND hwnd,
+MessageBoxResult message::box(HWND window_handle,
     const char                    *text,
     const char                    *caption,
     MessageBoxType                 type) {
     int32_t result =
-        MessageBoxA(hwnd, text, caption, static_cast<uint32_t>(type));
+        MessageBoxA(window_handle, text, caption, static_cast<uint32_t>(type));
     if (!result) {
         error_code = GetLastError();
     }
     return static_cast<MessageBoxResult>(result);
 }
 
-MessageBoxResult message::box(HWND hwnd,
+MessageBoxResult message::box(HWND window_handle,
     const wchar_t                 *text,
     const wchar_t                 *caption,
     MessageBoxType                 type) {
     int32_t result =
-        MessageBoxW(hwnd, text, caption, static_cast<uint32_t>(type));
+        MessageBoxW(window_handle, text, caption, static_cast<uint32_t>(type));
     if (!result) {
         error_code = GetLastError();
     }
     return static_cast<MessageBoxResult>(result);
 }
 
-MessageBoxResult message::box(HWND hwnd,
+MessageBoxResult message::box(HWND window_handle,
     const char                    *text,
     const char                    *caption,
     uint16_t                       language_id,
     MessageBoxType                 type) {
     int32_t result = MessageBoxExA(
-        hwnd, text, caption, static_cast<uint32_t>(type), language_id);
+        window_handle, text, caption, static_cast<uint32_t>(type), language_id);
     if (!result) {
         error_code = GetLastError();
     }
     return static_cast<MessageBoxResult>(result);
 }
 
-MessageBoxResult message::box(HWND hwnd,
+MessageBoxResult message::box(HWND window_handle,
     const wchar_t                 *text,
     const wchar_t                 *caption,
     uint16_t                       language_id,
     MessageBoxType                 type) {
     int32_t result = MessageBoxExW(
-        hwnd, text, caption, static_cast<uint32_t>(type), language_id);
+        window_handle, text, caption, static_cast<uint32_t>(type), language_id);
     if (!result) {
         error_code = GetLastError();
     }

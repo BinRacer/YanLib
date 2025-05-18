@@ -510,7 +510,8 @@ public:
 
     ~message()                               = default;
 
-    bool get(HWND hwnd, MSG *msg, uint32_t filter_min, uint32_t filter_max);
+    bool
+    get(HWND window_handle, MSG *msg, uint32_t filter_min, uint32_t filter_max);
 
     LPARAM get_extra_info();
 
@@ -522,13 +523,13 @@ public:
 
     long get_time();
 
-    bool peek(HWND    hwnd,
+    bool peek(HWND    window_handle,
         MSG          *msg, /* RegularMessage */
         uint32_t      filter_min,
         uint32_t      filter_max,
         MessageRemove flag = MessageRemove::NoRemove);
 
-    bool post(HWND hwnd,
+    bool post(HWND window_handle,
         uint32_t   msg, /* RegularMessage */
         WPARAM     wparam,
         LPARAM     lparam);
@@ -548,25 +549,25 @@ public:
 
     bool reply(LRESULT result);
 
-    LRESULT send_dialog_item(HWND hwnd_dialog,
+    LRESULT send_dialog_item(HWND dialog_handle,
         int32_t                   dialog_item_id,
         uint32_t                  msg, /* RegularMessage */
         WPARAM                    wparam,
         LPARAM                    lparam);
 
-    LRESULT send(HWND hwnd,
+    LRESULT send(HWND window_handle,
         uint32_t      msg, /* RegularMessage */
         WPARAM        wparam,
         LPARAM        lparam);
 
-    bool send_callback(HWND hwnd,
+    bool send_callback(HWND window_handle,
         uint32_t            msg, /* RegularMessage */
         WPARAM              wparam,
         LPARAM              lparam,
         SENDASYNCPROC       callback,
         ULONG_PTR           data);
 
-    LRESULT send_timeout(HWND hwnd,
+    LRESULT send_timeout(HWND window_handle,
         uint32_t              msg, /* RegularMessage */
         WPARAM                wparam,
         LPARAM                lparam,
@@ -574,7 +575,7 @@ public:
         uint32_t              milli_second,
         SendTimeoutFlag       flag = SendTimeoutFlag::Block);
 
-    bool send_notify(HWND hwnd,
+    bool send_notify(HWND window_handle,
         uint32_t          msg, /* RegularMessage */
         WPARAM            wparam,
         LPARAM            lparam);
@@ -595,7 +596,7 @@ public:
 
     bool use_send_func(SendType *type);
 
-    bool is_dialog(HWND hwnd_dialog, MSG *msg);
+    bool is_dialog(HWND dialog_handle, MSG *msg);
 
     bool is_wow64();
 
@@ -616,25 +617,25 @@ public:
 
     bool remove_window_filter(uint32_t message);
 
-    bool change_window_filter(HWND hwnd,
+    bool change_window_filter(HWND window_handle,
         uint32_t                   message, /* RegularMessage */
         CHANGEFILTERSTRUCT        *change_filter_struct,
         FilterAction               action = FilterAction::Allow);
 
-    MessageBoxResult box(HWND hwnd,
+    MessageBoxResult box(HWND window_handle,
         const char           *text,
         const char           *caption,
         MessageBoxType        type = MessageBoxType::Ok |
                               MessageBoxType::IconInformation);
 
-    MessageBoxResult box(HWND hwnd,
+    MessageBoxResult box(HWND window_handle,
         const wchar_t        *text,
         const wchar_t        *caption,
         MessageBoxType        type = MessageBoxType::Ok |
                               MessageBoxType::IconInformation);
 
     // language_id = MAKELANGID(LANG_CHINESE, SUBLANG_DEFAULT);
-    MessageBoxResult box(HWND hwnd,
+    MessageBoxResult box(HWND window_handle,
         const char           *text,
         const char           *caption,
         uint16_t              language_id,
@@ -642,7 +643,7 @@ public:
                               MessageBoxType::IconInformation);
 
     // language_id = MAKELANGID(LANG_CHINESE, SUBLANG_DEFAULT);
-    MessageBoxResult box(HWND hwnd,
+    MessageBoxResult box(HWND window_handle,
         const wchar_t        *text,
         const wchar_t        *caption,
         uint16_t              language_id,

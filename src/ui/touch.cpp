@@ -34,32 +34,34 @@ bool touch::inject_synthetic_pointer_input(
     }
     return true;
 }
-bool touch::register_hit_testing(HWND hwnd, TouchHitTesting flag) {
-    if (!RegisterTouchHitTestingWindow(hwnd, static_cast<uint32_t>(flag))) {
+bool touch::register_hit_testing(HWND window_handle, TouchHitTesting flag) {
+    if (!RegisterTouchHitTestingWindow(
+            window_handle, static_cast<uint32_t>(flag))) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool touch::register_window(HWND hwnd, RegisterFlag flag) {
-    if (!RegisterTouchWindow(hwnd, static_cast<uint32_t>(flag))) {
+bool touch::register_window(HWND window_handle, RegisterFlag flag) {
+    if (!RegisterTouchWindow(window_handle, static_cast<uint32_t>(flag))) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool touch::unregister_window(HWND hwnd) {
-    if (!UnregisterTouchWindow(hwnd)) {
+bool touch::unregister_window(HWND window_handle) {
+    if (!UnregisterTouchWindow(window_handle)) {
         error_code = GetLastError();
         return false;
     }
     return true;
 }
 
-bool touch::what_flag(HWND hwnd, RegisterFlag *flag) {
-    return IsTouchWindow(hwnd, reinterpret_cast<unsigned long *>(flag));
+bool touch::what_flag(HWND window_handle, RegisterFlag *flag) {
+    return IsTouchWindow(
+        window_handle, reinterpret_cast<unsigned long *>(flag));
 }
 
 bool touch::close_input_handle(HTOUCHINPUT touch_input_handle) {

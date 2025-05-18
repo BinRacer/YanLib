@@ -123,52 +123,53 @@ public:
 
     ~scroll()                              = default;
 
-    bool enable(HWND hwnd,
+    bool enable(HWND window_handle,
         ScrollType   scroll_type = ScrollType::Both,
         ArrowType    arrow_type  = ArrowType::EnableBoth);
 
-    bool show(HWND hwnd, ScrollType scroll_type = ScrollType::Both);
+    bool show(HWND window_handle, ScrollType scroll_type = ScrollType::Both);
 
-    bool hide(HWND hwnd, ScrollType scroll_type = ScrollType::Both);
+    bool hide(HWND window_handle, ScrollType scroll_type = ScrollType::Both);
 
-    bool get_info(HWND hwnd,
+    bool get_info(HWND window_handle,
         SCROLLBARINFO *scroll_bar_info,
         ObjectID       object_id = ObjectID::VScroll);
 
-    bool get_info(HWND hwnd,
+    bool get_info(HWND window_handle,
         SCROLLINFO    *scroll_info,
         ScrollType     scroll_type = ScrollType::Vert);
 
-    int32_t set_info(HWND hwnd,
+    int32_t set_info(HWND window_handle,
         SCROLLINFO       *scroll_info,
         ScrollType        scroll_type = ScrollType::Vert,
         bool              is_redraw   = true);
 
-    int32_t get_pos(HWND hwnd, ScrollType scroll_type = ScrollType::Vert);
+    int32_t get_pos(HWND window_handle,
+        ScrollType       scroll_type = ScrollType::Vert);
 
-    int32_t set_pos(HWND hwnd,
+    int32_t set_pos(HWND window_handle,
         int32_t          pos,
         ScrollType       scroll_type = ScrollType::Vert,
         bool             is_redraw   = true);
 
-    bool get_range(HWND hwnd,
+    bool get_range(HWND window_handle,
         int32_t        *min_pos,
         int32_t        *max_pos,
         ScrollType      scroll_type = ScrollType::Vert);
 
-    bool set_range(HWND hwnd,
+    bool set_range(HWND window_handle,
         int32_t         min_pos,
         int32_t         max_pos,
         ScrollType      scroll_type = ScrollType::Vert,
         bool            is_redraw   = true);
 
-    bool scroll_window(HWND hwnd,
+    bool scroll_window(HWND window_handle,
         int32_t             x_amount,
         int32_t             y_amount,
         const RECT         *rect      = nullptr,
         const RECT         *clip_rect = nullptr);
 
-    int32_t scroll_window_extend(HWND hwnd,
+    int32_t scroll_window_extend(HWND window_handle,
         int32_t                       dx,
         int32_t                       dy,
         const RECT                   *rect_scroll          = nullptr,

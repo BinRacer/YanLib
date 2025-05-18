@@ -15,11 +15,11 @@ HKL keyboard::load_layout(KeyboardID id, KeyboardLayout layout) {
     return result;
 }
 
-bool keyboard::register_hot_key(HWND hwnd,
+bool keyboard::register_hot_key(HWND window_handle,
     int32_t                          id,
     ModKey                           mod_key,
     VirtualKey                       vk) {
-    if (!RegisterHotKey(hwnd, id, static_cast<uint32_t>(mod_key),
+    if (!RegisterHotKey(window_handle, id, static_cast<uint32_t>(mod_key),
             static_cast<uint32_t>(vk))) {
         error_code = GetLastError();
         return false;
@@ -27,8 +27,8 @@ bool keyboard::register_hot_key(HWND hwnd,
     return true;
 }
 
-bool keyboard::unregister_hot_key(HWND hwnd, int32_t id) {
-    if (!UnregisterHotKey(hwnd, id)) {
+bool keyboard::unregister_hot_key(HWND window_handle, int32_t id) {
+    if (!UnregisterHotKey(window_handle, id)) {
         error_code = GetLastError();
         return false;
     }
@@ -247,8 +247,8 @@ HWND keyboard::get_focus() {
     return GetFocus();
 }
 
-HWND keyboard::set_focus(HWND hwnd) {
-    HWND result = SetFocus(hwnd);
+HWND keyboard::set_focus(HWND window_handle) {
+    HWND result = SetFocus(window_handle);
     if (!result) {
         error_code = GetLastError();
     }

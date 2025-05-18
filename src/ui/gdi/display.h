@@ -88,13 +88,13 @@ public:
 
     static long change_display_settings(const char *device_name,
         DEVMODEA                                   *device_mode,
-        HWND                                        hwnd,
+        HWND                                        window_handle,
         uint32_t                                    flag,
         void                                       *lparam);
 
     static long change_display_settings(const wchar_t *device_name,
         DEVMODEW                                      *device_mode,
-        HWND                                           hwnd,
+        HWND                                           window_handle,
         uint32_t                                       flag,
         void                                          *lparam);
 };

@@ -14,132 +14,132 @@ namespace YanLib::sys {
 #ifndef TOKENACCESS
 #define TOKENACCESS
 
-enum class ProcAccess : uint32_t {
-    Delete           = DELETE,
-    ReadControl      = READ_CONTROL,
-    WriteDac         = WRITE_DAC,
-    WriteOwner       = WRITE_OWNER,
-    Synchronize      = SYNCHRONIZE,
-    All              = PROCESS_ALL_ACCESS,
-    Terminate        = PROCESS_TERMINATE,
-    CreateThread     = PROCESS_CREATE_THREAD,
-    SetSessionId     = PROCESS_SET_SESSIONID,
-    VmOperation      = PROCESS_VM_OPERATION,
-    VmRead           = PROCESS_VM_READ,
-    VmWrite          = PROCESS_VM_WRITE,
-    DupHandle        = PROCESS_DUP_HANDLE,
-    Create           = PROCESS_CREATE_PROCESS,
-    SetQuota         = PROCESS_SET_QUOTA,
-    SetInfo          = PROCESS_SET_INFORMATION,
-    QueryInfo        = PROCESS_QUERY_INFORMATION,
-    SuspendResume    = PROCESS_SUSPEND_RESUME,
-    QueryLimitedInfo = PROCESS_QUERY_LIMITED_INFORMATION,
-    SetLimitedInfo   = PROCESS_SET_LIMITED_INFORMATION,
-};
+    enum class ProcAccess : uint32_t {
+        Delete = DELETE,
+        ReadControl = READ_CONTROL,
+        WriteDac = WRITE_DAC,
+        WriteOwner = WRITE_OWNER,
+        Synchronize = SYNCHRONIZE,
+        All = PROCESS_ALL_ACCESS,
+        Terminate = PROCESS_TERMINATE,
+        CreateThread = PROCESS_CREATE_THREAD,
+        SetSessionId = PROCESS_SET_SESSIONID,
+        VmOperation = PROCESS_VM_OPERATION,
+        VmRead = PROCESS_VM_READ,
+        VmWrite = PROCESS_VM_WRITE,
+        DupHandle = PROCESS_DUP_HANDLE,
+        Create = PROCESS_CREATE_PROCESS,
+        SetQuota = PROCESS_SET_QUOTA,
+        SetInfo = PROCESS_SET_INFORMATION,
+        QueryInfo = PROCESS_QUERY_INFORMATION,
+        SuspendResume = PROCESS_SUSPEND_RESUME,
+        QueryLimitedInfo = PROCESS_QUERY_LIMITED_INFORMATION,
+        SetLimitedInfo = PROCESS_SET_LIMITED_INFORMATION,
+    };
 
-inline ProcAccess operator|(ProcAccess a, ProcAccess b) {
-    return static_cast<ProcAccess>(
-        static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
-}
+    inline ProcAccess operator|(ProcAccess a, ProcAccess b) {
+        return static_cast<ProcAccess>(static_cast<uint32_t>(a) |
+                                       static_cast<uint32_t>(b));
+    }
 #endif
 
-class snapshot {
-private:
-    HANDLE                        snapshot_handle = INVALID_HANDLE_VALUE;
-    std::vector<PROCESSENTRY32W>  procs{};
-    std::unordered_set<uint32_t>  pids{};
-    std::vector<THREADENTRY32>    threads{};
-    std::unordered_set<uint32_t>  thread_ids{};
-    std::vector<MODULEENTRY32W>   modules{};
-    std::unordered_set<HMODULE>   module_handles{};
-    std::vector<HEAPLIST32>       heaps{};
-    std::unordered_set<ULONG_PTR> heap_ids{};
-    uint32_t                      error_code = 0;
+    class snapshot {
+    private:
+        HANDLE snapshot_handle = INVALID_HANDLE_VALUE;
+        std::vector<PROCESSENTRY32W> procs{};
+        std::unordered_set<uint32_t> pids{};
+        std::vector<THREADENTRY32> threads{};
+        std::unordered_set<uint32_t> thread_ids{};
+        std::vector<MODULEENTRY32W> modules{};
+        std::unordered_set<HMODULE> module_handles{};
+        std::vector<HEAPLIST32> heaps{};
+        std::unordered_set<ULONG_PTR> heap_ids{};
+        uint32_t error_code = 0;
 
-    void cleanup();
+        void cleanup();
 
-public:
-    snapshot(const snapshot &other)            = delete;
+    public:
+        snapshot(const snapshot &other) = delete;
 
-    snapshot(snapshot &&other)                 = delete;
+        snapshot(snapshot &&other) = delete;
 
-    snapshot &operator=(const snapshot &other) = delete;
+        snapshot &operator=(const snapshot &other) = delete;
 
-    snapshot &operator=(snapshot &&other)      = delete;
+        snapshot &operator=(snapshot &&other) = delete;
 
-    snapshot()                                 = default;
+        snapshot() = default;
 
-    ~snapshot();
+        ~snapshot();
 
-    std::vector<PROCESSENTRY32W> ls_procs(uint32_t pid = 0);
+        std::vector<PROCESSENTRY32W> ls_procs(uint32_t pid = 0);
 
-    std::unordered_set<uint32_t> ls_pids(uint32_t pid = 0);
+        std::unordered_set<uint32_t> ls_pids(uint32_t pid = 0);
 
-    void refresh_procs();
+        void refresh_procs();
 
-    bool pid_exists(uint32_t pid);
+        bool pid_exists(uint32_t pid);
 
-    uint32_t get_ppid(uint32_t pid);
+        uint32_t get_ppid(uint32_t pid);
 
-    PROCESSENTRY32W find_proc(uint32_t pid);
+        PROCESSENTRY32W find_proc(uint32_t pid);
 
-    PROCESSENTRY32W find_proc(const wchar_t *proc_name);
+        PROCESSENTRY32W find_proc(const wchar_t* proc_name);
 
-    std::vector<THREADENTRY32> ls_threads(uint32_t pid = 0);
+        std::vector<THREADENTRY32> ls_threads(uint32_t pid = 0);
 
-    std::unordered_set<uint32_t> ls_thread_ids(uint32_t pid = 0);
+        std::unordered_set<uint32_t> ls_thread_ids(uint32_t pid = 0);
 
-    void refresh_threads();
+        void refresh_threads();
 
-    bool tid_exists(uint32_t tid);
+        bool tid_exists(uint32_t tid);
 
-    uint32_t tid_to_pid(uint32_t tid);
+        uint32_t tid_to_pid(uint32_t tid);
 
-    THREADENTRY32 find_thread(uint32_t tid);
+        THREADENTRY32 find_thread(uint32_t tid);
 
-    std::vector<THREADENTRY32> find_threads(uint32_t pid);
+        std::vector<THREADENTRY32> find_threads(uint32_t pid);
 
-    std::vector<MODULEENTRY32W> ls_modules(uint32_t pid = 0);
+        std::vector<MODULEENTRY32W> ls_modules(uint32_t pid = 0);
 
-    std::unordered_set<HMODULE> ls_module_handles(uint32_t pid = 0);
+        std::unordered_set<HMODULE> ls_module_handles(uint32_t pid = 0);
 
-    void refresh_modules();
+        void refresh_modules();
 
-    MODULEENTRY32W find_module(const wchar_t *proc_name);
+        MODULEENTRY32W find_module(const wchar_t* proc_name);
 
-    MODULEENTRY32W find_module(const void *address);
+        MODULEENTRY32W find_module(const void* address);
 
-    std::vector<HEAPLIST32> ls_heaps(uint32_t pid = 0);
+        std::vector<HEAPLIST32> ls_heaps(uint32_t pid = 0);
 
-    std::unordered_set<ULONG_PTR> ls_heap_ids(uint32_t pid = 0);
+        std::unordered_set<ULONG_PTR> ls_heap_ids(uint32_t pid = 0);
 
-    void refresh_heaps();
+        void refresh_heaps();
 
-    HEAPLIST32 find_heap(ULONG_PTR heap_id);
+        HEAPLIST32 find_heap(ULONG_PTR heap_id);
 
-    std::vector<HEAPLIST32> find_heaps(uint32_t pid);
+        std::vector<HEAPLIST32> find_heaps(uint32_t pid);
 
-    std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heap_list);
+        std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heap_list);
 
-    std::vector<HEAPENTRY32> find_heap_blocks(ULONG_PTR heap_id);
+        std::vector<HEAPENTRY32> find_heap_blocks(ULONG_PTR heap_id);
 
-    std::vector<HEAPENTRY32> find_heap_blocks(uint32_t pid);
+        std::vector<HEAPENTRY32> find_heap_blocks(uint32_t pid);
 
-    HANDLE pid_to_handle(uint32_t pid,
-        ProcAccess                access     = ProcAccess::All,
-        bool                      is_inherit = false);
+        HANDLE pid_to_handle(uint32_t pid,
+                             ProcAccess access = ProcAccess::All,
+                             bool is_inherit = false);
 
-    uint32_t handle_to_pid(HANDLE proc_handle);
+        uint32_t handle_to_pid(HANDLE proc_handle);
 
-    bool is_heap(HANDLE proc_handle, void *address);
+        bool is_heap(HANDLE proc_handle, void* address);
 
-    bool is_heap(uint32_t pid, void *address);
+        bool is_heap(uint32_t pid, void* address);
 
-    [[nodiscard]] uint32_t err_code() const;
+        [[nodiscard]] uint32_t err_code() const;
 
-    [[nodiscard]] std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-    [[nodiscard]] std::wstring err_wstring() const;
-};
+        [[nodiscard]] std::wstring err_wstring() const;
+    };
 } // namespace YanLib::sys
 #endif // SNAPSHOT_H

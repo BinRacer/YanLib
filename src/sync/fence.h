@@ -8,34 +8,34 @@
 #include <cstdint>
 
 namespace YanLib::sync {
-class fence {
-private:
-    CRITICAL_SECTION critical_section{};
+    class fence {
+    private:
+        CRITICAL_SECTION critical_section{};
 
-public:
-    fence(const fence &other)            = delete;
+    public:
+        fence(const fence &other) = delete;
 
-    fence(fence &&other)                 = delete;
+        fence(fence &&other) = delete;
 
-    fence &operator=(const fence &other) = delete;
+        fence &operator=(const fence &other) = delete;
 
-    fence &operator=(fence &&other)      = delete;
+        fence &operator=(fence &&other) = delete;
 
-    fence()                              = delete;
+        fence() = delete;
 
-    ~fence();
+        ~fence();
 
-    void init();
+        void init();
 
-    void init_with_spin(uint32_t spin_count = 4000);
+        void init_with_spin(uint32_t spin_count = 4000);
 
-    uint32_t set_spin_count(uint32_t spin_count);
+        uint32_t set_spin_count(uint32_t spin_count);
 
-    void lock();
+        void lock();
 
-    bool try_lock();
+        bool try_lock();
 
-    void unlock();
-};
+        void unlock();
+    };
 } // namespace YanLib::sync
 #endif // FENCE_H

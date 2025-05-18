@@ -8,41 +8,67 @@
 #include <string>
 
 namespace YanLib::ui {
-class window_pos {
-private:
-    uint32_t error_code = 0;
+#ifndef POSFLAG
+#define POSFLAG
 
-public:
-    window_pos(const window_pos &other)            = delete;
+    enum class PosFlag : uint32_t {
+        NoSize = SWP_NOSIZE,
+        NoMove = SWP_NOMOVE,
+        NoZOrder = SWP_NOZORDER,
+        NoRedraw = SWP_NOREDRAW,
+        NoActivate = SWP_NOACTIVATE,
+        FrameChanged = SWP_FRAMECHANGED,
+        ShowWindow = SWP_SHOWWINDOW,
+        HideWindow = SWP_HIDEWINDOW,
+        NoCopyBits = SWP_NOCOPYBITS,
+        NoOwnerZOrder = SWP_NOOWNERZORDER,
+        NoSendChanging = SWP_NOSENDCHANGING,
+        DrawFrame = SWP_DRAWFRAME,
+        NoRepos = SWP_NOREPOSITION,
+        DeferErase = SWP_DEFERERASE,
+        AsyncWindowPos = SWP_ASYNCWINDOWPOS,
+    };
 
-    window_pos(window_pos &&other)                 = delete;
+    inline PosFlag operator|(PosFlag a, PosFlag b) {
+        return static_cast<PosFlag>(static_cast<uint32_t>(a) |
+                                    static_cast<uint32_t>(b));
+    }
+#endif
+    class window_pos {
+    private:
+        uint32_t error_code = 0;
 
-    window_pos &operator=(const window_pos &other) = delete;
+    public:
+        window_pos(const window_pos &other) = delete;
 
-    window_pos &operator=(window_pos &&other)      = delete;
+        window_pos(window_pos &&other) = delete;
 
-    window_pos()                                   = default;
+        window_pos &operator=(const window_pos &other) = delete;
 
-    ~window_pos()                                  = default;
+        window_pos &operator=(window_pos &&other) = delete;
 
-    HDWP prepare(int32_t window_num);
+        window_pos() = default;
 
-    HDWP add(HDWP window_pos_handle,
-        HWND      window_handle,
-        HWND      insert_after_window_handle,
-        int32_t   x,
-        int32_t   y,
-        int32_t   cx,
-        int32_t   cy,
-        uint32_t  flag);
+        ~window_pos() = default;
 
-    bool apply(HDWP window_pos_handle);
+        HDWP prepare(int32_t window_num);
 
-    [[nodiscard]] uint32_t err_code() const;
+        HDWP add(HDWP window_pos_handle,
+                 HWND window_handle,
+                 HWND insert_after_window_handle = nullptr,
+                 int32_t x = CW_USEDEFAULT,
+                 int32_t y = CW_USEDEFAULT,
+                 int32_t width = CW_USEDEFAULT,
+                 int32_t height = CW_USEDEFAULT,
+                 PosFlag flag = PosFlag::NoZOrder | PosFlag::ShowWindow);
 
-    [[nodiscard]] std::string err_string() const;
+        bool apply(HDWP window_pos_handle);
 
-    [[nodiscard]] std::wstring err_wstring() const;
-};
+        [[nodiscard]] uint32_t err_code() const;
+
+        [[nodiscard]] std::string err_string() const;
+
+        [[nodiscard]] std::wstring err_wstring() const;
+    };
 } // namespace YanLib::ui
 #endif // WINDOW_POS_H

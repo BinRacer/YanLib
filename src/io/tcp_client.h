@@ -10,49 +10,49 @@
 
 #pragma comment(lib, "ws2_32.lib")
 namespace YanLib::io {
-class tcp_client {
-private:
-    WSADATA       wsa_data      = {};
-    volatile bool is_ipv6       = false;
-    SOCKET        client_socket = INVALID_SOCKET;
-    volatile bool init_done     = false;
-    int32_t       error_code    = 0;
+    class tcp_client {
+    private:
+        WSADATA wsa_data = {};
+        volatile bool is_ipv6 = false;
+        SOCKET client_socket = INVALID_SOCKET;
+        volatile bool init_done = false;
+        int32_t error_code = 0;
 
-    tcp_client()                = default;
+        tcp_client() = default;
 
-public:
-    tcp_client(const tcp_client &other)            = delete;
+    public:
+        tcp_client(const tcp_client &other) = delete;
 
-    tcp_client(tcp_client &&other)                 = delete;
+        tcp_client(tcp_client &&other) = delete;
 
-    tcp_client &operator=(const tcp_client &other) = delete;
+        tcp_client &operator=(const tcp_client &other) = delete;
 
-    tcp_client &operator=(tcp_client &&other)      = delete;
+        tcp_client &operator=(tcp_client &&other) = delete;
 
-    explicit tcp_client(bool active_ipv6 = false);
+        explicit tcp_client(bool active_ipv6 = false);
 
-    ~tcp_client();
+        ~tcp_client();
 
-    [[nodiscard]] bool is_ok() const;
+        [[nodiscard]] bool is_ok() const;
 
-    bool connect(const char *remote_ip   = "127.0.0.1",
-        uint16_t             remote_port = 8080);
+        bool connect(const char* remote_ip = "127.0.0.1",
+                     uint16_t remote_port = 8080);
 
-    int32_t read(char *buf, int32_t len, int32_t flags = 0);
+        int32_t read(char* buf, int32_t len, int32_t flags = 0);
 
-    int32_t write(const char *buf, int32_t len, int32_t flags = 0);
+        int32_t write(const char* buf, int32_t len, int32_t flags = 0);
 
-    std::string read_string(int32_t buffer_size = 1024);
+        std::string read_string(int32_t buffer_size = 1024);
 
-    std::string read_string_to_end();
+        std::string read_string_to_end();
 
-    int32_t write_string(std::string &str);
+        int32_t write_string(std::string &str);
 
-    [[nodiscard]] int32_t err_code() const;
+        [[nodiscard]] int32_t err_code() const;
 
-    [[nodiscard]] std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-    [[nodiscard]] std::wstring err_wstring() const;
-};
+        [[nodiscard]] std::wstring err_wstring() const;
+    };
 } // namespace YanLib::io
 #endif // TCP_CLIENT_H

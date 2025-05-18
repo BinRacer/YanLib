@@ -1,77 +1,102 @@
-# ===================== Basic Rules =====================
+---
 Language: Cpp
 BasedOnStyle: LLVM
-Standard: Latest
-ColumnLimit: 80
 AccessModifierOffset: -4
-
-# ===================== Brace Control =====================
-BreakBeforeBraces: Attach
-BraceWrapping:
-  AfterFunction: false       # K&R style: } stays with function body
-  AfterClass: false          # } stays with class body
-  AfterControlStatement: Never # } stays with if/for/while statements
-  AfterEnum: false           # } stays with enum body
-  AfterStruct: false         # } stays with struct body
-  SplitEmptyFunction: true   # Allow split empty function {}
-  SplitEmptyRecord: true     # Allow split empty struct/class {}
-  SplitEmptyNamespace: true  # Allow split empty namespace {}
-
-# ===================== Parameter Wrapping =====================
-AlignAfterOpenBracket: DontAlign
-BinPackParameters: false
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: AcrossEmptyLinesAndComments
+AlignEscapedNewlines: Right
+AlignOperands: false
+AlignTrailingComments: true
 AllowAllParametersOfDeclarationOnNextLine: false
-PenaltyBreakBeforeFirstCallParameter: 200  # Prefer breaking after first parameter
-PenaltyExcessCharacter: 1000               # Strict 80-column enforcement
-BreakConstructorInitializers: AfterColon   # Constructor initializer after :
-
-# ===================== Alignment Enhancements =====================
-AlignConsecutiveAssignments:
-  Enabled: true             # Align consecutive assignments
-  AcrossComments: true      # Align across comments
-  AcrossEmptyLines: true    # Align across empty lines
-  AlignCompound: true       # Align compound operators (+=, *=)
-  PadOperators: true        # Add spaces around aligned operators
-
-AlignConsecutiveDeclarations: true         # Align variable declarations
-AlignConsecutiveMacros: AcrossEmptyLinesAndComments  # Align macro definitions
-
-# ===================== Indentation & Spacing =====================
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLambdasOnASingleLine: None
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+BinPackParameters: false
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeBraces: Custom
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: AfterColon
+BreakConstructorInitializersBeforeComma: false
+BreakInheritanceList: AfterColon
+BreakStringLiterals: true
+BreakTemplateDeclarations: MultiLine
+ColumnLimit: 80
+CompactNamespaces: true
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 8
+Cpp11BracedListStyle: true
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex: '^<.*'
+    Priority: 1
+  - Regex: '^".*'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentGotoLabels: true
+IndentPPDirectives: None
 IndentWidth: 4
-ContinuationIndentWidth: 4
-AlignTrailingComments: true      # Column-align trailing comments
-AlignEscapedNewlines: Right      # Right-align \ in multiline macros
-AlignOperands: Align             # Align multiline expressions
-SpacesBeforeTrailingComments: 1 # Single space before comments
-
-# ===================== Functions & Blocks =====================
-AllowShortFunctionsOnASingleLine: None     # Never collapse functions
-AllowShortIfStatementsOnASingleLine: Never  # Always expand if statements
-AllowShortLoopsOnASingleLine: false         # Always expand loops
-AllowShortLambdasOnASingleLine: None        # Never collapse lambdas
-SpaceBeforeParens: ControlStatements        # Space before control statement (e.g. if ())
-SpaceBeforeCtorInitializerColon: true      # Space before constructor :
-SpaceInEmptyBlock: false                    # No space in empty {}
-
-# ===================== Syntax-specific Formatting =====================
-SpaceAfterTemplateKeyword: true       # template<...> not template <...>
-SpaceBeforeRangeBasedForLoopColon: true # for (auto&& item : coll)
-SpaceAfterCStyleCast: false            # (int)var not (int) var
-SpaceBeforeAssignmentOperators: true   # var = 5 not var=5
-SpacesInAngles: Never                  # vector<int> not vector< int >
-SpacesInParentheses: false             # func(arg) not func( arg )
-
-# ===================== Templates & Inheritance =====================
-BreakTemplateDeclarations: MultiLine   # Multi-line template declaration
-BreakInheritanceList: AfterColon       # Break after inheritance :
-PackConstructorInitializers: BinPack    # BinPack constructor initializers
-Cpp11BracedListStyle: true             # Use modern {} initialization
-LambdaBodyIndentation: Signature       # Align lambda body with signature
-
-# ===================== Miscellaneous Settings =====================
-PointerAlignment: Right          # Type* ptr (left-aligned)
-ReferenceAlignment: Right        # Type& ref (left-aligned)
-SortIncludes: Never              # Case-sensitive include sorting
-BreakStringLiterals: true        # Break long string literals
-BreakBeforeTernaryOperators: true # Break before ? and :
-ConstructorInitializerIndentWidth: 4 # 4-space indent for continued lines
+IndentWrappedFunctionNames: false
+InsertNewlineAtEOF: true
+LambdaBodyIndentation: Signature
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: All
+PackConstructorInitializers: BinPack
+PenaltyBreakBeforeFirstCallParameter: 200
+PenaltyExcessCharacter: 1000
+PointerAlignment: Left
+ReferenceAlignment: Right
+SortIncludes: Never
+SpaceAfterCStyleCast: false
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpaceInEmptyParentheses: false
+SpacesBeforeTrailingComments: 1
+SpacesInAngles: false
+SpacesInConditionalStatement: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard: c++17
+TabWidth: 4
+UseTab: Never
+...

@@ -13,7 +13,7 @@ protected:
 TEST_F(sys_security, check_level) {
     auto elevation = security.check_proc_elevation();
     auto [security_level, token_policy, resource_level, system_policy] =
-        security.check_proc_integrity_level();
+            security.check_proc_integrity_level();
     EXPECT_EQ(elevation.first, TokenElevationTypeLimited);
     EXPECT_EQ(elevation.second, true);
     EXPECT_EQ(security_level, sys::SecurityLevel::Medium);

@@ -5,148 +5,151 @@
 #include "region.h"
 
 namespace YanLib::ui::gdi {
-HRGN region::create_rect_region(int32_t x1,
-    int32_t                             y1,
-    int32_t                             x2,
-    int32_t                             y2) {
-    return CreateRectRgn(x1, y1, x2, y2);
-}
-
-HRGN region::create_rect_region_indirect(const RECT *rect) {
-    return CreateRectRgnIndirect(rect);
-}
-
-HRGN region::create_round_rect_region(int32_t x1,
-    int32_t                                   y1,
-    int32_t                                   x2,
-    int32_t                                   y2,
-    int32_t                                   width,
-    int32_t                                   height) {
-    return CreateRoundRectRgn(x1, y1, x2, y2, width, height);
-}
-
-HRGN region::create_elliptic_region(int32_t x1,
-    int32_t                                 y1,
-    int32_t                                 x2,
-    int32_t                                 y2) {
-    return CreateEllipticRgn(x1, y1, x2, y2);
-}
-
-HRGN region::create_elliptic_region_indirect(const RECT *rect) {
-    return CreateEllipticRgnIndirect(rect);
-}
-
-HRGN region::create_polygon_region(const std::vector<POINT> &point,
-    int32_t                                                  mode) {
-    return CreatePolygonRgn(point.data(), static_cast<int>(point.size()), mode);
-}
-
-HRGN region::create_poly_polygon_region(const std::vector<POINT> &point,
-    const std::vector<int32_t>                                   &poly_count,
-    int32_t                                                       mode) {
-    return CreatePolyPolygonRgn(point.data(), poly_count.data(),
-        static_cast<int>(poly_count.size()), mode);
-}
-
-bool region::fill_region(HDC dc_handle,
-    HRGN                     region_handle,
-    HBRUSH                   brush_handle) {
-    return FillRgn(dc_handle, region_handle, brush_handle);
-}
-
-HRGN region::ext_create_region(const XFORM *xfrom,
-    uint32_t                                size,
-    const RGNDATA                          *buf) {
-    return ExtCreateRegion(xfrom, size, buf);
-}
-
-bool region::frame_region(HDC dc_handle,
-    HRGN                      region_handle,
-    HBRUSH                    brush_handle,
-    int32_t                   width,
-    int32_t                   height) {
-    return FrameRgn(dc_handle, region_handle, brush_handle, width, height);
-}
-
-int32_t region::combine_region(HRGN region_handle_dst,
-    HRGN                            region_handle_src1,
-    HRGN                            region_handle_src2,
-    int32_t                         mode) {
-    return CombineRgn(
-        region_handle_dst, region_handle_src1, region_handle_src2, mode);
-}
-
-bool region::equal_region(HRGN region_handle1, HRGN region_handle2) {
-    return EqualRgn(region_handle1, region_handle2);
-}
-
-bool region::invert_region(HDC dc_handle, HRGN region_handle) {
-    return InvertRgn(dc_handle, region_handle);
-}
-
-int32_t region::offset_region(HRGN region_handle, int32_t x, int32_t y) {
-    return OffsetRgn(region_handle, x, y);
-}
-
-bool region::paint_region(HDC dc_handle, HRGN region_handle) {
-    return PaintRgn(dc_handle, region_handle);
-}
-
-bool region::point_in_region(HRGN region_handle, int32_t x, int32_t y) {
-    return PtInRegion(region_handle, x, y);
-}
-
-bool region::rect_in_region(HRGN region_handle, const RECT *rect) {
-    return RectInRegion(region_handle, rect);
-}
-
-int32_t region::get_poly_fill_mode(HDC dc_handle) {
-    return GetPolyFillMode(dc_handle);
-}
-
-int32_t region::set_poly_fill_mode(HDC dc_handle, int32_t mode) {
-    return SetPolyFillMode(dc_handle, mode);
-}
-
-bool region::set_rect_region(HRGN region_handle,
-    int32_t                       left,
-    int32_t                       top,
-    int32_t                       right,
-    int32_t                       bottom) {
-    return SetRectRgn(region_handle, left, top, right, bottom);
-}
-
-int32_t region::get_region_box(HRGN region_handle, RECT *rect) {
-    return GetRgnBox(region_handle, rect);
-}
-
-int32_t region::get_update_region(HWND window_handle,
-    HRGN                               region_handle,
-    bool                               is_erase) {
-    return GetUpdateRgn(window_handle, region_handle, is_erase ? TRUE : FALSE);
-}
-
-bool region::validate_region(HWND window_handle, HRGN region_handle) {
-    return ValidateRgn(window_handle, region_handle);
-}
-
-bool region::invalidate_region(HWND window_handle,
-    HRGN                            region_handle,
-    bool                            is_erase) {
-    return InvalidateRgn(window_handle, region_handle, is_erase ? TRUE : FALSE);
-}
-
-int32_t region::exclude_update_region(HDC dc_handle, HWND window_handle) {
-    return ExcludeUpdateRgn(dc_handle, window_handle);
-}
-
-std::pair<uint32_t, uint32_t>
-region::get_region_data(HRGN region_handle, uint32_t size, RGNDATA *buf) {
-    uint32_t result     = GetRegionData(region_handle, size, buf);
-    uint32_t error_code = 0;
-    if (!result) {
-        error_code = GetLastError();
+    HRGN
+    region::create_rect_region(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
+        return CreateRectRgn(x1, y1, x2, y2);
     }
-    return std::make_pair(result, error_code);
-}
+
+    HRGN region::create_rect_region_indirect(const RECT* rect) {
+        return CreateRectRgnIndirect(rect);
+    }
+
+    HRGN region::create_round_rect_region(int32_t x1,
+                                          int32_t y1,
+                                          int32_t x2,
+                                          int32_t y2,
+                                          int32_t width,
+                                          int32_t height) {
+        return CreateRoundRectRgn(x1, y1, x2, y2, width, height);
+    }
+
+    HRGN region::create_elliptic_region(int32_t x1,
+                                        int32_t y1,
+                                        int32_t x2,
+                                        int32_t y2) {
+        return CreateEllipticRgn(x1, y1, x2, y2);
+    }
+
+    HRGN region::create_elliptic_region_indirect(const RECT* rect) {
+        return CreateEllipticRgnIndirect(rect);
+    }
+
+    HRGN region::create_polygon_region(const std::vector<POINT> &point,
+                                       int32_t mode) {
+        return CreatePolygonRgn(point.data(),
+                                static_cast<int32_t>(point.size()), mode);
+    }
+
+    HRGN
+    region::create_poly_polygon_region(const std::vector<POINT> &point,
+                                       const std::vector<int32_t> &poly_count,
+                                       int32_t mode) {
+        return CreatePolyPolygonRgn(point.data(), poly_count.data(),
+                                    static_cast<int32_t>(poly_count.size()),
+                                    mode);
+    }
+
+    bool region::fill_region(HDC dc_handle,
+                             HRGN region_handle,
+                             HBRUSH brush_handle) {
+        return FillRgn(dc_handle, region_handle, brush_handle);
+    }
+
+    HRGN region::ext_create_region(const XFORM* xfrom,
+                                   uint32_t size,
+                                   const RGNDATA* buf) {
+        return ExtCreateRegion(xfrom, size, buf);
+    }
+
+    bool region::frame_region(HDC dc_handle,
+                              HRGN region_handle,
+                              HBRUSH brush_handle,
+                              int32_t width,
+                              int32_t height) {
+        return FrameRgn(dc_handle, region_handle, brush_handle, width, height);
+    }
+
+    int32_t region::combine_region(HRGN region_handle_dst,
+                                   HRGN region_handle_src1,
+                                   HRGN region_handle_src2,
+                                   int32_t mode) {
+        return CombineRgn(region_handle_dst, region_handle_src1,
+                          region_handle_src2, mode);
+    }
+
+    bool region::equal_region(HRGN region_handle1, HRGN region_handle2) {
+        return EqualRgn(region_handle1, region_handle2);
+    }
+
+    bool region::invert_region(HDC dc_handle, HRGN region_handle) {
+        return InvertRgn(dc_handle, region_handle);
+    }
+
+    int32_t region::offset_region(HRGN region_handle, int32_t x, int32_t y) {
+        return OffsetRgn(region_handle, x, y);
+    }
+
+    bool region::paint_region(HDC dc_handle, HRGN region_handle) {
+        return PaintRgn(dc_handle, region_handle);
+    }
+
+    bool region::point_in_region(HRGN region_handle, int32_t x, int32_t y) {
+        return PtInRegion(region_handle, x, y);
+    }
+
+    bool region::rect_in_region(HRGN region_handle, const RECT* rect) {
+        return RectInRegion(region_handle, rect);
+    }
+
+    int32_t region::get_poly_fill_mode(HDC dc_handle) {
+        return GetPolyFillMode(dc_handle);
+    }
+
+    int32_t region::set_poly_fill_mode(HDC dc_handle, int32_t mode) {
+        return SetPolyFillMode(dc_handle, mode);
+    }
+
+    bool region::set_rect_region(HRGN region_handle,
+                                 int32_t left,
+                                 int32_t top,
+                                 int32_t right,
+                                 int32_t bottom) {
+        return SetRectRgn(region_handle, left, top, right, bottom);
+    }
+
+    int32_t region::get_region_box(HRGN region_handle, RECT* rect) {
+        return GetRgnBox(region_handle, rect);
+    }
+
+    int32_t region::get_update_region(HWND window_handle,
+                                      HRGN region_handle,
+                                      bool is_erase) {
+        return GetUpdateRgn(window_handle, region_handle,
+                            is_erase ? TRUE : FALSE);
+    }
+
+    bool region::validate_region(HWND window_handle, HRGN region_handle) {
+        return ValidateRgn(window_handle, region_handle);
+    }
+
+    bool region::invalidate_region(HWND window_handle,
+                                   HRGN region_handle,
+                                   bool is_erase) {
+        return InvalidateRgn(window_handle, region_handle,
+                             is_erase ? TRUE : FALSE);
+    }
+
+    int32_t region::exclude_update_region(HDC dc_handle, HWND window_handle) {
+        return ExcludeUpdateRgn(dc_handle, window_handle);
+    }
+
+    std::pair<uint32_t, uint32_t>
+    region::get_region_data(HRGN region_handle, uint32_t size, RGNDATA* buf) {
+        uint32_t result = GetRegionData(region_handle, size, buf);
+        uint32_t error_code = 0;
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return std::make_pair(result, error_code);
+    }
 } // namespace YanLib::ui::gdi

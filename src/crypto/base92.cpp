@@ -6,107 +6,112 @@
 #include <bitset>
 
 namespace YanLib::crypto {
-std::vector<uint8_t> base92::encode(const std::vector<uint8_t> &data) {
-    // The valid character set of Base92 consists of 91 characters,
-    // of which '~' is a placeholder, not in the character set
-    constexpr uint8_t BASE92_CHARS[] =
-        "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
-        "abcdefghijklmnopqrstuvwxyz{|}";
-    if (data.empty())
-        return {};
+    std::vector<uint8_t> base92::encode(const std::vector<uint8_t> &data) {
+        // The valid character set of Base92 consists of 91 characters,
+        // of which '~' is a placeholder, not in the character set
+        constexpr uint8_t BASE92_CHARS[] =
+                "!#$%&'()*+,-./"
+                "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                "abcdefghijklmnopqrstuvwxyz{|}";
+        if (data.empty())
+            return {};
 
-    std::string bitstr;
-    for (const auto b : data) {
-        bitstr += std::bitset<8>(b).to_string();
-    }
+        std::string bitstr;
+        for (const auto b : data) {
+            bitstr += std::bitset<8>(b).to_string();
+        }
 
-    std::vector<uint8_t> result;
-    size_t               pos = 0;
-    while (pos < bitstr.length()) {
-        std::string chunk  = bitstr.substr(pos, 13);
-        pos               += chunk.length();
+        std::vector<uint8_t> result;
+        size_t pos = 0;
+        while (pos < bitstr.length()) {
+            std::string chunk = bitstr.substr(pos, 13);
+            pos += chunk.length();
 
-        if (chunk.length() < 13) {
-            if (chunk.length() <= 6) {
-                chunk += std::string(6 - chunk.length(), '0');
-                int32_t val =
-                    static_cast<int32_t>(std::bitset<6>(chunk).to_ulong());
-                result.push_back(BASE92_CHARS[val]);
-            } else {
-                chunk        += std::string(13 - chunk.length(), '0');
-                int32_t high  = static_cast<int32_t>(
-                    std::bitset<13>(chunk).to_ulong() / 91);
-                int32_t low = static_cast<int32_t>(
-                    std::bitset<13>(chunk).to_ulong() % 91);
-                result.push_back(BASE92_CHARS[high]);
-                result.push_back(BASE92_CHARS[low]);
+            if (chunk.length() < 13) {
+                if (chunk.length() <= 6) {
+                    chunk += std::string(6 - chunk.length(), '0');
+                    int32_t val = static_cast<int32_t>(
+                            std::bitset<6>(chunk).to_ulong());
+                    result.push_back(BASE92_CHARS[val]);
+                }
+                else {
+                    chunk += std::string(13 - chunk.length(), '0');
+                    int32_t high = static_cast<int32_t>(
+                            std::bitset<13>(chunk).to_ulong() / 91);
+                    int32_t low = static_cast<int32_t>(
+                            std::bitset<13>(chunk).to_ulong() % 91);
+                    result.push_back(BASE92_CHARS[high]);
+                    result.push_back(BASE92_CHARS[low]);
+                }
+                break;
             }
-            break;
+
+            int32_t high = static_cast<int32_t>(
+                    std::bitset<13>(chunk).to_ulong() / 91);
+            int32_t low = static_cast<int32_t>(
+                    std::bitset<13>(chunk).to_ulong() % 91);
+            result.push_back(BASE92_CHARS[high]);
+            result.push_back(BASE92_CHARS[low]);
         }
 
-        int32_t high =
-            static_cast<int32_t>(std::bitset<13>(chunk).to_ulong() / 91);
-        int32_t low =
-            static_cast<int32_t>(std::bitset<13>(chunk).to_ulong() % 91);
-        result.push_back(BASE92_CHARS[high]);
-        result.push_back(BASE92_CHARS[low]);
+        return result;
     }
 
-    return result;
-}
+    std::vector<uint8_t> base92::decode(const std::vector<uint8_t> &data) {
+        // The valid character set of Base92 consists of 91 characters,
+        // of which '~' is a placeholder, not in the character set
+        constexpr uint8_t BASE92_CHARS[] =
+                "!#$%&'()*+,-./"
+                "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                "abcdefghijklmnopqrstuvwxyz{|}";
+        if (data.empty())
+            return {};
 
-std::vector<uint8_t> base92::decode(const std::vector<uint8_t> &data) {
-    // The valid character set of Base92 consists of 91 characters,
-    // of which '~' is a placeholder, not in the character set
-    constexpr uint8_t BASE92_CHARS[] =
-        "!#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
-        "abcdefghijklmnopqrstuvwxyz{|}";
-    if (data.empty())
-        return {};
-
-    std::vector<int32_t> table(256, -1);
-    for (int32_t i = 0; i < sizeof(BASE92_CHARS) - 1; ++i) {
-        table[BASE92_CHARS[i]] = i;
-    }
-
-    std::string bitstr;
-    for (size_t i = 0; i < data.size(); ++i) {
-        if (i + 1 < data.size()) {
-            int32_t high = table[data[i]];
-            int32_t low  = table[data[i + 1]];
-            if (high == -1 || low == -1)
-                return {};
-
-            int32_t combined  = high * 91 + low;
-            bitstr           += std::bitset<13>(combined).to_string();
-            ++i;
-        } else {
-            int32_t val = table[data[i]];
-            if (val == -1)
-                return {};
-            bitstr += std::bitset<6>(val).to_string().substr(0, 6);
+        std::vector<int32_t> table(256, -1);
+        for (int32_t i = 0; i < sizeof(BASE92_CHARS) - 1; ++i) {
+            table[BASE92_CHARS[i]] = i;
         }
+
+        std::string bitstr;
+        for (size_t i = 0; i < data.size(); ++i) {
+            if (i + 1 < data.size()) {
+                int32_t high = table[data[i]];
+                int32_t low = table[data[i + 1]];
+                if (high == -1 || low == -1)
+                    return {};
+
+                int32_t combined = high * 91 + low;
+                bitstr += std::bitset<13>(combined).to_string();
+                ++i;
+            }
+            else {
+                int32_t val = table[data[i]];
+                if (val == -1)
+                    return {};
+                bitstr += std::bitset<6>(val).to_string().substr(0, 6);
+            }
+        }
+
+        std::vector<uint8_t> result;
+        for (size_t i = 0; i + 8 <= bitstr.length(); i += 8) {
+            std::string byte = bitstr.substr(i, 8);
+            result.push_back(
+                    static_cast<uint8_t>(std::bitset<8>(byte).to_ulong()));
+        }
+        return result;
     }
 
-    std::vector<uint8_t> result;
-    for (size_t i = 0; i + 8 <= bitstr.length(); i += 8) {
-        std::string byte = bitstr.substr(i, 8);
-        result.push_back(static_cast<uint8_t>(std::bitset<8>(byte).to_ulong()));
+    std::string base92::encode_string(const std::string &data) {
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> encoded = encode(input);
+        std::string result(encoded.begin(), encoded.end());
+        return result;
     }
-    return result;
-}
 
-std::string base92::encode_string(const std::string &data) {
-    std::vector<uint8_t> input(data.begin(), data.end());
-    std::vector<uint8_t> encoded = encode(input);
-    std::string          result(encoded.begin(), encoded.end());
-    return result;
-}
-
-std::string base92::decode_string(const std::string &data) {
-    std::vector<uint8_t> input(data.begin(), data.end());
-    std::vector<uint8_t> decoded = decode(input);
-    std::string          result(decoded.begin(), decoded.end());
-    return result;
-}
+    std::string base92::decode_string(const std::string &data) {
+        std::vector<uint8_t> input(data.begin(), data.end());
+        std::vector<uint8_t> decoded = decode(input);
+        std::string result(decoded.begin(), decoded.end());
+        return result;
+    }
 } // namespace YanLib::crypto

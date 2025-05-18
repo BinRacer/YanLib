@@ -7,34 +7,34 @@
 #include <Windows.h>
 
 namespace YanLib::sync {
-class rwlock {
-private:
-    SRWLOCK rw_lock{};
+    class rwlock {
+    private:
+        SRWLOCK rw_lock{};
 
-public:
-    rwlock(const rwlock &other)            = delete;
+    public:
+        rwlock(const rwlock &other) = delete;
 
-    rwlock(rwlock &&other)                 = delete;
+        rwlock(rwlock &&other) = delete;
 
-    rwlock &operator=(const rwlock &other) = delete;
+        rwlock &operator=(const rwlock &other) = delete;
 
-    rwlock &operator=(rwlock &&other)      = delete;
+        rwlock &operator=(rwlock &&other) = delete;
 
-    rwlock();
+        rwlock();
 
-    ~rwlock() = default;
+        ~rwlock() = default;
 
-    void read_lock();
+        void read_lock();
 
-    bool try_read_lock();
+        bool try_read_lock();
 
-    void read_unlock();
+        void read_unlock();
 
-    void write_lock();
+        void write_lock();
 
-    bool try_write_lock();
+        bool try_write_lock();
 
-    void write_unlock();
-};
+        void write_unlock();
+    };
 } // namespace YanLib::sync
 #endif // RWLOCK_H

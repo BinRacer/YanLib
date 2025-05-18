@@ -36,8 +36,8 @@ protected:
         data_vec.insert(data_vec.end(), data_str.begin(), data_str.end());
         ciphertext_str = "e1d24db90d71fa78674ec917eb5f0fb4c4e8d893a2863b11318e8"
                          "e7dd6fd63fcb5990d22ba97ae9dba900eb5538b1236";
-        ciphertext_vec.insert(
-            ciphertext_vec.end(), ciphertext_str.begin(), ciphertext_str.end());
+        ciphertext_vec.insert(ciphertext_vec.end(), ciphertext_str.begin(),
+                              ciphertext_str.end());
         ciphertext_vec = hex_decode(ciphertext_vec);
         zlib_str = "677594fa93df2389b04364bcec0454091ed08297e81f3fba32ad6a8ec43"
                    "3e61e9a23a052974ba1ec1ff28214ff77fc85";
@@ -45,12 +45,12 @@ protected:
         zlib_vec = hex_decode(zlib_vec);
     }
 
-    std::string          data_str{};
+    std::string data_str{};
     std::vector<uint8_t> data_vec{};
-    std::string          ciphertext_str{};
+    std::string ciphertext_str{};
     std::vector<uint8_t> ciphertext_vec{};
-    const wchar_t       *zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
-    std::string          zlib_str{};
+    const wchar_t* zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
+    std::string zlib_str{};
     std::vector<uint8_t> zlib_vec{};
 };
 

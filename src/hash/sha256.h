@@ -9,61 +9,61 @@
 #include <vector>
 
 namespace YanLib::hash {
-class sha256 {
-private:
-    HCRYPTPROV           crypt_prov_handle;
-    HCRYPTHASH           crypt_hash_handle;
-    std::vector<uint8_t> data_bytes;
-    std::vector<uint8_t> hash_bytes;
-    std::wstring         file_name;
-    bool                 is_file;
-    bool                 is_done = false;
-    uint32_t             error_code;
+    class sha256 {
+    private:
+        HCRYPTPROV crypt_prov_handle;
+        HCRYPTHASH crypt_hash_handle;
+        std::vector<uint8_t> data_bytes;
+        std::vector<uint8_t> hash_bytes;
+        std::wstring file_name;
+        bool is_file;
+        bool is_done = false;
+        uint32_t error_code;
 
-    static std::string format_hex_fast(const std::vector<uint8_t> &data);
+        static std::string format_hex_fast(const std::vector<uint8_t> &data);
 
-    bool pre_process();
+        bool pre_process();
 
-    bool process_file();
+        bool process_file();
 
-    bool process_data();
+        bool process_data();
 
-    std::vector<uint8_t> process();
+        std::vector<uint8_t> process();
 
-    bool post_process();
+        bool post_process();
 
-public:
-    sha256(const sha256 &other)            = delete;
+    public:
+        sha256(const sha256 &other) = delete;
 
-    sha256(sha256 &&other)                 = delete;
+        sha256(sha256 &&other) = delete;
 
-    sha256 &operator=(const sha256 &other) = delete;
+        sha256 &operator=(const sha256 &other) = delete;
 
-    sha256 &operator=(sha256 &&other)      = delete;
+        sha256 &operator=(sha256 &&other) = delete;
 
-    sha256()                               = delete;
+        sha256() = delete;
 
-    explicit sha256(const std::vector<uint8_t> &data);
+        explicit sha256(const std::vector<uint8_t> &data);
 
-    explicit sha256(const std::string &data);
+        explicit sha256(const std::string &data);
 
-    explicit sha256(const char *filename);
+        explicit sha256(const char* filename);
 
-    explicit sha256(const wchar_t *filename);
+        explicit sha256(const wchar_t* filename);
 
-    ~sha256();
+        ~sha256();
 
-    std::vector<uint8_t> hash();
+        std::vector<uint8_t> hash();
 
-    std::string hash_string();
+        std::string hash_string();
 
-    std::wstring hash_wstring();
+        std::wstring hash_wstring();
 
-    [[nodiscard]] uint32_t err_code() const;
+        [[nodiscard]] uint32_t err_code() const;
 
-    [[nodiscard]] std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-    [[nodiscard]] std::wstring err_wstring() const;
-};
+        [[nodiscard]] std::wstring err_wstring() const;
+    };
 } // namespace YanLib::hash
 #endif // SHA256_H

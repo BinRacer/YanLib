@@ -34,23 +34,23 @@ protected:
     void SetUp() override {
         data_str = "Hello World!你好世界";
         data_vec.insert(data_vec.end(), data_str.begin(), data_str.end());
-        ciphertext_str =
-            "3baf349a1a5e420f2e10eb41d571427564b114fe175753f0abddae3148744472";
-        ciphertext_vec.insert(
-            ciphertext_vec.end(), ciphertext_str.begin(), ciphertext_str.end());
+        ciphertext_str = "3baf349a1a5e420f2e10eb41d571427564b114fe175753f0abdda"
+                         "e3148744472";
+        ciphertext_vec.insert(ciphertext_vec.end(), ciphertext_str.begin(),
+                              ciphertext_str.end());
         ciphertext_vec = hex_decode(ciphertext_vec);
-        zlib_str =
-            "c2e88c4d1763b13a91ebaceb65d867c3d3b81befb225cbfa4698df9c0954c547";
+        zlib_str = "c2e88c4d1763b13a91ebaceb65d867c3d3b81befb225cbfa4698df9c095"
+                   "4c547";
         zlib_vec.insert(zlib_vec.end(), zlib_str.begin(), zlib_str.end());
         zlib_vec = hex_decode(zlib_vec);
     }
 
-    std::string          data_str{};
+    std::string data_str{};
     std::vector<uint8_t> data_vec{};
-    std::string          ciphertext_str{};
+    std::string ciphertext_str{};
     std::vector<uint8_t> ciphertext_vec{};
-    const wchar_t       *zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
-    std::string          zlib_str{};
+    const wchar_t* zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
+    std::string zlib_str{};
     std::vector<uint8_t> zlib_vec{};
 };
 

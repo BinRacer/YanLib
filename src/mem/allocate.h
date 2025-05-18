@@ -10,41 +10,41 @@
 #include "sync/rwlock.h"
 
 namespace YanLib::mem {
-class allocate {
-private:
-    std::vector<void *> mem_list   = {};
-    sync::rwlock        rwlock     = {};
-    uint32_t            error_code = 0;
+    class allocate {
+    private:
+        std::vector<void*> mem_list = {};
+        sync::rwlock rwlock = {};
+        uint32_t error_code = 0;
 
-public:
-    allocate(const allocate &other)            = delete;
+    public:
+        allocate(const allocate &other) = delete;
 
-    allocate(allocate &&other)                 = delete;
+        allocate(allocate &&other) = delete;
 
-    allocate &operator=(const allocate &other) = delete;
+        allocate &operator=(const allocate &other) = delete;
 
-    allocate &operator=(allocate &&other)      = delete;
+        allocate &operator=(allocate &&other) = delete;
 
-    allocate()                                 = default;
+        allocate() = default;
 
-    ~allocate();
+        ~allocate();
 
-    void *malloc(size_t size);
+        void* malloc(size_t size);
 
-    bool free(void *addr);
+        bool free(void* addr);
 
-    void *malloc_reserve(size_t size);
+        void* malloc_reserve(size_t size);
 
-    bool free_reserve(void *addr, size_t size = 0);
+        bool free_reserve(void* addr, size_t size = 0);
 
-    void *realloc(void *old_addr, size_t new_size);
+        void* realloc(void* old_addr, size_t new_size);
 
-    [[nodiscard]] uint32_t err_code() const;
+        [[nodiscard]] uint32_t err_code() const;
 
-    [[nodiscard]] std::string err_string() const;
+        [[nodiscard]] std::string err_string() const;
 
-    [[nodiscard]] std::wstring err_wstring() const;
-};
+        [[nodiscard]] std::wstring err_wstring() const;
+    };
 } // namespace YanLib::mem
 
 #endif // ALLOCATE_H

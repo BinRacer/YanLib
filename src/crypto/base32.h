@@ -8,27 +8,27 @@
 #include <vector>
 
 namespace YanLib::crypto {
-class base32 {
-public:
-    base32(const base32 &other)            = delete;
+    class base32 {
+    public:
+        base32(const base32 &other) = delete;
 
-    base32(base32 &&other)                 = delete;
+        base32(base32 &&other) = delete;
 
-    base32 &operator=(const base32 &other) = delete;
+        base32 &operator=(const base32 &other) = delete;
 
-    base32 &operator=(base32 &&other)      = delete;
+        base32 &operator=(base32 &&other) = delete;
 
-    base32()                               = default;
+        base32() = default;
 
-    ~base32()                              = default;
+        ~base32() = default;
 
-    static std::vector<uint8_t> encode(const std::vector<uint8_t> &data);
+        static std::vector<uint8_t> encode(const std::vector<uint8_t> &data);
 
-    static std::vector<uint8_t> decode(const std::vector<uint8_t> &data);
+        static std::vector<uint8_t> decode(const std::vector<uint8_t> &data);
 
-    static std::string encode_string(const std::string &data);
+        static std::string encode_string(const std::string &data);
 
-    static std::string decode_string(const std::string &data);
-};
+        static std::string decode_string(const std::string &data);
+    };
 } // namespace YanLib::crypto
 #endif // BASE32_H

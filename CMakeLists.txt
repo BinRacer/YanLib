@@ -154,6 +154,8 @@ add_library(YanLib STATIC
         src/ui/accelerator.h
         src/ui/scroll.cpp
         src/ui/scroll.h
+        src/ui/notify.cpp
+        src/ui/notify.h
         src/ui/gdi/bitmap.cpp
         src/ui/gdi/bitmap.h
         src/ui/gdi/display.cpp

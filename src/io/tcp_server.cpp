@@ -48,7 +48,7 @@ namespace YanLib::io {
         return init_done;
     }
 
-    bool tcp_server::bind(const char* local_ip, uint16_t local_port) {
+    bool tcp_server::bind(const char *local_ip, uint16_t local_port) {
         if (!init_done) {
             return false;
         }
@@ -60,7 +60,7 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 return false;
             }
-            if (::bind(server_socket, reinterpret_cast<sockaddr*>(&addr),
+            if (::bind(server_socket, reinterpret_cast<sockaddr *>(&addr),
                        sizeof(addr)) == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
                 return false;
@@ -75,7 +75,7 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 return false;
             }
-            if (::bind(server_socket, reinterpret_cast<sockaddr*>(&addr),
+            if (::bind(server_socket, reinterpret_cast<sockaddr *>(&addr),
                        sizeof(addr)) == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
                 return false;
@@ -95,7 +95,7 @@ namespace YanLib::io {
         return true;
     }
 
-    SOCKET tcp_server::accept(sockaddr* addr, int32_t* addr_len) {
+    SOCKET tcp_server::accept(sockaddr *addr, int32_t *addr_len) {
         if (!init_done) {
             return INVALID_SOCKET;
         }
@@ -111,7 +111,7 @@ namespace YanLib::io {
     }
 
     int32_t tcp_server::read(SOCKET client_socket,
-                             char* buf,
+                             char *buf,
                              int32_t len,
                              int32_t flags) {
         int32_t number_of_bytes = recv(client_socket, buf, len, flags);
@@ -122,7 +122,7 @@ namespace YanLib::io {
     }
 
     int32_t tcp_server::write(SOCKET client_socket,
-                              const char* buf,
+                              const char *buf,
                               int32_t len,
                               int32_t flags) {
         int32_t number_of_bytes = send(client_socket, buf, len, flags);

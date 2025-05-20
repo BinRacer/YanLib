@@ -7,7 +7,7 @@ protected:
     void SetUp() override {
     }
 
-    const wchar_t* zlib = L"..\\..\\test\\testdata\\zlibd1_32.dll";
+    const wchar_t *zlib = L"..\\..\\test\\testdata\\zlibd1_32.dll";
 };
 
 TEST_F(io_pe32, pre_check) {
@@ -340,7 +340,7 @@ TEST_F(io_pe32, relocation_table_check) {
 TEST_F(io_pe32, other_check) {
     io::pe32 pe32(zlib);
     auto section_header = pe32.find_section_header(4096);
-    EXPECT_EQ(strcmp(reinterpret_cast<char const*>(section_header.Name),
+    EXPECT_EQ(strcmp(reinterpret_cast<char const *>(section_header.Name),
                      ".text"),
               0);
 

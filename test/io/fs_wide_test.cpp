@@ -55,7 +55,7 @@ protected:
     }
 
     std::wstring temp_path;
-    const wchar_t* notepad = L"C:\\Windows\\System32\\notepad.exe";
+    const wchar_t *notepad = L"C:\\Windows\\System32\\notepad.exe";
     std::wstring read_notepad;
     std::wstring write_notepad;
     std::wstring fs_test_dir;

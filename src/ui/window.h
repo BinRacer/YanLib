@@ -316,12 +316,18 @@ namespace YanLib::ui {
 #define LAYOUT
 
     enum class Layout : uint32_t {
+        Error = GDI_ERROR,
         RightToLeft = LAYOUT_RTL,
         BottomToTop = LAYOUT_BTT,
         VerticalBeforeHorizontal = LAYOUT_VBH,
         OrientationMask = LAYOUT_ORIENTATIONMASK,
         BitmapOrientationPreserved = LAYOUT_BITMAPORIENTATIONPRESERVED,
     };
+
+    inline Layout operator|(Layout a, Layout b) {
+        return static_cast<Layout>(static_cast<uint32_t>(a) |
+                                   static_cast<uint32_t>(b));
+    }
 #endif
 #ifndef POSFLAG
 #define POSFLAG
@@ -834,10 +840,10 @@ namespace YanLib::ui {
 
         ~window() = default;
 
-        HWND create(const char* class_name,
-                    const char* window_name,
+        HWND create(const char *class_name,
+                    const char *window_name,
                     HINSTANCE instance_handle,
-                    void* param = nullptr,
+                    void *param = nullptr,
                     HWND parent_window_handle = nullptr,
                     HMENU menu_handle = nullptr,
                     int32_t x = CW_USEDEFAULT,
@@ -847,10 +853,10 @@ namespace YanLib::ui {
                     WindowStyle style = WindowStyle::OverlappedWindow,
                     WindowExtendStyle extend_style = WindowExtendStyle::None);
 
-        HWND create(const wchar_t* class_name,
-                    const wchar_t* window_name,
+        HWND create(const wchar_t *class_name,
+                    const wchar_t *window_name,
                     HINSTANCE instance_handle,
-                    void* param = nullptr,
+                    void *param = nullptr,
                     HWND parent_window_handle = nullptr,
                     HMENU menu_handle = nullptr,
                     int32_t x = CW_USEDEFAULT,
@@ -860,8 +866,8 @@ namespace YanLib::ui {
                     WindowStyle style = WindowStyle::OverlappedWindow,
                     WindowExtendStyle extend_style = WindowExtendStyle::None);
 
-        HWND create_mdi(const char* class_name,
-                        const char* window_name,
+        HWND create_mdi(const char *class_name,
+                        const char *window_name,
                         HINSTANCE instance_handle,
                         LPARAM lparam,
                         HWND parent_window_handle,
@@ -871,8 +877,8 @@ namespace YanLib::ui {
                         int32_t height = CW_USEDEFAULT,
                         WindowStyle style = WindowStyle::OverlappedWindow);
 
-        HWND create_mdi(const wchar_t* class_name,
-                        const wchar_t* window_name,
+        HWND create_mdi(const wchar_t *class_name,
+                        const wchar_t *window_name,
                         HINSTANCE instance_handle,
                         LPARAM lparam,
                         HWND parent_window_handle,
@@ -891,12 +897,12 @@ namespace YanLib::ui {
 
         bool update_layered(HWND window_handle,
                             HDC hdc_dst,
-                            POINT* coordinate_dst,
-                            SIZE* size,
+                            POINT *coordinate_dst,
+                            SIZE *size,
                             HDC hdc_src,
-                            POINT* coordinate_src,
+                            POINT *coordinate_src,
                             COLORREF color_ref,
-                            BLENDFUNCTION* blend_fn,
+                            BLENDFUNCTION *blend_fn,
                             UpdateLayeredFlag flag = UpdateLayeredFlag::Alpha);
 
         bool lock_update(HWND window_handle);
@@ -937,11 +943,11 @@ namespace YanLib::ui {
 
         bool query_shutdown_reason(HWND window_handle,
                                    std::string &reason,
-                                   uint32_t* real_size);
+                                   uint32_t *real_size);
 
         bool query_shutdown_reason(HWND window_handle,
                                    std::wstring &reason,
-                                   uint32_t* real_size);
+                                   uint32_t *real_size);
 
         bool destroy(HWND window_handle);
 
@@ -957,21 +963,21 @@ namespace YanLib::ui {
 
         bool enumerate(uint32_t tid, WNDENUMPROC fn, LPARAM lparam = 0);
 
-        HWND find(const char* class_name, const char* window_name);
+        HWND find(const char *class_name, const char *window_name);
 
-        HWND find(const wchar_t* class_name, const wchar_t* window_name);
-
-        HWND find(HWND parent_window_handle,
-                  const char* class_name,
-                  const char* window_name);
+        HWND find(const wchar_t *class_name, const wchar_t *window_name);
 
         HWND find(HWND parent_window_handle,
-                  const wchar_t* class_name,
-                  const wchar_t* window_name);
+                  const char *class_name,
+                  const char *window_name);
+
+        HWND find(HWND parent_window_handle,
+                  const wchar_t *class_name,
+                  const wchar_t *window_name);
 
         bool flash(HWND window_handle, bool invert = true);
 
-        bool flash(FLASHWINFO* flash_info);
+        bool flash(FLASHWINFO *flash_info);
 
         bool move(HWND window_handle,
                   int32_t x,
@@ -984,7 +990,7 @@ namespace YanLib::ui {
 
         bool redraw(HWND window_handle,
                     HRGN region_handle,
-                    const RECT* rect,
+                    const RECT *rect,
                     RedrawFlag flag = RedrawFlag::Invalidate |
                             RedrawFlag::Erase | RedrawFlag::UpdateNow |
                             RedrawFlag::AllChildren);
@@ -1000,7 +1006,7 @@ namespace YanLib::ui {
         bool restore_minimize(HWND window_handle);
 
         uint16_t tile(HWND parent_window_handle,
-                      const RECT* rect,
+                      const RECT *rect,
                       const std::vector<HWND> &child,
                       TileStyle style = TileStyle::Vertical |
                               TileStyle::SkipDisabled);
@@ -1040,7 +1046,7 @@ namespace YanLib::ui {
 
         uint32_t arrange_minimize(HWND window_handle);
 
-        bool get_proc_default_layout(Layout* layout);
+        bool get_proc_default_layout(Layout *layout);
 
         bool set_proc_default_layout(Layout layout);
 
@@ -1052,10 +1058,10 @@ namespace YanLib::ui {
                      int32_t height = CW_USEDEFAULT,
                      PosFlag flag = PosFlag::NoZOrder | PosFlag::ShowWindow);
 
-        bool calc_popup_pos(const POINT* anchor_coordinate,
-                            const SIZE* window_size,
-                            RECT* popup_pos,
-                            RECT* exclude_rect = nullptr,
+        bool calc_popup_pos(const POINT *anchor_coordinate,
+                            const SIZE *window_size,
+                            RECT *popup_pos,
+                            RECT *exclude_rect = nullptr,
                             TrackPopup flag = TrackPopup::RightAlign |
                                     TrackPopup::BottomAlign |
                                     TrackPopup::ReturnCmd |
@@ -1103,7 +1109,7 @@ namespace YanLib::ui {
 
         uint16_t cascade(HWND parent_window_handle,
                          uint32_t how,
-                         const RECT* rect,
+                         const RECT *rect,
                          std::vector<HWND> &child);
 
         void disable_proc_ghosting();
@@ -1125,9 +1131,9 @@ namespace YanLib::ui {
         bool unlock_set_foreground();
 
         bool get_layered_attrs(HWND window_handle,
-                               COLORREF* color_ref,
-                               uint8_t* alpha,
-                               LayeredFlag* flag);
+                               COLORREF *color_ref,
+                               uint8_t *alpha,
+                               LayeredFlag *flag);
 
         bool set_layered_attrs(HWND window_handle,
                                COLORREF color_ref,
@@ -1154,21 +1160,21 @@ namespace YanLib::ui {
 
         bool set_context_help_id(HWND window_handle, uint32_t param);
 
-        bool get_display_affinity(HWND window_handle, AffinityFlag* affinity);
+        bool get_display_affinity(HWND window_handle, AffinityFlag *affinity);
 
         bool set_display_affinity(HWND window_handle, AffinityFlag affinity);
 
         bool get_feedback_setting(HWND window_handle,
                                   FeedbackType feedback,
-                                  bool* config,
+                                  bool *config,
                                   bool include_ancestor = false);
 
         bool set_feedback_setting(HWND window_handle,
                                   FeedbackType feedback,
-                                  const void* config,
+                                  const void *config,
                                   uint32_t size);
 
-        bool get_info(HWND window_handle, WINDOWINFO* window_info);
+        bool get_info(HWND window_handle, WINDOWINFO *window_info);
 
         // can fill offset with WindowLongOffset enum
         int32_t get_long(HWND window_handle, int32_t offset);
@@ -1177,11 +1183,11 @@ namespace YanLib::ui {
         int32_t set_long(HWND window_handle, int32_t offset, int32_t value);
 
         // can fill offset with WindowLongOffset enum
-        LONG_PTR get_long_ptr(HWND window_handle, int32_t offset);
+        intptr_t get_long_ptr(HWND window_handle, int32_t offset);
 
         // can fill offset with WindowLongOffset enum
-        LONG_PTR
-        set_long_ptr(HWND window_handle, int32_t offset, LONG_PTR value);
+        intptr_t
+        set_long_ptr(HWND window_handle, int32_t offset, intptr_t value);
 
         // can fill offset with WindowWordOffset enum
         uint16_t get_word(HWND window_handle, int32_t offset);
@@ -1193,22 +1199,22 @@ namespace YanLib::ui {
                                       std::wstring &file_name);
 
         bool get_placement(HWND window_handle,
-                           WINDOWPLACEMENT* window_placement);
+                           WINDOWPLACEMENT *window_placement);
 
         bool set_placement(HWND window_handle,
-                           const WINDOWPLACEMENT* window_placement);
+                           const WINDOWPLACEMENT *window_placement);
 
-        bool get_rect(HWND window_handle, RECT* rect);
+        bool get_rect(HWND window_handle, RECT *rect);
 
-        bool calc_rect(RECT* rect, WindowStyle style, bool include_menu = true);
+        bool calc_rect(RECT *rect, WindowStyle style, bool include_menu = true);
 
-        bool calc_rect(RECT* rect,
+        bool calc_rect(RECT *rect,
                        WindowStyle style,
                        WindowExtendStyle extend_style = WindowExtendStyle::None,
                        bool include_menu = true);
 
         bool calc_rect_for_dpi(
-                RECT* rect,
+                RECT *rect,
                 uint32_t dpi,
                 WindowStyle style,
                 WindowExtendStyle extend_style = WindowExtendStyle::None,
@@ -1219,15 +1225,15 @@ namespace YanLib::ui {
         int32_t
         set_region(HWND window_handle, HRGN region_handle, bool redraw = true);
 
-        int32_t get_region_box(HWND window_handle, RECT* rect);
+        int32_t get_region_box(HWND window_handle, RECT *rect);
 
         int32_t get_text(HWND window_handle, std::string &text);
 
         int32_t get_text(HWND window_handle, std::wstring &text);
 
-        bool set_text(HWND window_handle, const char* text);
+        bool set_text(HWND window_handle, const char *text);
 
-        bool set_text(HWND window_handle, const wchar_t* text);
+        bool set_text(HWND window_handle, const wchar_t *text);
 
         int32_t get_text_length(HWND window_handle);
 
@@ -1250,18 +1256,18 @@ namespace YanLib::ui {
         void switch_window(HWND window_handle, bool UseAccelerator = false);
 
         bool show_help(HWND window_handle,
-                       const char* help,
-                       ULONG_PTR data,
+                       const char *help,
+                       uintptr_t data,
                        HelpCommand cmd);
 
         bool show_help(HWND window_handle,
-                       const wchar_t* help,
-                       ULONG_PTR data,
+                       const wchar_t *help,
+                       uintptr_t data,
                        HelpCommand cmd);
 
         uint32_t get_gui_resources(HANDLE proc_handle, ResourceFlag flag);
 
-        bool get_gui_thread_info(uint32_t tid, GUITHREADINFO* gui_thread_info);
+        bool get_gui_thread_info(uint32_t tid, GUITHREADINFO *gui_thread_info);
 
         bool convert_to_gui_thread();
 
@@ -1269,27 +1275,27 @@ namespace YanLib::ui {
 
         bool get_alt_tab_info(HWND window_handle,
                               int32_t icon_index,
-                              ALTTABINFO* alt_tab_info,
+                              ALTTABINFO *alt_tab_info,
                               std::string &item_text);
 
         bool get_alt_tab_info(HWND window_handle,
                               int32_t icon_index,
-                              ALTTABINFO* alt_tab_info,
+                              ALTTABINFO *alt_tab_info,
                               std::wstring &item_text);
 
-        UINT_PTR set_timer(HWND window_handle,
-                           UINT_PTR event_id,
-                           TIMERPROC timer_func,
-                           uint32_t timeout_ms = 1000);
+        uintptr_t set_timer(HWND window_handle,
+                            uintptr_t event_id,
+                            TIMERPROC timer_func,
+                            uint32_t timeout_ms = 1000);
 
-        UINT_PTR set_mixed_timer(
+        uintptr_t set_mixed_timer(
                 HWND window_handle,
-                UINT_PTR event_id,
+                uintptr_t event_id,
                 TIMERPROC timer_func,
                 uint32_t timeout_ms = 1000,
                 uint32_t tolerance_delay_ms = TIMERV_DEFAULT_COALESCING);
 
-        bool kill_timer(HWND window_handle, UINT_PTR event_id);
+        bool kill_timer(HWND window_handle, uintptr_t event_id);
 
         int32_t get_system_metrics(MetricCode code);
 
@@ -1297,12 +1303,12 @@ namespace YanLib::ui {
 
         bool system_params_info(SystemParameter action,
                                 uint32_t key,
-                                void* value,
+                                void *value,
                                 SystemParameterFlag flag);
 
         bool system_paras_info_for_dpi(SystemParameter action,
                                        uint32_t key,
-                                       void* value,
+                                       void *value,
                                        uint32_t dpi,
                                        SystemParameterFlag flag);
 
@@ -1310,7 +1316,7 @@ namespace YanLib::ui {
                                       PSECURITY_INFORMATION si,
                                       PSECURITY_DESCRIPTOR sd,
                                       uint32_t size,
-                                      uint32_t* real_size);
+                                      uint32_t *real_size);
 
         bool set_user_object_security(HANDLE obj_handle,
                                       PSECURITY_INFORMATION si,
@@ -1337,13 +1343,13 @@ namespace YanLib::ui {
                 std::vector<HANDLE> &proc_handles);
 
         bool get_title_bar_info(HWND window_handle,
-                                TITLEBARINFO* title_bar_info);
+                                TITLEBARINFO *title_bar_info);
 
-        bool get_auto_rotation_state(RotateState* state);
+        bool get_auto_rotation_state(RotateState *state);
 
         helper::CodePage get_code_page();
 
-        bool get_combobox_info(HWND combo_handle, COMBOBOXINFO* combobox_info);
+        bool get_combobox_info(HWND combo_handle, COMBOBOXINFO *combobox_info);
 
         uint32_t get_listbox_info(HWND window_handle);
 
@@ -1363,7 +1369,7 @@ namespace YanLib::ui {
 
         int16_t get_wheel_delta(WPARAM wparam);
 
-        wchar_t* make_int_resource(uint16_t value);
+        wchar_t *make_int_resource(uint16_t value);
 
         bool is_int_resource(uint16_t value);
 

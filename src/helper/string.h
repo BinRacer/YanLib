@@ -24,7 +24,7 @@ namespace YanLib::helper {
         static bool strstri(const std::wstring &text,
                             const std::wstring &substr);
 
-        static bool strstri(const wchar_t* text, const wchar_t* substr);
+        static bool strstri(const wchar_t *text, const wchar_t *substr);
     };
 } // namespace YanLib::helper
 

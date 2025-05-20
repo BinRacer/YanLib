@@ -26,7 +26,7 @@ namespace YanLib::io {
         return iocp;
     }
 
-    bool comp_port::associate_device(HANDLE file_handle, ULONG_PTR comp_key) {
+    bool comp_port::associate_device(HANDLE file_handle, uintptr_t comp_key) {
         bool is_ok = CreateIoCompletionPort(file_handle, iocp, comp_key,
                                             max_concurrent_threads) == iocp;
         if (!is_ok) {
@@ -35,13 +35,13 @@ namespace YanLib::io {
         return is_ok;
     }
 
-    bool comp_port::associate_socket(SOCKET socket, ULONG_PTR comp_key) {
+    bool comp_port::associate_socket(SOCKET socket, uintptr_t comp_key) {
         return associate_device(reinterpret_cast<HANDLE>(socket), comp_key);
     }
 
-    bool comp_port::post_status(ULONG_PTR comp_key,
+    bool comp_port::post_status(uintptr_t comp_key,
                                 uint32_t num_bytes,
-                                OVERLAPPED* overlapped) {
+                                OVERLAPPED *overlapped) {
         if (!PostQueuedCompletionStatus(iocp, num_bytes, comp_key,
                                         overlapped)) {
             error_code = GetLastError();
@@ -50,48 +50,63 @@ namespace YanLib::io {
         return true;
     }
 
-    bool comp_port::get_status(ULONG_PTR* comp_key,
-                               uint32_t* num_bytes,
-                               OVERLAPPED** overlapped,
+    bool comp_port::get_status(uintptr_t *comp_key,
+                               uint32_t *num_bytes,
+                               OVERLAPPED **overlapped,
                                uint32_t milli_seconds) {
-        if (!GetQueuedCompletionStatus(iocp,
-                                       reinterpret_cast<unsigned long*>(
-                                               num_bytes),
-                                       comp_key, overlapped, milli_seconds)) {
-            error_code = GetLastError();
+        if (!num_bytes) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *num_bytes;
+        if (!GetQueuedCompletionStatus(iocp, &temp, comp_key, overlapped,
+                                       milli_seconds)) {
+            error_code = GetLastError();
+            *num_bytes = temp;
+            return false;
+        }
+        *num_bytes = temp;
         return true;
     }
 
-    bool comp_port::get_status(OVERLAPPED_ENTRY* comp_port_entries,
+    bool comp_port::get_status(OVERLAPPED_ENTRY *comp_port_entries,
                                uint32_t count,
-                               uint32_t* num_entries_removed,
+                               uint32_t *num_entries_removed,
                                uint32_t milli_seconds,
                                bool is_alert) {
-        if (!GetQueuedCompletionStatusEx(iocp, comp_port_entries, count,
-                                         reinterpret_cast<unsigned long*>(
-                                                 num_entries_removed),
+        if (!num_entries_removed) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        unsigned long temp = *num_entries_removed;
+        if (!GetQueuedCompletionStatusEx(iocp, comp_port_entries, count, &temp,
                                          milli_seconds,
                                          is_alert ? TRUE : FALSE)) {
             error_code = GetLastError();
+            *num_entries_removed = temp;
             return false;
         }
+        *num_entries_removed = temp;
         return true;
     }
 
     bool comp_port::get_status(std::vector<OVERLAPPED_ENTRY> &entries,
-                               uint32_t* num_entries_removed,
+                               uint32_t *num_entries_removed,
                                uint32_t milli_seconds,
                                bool is_alert) {
-        if (!GetQueuedCompletionStatusEx(iocp, entries.data(), entries.size(),
-                                         reinterpret_cast<unsigned long*>(
-                                                 num_entries_removed),
-                                         milli_seconds,
-                                         is_alert ? TRUE : FALSE)) {
-            error_code = GetLastError();
+        if (!num_entries_removed) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *num_entries_removed;
+        if (!GetQueuedCompletionStatusEx(iocp, entries.data(), entries.size(),
+                                         &temp, milli_seconds,
+                                         is_alert ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            *num_entries_removed = temp;
+            return false;
+        }
+        *num_entries_removed = temp;
         return true;
     }
 
@@ -103,7 +118,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool comp_port::cancel(HANDLE file_handle, OVERLAPPED* overlapped) {
+    bool comp_port::cancel(HANDLE file_handle, OVERLAPPED *overlapped) {
         if (!CancelIoEx(file_handle, overlapped)) {
             error_code = GetLastError();
             return false;
@@ -121,20 +136,25 @@ namespace YanLib::io {
 
     bool comp_port::device_io_control(HANDLE device_handle,
                                       uint32_t io_control_code,
-                                      void* in_buffer,
+                                      void *in_buffer,
                                       uint32_t in_buffer_size,
-                                      void* out_buffer,
+                                      void *out_buffer,
                                       uint32_t out_buffer_size,
-                                      uint32_t* bytes_transferred,
-                                      OVERLAPPED* overlapped) {
-        if (!DeviceIoControl(device_handle, io_control_code, in_buffer,
-                             in_buffer_size, out_buffer, out_buffer_size,
-                             reinterpret_cast<unsigned long*>(
-                                     bytes_transferred),
-                             overlapped)) {
-            error_code = GetLastError();
+                                      uint32_t *bytes_transferred,
+                                      OVERLAPPED *overlapped) {
+        if (!bytes_transferred) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *bytes_transferred;
+        if (!DeviceIoControl(device_handle, io_control_code, in_buffer,
+                             in_buffer_size, out_buffer, out_buffer_size, &temp,
+                             overlapped)) {
+            error_code = GetLastError();
+            *bytes_transferred = temp;
+            return false;
+        }
+        *bytes_transferred = temp;
         return true;
     }
 
@@ -142,49 +162,63 @@ namespace YanLib::io {
                                       uint32_t io_control_code,
                                       std::vector<uint8_t> &in_buffer,
                                       std::vector<uint8_t> &out_buffer,
-                                      uint32_t* bytes_transferred,
-                                      OVERLAPPED* overlapped) {
+                                      uint32_t *bytes_transferred,
+                                      OVERLAPPED *overlapped) {
+        if (!bytes_transferred) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
         if (in_buffer.empty() || out_buffer.empty()) {
             return false;
         }
+        unsigned long temp = *bytes_transferred;
         if (!DeviceIoControl(device_handle, io_control_code, in_buffer.data(),
                              in_buffer.size(), out_buffer.data(),
-                             out_buffer.size(),
-                             reinterpret_cast<unsigned long*>(
-                                     bytes_transferred),
-                             overlapped)) {
+                             out_buffer.size(), &temp, overlapped)) {
             error_code = GetLastError();
+            *bytes_transferred = temp;
             return false;
         }
+        *bytes_transferred = temp;
         return true;
     }
 
     bool comp_port::get_overlapped_result(HANDLE file_handle,
-                                          OVERLAPPED* overlapped,
-                                          uint32_t* bytes_transferred,
+                                          OVERLAPPED *overlapped,
+                                          uint32_t *bytes_transferred,
                                           bool is_wait) {
-        if (!GetOverlappedResult(file_handle, overlapped,
-                                 reinterpret_cast<unsigned long*>(
-                                         bytes_transferred),
+        if (!bytes_transferred) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        unsigned long temp = *bytes_transferred;
+        if (!GetOverlappedResult(file_handle, overlapped, &temp,
                                  is_wait ? TRUE : FALSE)) {
             error_code = GetLastError();
+            *bytes_transferred = temp;
             return false;
         }
+        *bytes_transferred = temp;
         return true;
     }
 
     bool comp_port::get_overlapped_result(HANDLE file_handle,
-                                          OVERLAPPED* overlapped,
-                                          uint32_t* bytes_transferred,
+                                          OVERLAPPED *overlapped,
+                                          uint32_t *bytes_transferred,
                                           uint32_t milli_seconds,
                                           bool is_wait) {
-        if (!GetOverlappedResultEx(file_handle, overlapped,
-                                   reinterpret_cast<unsigned long*>(
-                                           bytes_transferred),
-                                   milli_seconds, is_wait ? TRUE : FALSE)) {
-            error_code = GetLastError();
+        if (!bytes_transferred) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *bytes_transferred;
+        if (!GetOverlappedResultEx(file_handle, overlapped, &temp,
+                                   milli_seconds, is_wait ? TRUE : FALSE)) {
+            error_code = GetLastError();
+            *bytes_transferred = temp;
+            return false;
+        }
+        *bytes_transferred = temp;
         return true;
     }
 

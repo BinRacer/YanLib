@@ -47,9 +47,9 @@ namespace YanLib::hash {
 
         explicit sha1(const std::string &data);
 
-        explicit sha1(const char* filename);
+        explicit sha1(const char *filename);
 
-        explicit sha1(const wchar_t* filename);
+        explicit sha1(const wchar_t *filename);
 
         ~sha1();
 

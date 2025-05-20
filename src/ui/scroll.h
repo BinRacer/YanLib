@@ -134,15 +134,15 @@ namespace YanLib::ui {
                   ScrollType scroll_type = ScrollType::Both);
 
         bool get_info(HWND window_handle,
-                      SCROLLBARINFO* scroll_bar_info,
+                      SCROLLBARINFO *scroll_bar_info,
                       ObjectID object_id = ObjectID::VScroll);
 
         bool get_info(HWND window_handle,
-                      SCROLLINFO* scroll_info,
+                      SCROLLINFO *scroll_info,
                       ScrollType scroll_type = ScrollType::Vert);
 
         int32_t set_info(HWND window_handle,
-                         SCROLLINFO* scroll_info,
+                         SCROLLINFO *scroll_info,
                          ScrollType scroll_type = ScrollType::Vert,
                          bool is_redraw = true);
 
@@ -155,8 +155,8 @@ namespace YanLib::ui {
                         bool is_redraw = true);
 
         bool get_range(HWND window_handle,
-                       int32_t* min_pos,
-                       int32_t* max_pos,
+                       int32_t *min_pos,
+                       int32_t *max_pos,
                        ScrollType scroll_type = ScrollType::Vert);
 
         bool set_range(HWND window_handle,
@@ -168,16 +168,16 @@ namespace YanLib::ui {
         bool scroll_window(HWND window_handle,
                            int32_t x_amount,
                            int32_t y_amount,
-                           const RECT* rect = nullptr,
-                           const RECT* clip_rect = nullptr);
+                           const RECT *rect = nullptr,
+                           const RECT *clip_rect = nullptr);
 
         int32_t scroll_window_extend(HWND window_handle,
                                      int32_t dx,
                                      int32_t dy,
-                                     const RECT* rect_scroll = nullptr,
-                                     const RECT* rect_clip = nullptr,
+                                     const RECT *rect_scroll = nullptr,
+                                     const RECT *rect_clip = nullptr,
                                      HRGN region_handle_update = nullptr,
-                                     RECT* rect_update = nullptr,
+                                     RECT *rect_update = nullptr,
                                      ScrollFlag flag = ScrollFlag::InValidate |
                                              ScrollFlag::Erase);
 

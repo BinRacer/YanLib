@@ -22,9 +22,9 @@ namespace YanLib::crypto {
 
         ~base64() = default;
 
-        static std::vector<uint8_t> encode(const uint8_t* data, size_t len);
+        static std::vector<uint8_t> encode(const uint8_t *data, size_t len);
 
-        static std::vector<uint8_t> decode(const uint8_t* data, size_t len);
+        static std::vector<uint8_t> decode(const uint8_t *data, size_t len);
 
         static std::vector<uint8_t> encode(const std::vector<uint8_t> &data);
 
@@ -46,9 +46,9 @@ namespace YanLib::crypto {
         static bool decode_file(const std::wstring &input_file,
                                 const std::wstring &output_file);
 
-        static std::vector<uint8_t> encode_url(const uint8_t* data, size_t len);
+        static std::vector<uint8_t> encode_url(const uint8_t *data, size_t len);
 
-        static std::vector<uint8_t> decode_url(const uint8_t* data, size_t len);
+        static std::vector<uint8_t> decode_url(const uint8_t *data, size_t len);
 
         static std::vector<uint8_t>
         encode_url(const std::vector<uint8_t> &data);

@@ -24,7 +24,7 @@ namespace YanLib::sync {
     }
 
     bool barrier::wait(uint32_t count,
-                       const HANDLE* handles,
+                       const HANDLE *handles,
                        bool wait_all,
                        uint32_t milli_seconds) {
         uint32_t ret =

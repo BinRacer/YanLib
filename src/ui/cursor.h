@@ -34,18 +34,18 @@ namespace YanLib::ui {
                        int32_t y_hotspot,
                        int32_t width,
                        int32_t height,
-                       const void* and_plane,
-                       const void* xor_plane);
+                       const void *and_plane,
+                       const void *xor_plane);
 
-        HCURSOR load(HINSTANCE instance_handle, const char* cursor_name);
+        HCURSOR load(HINSTANCE instance_handle, const char *cursor_name);
 
-        HCURSOR load(HINSTANCE instance_handle, const wchar_t* cursor_name);
+        HCURSOR load(HINSTANCE instance_handle, const wchar_t *cursor_name);
 
-        HCURSOR load(const char* file_name);
+        HCURSOR load(const char *file_name);
 
-        HCURSOR load(const wchar_t* file_name);
+        HCURSOR load(const wchar_t *file_name);
 
-        bool clip(const RECT* rect);
+        bool clip(const RECT *rect);
 
         HCURSOR copy(HCURSOR cursor_handle);
 
@@ -53,22 +53,22 @@ namespace YanLib::ui {
 
         HCURSOR set_cursor(HCURSOR cursor_handle);
 
-        bool get_info(CURSORINFO* cursor_info);
+        bool get_info(CURSORINFO *cursor_info);
 
-        bool get_pos(POINT* point);
+        bool get_pos(POINT *point);
 
         bool set_pos(int32_t x, int32_t y);
 
-        bool get_clip(RECT* rect);
+        bool get_clip(RECT *rect);
 
-        bool get_physical_pos(POINT* point);
+        bool get_physical_pos(POINT *point);
 
         bool set_physical_pos(int32_t x, int32_t y);
 
-        bool get_pointer_id(uint32_t pointer_id, uint32_t* cursor_id);
+        bool get_pointer_id(uint32_t pointer_id, uint32_t *cursor_id);
 
         bool get_pointer_device(HANDLE device_handle,
-                                uint32_t* cursor_count,
+                                uint32_t *cursor_count,
                                 POINTER_DEVICE_CURSOR_INFO cursor[]);
 
         bool set_system_cursor(HCURSOR cursor_handle, uint32_t id);

@@ -16,16 +16,16 @@ namespace YanLib::sync {
         }
     }
 
-    bool timer::create(SECURITY_ATTRIBUTES* sa,
+    bool timer::create(SECURITY_ATTRIBUTES *sa,
                        bool is_manual_reset,
-                       const wchar_t* timer_name) {
+                       const wchar_t *timer_name) {
         timer_handle = CreateWaitableTimerW(sa, is_manual_reset ? TRUE : FALSE,
                                             timer_name);
         error_code = GetLastError();
         return timer_handle != nullptr;
     }
 
-    bool timer::open(const wchar_t* timer_name,
+    bool timer::open(const wchar_t *timer_name,
                      TimerAccess access,
                      bool is_inherit) {
         timer_handle =
@@ -35,10 +35,10 @@ namespace YanLib::sync {
         return timer_handle != nullptr;
     }
 
-    bool timer::set_timer(const LARGE_INTEGER* due_time,
+    bool timer::set_timer(const LARGE_INTEGER *due_time,
                           int32_t period,
                           PTIMERAPCROUTINE completion_routine,
-                          void* param,
+                          void *param,
                           bool is_resume) {
         // SYSTEMTIME st = {0};
         // FILETIME ftLocal, ftUTC;

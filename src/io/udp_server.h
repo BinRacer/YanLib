@@ -34,26 +34,26 @@ namespace YanLib::io {
 
         [[nodiscard]] bool init_ok() const;
 
-        bool bind(const char* local_ip = "0.0.0.0", uint16_t local_port = 8080);
+        bool bind(const char *local_ip = "0.0.0.0", uint16_t local_port = 8080);
 
-        int32_t read(char* buf,
+        int32_t read(char *buf,
                      int32_t len,
                      int32_t flags,
-                     sockaddr* from,
-                     int32_t* from_len);
+                     sockaddr *from,
+                     int32_t *from_len);
 
-        int32_t write(const char* buf,
+        int32_t write(const char *buf,
                       int32_t len,
                       int32_t flags,
-                      const sockaddr* to,
+                      const sockaddr *to,
                       int32_t to_len);
 
-        int32_t read(char* buf,
+        int32_t read(char *buf,
                      int32_t len,
                      std::string &client_ip,
                      uint16_t &client_port);
 
-        int32_t write(char* buf,
+        int32_t write(char *buf,
                       int32_t len,
                       std::string &client_ip,
                       uint16_t &client_port);

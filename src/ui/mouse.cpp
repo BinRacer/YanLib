@@ -70,11 +70,11 @@ namespace YanLib::ui {
                            uint32_t y,
                            MouseEvent flag,
                            uint32_t data,
-                           ULONG_PTR extra_info) {
+                           uintptr_t extra_info) {
         mouse_event(static_cast<uint32_t>(flag), x, y, data, extra_info);
     }
 
-    bool mouse::track_event(TRACKMOUSEEVENT* event_track) {
+    bool mouse::track_event(TRACKMOUSEEVENT *event_track) {
         if (!TrackMouseEvent(event_track)) {
             error_code = GetLastError();
             return false;
@@ -106,7 +106,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool mouse::get_last_input_info(LASTINPUTINFO* last_input_info) {
+    bool mouse::get_last_input_info(LASTINPUTINFO *last_input_info) {
         return GetLastInputInfo(last_input_info);
     }
 
@@ -122,7 +122,7 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pointer_device(HANDLE device_handle,
-                                   POINTER_DEVICE_INFO* pointer_device) {
+                                   POINTER_DEVICE_INFO *pointer_device) {
         if (!GetPointerDevice(device_handle, pointer_device)) {
             error_code = GetLastError();
             return false;
@@ -132,7 +132,7 @@ namespace YanLib::ui {
 
     bool
     mouse::get_pointer_device_properties(HANDLE device_handle,
-                                         uint32_t* real_num,
+                                         uint32_t *real_num,
                                          POINTER_DEVICE_PROPERTY properties[]) {
         if (!GetPointerDeviceProperties(device_handle, real_num, properties)) {
             error_code = GetLastError();
@@ -142,8 +142,8 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pointer_device_rects(HANDLE device_handle,
-                                         RECT* pointer_device_rect,
-                                         RECT* display_rect) {
+                                         RECT *pointer_device_rect,
+                                         RECT *display_rect) {
         if (!GetPointerDeviceRects(device_handle, pointer_device_rect,
                                    display_rect)) {
             error_code = GetLastError();
@@ -152,7 +152,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool mouse::get_pointer_devices(uint32_t* real_num,
+    bool mouse::get_pointer_devices(uint32_t *real_num,
                                     POINTER_DEVICE_INFO pointer_devices[]) {
         if (!GetPointerDevices(real_num, pointer_devices)) {
             error_code = GetLastError();
@@ -162,7 +162,7 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pointer_frame_info(uint32_t pointer_id,
-                                       uint32_t* real_num,
+                                       uint32_t *real_num,
                                        POINTER_INFO pointer_info[]) {
         if (!GetPointerFrameInfo(pointer_id, real_num, pointer_info)) {
             error_code = GetLastError();
@@ -172,8 +172,8 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pointer_frame_info_history(uint32_t pointer_id,
-                                               uint32_t* row,
-                                               uint32_t* col,
+                                               uint32_t *row,
+                                               uint32_t *col,
                                                POINTER_INFO pointer_info[]) {
         if (!GetPointerFrameInfoHistory(pointer_id, row, col, pointer_info)) {
             error_code = GetLastError();
@@ -183,7 +183,7 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pen_frame_info(uint32_t pointer_id,
-                                   uint32_t* real_num,
+                                   uint32_t *real_num,
                                    POINTER_PEN_INFO pen_info[]) {
         if (!GetPointerFramePenInfo(pointer_id, real_num, pen_info)) {
             error_code = GetLastError();
@@ -193,8 +193,8 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pen_frame_info_history(uint32_t pointer_id,
-                                           uint32_t* row,
-                                           uint32_t* col,
+                                           uint32_t *row,
+                                           uint32_t *col,
                                            POINTER_PEN_INFO pen_info[]) {
         if (!GetPointerFramePenInfoHistory(pointer_id, row, col, pen_info)) {
             error_code = GetLastError();
@@ -204,7 +204,7 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pointer_info(uint32_t pointer_id,
-                                 POINTER_INFO* pointer_info) {
+                                 POINTER_INFO *pointer_info) {
         if (!GetPointerInfo(pointer_id, pointer_info)) {
             error_code = GetLastError();
             return false;
@@ -213,7 +213,7 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pointer_info_history(uint32_t pointer_id,
-                                         uint32_t* real_num,
+                                         uint32_t *real_num,
                                          POINTER_INFO pointer_info[]) {
         if (!GetPointerInfoHistory(pointer_id, real_num, pointer_info)) {
             error_code = GetLastError();
@@ -222,7 +222,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool mouse::get_pen_info(uint32_t pointer_id, POINTER_PEN_INFO* pen_info) {
+    bool mouse::get_pen_info(uint32_t pointer_id, POINTER_PEN_INFO *pen_info) {
         if (!GetPointerPenInfo(pointer_id, pen_info)) {
             error_code = GetLastError();
             return false;
@@ -231,7 +231,7 @@ namespace YanLib::ui {
     }
 
     bool mouse::get_pen_info_history(uint32_t pointer_id,
-                                     uint32_t* real_num,
+                                     uint32_t *real_num,
                                      POINTER_PEN_INFO pen_info[]) {
         if (!GetPointerPenInfoHistory(pointer_id, real_num, pen_info)) {
             error_code = GetLastError();
@@ -240,8 +240,9 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool mouse::get_pointer_type(uint32_t pointer_id, PointerInputType* type) {
+    bool mouse::get_pointer_type(uint32_t pointer_id, PointerInputType *type) {
         if (!type) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
         DWORD pointer_type = 0;
@@ -257,8 +258,12 @@ namespace YanLib::ui {
             uint32_t pointer_id,
             uint32_t history_count,
             std::vector<POINTER_DEVICE_PROPERTY> &properties,
-            int32_t* value) {
-        long temp = 0;
+            int32_t *value) {
+        if (!value) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        long temp = *value;
         if (!GetRawPointerDeviceData(pointer_id, history_count,
                                      properties.size(), properties.data(),
                                      &temp)) {
@@ -271,7 +276,7 @@ namespace YanLib::ui {
     }
 
     int32_t mouse::get_move_points(uint32_t cb_size,
-                                   MOUSEMOVEPOINT* mouse_move_point,
+                                   MOUSEMOVEPOINT *mouse_move_point,
                                    std::vector<MOUSEMOVEPOINT> &point,
                                    uint32_t resolution) {
         int32_t result =

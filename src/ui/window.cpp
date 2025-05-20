@@ -4,13 +4,14 @@
 
 #include "window.h"
 
+#include <complex>
 #include <Powrprof.h>
 
 namespace YanLib::ui {
-    HWND window::create(const char* class_name,
-                        const char* window_name,
+    HWND window::create(const char *class_name,
+                        const char *window_name,
                         HINSTANCE instance_handle,
-                        void* param,
+                        void *param,
                         HWND parent_window_handle,
                         HMENU menu_handle,
                         int32_t x,
@@ -30,10 +31,10 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND window::create(const wchar_t* class_name,
-                        const wchar_t* window_name,
+    HWND window::create(const wchar_t *class_name,
+                        const wchar_t *window_name,
                         HINSTANCE instance_handle,
-                        void* param,
+                        void *param,
                         HWND parent_window_handle,
                         HMENU menu_handle,
                         int32_t x,
@@ -53,8 +54,8 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND window::create_mdi(const char* class_name,
-                            const char* window_name,
+    HWND window::create_mdi(const char *class_name,
+                            const char *window_name,
                             HINSTANCE instance_handle,
                             LPARAM lparam,
                             HWND parent_window_handle,
@@ -75,8 +76,8 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWND window::create_mdi(const wchar_t* class_name,
-                            const wchar_t* window_name,
+    HWND window::create_mdi(const wchar_t *class_name,
+                            const wchar_t *window_name,
                             HINSTANCE instance_handle,
                             LPARAM lparam,
                             HWND parent_window_handle,
@@ -111,12 +112,12 @@ namespace YanLib::ui {
 
     bool window::update_layered(HWND window_handle,
                                 HDC hdc_dst,
-                                POINT* coordinate_dst,
-                                SIZE* size,
+                                POINT *coordinate_dst,
+                                SIZE *size,
                                 HDC hdc_src,
-                                POINT* coordinate_src,
+                                POINT *coordinate_src,
                                 COLORREF color_ref,
-                                BLENDFUNCTION* blend_fn,
+                                BLENDFUNCTION *blend_fn,
                                 UpdateLayeredFlag flag) {
         if (!UpdateLayeredWindow(window_handle, hdc_dst, coordinate_dst, size,
                                  hdc_src, coordinate_src, color_ref, blend_fn,
@@ -234,27 +235,36 @@ namespace YanLib::ui {
 
     bool window::query_shutdown_reason(HWND window_handle,
                                        std::string &reason,
-                                       uint32_t* real_size) {
-        std::wstring data = helper::convert::str_to_wstr(reason);
-        *real_size = data.size();
-        if (!ShutdownBlockReasonQuery(window_handle, data.data(),
-                                      reinterpret_cast<unsigned long*>(
-                                              real_size))) {
-            error_code = GetLastError();
+                                       uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        std::wstring data = helper::convert::str_to_wstr(reason);
+        unsigned long temp = data.size();
+        if (!ShutdownBlockReasonQuery(window_handle, data.data(), &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
     bool window::query_shutdown_reason(HWND window_handle,
                                        std::wstring &reason,
-                                       uint32_t* real_size) {
-        if (!ShutdownBlockReasonQuery(window_handle, reason.data(),
-                                      reinterpret_cast<unsigned long*>(
-                                              real_size))) {
-            error_code = GetLastError();
+                                       uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = reason.size();
+        if (!ShutdownBlockReasonQuery(window_handle, reason.data(), &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
@@ -292,17 +302,17 @@ namespace YanLib::ui {
         return EnumThreadWindows(tid, fn, lparam);
     }
 
-    HWND window::find(const char* class_name, const char* window_name) {
+    HWND window::find(const char *class_name, const char *window_name) {
         return FindWindowA(class_name, window_name);
     }
 
-    HWND window::find(const wchar_t* class_name, const wchar_t* window_name) {
+    HWND window::find(const wchar_t *class_name, const wchar_t *window_name) {
         return FindWindowW(class_name, window_name);
     }
 
     HWND window::find(HWND parent_window_handle,
-                      const char* class_name,
-                      const char* window_name) {
+                      const char *class_name,
+                      const char *window_name) {
         HWND result = FindWindowExA(parent_window_handle, nullptr, class_name,
                                     window_name);
         if (!result) {
@@ -312,8 +322,8 @@ namespace YanLib::ui {
     }
 
     HWND window::find(HWND parent_window_handle,
-                      const wchar_t* class_name,
-                      const wchar_t* window_name) {
+                      const wchar_t *class_name,
+                      const wchar_t *window_name) {
         HWND result = FindWindowExW(parent_window_handle, nullptr, class_name,
                                     window_name);
         if (!result) {
@@ -326,7 +336,7 @@ namespace YanLib::ui {
         return FlashWindow(window_handle, invert ? TRUE : FALSE);
     }
 
-    bool window::flash(FLASHWINFO* flash_info) {
+    bool window::flash(FLASHWINFO *flash_info) {
         return FlashWindowEx(flash_info);
     }
 
@@ -351,7 +361,7 @@ namespace YanLib::ui {
 
     bool window::redraw(HWND window_handle,
                         HRGN region_handle,
-                        const RECT* rect,
+                        const RECT *rect,
                         RedrawFlag flag) {
         return RedrawWindow(window_handle, rect, region_handle,
                             static_cast<uint32_t>(flag));
@@ -382,7 +392,7 @@ namespace YanLib::ui {
     }
 
     uint16_t window::tile(HWND parent_window_handle,
-                          const RECT* rect,
+                          const RECT *rect,
                           const std::vector<HWND> &child,
                           TileStyle style) {
         uint16_t result =
@@ -507,12 +517,18 @@ namespace YanLib::ui {
         return height;
     }
 
-    bool window::get_proc_default_layout(Layout* layout) {
-        if (!GetProcessDefaultLayout(
-                    reinterpret_cast<unsigned long*>(layout))) {
-            error_code = GetLastError();
+    bool window::get_proc_default_layout(Layout *layout) {
+        if (!layout) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        auto temp = static_cast<unsigned long>(*layout);
+        if (!GetProcessDefaultLayout(&temp)) {
+            error_code = GetLastError();
+            *layout = static_cast<Layout>(temp);
+            return false;
+        }
+        *layout = static_cast<Layout>(temp);
         return true;
     }
 
@@ -539,10 +555,10 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::calc_popup_pos(const POINT* anchor_coordinate,
-                                const SIZE* window_size,
-                                RECT* popup_pos,
-                                RECT* exclude_rect,
+    bool window::calc_popup_pos(const POINT *anchor_coordinate,
+                                const SIZE *window_size,
+                                RECT *popup_pos,
+                                RECT *exclude_rect,
                                 TrackPopup flag) {
         if (!CalculatePopupWindowPosition(anchor_coordinate, window_size,
                                           static_cast<uint32_t>(flag),
@@ -628,7 +644,7 @@ namespace YanLib::ui {
 
     uint16_t window::cascade(HWND parent_window_handle,
                              uint32_t how,
-                             const RECT* rect,
+                             const RECT *rect,
                              std::vector<HWND> &child) {
         uint16_t count = CascadeWindows(parent_window_handle, how, rect,
                                         child.size(), child.data());
@@ -683,15 +699,21 @@ namespace YanLib::ui {
     }
 
     bool window::get_layered_attrs(HWND window_handle,
-                                   COLORREF* color_ref,
-                                   uint8_t* alpha,
-                                   LayeredFlag* flag) {
-        if (!GetLayeredWindowAttributes(window_handle, color_ref, alpha,
-                                        reinterpret_cast<unsigned long*>(
-                                                flag))) {
-            error_code = GetLastError();
+                                   COLORREF *color_ref,
+                                   uint8_t *alpha,
+                                   LayeredFlag *flag) {
+        if (!flag) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        auto temp = static_cast<unsigned long>(*flag);
+        if (!GetLayeredWindowAttributes(window_handle, color_ref, alpha,
+                                        &temp)) {
+            error_code = GetLastError();
+            *flag = static_cast<LayeredFlag>(temp);
+            return false;
+        }
+        *flag = static_cast<LayeredFlag>(temp);
         return true;
     }
 
@@ -760,13 +782,18 @@ namespace YanLib::ui {
     }
 
     bool window::get_display_affinity(HWND window_handle,
-                                      AffinityFlag* affinity) {
-        if (!GetWindowDisplayAffinity(window_handle,
-                                      reinterpret_cast<unsigned long*>(
-                                              affinity))) {
-            error_code = GetLastError();
+                                      AffinityFlag *affinity) {
+        if (!affinity) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        auto temp = static_cast<unsigned long>(*affinity);
+        if (!GetWindowDisplayAffinity(window_handle, &temp)) {
+            error_code = GetLastError();
+            *affinity = static_cast<AffinityFlag>(temp);
+            return false;
+        }
+        *affinity = static_cast<AffinityFlag>(temp);
         return true;
     }
 
@@ -782,7 +809,7 @@ namespace YanLib::ui {
 
     bool window::get_feedback_setting(HWND window_handle,
                                       FeedbackType feedback,
-                                      bool* config,
+                                      bool *config,
                                       bool include_ancestor) {
         uint32_t size = sizeof(int32_t);
         int32_t real_config = 0;
@@ -799,14 +826,14 @@ namespace YanLib::ui {
 
     bool window::set_feedback_setting(HWND window_handle,
                                       FeedbackType feedback,
-                                      const void* config,
+                                      const void *config,
                                       uint32_t size) {
         return SetWindowFeedbackSetting(window_handle,
                                         static_cast<FEEDBACK_TYPE>(feedback), 0,
                                         size, config);
     }
 
-    bool window::get_info(HWND window_handle, WINDOWINFO* window_info) {
+    bool window::get_info(HWND window_handle, WINDOWINFO *window_info) {
         if (!GetWindowInfo(window_handle, window_info)) {
             error_code = GetLastError();
             return false;
@@ -831,17 +858,17 @@ namespace YanLib::ui {
         return result;
     }
 
-    LONG_PTR window::get_long_ptr(HWND window_handle, int32_t offset) {
-        LONG_PTR result = GetWindowLongPtrW(window_handle, offset);
+    intptr_t window::get_long_ptr(HWND window_handle, int32_t offset) {
+        intptr_t result = GetWindowLongPtrW(window_handle, offset);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    LONG_PTR
-    window::set_long_ptr(HWND window_handle, int32_t offset, LONG_PTR value) {
-        LONG_PTR result = SetWindowLongPtrW(window_handle, offset, value);
+    intptr_t
+    window::set_long_ptr(HWND window_handle, int32_t offset, intptr_t value) {
+        intptr_t result = SetWindowLongPtrW(window_handle, offset, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -869,7 +896,7 @@ namespace YanLib::ui {
     }
 
     bool window::get_placement(HWND window_handle,
-                               WINDOWPLACEMENT* window_placement) {
+                               WINDOWPLACEMENT *window_placement) {
         if (!GetWindowPlacement(window_handle, window_placement)) {
             error_code = GetLastError();
             return false;
@@ -878,7 +905,7 @@ namespace YanLib::ui {
     }
 
     bool window::set_placement(HWND window_handle,
-                               const WINDOWPLACEMENT* window_placement) {
+                               const WINDOWPLACEMENT *window_placement) {
         if (!SetWindowPlacement(window_handle, window_placement)) {
             error_code = GetLastError();
             return false;
@@ -886,7 +913,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::get_rect(HWND window_handle, RECT* rect) {
+    bool window::get_rect(HWND window_handle, RECT *rect) {
         if (!GetWindowRect(window_handle, rect)) {
             error_code = GetLastError();
             return false;
@@ -894,7 +921,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::calc_rect(RECT* rect, WindowStyle style, bool include_menu) {
+    bool window::calc_rect(RECT *rect, WindowStyle style, bool include_menu) {
         if (!AdjustWindowRect(rect, static_cast<uint32_t>(style),
                               include_menu ? TRUE : FALSE)) {
             error_code = GetLastError();
@@ -903,7 +930,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::calc_rect(RECT* rect,
+    bool window::calc_rect(RECT *rect,
                            WindowStyle style,
                            WindowExtendStyle extend_style,
                            bool include_menu) {
@@ -916,7 +943,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::calc_rect_for_dpi(RECT* rect,
+    bool window::calc_rect_for_dpi(RECT *rect,
                                    uint32_t dpi,
                                    WindowStyle style,
                                    WindowExtendStyle extend_style,
@@ -941,7 +968,7 @@ namespace YanLib::ui {
                             redraw ? TRUE : FALSE);
     }
 
-    int32_t window::get_region_box(HWND window_handle, RECT* rect) {
+    int32_t window::get_region_box(HWND window_handle, RECT *rect) {
         return GetWindowRgnBox(window_handle, rect);
     }
 
@@ -963,7 +990,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window::set_text(HWND window_handle, const char* text) {
+    bool window::set_text(HWND window_handle, const char *text) {
         if (!SetWindowTextA(window_handle, text)) {
             error_code = GetLastError();
             return false;
@@ -971,7 +998,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::set_text(HWND window_handle, const wchar_t* text) {
+    bool window::set_text(HWND window_handle, const wchar_t *text) {
         if (!SetWindowTextW(window_handle, text)) {
             error_code = GetLastError();
             return false;
@@ -988,11 +1015,8 @@ namespace YanLib::ui {
     }
 
     uint32_t window::get_thread_id(HWND window_handle) {
-        uint32_t pid = 0;
-        uint32_t tid =
-                GetWindowThreadProcessId(window_handle,
-                                         reinterpret_cast<unsigned long*>(
-                                                 &pid));
+        unsigned long pid = 0;
+        uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
         if (!tid) {
             error_code = GetLastError();
         }
@@ -1000,11 +1024,8 @@ namespace YanLib::ui {
     }
 
     uint32_t window::get_proc_id(HWND window_handle) {
-        uint32_t pid = 0;
-        uint32_t tid =
-                GetWindowThreadProcessId(window_handle,
-                                         reinterpret_cast<unsigned long*>(
-                                                 &pid));
+        unsigned long pid = 0;
+        uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
         if (!tid) {
             error_code = GetLastError();
         }
@@ -1013,11 +1034,8 @@ namespace YanLib::ui {
 
     std::pair<uint32_t, uint32_t>
     window::get_window_tid_and_pid(HWND window_handle) {
-        uint32_t pid = 0;
-        uint32_t tid =
-                GetWindowThreadProcessId(window_handle,
-                                         reinterpret_cast<unsigned long*>(
-                                                 &pid));
+        unsigned long pid = 0;
+        uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
         if (!tid) {
             error_code = GetLastError();
         }
@@ -1071,8 +1089,8 @@ namespace YanLib::ui {
     }
 
     bool window::show_help(HWND window_handle,
-                           const char* help,
-                           ULONG_PTR data,
+                           const char *help,
+                           uintptr_t data,
                            HelpCommand cmd) {
         if (!WinHelpA(window_handle, help, static_cast<uint32_t>(cmd), data)) {
             error_code = GetLastError();
@@ -1082,8 +1100,8 @@ namespace YanLib::ui {
     }
 
     bool window::show_help(HWND window_handle,
-                           const wchar_t* help,
-                           ULONG_PTR data,
+                           const wchar_t *help,
+                           uintptr_t data,
                            HelpCommand cmd) {
         if (!WinHelpW(window_handle, help, static_cast<uint32_t>(cmd), data)) {
             error_code = GetLastError();
@@ -1102,7 +1120,7 @@ namespace YanLib::ui {
     }
 
     bool window::get_gui_thread_info(uint32_t tid,
-                                     GUITHREADINFO* gui_thread_info) {
+                                     GUITHREADINFO *gui_thread_info) {
         if (!GetGUIThreadInfo(tid, gui_thread_info)) {
             error_code = GetLastError();
             return false;
@@ -1124,7 +1142,7 @@ namespace YanLib::ui {
 
     bool window::get_alt_tab_info(HWND window_handle,
                                   int32_t icon_index,
-                                  ALTTABINFO* alt_tab_info,
+                                  ALTTABINFO *alt_tab_info,
                                   std::string &item_text) {
         if (!GetAltTabInfoA(window_handle, icon_index, alt_tab_info,
                             item_text.data(), item_text.size())) {
@@ -1136,7 +1154,7 @@ namespace YanLib::ui {
 
     bool window::get_alt_tab_info(HWND window_handle,
                                   int32_t icon_index,
-                                  ALTTABINFO* alt_tab_info,
+                                  ALTTABINFO *alt_tab_info,
                                   std::wstring &item_text) {
         if (!GetAltTabInfoW(window_handle, icon_index, alt_tab_info,
                             item_text.data(), item_text.size())) {
@@ -1146,11 +1164,11 @@ namespace YanLib::ui {
         return true;
     }
 
-    UINT_PTR window::set_timer(HWND window_handle,
-                               UINT_PTR event_id,
-                               TIMERPROC timer_func,
-                               uint32_t timeout_ms) {
-        UINT_PTR result =
+    uintptr_t window::set_timer(HWND window_handle,
+                                uintptr_t event_id,
+                                TIMERPROC timer_func,
+                                uint32_t timeout_ms) {
+        uintptr_t result =
                 SetTimer(window_handle, event_id, timeout_ms, timer_func);
         if (!result) {
             error_code = GetLastError();
@@ -1158,12 +1176,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    UINT_PTR window::set_mixed_timer(HWND window_handle,
-                                     UINT_PTR event_id,
-                                     TIMERPROC timer_func,
-                                     uint32_t timeout_ms,
-                                     uint32_t tolerance_delay_ms) {
-        UINT_PTR result =
+    uintptr_t window::set_mixed_timer(HWND window_handle,
+                                      uintptr_t event_id,
+                                      TIMERPROC timer_func,
+                                      uint32_t timeout_ms,
+                                      uint32_t tolerance_delay_ms) {
+        uintptr_t result =
                 SetCoalescableTimer(window_handle, event_id, timeout_ms,
                                     timer_func, tolerance_delay_ms);
         if (!result) {
@@ -1172,7 +1190,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window::kill_timer(HWND window_handle, UINT_PTR event_id) {
+    bool window::kill_timer(HWND window_handle, uintptr_t event_id) {
         if (!KillTimer(window_handle, event_id)) {
             error_code = GetLastError();
             return false;
@@ -1190,7 +1208,7 @@ namespace YanLib::ui {
 
     bool window::system_params_info(SystemParameter action,
                                     uint32_t key,
-                                    void* value,
+                                    void *value,
                                     SystemParameterFlag flag) {
         if (!SystemParametersInfoW(static_cast<uint32_t>(action), key, value,
                                    static_cast<uint32_t>(flag))) {
@@ -1202,7 +1220,7 @@ namespace YanLib::ui {
 
     bool window::system_paras_info_for_dpi(SystemParameter action,
                                            uint32_t key,
-                                           void* value,
+                                           void *value,
                                            uint32_t dpi,
                                            SystemParameterFlag flag) {
         if (!SystemParametersInfoForDpi(static_cast<uint32_t>(action), key,
@@ -1218,13 +1236,18 @@ namespace YanLib::ui {
                                           PSECURITY_INFORMATION si,
                                           PSECURITY_DESCRIPTOR sd,
                                           uint32_t size,
-                                          uint32_t* real_size) {
-        if (!GetUserObjectSecurity(obj_handle, si, sd, size,
-                                   reinterpret_cast<unsigned long*>(
-                                           real_size))) {
-            error_code = GetLastError();
+                                          uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!GetUserObjectSecurity(obj_handle, si, sd, size, &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
@@ -1294,7 +1317,7 @@ namespace YanLib::ui {
     }
 
     bool window::get_title_bar_info(HWND window_handle,
-                                    TITLEBARINFO* title_bar_info) {
+                                    TITLEBARINFO *title_bar_info) {
         if (!GetTitleBarInfo(window_handle, title_bar_info)) {
             error_code = GetLastError();
             return false;
@@ -1302,8 +1325,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window::get_auto_rotation_state(RotateState* state) {
-        return GetAutoRotationState(reinterpret_cast<PAR_STATE>(state));
+    bool window::get_auto_rotation_state(RotateState *state) {
+        if (!state) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        auto temp = static_cast<AR_STATE>(*state);
+        bool is_ok = GetAutoRotationState(&temp);
+        *state = static_cast<RotateState>(temp);
+        return is_ok;
     }
 
     helper::CodePage window::get_code_page() {
@@ -1311,7 +1341,7 @@ namespace YanLib::ui {
     }
 
     bool window::get_combobox_info(HWND combo_handle,
-                                   COMBOBOXINFO* combobox_info) {
+                                   COMBOBOXINFO *combobox_info) {
         if (!GetComboBoxInfo(combo_handle, combobox_info)) {
             error_code = GetLastError();
             return false;
@@ -1359,7 +1389,7 @@ namespace YanLib::ui {
         return GET_WHEEL_DELTA_WPARAM(wparam);
     }
 
-    wchar_t* window::make_int_resource(uint16_t value) {
+    wchar_t *window::make_int_resource(uint16_t value) {
         return MAKEINTRESOURCEW(value);
     }
 

@@ -28,7 +28,7 @@ namespace YanLib::hash {
         error_code = 0;
     }
 
-    sha1::sha1(const char* filename) {
+    sha1::sha1(const char *filename) {
         crypt_prov_handle = 0;
         crypt_hash_handle = 0;
         data_bytes = {};
@@ -38,7 +38,7 @@ namespace YanLib::hash {
         error_code = 0;
     }
 
-    sha1::sha1(const wchar_t* filename) {
+    sha1::sha1(const wchar_t *filename) {
         crypt_prov_handle = 0;
         crypt_hash_handle = 0;
         data_bytes = {};
@@ -150,7 +150,7 @@ namespace YanLib::hash {
                     size_t block_size = (total_size - offset) > BLOCKSIZE
                             ? BLOCKSIZE
                             : total_size - offset;
-                    uint8_t* block_ptr = data_bytes.data() + offset;
+                    uint8_t *block_ptr = data_bytes.data() + offset;
                     if (!CryptHashData(crypt_hash_handle, block_ptr,
                                        static_cast<uint32_t>(block_size), 0)) {
                         error_code = GetLastError();
@@ -198,19 +198,17 @@ namespace YanLib::hash {
 
     bool sha1::post_process() {
         do {
-            uint32_t len = 0;
-            uint32_t data_len = sizeof(uint32_t);
+            unsigned long len = 0;
+            unsigned long data_len = sizeof(uint32_t);
             if (!CryptGetHashParam(crypt_hash_handle, HP_HASHSIZE,
-                                   reinterpret_cast<uint8_t*>(&len),
-                                   reinterpret_cast<unsigned long*>(&data_len),
+                                   reinterpret_cast<uint8_t *>(&len), &data_len,
                                    0)) {
                 error_code = GetLastError();
                 break;
             }
             hash_bytes.resize(len);
             if (!CryptGetHashParam(crypt_hash_handle, HP_HASHVAL,
-                                   hash_bytes.data(),
-                                   reinterpret_cast<unsigned long*>(&len), 0)) {
+                                   hash_bytes.data(), &len, 0)) {
                 error_code = GetLastError();
                 break;
             }

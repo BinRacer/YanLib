@@ -34,6 +34,7 @@ namespace YanLib::ui {
         }
         return true;
     }
+
     bool touch::register_hit_testing(HWND window_handle, TouchHitTesting flag) {
         if (!RegisterTouchHitTestingWindow(window_handle,
                                            static_cast<uint32_t>(flag))) {
@@ -59,9 +60,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool touch::what_flag(HWND window_handle, RegisterFlag* flag) {
-        return IsTouchWindow(window_handle,
-                             reinterpret_cast<unsigned long*>(flag));
+    bool touch::what_flag(HWND window_handle, RegisterFlag *flag) {
+        if (!flag) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        auto temp = static_cast<unsigned long>(*flag);
+        bool is_ok = IsTouchWindow(window_handle, &temp);
+        *flag = static_cast<RegisterFlag>(temp);
+        return is_ok;
     }
 
     bool touch::close_input_handle(HTOUCHINPUT touch_input_handle) {
@@ -83,7 +90,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_pointer_frame_info(uint32_t pointer_id,
-                                       uint32_t* real_num,
+                                       uint32_t *real_num,
                                        POINTER_TOUCH_INFO touch_info[]) {
         if (!GetPointerFrameTouchInfo(pointer_id, real_num, touch_info)) {
             error_code = GetLastError();
@@ -94,8 +101,8 @@ namespace YanLib::ui {
 
     bool
     touch::get_pointer_frame_info_history(uint32_t pointer_id,
-                                          uint32_t* row,
-                                          uint32_t* col,
+                                          uint32_t *row,
+                                          uint32_t *col,
                                           POINTER_TOUCH_INFO touch_info[]) {
         if (!GetPointerFrameTouchInfoHistory(pointer_id, row, col,
                                              touch_info)) {
@@ -106,7 +113,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_pointer_info(uint32_t pointer_id,
-                                 POINTER_TOUCH_INFO* touch_info) {
+                                 POINTER_TOUCH_INFO *touch_info) {
         if (!GetPointerTouchInfo(pointer_id, touch_info)) {
             error_code = GetLastError();
             return false;
@@ -115,7 +122,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_pointer_info_history(uint32_t pointer_id,
-                                         uint32_t* real_num,
+                                         uint32_t *real_num,
                                          POINTER_TOUCH_INFO touch_info[]) {
         if (!GetPointerTouchInfoHistory(pointer_id, real_num, touch_info)) {
             error_code = GetLastError();
@@ -146,8 +153,8 @@ namespace YanLib::ui {
     }
 
     LRESULT touch::pack_hit_testing_proximity_evaluation(
-            const TOUCH_HIT_TESTING_INPUT* hit_testing_input,
-            const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION* proximity_eval) {
+            const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
+            const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval) {
         LRESULT result =
                 PackTouchHitTestingProximityEvaluation(hit_testing_input,
                                                        proximity_eval);
@@ -157,8 +164,8 @@ namespace YanLib::ui {
 
     bool touch::evaluate_proximity_to_polygon(
             const std::vector<POINT> &control_polygon,
-            const TOUCH_HIT_TESTING_INPUT* hit_testing_input,
-            TOUCH_HIT_TESTING_PROXIMITY_EVALUATION* proximity_eval) {
+            const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
+            TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval) {
         if (!EvaluateProximityToPolygon(control_polygon.size(),
                                         control_polygon.data(),
                                         hit_testing_input, proximity_eval)) {
@@ -169,9 +176,9 @@ namespace YanLib::ui {
     }
 
     bool touch::evaluate_proximity_to_rect(
-            const RECT* control_bounding_box,
-            const TOUCH_HIT_TESTING_INPUT* hit_testing_input,
-            TOUCH_HIT_TESTING_PROXIMITY_EVALUATION* proximity_eval) {
+            const RECT *control_bounding_box,
+            const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
+            TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval) {
         if (!EvaluateProximityToRect(control_bounding_box, hit_testing_input,
                                      proximity_eval)) {
             error_code = GetLastError();
@@ -193,7 +200,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_gesture_extra_args(HGESTUREINFO gesture_info_handle,
-                                       uint8_t* buf,
+                                       uint8_t *buf,
                                        uint32_t size) {
         if (!GetGestureExtraArgs(gesture_info_handle, size, buf)) {
             error_code = GetLastError();
@@ -203,7 +210,7 @@ namespace YanLib::ui {
     }
 
     bool touch::get_gesture_info(HGESTUREINFO gesture_info_handle,
-                                 GESTUREINFO* gesture_info) {
+                                 GESTUREINFO *gesture_info) {
         if (!GetGestureInfo(gesture_info_handle, gesture_info)) {
             error_code = GetLastError();
             return false;

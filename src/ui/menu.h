@@ -156,9 +156,9 @@ namespace YanLib::ui {
 
         HMENU create(bool is_popup = false);
 
-        HMENU load(HINSTANCE instance_handle, const char* menu_name);
+        HMENU load(HINSTANCE instance_handle, const char *menu_name);
 
-        HMENU load(HINSTANCE instance_handle, const wchar_t* menu_name);
+        HMENU load(HINSTANCE instance_handle, const wchar_t *menu_name);
 
         struct MenuItemTemplate {
             uint16_t option;
@@ -180,25 +180,25 @@ namespace YanLib::ui {
                    const std::vector<MenuItemTemplateEx> &menu_templates);
 
         bool append(HMENU menu_handle,
-                    UINT_PTR item_id,
-                    const char* item_text,
+                    uintptr_t item_id,
+                    const char *item_text,
                     MenuFlag flag = MenuFlag::String);
 
         bool append(HMENU menu_handle,
-                    UINT_PTR item_id,
-                    const wchar_t* item_text,
+                    uintptr_t item_id,
+                    const wchar_t *item_text,
                     MenuFlag flag = MenuFlag::String);
 
         bool insert(HMENU menu_handle,
                     uint32_t pos,
-                    UINT_PTR item_id,
-                    const char* item_text,
+                    uintptr_t item_id,
+                    const char *item_text,
                     MenuFlag flag = MenuFlag::ByPosition | MenuFlag::String);
 
         bool insert(HMENU menu_handle,
                     uint32_t pos,
-                    UINT_PTR item_id,
-                    const wchar_t* item_text,
+                    uintptr_t item_id,
+                    const wchar_t *item_text,
                     MenuFlag flag = MenuFlag::ByPosition | MenuFlag::String);
 
         bool remove(HMENU menu_handle, uint32_t pos, bool by_pos = true);
@@ -211,27 +211,27 @@ namespace YanLib::ui {
 
         bool modify(HMENU menu_handle,
                     uint32_t pos,
-                    UINT_PTR item_id,
-                    const char* item_text,
+                    uintptr_t item_id,
+                    const char *item_text,
                     MenuFlag flag = MenuFlag::ByPosition | MenuFlag::String);
 
         bool modify(HMENU menu_handle,
                     uint32_t pos,
-                    UINT_PTR item_id,
-                    const wchar_t* item_text,
+                    uintptr_t item_id,
+                    const wchar_t *item_text,
                     MenuFlag flag = MenuFlag::ByPosition | MenuFlag::String);
 
         HMENU get_menu(HWND window_handle);
 
         bool set_menu(HWND window_handle, HMENU menu_handle);
 
-        bool get_info(HMENU menu_handle, MENUINFO* memu_info);
+        bool get_info(HMENU menu_handle, MENUINFO *memu_info);
 
-        bool set_info(HMENU menu_handle, const MENUINFO* memu_info);
+        bool set_info(HMENU menu_handle, const MENUINFO *memu_info);
 
         bool get_bar_info(HWND window_handle,
                           int32_t item_id,
-                          MENUBARINFO* menu_bar_info,
+                          MENUBARINFO *menu_bar_info,
                           ObjectID flag = ObjectID::Menu);
 
         uint32_t get_state(HMENU menu_handle, uint32_t pos, bool by_pos = true);
@@ -259,32 +259,32 @@ namespace YanLib::ui {
 
         bool insert_item(HMENU menu_handle,
                          uint32_t pos,
-                         const MENUITEMINFOA* menu_item_info,
+                         const MENUITEMINFOA *menu_item_info,
                          bool is_pos = true);
 
         bool insert_item(HMENU menu_handle,
                          uint32_t pos,
-                         const MENUITEMINFOW* menu_item_info,
+                         const MENUITEMINFOW *menu_item_info,
                          bool is_pos = true);
 
         bool get_item_info(HMENU menu_handle,
                            uint32_t pos,
-                           MENUITEMINFOA* menu_item_info,
+                           MENUITEMINFOA *menu_item_info,
                            bool is_pos = true);
 
         bool get_item_info(HMENU menu_handle,
                            uint32_t pos,
-                           MENUITEMINFOW* menu_item_info,
+                           MENUITEMINFOW *menu_item_info,
                            bool is_pos = true);
 
         bool set_item_info(HMENU menu_handle,
                            uint32_t pos,
-                           const MENUITEMINFOA* menu_item_info,
+                           const MENUITEMINFOA *menu_item_info,
                            bool is_pos = true);
 
         bool set_item_info(HMENU menu_handle,
                            uint32_t pos,
-                           const MENUITEMINFOW* menu_item_info,
+                           const MENUITEMINFOW *menu_item_info,
                            bool is_pos = true);
 
         uint32_t get_default_item(HMENU menu_handle,
@@ -305,7 +305,7 @@ namespace YanLib::ui {
         bool get_item_rect(HWND window_handle,
                            HMENU menu_handle,
                            uint32_t pos,
-                           RECT* rect);
+                           RECT *rect);
 
         bool set_item_bitmaps(HMENU menu_handle,
                               uint32_t pos,
@@ -366,7 +366,7 @@ namespace YanLib::ui {
                          int32_t x,
                          int32_t y,
                          HWND window_handle,
-                         TPMPARAMS* tpm_params = nullptr,
+                         TPMPARAMS *tpm_params = nullptr,
                          TrackPopup flag = TrackPopup::RightAlign |
                                  TrackPopup::BottomAlign |
                                  TrackPopup::ReturnCmd |

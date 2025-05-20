@@ -14,7 +14,7 @@ namespace YanLib::sys {
         job_handles.clear();
     }
 
-    HANDLE job::create(const char* job_name, SECURITY_ATTRIBUTES* sa) {
+    HANDLE job::create(const char *job_name, SECURITY_ATTRIBUTES *sa) {
         HANDLE job_handle = CreateJobObjectA(sa, job_name);
         if (!job_handle) {
             error_code = GetLastError();
@@ -26,7 +26,7 @@ namespace YanLib::sys {
         return job_handle;
     }
 
-    HANDLE job::create(const wchar_t* job_name, SECURITY_ATTRIBUTES* sa) {
+    HANDLE job::create(const wchar_t *job_name, SECURITY_ATTRIBUTES *sa) {
         HANDLE job_handle = CreateJobObjectW(sa, job_name);
         if (!job_handle) {
             error_code = GetLastError();
@@ -38,7 +38,7 @@ namespace YanLib::sys {
         return job_handle;
     }
 
-    HANDLE job::open(const char* job_name, JobAccess access, bool is_inherit) {
+    HANDLE job::open(const char *job_name, JobAccess access, bool is_inherit) {
         HANDLE job_handle = OpenJobObjectA(static_cast<uint32_t>(access),
                                            is_inherit ? TRUE : FALSE, job_name);
         if (!job_handle) {
@@ -52,7 +52,7 @@ namespace YanLib::sys {
     }
 
     HANDLE
-    job::open(const wchar_t* job_name, JobAccess access, bool is_inherit) {
+    job::open(const wchar_t *job_name, JobAccess access, bool is_inherit) {
         HANDLE job_handle = OpenJobObjectW(static_cast<uint32_t>(access),
                                            is_inherit ? TRUE : FALSE, job_name);
         if (!job_handle) {
@@ -107,22 +107,28 @@ namespace YanLib::sys {
 
     bool job::get_info(HANDLE job_handle,
                        JOBOBJECTINFOCLASS job_object_info_class,
-                       void* job_object_info,
+                       void *job_object_info,
                        uint32_t job_object_info_len,
-                       uint32_t* real_size) {
-        if (!QueryInformationJobObject(job_handle, job_object_info_class,
-                                       job_object_info, job_object_info_len,
-                                       reinterpret_cast<unsigned long*>(
-                                               real_size))) {
-            error_code = GetLastError();
+                       uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!QueryInformationJobObject(job_handle, job_object_info_class,
+                                       job_object_info, job_object_info_len,
+                                       &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
     bool job::set_info(HANDLE job_handle,
                        JOBOBJECTINFOCLASS job_object_info_class,
-                       void* job_object_info,
+                       void *job_object_info,
                        uint32_t job_object_info_len) {
         if (!SetInformationJobObject(job_handle, job_object_info_class,
                                      job_object_info, job_object_info_len)) {

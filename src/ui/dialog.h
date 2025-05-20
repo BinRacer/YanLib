@@ -77,62 +77,62 @@ namespace YanLib::ui {
 
         ~dialog();
 
-        INT_PTR create(HINSTANCE instance_handle,
-                       const char* template_name,
-                       HWND parent_window_handle,
-                       DLGPROC dialog_func);
+        intptr_t create(HINSTANCE instance_handle,
+                        const char *template_name,
+                        HWND parent_window_handle,
+                        DLGPROC dialog_func);
 
-        INT_PTR create(HINSTANCE instance_handle,
-                       const wchar_t* template_name,
-                       HWND parent_window_handle,
-                       DLGPROC dialog_func);
+        intptr_t create(HINSTANCE instance_handle,
+                        const wchar_t *template_name,
+                        HWND parent_window_handle,
+                        DLGPROC dialog_func);
 
-        INT_PTR create(HINSTANCE instance_handle,
-                       const char* template_name,
-                       HWND parent_window_handle,
-                       DLGPROC dialog_func,
-                       LPARAM init_param);
+        intptr_t create(HINSTANCE instance_handle,
+                        const char *template_name,
+                        HWND parent_window_handle,
+                        DLGPROC dialog_func,
+                        LPARAM init_param);
 
-        INT_PTR create(HINSTANCE instance_handle,
-                       const wchar_t* template_name,
-                       HWND parent_window_handle,
-                       DLGPROC dialog_func,
-                       LPARAM init_param);
+        intptr_t create(HINSTANCE instance_handle,
+                        const wchar_t *template_name,
+                        HWND parent_window_handle,
+                        DLGPROC dialog_func,
+                        LPARAM init_param);
 
-        INT_PTR create(HINSTANCE instance_handle,
-                       const DLGTEMPLATE* dialog_template,
-                       HWND parent_window_handle,
-                       DLGPROC dialog_func);
+        intptr_t create(HINSTANCE instance_handle,
+                        const DLGTEMPLATE *dialog_template,
+                        HWND parent_window_handle,
+                        DLGPROC dialog_func);
 
-        INT_PTR create(HINSTANCE instance_handle,
-                       const DLGTEMPLATE* dialog_template,
-                       HWND parent_window_handle,
-                       DLGPROC dialog_func,
-                       LPARAM init_param);
+        intptr_t create(HINSTANCE instance_handle,
+                        const DLGTEMPLATE *dialog_template,
+                        HWND parent_window_handle,
+                        DLGPROC dialog_func,
+                        LPARAM init_param);
 
         HWND create_modeless(HINSTANCE instance_handle,
-                             const wchar_t* template_name,
+                             const wchar_t *template_name,
                              HWND parent_window_handle,
                              DLGPROC dialog_func);
 
         HWND create_modeless(HINSTANCE instance_handle,
-                             const wchar_t* template_name,
+                             const wchar_t *template_name,
                              HWND parent_window_handle,
                              DLGPROC dialog_func,
                              LPARAM init_param);
 
         HWND create_modeless(HINSTANCE instance_handle,
-                             const DLGTEMPLATE* dialog_template,
+                             const DLGTEMPLATE *dialog_template,
                              HWND parent_window_handle,
                              DLGPROC dialog_func);
 
         HWND create_modeless(HINSTANCE instance_handle,
-                             const DLGTEMPLATE* dialog_template,
+                             const DLGTEMPLATE *dialog_template,
                              HWND parent_window_handle,
                              DLGPROC dialog_func,
                              LPARAM init_param);
 
-        bool destroy(HWND dialog_handle, INT_PTR result);
+        bool destroy(HWND dialog_handle, intptr_t result);
 
         bool destroy_modeless(HWND dialog_handle);
 
@@ -152,21 +152,21 @@ namespace YanLib::ui {
                      LPARAM lparam);
 
         int32_t fill_listbox(HWND dialog_handle,
-                             char* path_spec,
+                             char *path_spec,
                              int32_t listbox_id,
                              int32_t static_id,
                              FileType file_type = FileType::Drives |
                                      FileType::Directory | FileType::ReadWrite);
 
         int32_t fill_listbox(HWND dialog_handle,
-                             wchar_t* path_spec,
+                             wchar_t *path_spec,
                              int32_t listbox_id,
                              int32_t static_id,
                              FileType file_type = FileType::Drives |
                                      FileType::Directory | FileType::ReadWrite);
 
         int32_t fill_combobox(HWND dialog_handle,
-                              char* path_spec,
+                              char *path_spec,
                               int32_t combobox_id,
                               int32_t static_id,
                               FileType file_type = FileType::Drives |
@@ -174,7 +174,7 @@ namespace YanLib::ui {
                                       FileType::ReadWrite);
 
         int32_t fill_combobox(HWND dialog_handle,
-                              wchar_t* path_spec,
+                              wchar_t *path_spec,
                               int32_t combobox_id,
                               int32_t static_id,
                               FileType file_type = FileType::Drives |
@@ -203,7 +203,7 @@ namespace YanLib::ui {
 
         bool get_item_int(HWND dialog_handle,
                           int32_t item_id,
-                          uint32_t* value,
+                          uint32_t *value,
                           bool is_signed);
 
         bool set_item_int(HWND dialog_handle,
@@ -218,10 +218,10 @@ namespace YanLib::ui {
         get_item_text(HWND dialog_handle, int32_t item_id, std::wstring &text);
 
         bool
-        set_item_text(HWND dialog_handle, int32_t item_id, const char* text);
+        set_item_text(HWND dialog_handle, int32_t item_id, const char *text);
 
         bool
-        set_item_text(HWND dialog_handle, int32_t item_id, const wchar_t* text);
+        set_item_text(HWND dialog_handle, int32_t item_id, const wchar_t *text);
 
         HWND next_group_item(HWND dialog_handle,
                              HWND item_handle,
@@ -247,7 +247,7 @@ namespace YanLib::ui {
 
         int32_t get_base_units();
 
-        bool base_units_to_screen_point(HWND dialog_handle, RECT* rect);
+        bool base_units_to_screen_point(HWND dialog_handle, RECT *rect);
 
         [[nodiscard]] uint32_t err_code() const;
 

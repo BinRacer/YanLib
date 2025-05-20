@@ -38,17 +38,17 @@ namespace YanLib::io {
 
         [[nodiscard]] bool is_ok() const;
 
-        bool bind(const char* local_ip = "0.0.0.0", uint16_t local_port = 8080);
+        bool bind(const char *local_ip = "0.0.0.0", uint16_t local_port = 8080);
 
         bool listen(int32_t backlog = SOMAXCONN);
 
-        SOCKET accept(sockaddr* addr, int32_t* addr_len);
+        SOCKET accept(sockaddr *addr, int32_t *addr_len);
 
         int32_t
-        read(SOCKET client_socket, char* buf, int32_t len, int32_t flags = 0);
+        read(SOCKET client_socket, char *buf, int32_t len, int32_t flags = 0);
 
         int32_t write(SOCKET client_socket,
-                      const char* buf,
+                      const char *buf,
                       int32_t len,
                       int32_t flags = 0);
 

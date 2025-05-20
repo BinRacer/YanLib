@@ -32,60 +32,60 @@ namespace YanLib::io {
 
         bool create();
 
-        bool associate_device(HANDLE file_handle, ULONG_PTR comp_key);
+        bool associate_device(HANDLE file_handle, uintptr_t comp_key);
 
-        bool associate_socket(SOCKET socket, ULONG_PTR comp_key);
+        bool associate_socket(SOCKET socket, uintptr_t comp_key);
 
-        bool post_status(ULONG_PTR comp_key,
+        bool post_status(uintptr_t comp_key,
                          uint32_t num_bytes = 0,
-                         OVERLAPPED* overlapped = nullptr);
+                         OVERLAPPED *overlapped = nullptr);
 
-        bool get_status(ULONG_PTR* comp_key,
-                        uint32_t* num_bytes,
-                        OVERLAPPED** overlapped,
+        bool get_status(uintptr_t *comp_key,
+                        uint32_t *num_bytes,
+                        OVERLAPPED **overlapped,
                         uint32_t milli_seconds = INFINITE);
 
-        bool get_status(OVERLAPPED_ENTRY* comp_port_entries,
+        bool get_status(OVERLAPPED_ENTRY *comp_port_entries,
                         uint32_t count,
-                        uint32_t* num_entries_removed,
+                        uint32_t *num_entries_removed,
                         uint32_t milli_seconds = INFINITE,
                         bool is_alert = false);
 
         bool get_status(std::vector<OVERLAPPED_ENTRY> &entries,
-                        uint32_t* num_entries_removed,
+                        uint32_t *num_entries_removed,
                         uint32_t milli_seconds = INFINITE,
                         bool is_alert = false);
 
         bool cancel(HANDLE file_handle);
 
-        bool cancel(HANDLE file_handle, OVERLAPPED* overlapped);
+        bool cancel(HANDLE file_handle, OVERLAPPED *overlapped);
 
         bool cancel_sync_io(HANDLE thread_handle);
 
         bool device_io_control(HANDLE device_handle,
                                uint32_t io_control_code,
-                               void* in_buffer,
+                               void *in_buffer,
                                uint32_t in_buffer_size,
-                               void* out_buffer,
+                               void *out_buffer,
                                uint32_t out_buffer_size,
-                               uint32_t* bytes_transferred,
-                               OVERLAPPED* overlapped);
+                               uint32_t *bytes_transferred,
+                               OVERLAPPED *overlapped);
 
         bool device_io_control(HANDLE device_handle,
                                uint32_t io_control_code,
                                std::vector<uint8_t> &in_buffer,
                                std::vector<uint8_t> &out_buffer,
-                               uint32_t* bytes_transferred,
-                               OVERLAPPED* overlapped);
+                               uint32_t *bytes_transferred,
+                               OVERLAPPED *overlapped);
 
         bool get_overlapped_result(HANDLE file_handle,
-                                   OVERLAPPED* overlapped,
-                                   uint32_t* bytes_transferred,
+                                   OVERLAPPED *overlapped,
+                                   uint32_t *bytes_transferred,
                                    bool is_wait);
 
         bool get_overlapped_result(HANDLE file_handle,
-                                   OVERLAPPED* overlapped,
-                                   uint32_t* bytes_transferred,
+                                   OVERLAPPED *overlapped,
+                                   uint32_t *bytes_transferred,
                                    uint32_t milli_seconds,
                                    bool is_wait);
 

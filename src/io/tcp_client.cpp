@@ -44,7 +44,7 @@ namespace YanLib::io {
         return init_done;
     }
 
-    bool tcp_client::connect(const char* remote_ip, uint16_t remote_port) {
+    bool tcp_client::connect(const char *remote_ip, uint16_t remote_port) {
         if (!init_done) {
             return false;
         }
@@ -56,7 +56,7 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 return false;
             }
-            if (::connect(client_socket, reinterpret_cast<sockaddr*>(&addr),
+            if (::connect(client_socket, reinterpret_cast<sockaddr *>(&addr),
                           sizeof(addr)) == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
                 return false;
@@ -71,7 +71,7 @@ namespace YanLib::io {
                 error_code = WSAGetLastError();
                 return false;
             }
-            if (::connect(client_socket, reinterpret_cast<sockaddr*>(&addr),
+            if (::connect(client_socket, reinterpret_cast<sockaddr *>(&addr),
                           sizeof(addr)) == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
                 return false;
@@ -80,7 +80,7 @@ namespace YanLib::io {
         }
     }
 
-    int32_t tcp_client::read(char* buf, int32_t len, int32_t flags) {
+    int32_t tcp_client::read(char *buf, int32_t len, int32_t flags) {
         int32_t number_of_bytes = recv(client_socket, buf, len, flags);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
@@ -88,7 +88,7 @@ namespace YanLib::io {
         return number_of_bytes;
     }
 
-    int32_t tcp_client::write(const char* buf, int32_t len, int32_t flags) {
+    int32_t tcp_client::write(const char *buf, int32_t len, int32_t flags) {
         int32_t number_of_bytes = send(client_socket, buf, len, flags);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();

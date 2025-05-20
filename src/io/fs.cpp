@@ -32,10 +32,10 @@ namespace YanLib::io {
         }
     }
 
-    fs::fs(const char* file_name,
+    fs::fs(const char *file_name,
            DesiredAccess desired_access,
            ShareMode share_mode,
-           SECURITY_ATTRIBUTES* security_attrs,
+           SECURITY_ATTRIBUTES *security_attrs,
            CreationDisposition creation_disposition,
            FlagAndAttr flag_and_attr,
            HANDLE template_file) {
@@ -51,10 +51,10 @@ namespace YanLib::io {
         }
     }
 
-    fs::fs(const wchar_t* file_name,
+    fs::fs(const wchar_t *file_name,
            DesiredAccess desired_access,
            ShareMode share_mode,
-           SECURITY_ATTRIBUTES* security_attrs,
+           SECURITY_ATTRIBUTES *security_attrs,
            CreationDisposition creation_disposition,
            FlagAndAttr flag_and_attr,
            HANDLE template_file) {
@@ -81,22 +81,27 @@ namespace YanLib::io {
         return !is_open_failed;
     }
 
-    bool fs::read(void* buf,
+    bool fs::read(void *buf,
                   uint32_t size,
-                  uint32_t* bytes_read,
-                  OVERLAPPED* overlapped) {
-        if (!ReadFile(file_handle, buf, size,
-                      reinterpret_cast<unsigned long*>(bytes_read),
-                      overlapped)) {
-            error_code = GetLastError();
+                  uint32_t *bytes_read,
+                  OVERLAPPED *overlapped) {
+        if (!bytes_read) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *bytes_read;
+        if (!ReadFile(file_handle, buf, size, &temp, overlapped)) {
+            error_code = GetLastError();
+            *bytes_read = temp;
+            return false;
+        }
+        *bytes_read = temp;
         return true;
     }
 
-    bool fs::read(void* buf,
+    bool fs::read(void *buf,
                   uint32_t size,
-                  OVERLAPPED* overlapped,
+                  OVERLAPPED *overlapped,
                   OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!ReadFileEx(file_handle, buf, size, overlapped,
                         completion_routine)) {
@@ -106,22 +111,27 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::write(const void* buf,
+    bool fs::write(const void *buf,
                    uint32_t size,
-                   uint32_t* bytes_written,
-                   OVERLAPPED* overlapped) {
-        if (!WriteFile(file_handle, buf, size,
-                       reinterpret_cast<unsigned long*>(bytes_written),
-                       overlapped)) {
-            error_code = GetLastError();
+                   uint32_t *bytes_written,
+                   OVERLAPPED *overlapped) {
+        if (!bytes_written) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *bytes_written;
+        if (!WriteFile(file_handle, buf, size, &temp, overlapped)) {
+            error_code = GetLastError();
+            *bytes_written = temp;
+            return false;
+        }
+        *bytes_written = temp;
         return true;
     }
 
-    bool fs::write(const void* buf,
+    bool fs::write(const void *buf,
                    uint32_t size,
-                   OVERLAPPED* overlapped,
+                   OVERLAPPED *overlapped,
                    OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
         if (!WriteFileEx(file_handle, buf, size, overlapped,
                          completion_routine)) {
@@ -136,9 +146,9 @@ namespace YanLib::io {
             buffer_size = 1;
         }
         std::vector<uint8_t> raw_data(buffer_size, '\0');
-        uint32_t bytes_read = 0;
-        if (ReadFile(file_handle, raw_data.data(), buffer_size,
-                     reinterpret_cast<unsigned long*>(&bytes_read), nullptr) &&
+        unsigned long bytes_read = 0;
+        if (ReadFile(file_handle, raw_data.data(), buffer_size, &bytes_read,
+                     nullptr) &&
             bytes_read > 0) {
             raw_data.resize(bytes_read);
             raw_data.shrink_to_fit();
@@ -153,9 +163,9 @@ namespace YanLib::io {
             buffer_size = 1;
         }
         std::string raw_data(buffer_size, '\0');
-        uint32_t bytes_read = 0;
-        if (ReadFile(file_handle, raw_data.data(), buffer_size,
-                     reinterpret_cast<unsigned long*>(&bytes_read), nullptr) &&
+        unsigned long bytes_read = 0;
+        if (ReadFile(file_handle, raw_data.data(), buffer_size, &bytes_read,
+                     nullptr) &&
             bytes_read > 0) {
             raw_data.resize(bytes_read);
             raw_data.shrink_to_fit();
@@ -169,10 +179,9 @@ namespace YanLib::io {
         std::vector<uint8_t> buf(4096, '\0');
         std::vector<uint8_t> raw_data;
         raw_data.reserve(4096);
-        uint32_t bytes_read = 0;
+        unsigned long bytes_read = 0;
         do {
-            if (ReadFile(file_handle, buf.data(), buf.size(),
-                         reinterpret_cast<unsigned long*>(&bytes_read),
+            if (ReadFile(file_handle, buf.data(), buf.size(), &bytes_read,
                          nullptr) &&
                 bytes_read > 0) {
                 raw_data.insert(raw_data.end(), buf.data(),
@@ -192,10 +201,9 @@ namespace YanLib::io {
         std::string buf(4096, '\0');
         std::string raw_data;
         raw_data.reserve(4096);
-        uint32_t bytes_read = 0;
+        unsigned long bytes_read = 0;
         do {
-            if (ReadFile(file_handle, buf.data(), buf.size(),
-                         reinterpret_cast<unsigned long*>(&bytes_read),
+            if (ReadFile(file_handle, buf.data(), buf.size(), &bytes_read,
                          nullptr) &&
                 bytes_read > 0) {
                 raw_data.insert(raw_data.end(), buf.data(),
@@ -215,9 +223,8 @@ namespace YanLib::io {
         if (data.empty()) {
             return 0;
         }
-        uint32_t bytes_written = 0;
-        if (!WriteFile(file_handle, data.data(), data.size(),
-                       reinterpret_cast<unsigned long*>(&bytes_written),
+        unsigned long bytes_written = 0;
+        if (!WriteFile(file_handle, data.data(), data.size(), &bytes_written,
                        nullptr)) {
             error_code = GetLastError();
         }
@@ -228,9 +235,8 @@ namespace YanLib::io {
         if (data.empty()) {
             return 0;
         }
-        uint32_t bytes_written = 0;
-        if (!WriteFile(file_handle, data.data(), data.size(),
-                       reinterpret_cast<unsigned long*>(&bytes_written),
+        unsigned long bytes_written = 0;
+        if (!WriteFile(file_handle, data.data(), data.size(), &bytes_written,
                        nullptr)) {
             error_code = GetLastError();
         }
@@ -271,7 +277,7 @@ namespace YanLib::io {
     }
 
     bool
-    fs::lock_async(LockMode lock_mode, uint64_t range, OVERLAPPED* overlapped) {
+    fs::lock_async(LockMode lock_mode, uint64_t range, OVERLAPPED *overlapped) {
         auto low = static_cast<uint32_t>(range & 0xFFFFFFFF);
         auto high = static_cast<uint32_t>(range >> 32);
         if (!LockFileEx(file_handle, static_cast<uint32_t>(lock_mode), 0, low,
@@ -295,7 +301,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::unlock_async(uint64_t range, OVERLAPPED* overlapped) {
+    bool fs::unlock_async(uint64_t range, OVERLAPPED *overlapped) {
         auto low = static_cast<uint32_t>(range & 0xFFFFFFFF);
         auto high = static_cast<uint32_t>(range >> 32);
         if (!UnlockFileEx(file_handle, 0, low, high, overlapped)) {
@@ -306,7 +312,7 @@ namespace YanLib::io {
     }
 
     bool fs::get_info(FILE_INFO_BY_HANDLE_CLASS file_info_class,
-                      void* file_info,
+                      void *file_info,
                       uint32_t file_info_size) {
         if (!GetFileInformationByHandleEx(file_handle, file_info_class,
                                           file_info, file_info_size)) {
@@ -317,7 +323,7 @@ namespace YanLib::io {
     }
 
     bool fs::set_info(FILE_INFO_BY_HANDLE_CLASS file_info_class,
-                      void* file_info,
+                      void *file_info,
                       uint32_t file_info_size) {
         if (!SetFileInformationByHandle(file_handle, file_info_class, file_info,
                                         file_info_size)) {
@@ -327,7 +333,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::set_io_overlapped_range(uint8_t* overlapped_range_start,
+    bool fs::set_io_overlapped_range(uint8_t *overlapped_range_start,
                                      uint32_t length) {
         if (!SetFileIoOverlappedRange(file_handle, overlapped_range_start,
                                       length)) {
@@ -337,7 +343,11 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::get_volume_info(VolumeInfoA* volume_info) {
+    bool fs::get_volume_info(VolumeInfoA *volume_info) {
+        if (!volume_info) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
         memset(volume_info, 0, sizeof(VolumeInfoA));
         auto volume_info_wide = std::make_unique<VolumeInfoW>();
         memset(volume_info_wide.get(), 0, sizeof(VolumeInfoW));
@@ -357,20 +367,28 @@ namespace YanLib::io {
         return false;
     }
 
-    bool fs::get_volume_info(VolumeInfoW* volume_info) {
-        memset(volume_info, 0, sizeof(VolumeInfoW));
-        uint32_t size = 0;
-        if (!GetVolumeInformationByHandleW(
-                    file_handle, volume_info->volume_name, MAX_PATH,
-                    reinterpret_cast<unsigned long*>(
-                            &(volume_info->serial_number)),
-                    reinterpret_cast<unsigned long*>(&size),
-                    reinterpret_cast<unsigned long*>(
-                            &(volume_info->file_system_flag)),
-                    volume_info->file_system_name, MAX_PATH)) {
-            error_code = GetLastError();
+    bool fs::get_volume_info(VolumeInfoW *volume_info) {
+        if (!volume_info) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        memset(volume_info, 0, sizeof(VolumeInfoW));
+        unsigned long size = 0;
+        unsigned long serial_number = 0;
+        unsigned long file_system_flag = 0;
+        if (!GetVolumeInformationByHandleW(file_handle,
+                                           volume_info->volume_name, MAX_PATH,
+                                           &serial_number, &size,
+                                           &file_system_flag,
+                                           volume_info->file_system_name,
+                                           MAX_PATH)) {
+            error_code = GetLastError();
+            volume_info->serial_number = serial_number;
+            volume_info->file_system_flag = file_system_flag;
+            return false;
+        }
+        volume_info->serial_number = serial_number;
+        volume_info->file_system_flag = file_system_flag;
         return true;
     }
 
@@ -411,22 +429,27 @@ namespace YanLib::io {
     }
 
     bool
-    fs::monitor_dir_change(void* buffer,
+    fs::monitor_dir_change(void *buffer,
                            uint32_t buffer_length,
                            bool is_watch_subtree,
                            uint32_t notify_filter,
-                           uint32_t* bytes_returned,
-                           OVERLAPPED* overlapped,
+                           uint32_t *bytes_returned,
+                           OVERLAPPED *overlapped,
                            OVERLAPPED_COMPLETION_ROUTINE completion_routine) {
-        if (!ReadDirectoryChangesW(file_handle, buffer, buffer_length,
-                                   is_watch_subtree ? TRUE : FALSE,
-                                   notify_filter,
-                                   reinterpret_cast<unsigned long*>(
-                                           bytes_returned),
-                                   overlapped, completion_routine)) {
-            error_code = GetLastError();
+        if (!bytes_returned) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *bytes_returned;
+        if (!ReadDirectoryChangesW(file_handle, buffer, buffer_length,
+                                   is_watch_subtree ? TRUE : FALSE,
+                                   notify_filter, &temp, overlapped,
+                                   completion_routine)) {
+            error_code = GetLastError();
+            *bytes_returned = temp;
+            return false;
+        }
+        *bytes_returned = temp;
         return true;
     }
 
@@ -486,10 +509,10 @@ namespace YanLib::io {
         }
     }
 
-    bool fs_util::touch(const char* file_name,
+    bool fs_util::touch(const char *file_name,
                         DesiredAccess desired_access,
                         ShareMode share_mode,
-                        SECURITY_ATTRIBUTES* security_attrs,
+                        SECURITY_ATTRIBUTES *security_attrs,
                         CreationDisposition creation_disposition,
                         FlagAndAttr flag_and_attr,
                         HANDLE template_file) {
@@ -507,10 +530,10 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::touch(const wchar_t* file_name,
+    bool fs_util::touch(const wchar_t *file_name,
                         DesiredAccess desired_access,
                         ShareMode share_mode,
-                        SECURITY_ATTRIBUTES* security_attrs,
+                        SECURITY_ATTRIBUTES *security_attrs,
                         CreationDisposition creation_disposition,
                         FlagAndAttr flag_and_attr,
                         HANDLE template_file) {
@@ -528,7 +551,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::is_exists(const char* path_name) {
+    bool fs_util::is_exists(const char *path_name) {
         if (!PathFileExistsA(path_name)) {
             error_code = GetLastError();
             return false;
@@ -536,7 +559,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::is_exists(const wchar_t* path_name) {
+    bool fs_util::is_exists(const wchar_t *path_name) {
         if (!PathFileExistsW(path_name)) {
             error_code = GetLastError();
             return false;
@@ -544,7 +567,7 @@ namespace YanLib::io {
         return true;
     }
 
-    uint32_t fs_util::get_attr(const char* file_name) {
+    uint32_t fs_util::get_attr(const char *file_name) {
         uint32_t attr = GetFileAttributesA(file_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
@@ -553,7 +576,7 @@ namespace YanLib::io {
         return attr;
     }
 
-    uint32_t fs_util::get_attr(const wchar_t* file_name) {
+    uint32_t fs_util::get_attr(const wchar_t *file_name) {
         uint32_t attr = GetFileAttributesW(file_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
@@ -562,7 +585,7 @@ namespace YanLib::io {
         return attr;
     }
 
-    bool fs_util::set_attr(const char* file_name, uint32_t attr) {
+    bool fs_util::set_attr(const char *file_name, uint32_t attr) {
         if (!SetFileAttributesA(file_name, attr)) {
             error_code = GetLastError();
             return false;
@@ -570,7 +593,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::set_attr(const wchar_t* file_name, uint32_t attr) {
+    bool fs_util::set_attr(const wchar_t *file_name, uint32_t attr) {
         if (!SetFileAttributesW(file_name, attr)) {
             error_code = GetLastError();
             return false;
@@ -578,15 +601,15 @@ namespace YanLib::io {
         return true;
     }
 
-    DriveType fs_util::get_drive_type(const char* path_name) {
+    DriveType fs_util::get_drive_type(const char *path_name) {
         return static_cast<DriveType>(GetDriveTypeA(path_name));
     }
 
-    DriveType fs_util::get_drive_type(const wchar_t* path_name) {
+    DriveType fs_util::get_drive_type(const wchar_t *path_name) {
         return static_cast<DriveType>(GetDriveTypeW(path_name));
     }
 
-    std::string fs_util::get_volume_path_name(const char* file_name) {
+    std::string fs_util::get_volume_path_name(const char *file_name) {
         std::string buffer(MAX_PATH + 1, '\0');
         if (!GetVolumePathNameA(file_name, buffer.data(), MAX_PATH)) {
             error_code = GetLastError();
@@ -598,7 +621,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring fs_util::get_volume_path_name(const wchar_t* file_name) {
+    std::wstring fs_util::get_volume_path_name(const wchar_t *file_name) {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         if (!GetVolumePathNameW(file_name, buffer.data(), MAX_PATH)) {
             error_code = GetLastError();
@@ -611,16 +634,14 @@ namespace YanLib::io {
     }
 
     std::string
-    fs_util::get_volume_path_names_for_volume_name(const char* volume_name) {
-        uint32_t size = 0;
-        if (!GetVolumePathNamesForVolumeNameA(volume_name, nullptr, 0,
-                                              reinterpret_cast<unsigned long*>(
-                                                      &size))) {
+    fs_util::get_volume_path_names_for_volume_name(const char *volume_name) {
+        unsigned long size = 0;
+        if (!GetVolumePathNamesForVolumeNameA(volume_name, nullptr, 0, &size)) {
             if (GetLastError() == ERROR_MORE_DATA) {
                 std::string buffer(size, '\0');
-                if (!GetVolumePathNamesForVolumeNameA(
-                            volume_name, buffer.data(), buffer.size(),
-                            reinterpret_cast<unsigned long*>(&size))) {
+                if (!GetVolumePathNamesForVolumeNameA(volume_name,
+                                                      buffer.data(),
+                                                      buffer.size(), &size)) {
                     error_code = GetLastError();
                     return {};
                 }
@@ -635,16 +656,14 @@ namespace YanLib::io {
     }
 
     std::wstring
-    fs_util::get_volume_path_names_for_volume_name(const wchar_t* volume_name) {
-        uint32_t size = 0;
-        if (!GetVolumePathNamesForVolumeNameW(volume_name, nullptr, 0,
-                                              reinterpret_cast<unsigned long*>(
-                                                      &size))) {
+    fs_util::get_volume_path_names_for_volume_name(const wchar_t *volume_name) {
+        unsigned long size = 0;
+        if (!GetVolumePathNamesForVolumeNameW(volume_name, nullptr, 0, &size)) {
             if (GetLastError() == ERROR_MORE_DATA) {
                 std::wstring buffer(size, L'\0');
-                if (!GetVolumePathNamesForVolumeNameW(
-                            volume_name, buffer.data(), buffer.size(),
-                            reinterpret_cast<unsigned long*>(&size))) {
+                if (!GetVolumePathNamesForVolumeNameW(volume_name,
+                                                      buffer.data(),
+                                                      buffer.size(), &size)) {
                     error_code = GetLastError();
                     return {};
                 }
@@ -659,7 +678,7 @@ namespace YanLib::io {
     }
 
     std::string fs_util::get_volume_name_for_volume_mount_point(
-            const char* volume_mount_point) {
+            const char *volume_mount_point) {
         std::string buffer(MAX_PATH + 1, '\0');
         if (!GetVolumeNameForVolumeMountPointA(volume_mount_point,
                                                buffer.data(), MAX_PATH)) {
@@ -673,7 +692,7 @@ namespace YanLib::io {
     }
 
     std::wstring fs_util::get_volume_name_for_volume_mount_point(
-            const wchar_t* volume_mount_point) {
+            const wchar_t *volume_mount_point) {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         if (!GetVolumeNameForVolumeMountPointW(volume_mount_point,
                                                buffer.data(), MAX_PATH)) {
@@ -686,7 +705,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    bool fs_util::delete_volume_mount_point(const char* volume_mount_point) {
+    bool fs_util::delete_volume_mount_point(const char *volume_mount_point) {
         if (!DeleteVolumeMountPointA(volume_mount_point)) {
             error_code = GetLastError();
             return false;
@@ -694,7 +713,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::delete_volume_mount_point(const wchar_t* volume_mount_point) {
+    bool fs_util::delete_volume_mount_point(const wchar_t *volume_mount_point) {
         if (!DeleteVolumeMountPointW(volume_mount_point)) {
             error_code = GetLastError();
             return false;
@@ -730,8 +749,8 @@ namespace YanLib::io {
         return true;
     }
 
-    std::string fs_util::get_temp_file_name(const char* path_name,
-                                            const char* prefix,
+    std::string fs_util::get_temp_file_name(const char *path_name,
+                                            const char *prefix,
                                             uint32_t unique) {
         std::string buffer(MAX_PATH + 1, '\0');
         if (!GetTempFileNameA(path_name, prefix, unique, buffer.data())) {
@@ -744,8 +763,8 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring fs_util::get_temp_file_name(const wchar_t* path_name,
-                                             const wchar_t* prefix,
+    std::wstring fs_util::get_temp_file_name(const wchar_t *path_name,
+                                             const wchar_t *prefix,
                                              uint32_t unique) {
         std::wstring buffer(MAX_PATH + 1, L'\0');
         if (!GetTempFileNameW(path_name, prefix, unique, buffer.data())) {
@@ -758,7 +777,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::string fs_util::get_short_path_name(const char* long_path) {
+    std::string fs_util::get_short_path_name(const char *long_path) {
         uint32_t size = GetShortPathNameA(long_path, nullptr, 0);
         std::string buffer(size, '\0');
         size = GetShortPathNameA(long_path, buffer.data(), buffer.size());
@@ -773,7 +792,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring fs_util::get_short_path_name(const wchar_t* long_path) {
+    std::wstring fs_util::get_short_path_name(const wchar_t *long_path) {
         uint32_t size = GetShortPathNameW(long_path, nullptr, 0);
         std::wstring buffer(size, L'\0');
         size = GetShortPathNameW(long_path, buffer.data(), buffer.size());
@@ -788,7 +807,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::string fs_util::get_long_path_name(const char* short_path) {
+    std::string fs_util::get_long_path_name(const char *short_path) {
         uint32_t size = GetLongPathNameA(short_path, nullptr, 0);
         std::string buffer(size, '\0');
         size = GetLongPathNameA(short_path, buffer.data(), buffer.size());
@@ -803,7 +822,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring fs_util::get_long_path_name(const wchar_t* short_path) {
+    std::wstring fs_util::get_long_path_name(const wchar_t *short_path) {
         uint32_t size = GetLongPathNameW(short_path, nullptr, 0);
         std::wstring buffer(size, L'\0');
         size = GetLongPathNameW(short_path, buffer.data(), buffer.size());
@@ -852,7 +871,7 @@ namespace YanLib::io {
         return GetLogicalDrives();
     }
 
-    std::string fs_util::get_full_path_name(const char* file_name) {
+    std::string fs_util::get_full_path_name(const char *file_name) {
         uint32_t size = GetFullPathNameA(file_name, 0, nullptr, nullptr);
         std::string buffer(size, '\0');
         size = GetFullPathNameA(file_name, buffer.size(), buffer.data(),
@@ -868,7 +887,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring fs_util::get_full_path_name(const wchar_t* file_name) {
+    std::wstring fs_util::get_full_path_name(const wchar_t *file_name) {
         uint32_t size = GetFullPathNameW(file_name, 0, nullptr, nullptr);
         std::wstring buffer(size, L'\0');
         size = GetFullPathNameW(file_name, buffer.size(), buffer.data(),
@@ -884,8 +903,8 @@ namespace YanLib::io {
         return buffer;
     }
 
-    bool fs_util::get_disk_space_info(const char* root_path,
-                                      DISK_SPACE_INFORMATION* disk_space_info) {
+    bool fs_util::get_disk_space_info(const char *root_path,
+                                      DISK_SPACE_INFORMATION *disk_space_info) {
         HRESULT is_ok = GetDiskSpaceInformationA(root_path, disk_space_info);
         if (is_ok != S_OK) {
             error_code = GetLastError();
@@ -894,8 +913,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::get_disk_space_info(const wchar_t* root_path,
-                                      DISK_SPACE_INFORMATION* disk_space_info) {
+    bool fs_util::get_disk_space_info(const wchar_t *root_path,
+                                      DISK_SPACE_INFORMATION *disk_space_info) {
         HRESULT is_ok = GetDiskSpaceInformationW(root_path, disk_space_info);
         if (is_ok != S_OK) {
             error_code = GetLastError();
@@ -904,44 +923,68 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::get_disk_free_space(const char* root_path_name,
-                                      DiskFreeSpace4* disk_free_space4) {
-        if (!GetDiskFreeSpaceA(
-                    root_path_name,
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->sectors_per_cluster)),
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->bytes_per_sector)),
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->number_of_free_clusters)),
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->total_number_of_clusters)))) {
-            error_code = GetLastError();
+    bool fs_util::get_disk_free_space(const char *root_path_name,
+                                      DiskFreeSpace4 *disk_free_space4) {
+        if (!disk_free_space4) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long sectors_per_cluster = 0;
+        unsigned long bytes_per_sector = 0;
+        unsigned long number_of_free_clusters = 0;
+        unsigned long total_number_of_clusters = 0;
+        if (!GetDiskFreeSpaceA(root_path_name, &sectors_per_cluster,
+                               &bytes_per_sector, &number_of_free_clusters,
+                               &total_number_of_clusters)) {
+            error_code = GetLastError();
+            disk_free_space4->sectors_per_cluster = sectors_per_cluster;
+            disk_free_space4->bytes_per_sector = bytes_per_sector;
+            disk_free_space4->number_of_free_clusters = number_of_free_clusters;
+            disk_free_space4->total_number_of_clusters =
+                    total_number_of_clusters;
+            return false;
+        }
+        disk_free_space4->sectors_per_cluster = sectors_per_cluster;
+        disk_free_space4->bytes_per_sector = bytes_per_sector;
+        disk_free_space4->number_of_free_clusters = number_of_free_clusters;
+        disk_free_space4->total_number_of_clusters = total_number_of_clusters;
         return true;
     }
 
-    bool fs_util::get_disk_free_space(const wchar_t* root_path_name,
-                                      DiskFreeSpace4* disk_free_space4) {
-        if (!GetDiskFreeSpaceW(
-                    root_path_name,
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->sectors_per_cluster)),
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->bytes_per_sector)),
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->number_of_free_clusters)),
-                    reinterpret_cast<unsigned long*>(
-                            &(disk_free_space4->total_number_of_clusters)))) {
-            error_code = GetLastError();
+    bool fs_util::get_disk_free_space(const wchar_t *root_path_name,
+                                      DiskFreeSpace4 *disk_free_space4) {
+        if (!disk_free_space4) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long sectors_per_cluster = 0;
+        unsigned long bytes_per_sector = 0;
+        unsigned long number_of_free_clusters = 0;
+        unsigned long total_number_of_clusters = 0;
+        if (!GetDiskFreeSpaceW(root_path_name, &sectors_per_cluster,
+                               &bytes_per_sector, &number_of_free_clusters,
+                               &total_number_of_clusters)) {
+            error_code = GetLastError();
+            disk_free_space4->sectors_per_cluster = sectors_per_cluster;
+            disk_free_space4->bytes_per_sector = bytes_per_sector;
+            disk_free_space4->number_of_free_clusters = number_of_free_clusters;
+            disk_free_space4->total_number_of_clusters =
+                    total_number_of_clusters;
+            return false;
+        }
+        disk_free_space4->sectors_per_cluster = sectors_per_cluster;
+        disk_free_space4->bytes_per_sector = bytes_per_sector;
+        disk_free_space4->number_of_free_clusters = number_of_free_clusters;
+        disk_free_space4->total_number_of_clusters = total_number_of_clusters;
         return true;
     }
 
-    bool fs_util::get_disk_free_space(const char* directory_name,
-                                      DiskFreeSpace3* disk_free_space3) {
+    bool fs_util::get_disk_free_space(const char *directory_name,
+                                      DiskFreeSpace3 *disk_free_space3) {
+        if (!disk_free_space3) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
         ULARGE_INTEGER free_bytes_available_to_caller = {};
         ULARGE_INTEGER total_number_of_bytes = {};
         ULARGE_INTEGER total_number_of_free_bytes = {};
@@ -961,8 +1004,12 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::get_disk_free_space(const wchar_t* directory_name,
-                                      DiskFreeSpace3* disk_free_space3) {
+    bool fs_util::get_disk_free_space(const wchar_t *directory_name,
+                                      DiskFreeSpace3 *disk_free_space3) {
+        if (!disk_free_space3) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
         ULARGE_INTEGER free_bytes_available_to_caller = {};
         ULARGE_INTEGER total_number_of_bytes = {};
         ULARGE_INTEGER total_number_of_free_bytes = {};
@@ -982,11 +1029,9 @@ namespace YanLib::io {
         return true;
     }
 
-    int64_t fs_util::get_compressed_file_size(const char* file_name) {
-        uint32_t high = 0;
-        uint32_t low =
-                GetCompressedFileSizeA(file_name,
-                                       reinterpret_cast<unsigned long*>(&high));
+    int64_t fs_util::get_compressed_file_size(const char *file_name) {
+        unsigned long high = 0;
+        uint32_t low = GetCompressedFileSizeA(file_name, &high);
         if (low == INVALID_FILE_SIZE) {
             error_code = GetLastError();
             if (error_code != NO_ERROR) {
@@ -996,11 +1041,9 @@ namespace YanLib::io {
         return (static_cast<int64_t>(high) << 32) | low;
     }
 
-    int64_t fs_util::get_compressed_file_size(const wchar_t* file_name) {
-        uint32_t high = 0;
-        uint32_t low =
-                GetCompressedFileSizeW(file_name,
-                                       reinterpret_cast<unsigned long*>(&high));
+    int64_t fs_util::get_compressed_file_size(const wchar_t *file_name) {
+        unsigned long high = 0;
+        uint32_t low = GetCompressedFileSizeW(file_name, &high);
         if (low == INVALID_FILE_SIZE) {
             error_code = GetLastError();
             if (error_code != NO_ERROR) {
@@ -1010,7 +1053,7 @@ namespace YanLib::io {
         return (static_cast<int64_t>(high) << 32) | low;
     }
 
-    std::string fs_util::get_dos_device(const char* device_name) {
+    std::string fs_util::get_dos_device(const char *device_name) {
         size_t buff_size = MAX_PATH;
         std::string buffer(buff_size + 1, '\0');
         uint32_t size = QueryDosDeviceA(device_name, buffer.data(), MAX_PATH);
@@ -1029,7 +1072,7 @@ namespace YanLib::io {
         return buffer;
     }
 
-    std::wstring fs_util::get_dos_device(const wchar_t* device_name) {
+    std::wstring fs_util::get_dos_device(const wchar_t *device_name) {
         size_t buff_size = MAX_PATH;
         std::wstring buffer(buff_size + 1, L'\0');
         uint32_t size = QueryDosDeviceW(device_name, buffer.data(), MAX_PATH);
@@ -1106,8 +1149,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::control_dos_device(const char* device_name,
-                                     const char* target_path,
+    bool fs_util::control_dos_device(const char *device_name,
+                                     const char *target_path,
                                      DosControlCode code) {
         if (!DefineDosDeviceA(static_cast<uint32_t>(code), device_name,
                               target_path)) {
@@ -1117,8 +1160,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::control_dos_device(const wchar_t* device_name,
-                                     const wchar_t* target_path,
+    bool fs_util::control_dos_device(const wchar_t *device_name,
+                                     const wchar_t *target_path,
                                      DosControlCode code) {
         if (!DefineDosDeviceW(static_cast<uint32_t>(code), device_name,
                               target_path)) {
@@ -1219,7 +1262,7 @@ namespace YanLib::io {
     }
 
     std::vector<WIN32_FIND_STREAM_DATA>
-    fs_util::ls_stream_data(const char* file_name) {
+    fs_util::ls_stream_data(const char *file_name) {
         std::wstring result = helper::convert::str_to_wstr(file_name);
         if (result.empty()) {
             return {};
@@ -1228,7 +1271,7 @@ namespace YanLib::io {
     }
 
     std::vector<WIN32_FIND_STREAM_DATA>
-    fs_util::ls_stream_data(const wchar_t* file_name) {
+    fs_util::ls_stream_data(const wchar_t *file_name) {
         do {
             std::vector<WIN32_FIND_STREAM_DATA> result;
             WIN32_FIND_STREAM_DATA stream_data = {};
@@ -1252,7 +1295,7 @@ namespace YanLib::io {
         return {};
     }
 
-    bool fs_util::rm_file(const char* file_name) {
+    bool fs_util::rm_file(const char *file_name) {
         if (!DeleteFileA(file_name)) {
             error_code = GetLastError();
             return false;
@@ -1260,7 +1303,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::rm_file(const wchar_t* file_name) {
+    bool fs_util::rm_file(const wchar_t *file_name) {
         if (!DeleteFileW(file_name)) {
             error_code = GetLastError();
             return false;
@@ -1268,7 +1311,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::is_file(const char* file_name) {
+    bool fs_util::is_file(const char *file_name) {
         const uint32_t attr = GetFileAttributesA(file_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
@@ -1277,7 +1320,7 @@ namespace YanLib::io {
                 (!(attr & FILE_ATTRIBUTE_DIRECTORY));
     }
 
-    bool fs_util::is_file(const wchar_t* file_name) {
+    bool fs_util::is_file(const wchar_t *file_name) {
         const uint32_t attr = GetFileAttributesW(file_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
@@ -1286,7 +1329,7 @@ namespace YanLib::io {
                 (!(attr & FILE_ATTRIBUTE_DIRECTORY));
     }
 
-    bool fs_util::is_dir(const char* path_name) {
+    bool fs_util::is_dir(const char *path_name) {
         const uint32_t attr = GetFileAttributesA(path_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
@@ -1295,7 +1338,7 @@ namespace YanLib::io {
                 (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
-    bool fs_util::is_dir(const wchar_t* path_name) {
+    bool fs_util::is_dir(const wchar_t *path_name) {
         const uint32_t attr = GetFileAttributesW(path_name);
         if (attr == INVALID_FILE_ATTRIBUTES) {
             error_code = GetLastError();
@@ -1304,8 +1347,8 @@ namespace YanLib::io {
                 (attr & FILE_ATTRIBUTE_DIRECTORY);
     }
 
-    bool fs_util::mkdir(const char* path_name,
-                        SECURITY_ATTRIBUTES* security_attrs) {
+    bool fs_util::mkdir(const char *path_name,
+                        SECURITY_ATTRIBUTES *security_attrs) {
         if (!CreateDirectoryA(path_name, security_attrs)) {
             error_code = GetLastError();
             return false;
@@ -1313,8 +1356,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::mkdir(const wchar_t* path_name,
-                        SECURITY_ATTRIBUTES* security_attrs) {
+    bool fs_util::mkdir(const wchar_t *path_name,
+                        SECURITY_ATTRIBUTES *security_attrs) {
         if (!CreateDirectoryW(path_name, security_attrs)) {
             error_code = GetLastError();
             return false;
@@ -1322,8 +1365,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::mkdir_all(const char* path_name,
-                            SECURITY_ATTRIBUTES* security_attrs) {
+    bool fs_util::mkdir_all(const char *path_name,
+                            SECURITY_ATTRIBUTES *security_attrs) {
         std::string path(path_name);
         std::vector<std::string> dirs;
         std::string currentDir;
@@ -1349,8 +1392,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::mkdir_all(const wchar_t* path_name,
-                            SECURITY_ATTRIBUTES* security_attrs) {
+    bool fs_util::mkdir_all(const wchar_t *path_name,
+                            SECURITY_ATTRIBUTES *security_attrs) {
         std::wstring path(path_name);
         std::vector<std::wstring> dirs;
         std::wstring currentDir;
@@ -1376,7 +1419,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::rm_dir(const char* path_name) {
+    bool fs_util::rm_dir(const char *path_name) {
         if (!RemoveDirectoryA(path_name)) {
             error_code = GetLastError();
             return false;
@@ -1384,7 +1427,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::rm_dir(const wchar_t* path_name) {
+    bool fs_util::rm_dir(const wchar_t *path_name) {
         if (!RemoveDirectoryW(path_name)) {
             error_code = GetLastError();
             return false;
@@ -1392,7 +1435,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::rm_dir_all(const char* path_name) {
+    bool fs_util::rm_dir_all(const char *path_name) {
         SHFILEOPSTRUCTA op = {};
 
         char path[MAX_PATH + 2] = {};
@@ -1407,7 +1450,7 @@ namespace YanLib::io {
         return (result == 0) && !op.fAnyOperationsAborted;
     }
 
-    bool fs_util::rm_dir_all(const wchar_t* path_name) {
+    bool fs_util::rm_dir_all(const wchar_t *path_name) {
         SHFILEOPSTRUCTW op = {};
 
         wchar_t path[MAX_PATH + 2] = {};
@@ -1422,7 +1465,7 @@ namespace YanLib::io {
         return (result == 0) && !op.fAnyOperationsAborted;
     }
 
-    void fs_util::rm_dir_all_slow(const char* path_name) {
+    void fs_util::rm_dir_all_slow(const char *path_name) {
         std::vector<std::string> dirs = ls_all_dirs(path_name);
         std::vector<std::string> files = ls_all_files(path_name);
 
@@ -1436,7 +1479,7 @@ namespace YanLib::io {
                       });
     }
 
-    void fs_util::rm_dir_all_slow(const wchar_t* path_name) {
+    void fs_util::rm_dir_all_slow(const wchar_t *path_name) {
         std::vector<std::wstring> dirs = ls_all_dirs(path_name);
         std::vector<std::wstring> files = ls_all_files(path_name);
 
@@ -1450,7 +1493,7 @@ namespace YanLib::io {
                       });
     }
 
-    std::vector<WIN32_FIND_DATAA> fs_util::ls_detail(const char* path_name) {
+    std::vector<WIN32_FIND_DATAA> fs_util::ls_detail(const char *path_name) {
         std::vector<WIN32_FIND_DATAA> result;
         std::string path(path_name);
         remove_tail_slash(path);
@@ -1474,7 +1517,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<WIN32_FIND_DATAW> fs_util::ls_detail(const wchar_t* path_name) {
+    std::vector<WIN32_FIND_DATAW> fs_util::ls_detail(const wchar_t *path_name) {
         std::vector<WIN32_FIND_DATAW> result;
         std::wstring path(path_name);
         remove_tail_slash(path);
@@ -1498,7 +1541,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::string> fs_util::ls(const char* path_name) {
+    std::vector<std::string> fs_util::ls(const char *path_name) {
         std::vector<std::string> result;
         std::string path(path_name);
         WIN32_FIND_DATAA find_data;
@@ -1526,7 +1569,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::wstring> fs_util::ls(const wchar_t* path_name) {
+    std::vector<std::wstring> fs_util::ls(const wchar_t *path_name) {
         std::vector<std::wstring> result;
         std::wstring path(path_name);
         WIN32_FIND_DATAW find_data;
@@ -1554,7 +1597,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::string> fs_util::ls_full_path(const char* path_name) {
+    std::vector<std::string> fs_util::ls_full_path(const char *path_name) {
         std::vector<std::string> result;
         std::string path(path_name);
         WIN32_FIND_DATAA find_data;
@@ -1582,7 +1625,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::wstring> fs_util::ls_full_path(const wchar_t* path_name) {
+    std::vector<std::wstring> fs_util::ls_full_path(const wchar_t *path_name) {
         std::vector<std::wstring> result;
         std::wstring path(path_name);
         WIN32_FIND_DATAW find_data;
@@ -1610,7 +1653,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::string> fs_util::ls_all_files(const char* path_name) {
+    std::vector<std::string> fs_util::ls_all_files(const char *path_name) {
         std::vector<std::string> result;
         result.reserve(64);
 
@@ -1655,7 +1698,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::wstring> fs_util::ls_all_files(const wchar_t* path_name) {
+    std::vector<std::wstring> fs_util::ls_all_files(const wchar_t *path_name) {
         std::vector<std::wstring> result;
         result.reserve(64);
 
@@ -1700,7 +1743,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::string> fs_util::ls_all_dirs(const char* path_name) {
+    std::vector<std::string> fs_util::ls_all_dirs(const char *path_name) {
         std::vector<std::string> result;
         result.reserve(64);
 
@@ -1744,7 +1787,7 @@ namespace YanLib::io {
         return result;
     }
 
-    std::vector<std::wstring> fs_util::ls_all_dirs(const wchar_t* path_name) {
+    std::vector<std::wstring> fs_util::ls_all_dirs(const wchar_t *path_name) {
         std::vector<std::wstring> result;
         result.reserve(64);
 
@@ -1788,8 +1831,8 @@ namespace YanLib::io {
         return result;
     }
 
-    bool fs_util::copy(const char* existing_file_name,
-                       const char* new_file_name,
+    bool fs_util::copy(const char *existing_file_name,
+                       const char *new_file_name,
                        bool fail_if_exists) {
         if (!CopyFileA(existing_file_name, new_file_name,
                        fail_if_exists ? TRUE : FALSE)) {
@@ -1799,8 +1842,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::copy(const wchar_t* existing_file_name,
-                       const wchar_t* new_file_name,
+    bool fs_util::copy(const wchar_t *existing_file_name,
+                       const wchar_t *new_file_name,
                        bool fail_if_exists) {
         if (!CopyFileW(existing_file_name, new_file_name,
                        fail_if_exists ? TRUE : FALSE)) {
@@ -1810,8 +1853,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::copy_all(const char* existing_path_name,
-                           const char* new_path_name) {
+    bool fs_util::copy_all(const char *existing_path_name,
+                           const char *new_path_name) {
         SHFILEOPSTRUCTA file_op = {};
 
         char from[MAX_PATH + 2] = {};
@@ -1831,8 +1874,8 @@ namespace YanLib::io {
         return (result == 0) && !file_op.fAnyOperationsAborted;
     }
 
-    bool fs_util::copy_all(const wchar_t* existing_path_name,
-                           const wchar_t* new_path_name) {
+    bool fs_util::copy_all(const wchar_t *existing_path_name,
+                           const wchar_t *new_path_name) {
         SHFILEOPSTRUCTW file_op = {};
 
         wchar_t from[MAX_PATH + 2] = {};
@@ -1852,8 +1895,8 @@ namespace YanLib::io {
         return (result == 0) && !file_op.fAnyOperationsAborted;
     }
 
-    bool fs_util::rename(const char* existing_file_name,
-                         const char* new_file_name) {
+    bool fs_util::rename(const char *existing_file_name,
+                         const char *new_file_name) {
         if (!MoveFileExA(existing_file_name, new_file_name,
                          MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH)) {
             error_code = GetLastError();
@@ -1862,8 +1905,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::rename(const wchar_t* existing_file_name,
-                         const wchar_t* new_file_name) {
+    bool fs_util::rename(const wchar_t *existing_file_name,
+                         const wchar_t *new_file_name) {
         if (!MoveFileExW(existing_file_name, new_file_name,
                          MOVEFILE_COPY_ALLOWED | MOVEFILE_WRITE_THROUGH)) {
             error_code = GetLastError();
@@ -1872,8 +1915,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::replace(const char* existing_file_name,
-                          const char* new_file_name) {
+    bool fs_util::replace(const char *existing_file_name,
+                          const char *new_file_name) {
         if (!MoveFileExA(existing_file_name, new_file_name,
                          MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
             error_code = GetLastError();
@@ -1882,8 +1925,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs_util::replace(const wchar_t* existing_file_name,
-                          const wchar_t* new_file_name) {
+    bool fs_util::replace(const wchar_t *existing_file_name,
+                          const wchar_t *new_file_name) {
         if (!MoveFileExW(existing_file_name, new_file_name,
                          MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
             error_code = GetLastError();

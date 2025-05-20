@@ -53,16 +53,16 @@ namespace YanLib::sys {
 
         ~job();
 
-        HANDLE create(const char* job_name, SECURITY_ATTRIBUTES* sa = nullptr);
+        HANDLE create(const char *job_name, SECURITY_ATTRIBUTES *sa = nullptr);
 
-        HANDLE create(const wchar_t* job_name,
-                      SECURITY_ATTRIBUTES* sa = nullptr);
+        HANDLE create(const wchar_t *job_name,
+                      SECURITY_ATTRIBUTES *sa = nullptr);
 
-        HANDLE open(const char* job_name,
+        HANDLE open(const char *job_name,
                     JobAccess access = JobAccess::All,
                     bool is_inherit = false);
 
-        HANDLE open(const wchar_t* job_name,
+        HANDLE open(const wchar_t *job_name,
                     JobAccess access = JobAccess::All,
                     bool is_inherit = false);
 
@@ -78,13 +78,13 @@ namespace YanLib::sys {
 
         bool get_info(HANDLE job_handle,
                       JOBOBJECTINFOCLASS job_object_info_class,
-                      void* job_object_info,
+                      void *job_object_info,
                       uint32_t job_object_info_len,
-                      uint32_t* real_size);
+                      uint32_t *real_size);
 
         bool set_info(HANDLE job_handle,
                       JOBOBJECTINFOCLASS job_object_info_class,
-                      void* job_object_info,
+                      void *job_object_info,
                       uint32_t job_object_info_len);
 
         [[nodiscard]] uint32_t err_code() const;

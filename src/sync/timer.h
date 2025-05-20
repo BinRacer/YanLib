@@ -46,18 +46,18 @@ namespace YanLib::sync {
 
         ~timer();
 
-        bool create(SECURITY_ATTRIBUTES* sa = nullptr,
+        bool create(SECURITY_ATTRIBUTES *sa = nullptr,
                     bool is_manual_reset = false,
-                    const wchar_t* timer_name = nullptr);
+                    const wchar_t *timer_name = nullptr);
 
-        bool open(const wchar_t* timer_name,
+        bool open(const wchar_t *timer_name,
                   TimerAccess access = TimerAccess::All,
                   bool is_inherit = false);
 
-        bool set_timer(const LARGE_INTEGER* due_time,
-                       int32_t period = 1000, /* 1s */
+        bool set_timer(const LARGE_INTEGER *due_time,
+                       int32_t period = 1000 /* 1s */,
                        PTIMERAPCROUTINE completion_routine = nullptr,
-                       void* param = nullptr,
+                       void *param = nullptr,
                        bool is_resume = false);
 
         bool cancel_timer();

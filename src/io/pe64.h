@@ -13,10 +13,10 @@ namespace YanLib::io {
     private:
         mem::mmap mmap = {};
         HANDLE mmap_handle = nullptr;
-        void* addr = nullptr;
-        IMAGE_DOS_HEADER* _dos_header = nullptr;
-        IMAGE_NT_HEADERS64* _nt_headers = nullptr;
-        IMAGE_SECTION_HEADER* _section_header = nullptr;
+        void *addr = nullptr;
+        IMAGE_DOS_HEADER *_dos_header = nullptr;
+        IMAGE_NT_HEADERS64 *_nt_headers = nullptr;
+        IMAGE_SECTION_HEADER *_section_header = nullptr;
         std::vector<IMAGE_DATA_DIRECTORY> _data_table_list = {};
         std::vector<IMAGE_SECTION_HEADER> _section_header_list = {};
         std::vector<std::string> _export_func_name = {};
@@ -57,9 +57,9 @@ namespace YanLib::io {
 
         pe64() = delete;
 
-        explicit pe64(const char* file_name);
+        explicit pe64(const char *file_name);
 
-        explicit pe64(const wchar_t* file_name);
+        explicit pe64(const wchar_t *file_name);
 
         explicit pe64(HANDLE file_handle);
 
@@ -105,24 +105,24 @@ namespace YanLib::io {
         bool set_export_table(IMAGE_EXPORT_DIRECTORY &export_table);
 
         std::vector<std::string>
-        get_export_func_name_string(IMAGE_EXPORT_DIRECTORY* export_table);
+        get_export_func_name_string(IMAGE_EXPORT_DIRECTORY *export_table);
 
         std::vector<uint32_t>
-        get_export_func_name(IMAGE_EXPORT_DIRECTORY* export_table);
+        get_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table);
 
-        bool set_export_func_name(IMAGE_EXPORT_DIRECTORY* export_table,
+        bool set_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<uint32_t> &func_name_addrs);
 
         std::vector<uint32_t>
-        get_export_func_addr(IMAGE_EXPORT_DIRECTORY* export_table);
+        get_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table);
 
-        bool set_export_func_addr(IMAGE_EXPORT_DIRECTORY* export_table,
+        bool set_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<uint32_t> &func_addrs);
 
         std::vector<uint16_t>
-        get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY* export_table);
+        get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table);
 
-        bool set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY* export_table,
+        bool set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
                                      std::vector<uint16_t> &func_ordinals);
 
         std::vector<IMAGE_IMPORT_DESCRIPTOR> get_import_table();

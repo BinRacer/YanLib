@@ -44,11 +44,11 @@ namespace YanLib::sync {
 
         ~mutex();
 
-        bool create(SECURITY_ATTRIBUTES* sa = nullptr,
+        bool create(SECURITY_ATTRIBUTES *sa = nullptr,
                     bool is_initial_owner = false,
-                    const wchar_t* name = nullptr);
+                    const wchar_t *name = nullptr);
 
-        bool open(const wchar_t* name,
+        bool open(const wchar_t *name,
                   MutexAccess access = MutexAccess::All,
                   bool is_inherit = false);
 

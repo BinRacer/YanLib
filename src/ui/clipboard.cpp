@@ -26,7 +26,7 @@ namespace YanLib::ui {
         return is_create;
     }
 
-    uint32_t clipboard::register_format(const char* format) {
+    uint32_t clipboard::register_format(const char *format) {
         uint32_t result = RegisterClipboardFormatA(format);
         if (!result) {
             error_code = GetLastError();
@@ -34,7 +34,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    uint32_t clipboard::register_format(const wchar_t* format) {
+    uint32_t clipboard::register_format(const wchar_t *format) {
         uint32_t result = RegisterClipboardFormatW(format);
         if (!result) {
             error_code = GetLastError();
@@ -59,7 +59,7 @@ namespace YanLib::ui {
                 error_code = GetLastError();
                 break;
             }
-            void* addr = GlobalLock(mem_handle);
+            void *addr = GlobalLock(mem_handle);
             if (!addr) {
                 error_code = GetLastError();
                 break;
@@ -91,7 +91,7 @@ namespace YanLib::ui {
                 error_code = GetLastError();
                 break;
             }
-            void* addr = GlobalLock(mem_handle);
+            void *addr = GlobalLock(mem_handle);
             if (!addr) {
                 error_code = GetLastError();
                 break;
@@ -176,7 +176,7 @@ namespace YanLib::ui {
     }
 
     bool clipboard::get_updated_formats(std::vector<uint32_t> &formats,
-                                        uint32_t* real_size) {
+                                        uint32_t *real_size) {
         if (!GetUpdatedClipboardFormats(formats.data(), formats.size(),
                                         real_size)) {
             error_code = GetLastError();

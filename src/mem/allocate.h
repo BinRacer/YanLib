@@ -12,7 +12,7 @@
 namespace YanLib::mem {
     class allocate {
     private:
-        std::vector<void*> mem_list = {};
+        std::vector<void *> mem_list = {};
         sync::rwlock rwlock = {};
         uint32_t error_code = 0;
 
@@ -29,15 +29,15 @@ namespace YanLib::mem {
 
         ~allocate();
 
-        void* malloc(size_t size);
+        void *malloc(size_t size);
 
-        bool free(void* addr);
+        bool free(void *addr);
 
-        void* malloc_reserve(size_t size);
+        void *malloc_reserve(size_t size);
 
-        bool free_reserve(void* addr, size_t size = 0);
+        bool free_reserve(void *addr, size_t size = 0);
 
-        void* realloc(void* old_addr, size_t new_size);
+        void *realloc(void *old_addr, size_t new_size);
 
         [[nodiscard]] uint32_t err_code() const;
 

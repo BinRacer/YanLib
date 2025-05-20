@@ -31,9 +31,9 @@ namespace YanLib::ui {
 
         [[nodiscard]] bool is_ok() const;
 
-        uint32_t register_format(const char* format);
+        uint32_t register_format(const char *format);
 
-        uint32_t register_format(const wchar_t* format);
+        uint32_t register_format(const wchar_t *format);
 
         bool clear();
 
@@ -58,7 +58,7 @@ namespace YanLib::ui {
         get_priority_format(std::vector<uint32_t> &format_priority_list);
 
         bool get_updated_formats(std::vector<uint32_t> &formats,
-                                 uint32_t* real_size);
+                                 uint32_t *real_size);
 
         bool is_format_available(uint32_t format);
 

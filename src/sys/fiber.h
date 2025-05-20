@@ -12,7 +12,7 @@
 namespace YanLib::sys {
     class fiber {
     private:
-        std::vector<void*> fiber_addrs = {};
+        std::vector<void *> fiber_addrs = {};
         sync::rwlock fiber_lock = {};
         uint32_t error_code = 0;
 
@@ -29,8 +29,8 @@ namespace YanLib::sys {
 
         ~fiber();
 
-        void* create(LPFIBER_START_ROUTINE start_addr,
-                     void* params,
+        void *create(LPFIBER_START_ROUTINE start_addr,
+                     void *params,
                      size_t commit = 0,
                      size_t reserve = 0,
                      bool switch_float = true);
@@ -39,17 +39,17 @@ namespace YanLib::sys {
 
         bool fls_free(uint32_t index);
 
-        void* fls_get_value(uint32_t index);
+        void *fls_get_value(uint32_t index);
 
-        bool fls_set_value(uint32_t index, void* value);
+        bool fls_set_value(uint32_t index, void *value);
 
         bool is_fiber();
 
-        void switch_to_fiber(void* addr);
+        void switch_to_fiber(void *addr);
 
         void yield();
 
-        void* thread_to_fiber(void* params, bool switch_float = true);
+        void *thread_to_fiber(void *params, bool switch_float = true);
 
         bool fiber_to_thread();
 

@@ -110,7 +110,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    PROCESSENTRY32W snapshot::find_proc(const wchar_t* proc_name) {
+    PROCESSENTRY32W snapshot::find_proc(const wchar_t *proc_name) {
         if (!proc_name || wcslen(proc_name) == 0) {
             return {};
         }
@@ -291,7 +291,7 @@ namespace YanLib::sys {
         module_handles.clear();
     }
 
-    MODULEENTRY32W snapshot::find_module(const wchar_t* proc_name) {
+    MODULEENTRY32W snapshot::find_module(const wchar_t *proc_name) {
         if (!proc_name || wcslen(proc_name) == 0) {
             return {};
         }
@@ -307,7 +307,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    MODULEENTRY32W snapshot::find_module(const void* address) {
+    MODULEENTRY32W snapshot::find_module(const void *address) {
         if (!address) {
             return {};
         }
@@ -348,7 +348,7 @@ namespace YanLib::sys {
         return heaps;
     }
 
-    std::unordered_set<ULONG_PTR> snapshot::ls_heap_ids(uint32_t pid) {
+    std::unordered_set<uintptr_t> snapshot::ls_heap_ids(uint32_t pid) {
         if (!heap_ids.empty()) {
             return heap_ids;
         }
@@ -385,7 +385,7 @@ namespace YanLib::sys {
         heap_ids.clear();
     }
 
-    HEAPLIST32 snapshot::find_heap(ULONG_PTR heap_id) {
+    HEAPLIST32 snapshot::find_heap(uintptr_t heap_id) {
         if (heaps.empty()) {
             ls_heaps();
         }
@@ -428,7 +428,7 @@ namespace YanLib::sys {
         return result;
     }
 
-    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(ULONG_PTR heap_id) {
+    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(uintptr_t heap_id) {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
@@ -488,7 +488,7 @@ namespace YanLib::sys {
         return pid;
     }
 
-    bool snapshot::is_heap(HANDLE proc_handle, void* address) {
+    bool snapshot::is_heap(HANDLE proc_handle, void *address) {
         if (!proc_handle) {
             return false;
         }
@@ -503,13 +503,13 @@ namespace YanLib::sys {
         for (auto block : blocks) {
             MEMORY_BASIC_INFORMATION mbi;
             if (!VirtualQueryEx(proc_handle,
-                                reinterpret_cast<void*>(block.dwAddress), &mbi,
+                                reinterpret_cast<void *>(block.dwAddress), &mbi,
                                 sizeof(mbi))) {
                 error_code = GetLastError();
                 break;
             }
-            if (address >= static_cast<uint8_t*>(mbi.AllocationBase) &&
-                address <= static_cast<uint8_t*>(mbi.AllocationBase) +
+            if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
+                address <= static_cast<uint8_t *>(mbi.AllocationBase) +
                                 mbi.RegionSize) {
                 return true;
             }
@@ -517,7 +517,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool snapshot::is_heap(uint32_t pid, void* address) {
+    bool snapshot::is_heap(uint32_t pid, void *address) {
         HANDLE proc_handle = nullptr;
         if (GetCurrentProcessId() == pid) {
             proc_handle = GetCurrentProcess();
@@ -535,13 +535,13 @@ namespace YanLib::sys {
         for (auto block : blocks) {
             MEMORY_BASIC_INFORMATION mbi;
             if (!VirtualQueryEx(proc_handle,
-                                reinterpret_cast<void*>(block.dwAddress), &mbi,
+                                reinterpret_cast<void *>(block.dwAddress), &mbi,
                                 sizeof(mbi))) {
                 error_code = GetLastError();
                 break;
             }
-            if (address >= static_cast<uint8_t*>(mbi.AllocationBase) &&
-                address <= static_cast<uint8_t*>(mbi.AllocationBase) +
+            if (address >= static_cast<uint8_t *>(mbi.AllocationBase) &&
+                address <= static_cast<uint8_t *>(mbi.AllocationBase) +
                                 mbi.RegionSize) {
                 return true;
             }

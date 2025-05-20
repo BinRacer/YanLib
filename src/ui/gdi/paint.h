@@ -9,6 +9,187 @@
 #include <string>
 
 namespace YanLib::ui::gdi {
+#ifndef DRAWOPTION
+#define DRAWOPTION
+
+    enum class DrawOption : uint32_t {
+        None = 0,
+        Active = DC_ACTIVE,
+        SmallCap = DC_SMALLCAP,
+        Icon = DC_ICON,
+        Text = DC_TEXT,
+        InButton = DC_INBUTTON,
+        Gradient = DC_GRADIENT,
+        Buttons = DC_BUTTONS,
+    };
+
+    inline DrawOption operator|(DrawOption a, DrawOption b) {
+        return static_cast<DrawOption>(static_cast<uint32_t>(a) |
+                                       static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef BORDERSTYLE
+#define BORDERSTYLE
+
+    enum class BorderStyle : uint32_t {
+        // outer style
+        RaisedOuter = BDR_RAISEDOUTER,
+        SunkenOuter = BDR_SUNKENOUTER,
+        // inner style
+        RaisedInner = BDR_RAISEDINNER,
+        SunkenInner = BDR_SUNKENINNER,
+        // mixed style
+        Raised = BDR_RAISED,
+        Sunken = BDR_SUNKEN,
+    };
+
+    inline BorderStyle operator|(BorderStyle a, BorderStyle b) {
+        return static_cast<BorderStyle>(static_cast<uint32_t>(a) |
+                                        static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef BORDERFLAG
+#define BORDERFLAG
+
+    enum class BorderFlag : uint32_t {
+        Left = BF_LEFT,
+        Top = BF_TOP,
+        Right = BF_RIGHT,
+        Bottom = BF_BOTTOM,
+        TopLeft = BF_TOPLEFT,
+        TopRight = BF_TOPRIGHT,
+        BottomLeft = BF_BOTTOMLEFT,
+        BottomRight = BF_BOTTOMRIGHT,
+        Rect = BF_RECT,
+        Diagonal = BF_DIAGONAL,
+        DiagonalEndTopRight = BF_DIAGONAL_ENDTOPRIGHT,
+        DiagonalEndTopLeft = BF_DIAGONAL_ENDTOPLEFT,
+        DiagonalEndBottomLeft = BF_DIAGONAL_ENDBOTTOMLEFT,
+        DiagonalEndBottomRight = BF_DIAGONAL_ENDBOTTOMRIGHT,
+        Middle = BF_MIDDLE,
+        Soft = BF_SOFT,
+        Adjust = BF_ADJUST,
+        Flat = BF_FLAT,
+        Mono = BF_MONO,
+    };
+
+    inline BorderFlag operator|(BorderFlag a, BorderFlag b) {
+        return static_cast<BorderFlag>(static_cast<uint32_t>(a) |
+                                       static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef IMAGETYPESTATE
+#define IMAGETYPESTATE
+
+    enum class ImageTypeState : uint32_t {
+        // image type
+        TypeComplex = DST_COMPLEX,
+        TypeText = DST_TEXT,
+        TypePrefixText = DST_PREFIXTEXT,
+        TypeIcon = DST_ICON,
+        TypeBitmap = DST_BITMAP,
+        // state type
+        StateNormal = DSS_NORMAL,
+        StateUnion = DSS_UNION,
+        StateDisabled = DSS_DISABLED,
+        StateMono = DSS_MONO,
+        StateHidePrefix = DSS_HIDEPREFIX,
+        StatePrefixOnly = DSS_PREFIXONLY,
+        StateRight = DSS_RIGHT,
+    };
+
+    inline ImageTypeState operator|(ImageTypeState a, ImageTypeState b) {
+        return static_cast<ImageTypeState>(static_cast<uint32_t>(a) |
+                                           static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef FRAMETYPE
+#define FRAMETYPE
+
+    enum class FrameType : uint32_t {
+        Caption = DFC_CAPTION,
+        Menu = DFC_MENU,
+        Scroll = DFC_SCROLL,
+        Button = DFC_BUTTON,
+        PopupMenu = DFC_POPUPMENU,
+    };
+#endif
+#ifndef FRAMESTATE
+#define FRAMESTATE
+
+    enum class FrameState : uint32_t {
+        CaptionClose = DFCS_CAPTIONCLOSE,
+        CaptionMin = DFCS_CAPTIONMIN,
+        CaptionMax = DFCS_CAPTIONMAX,
+        CaptionRestore = DFCS_CAPTIONRESTORE,
+        CaptionHelp = DFCS_CAPTIONHELP,
+        MenuArrow = DFCS_MENUARROW,
+        MenuCheck = DFCS_MENUCHECK,
+        MenuBullet = DFCS_MENUBULLET,
+        MenuArrowRight = DFCS_MENUARROWRIGHT,
+        ScrollUp = DFCS_SCROLLUP,
+        ScrollDown = DFCS_SCROLLDOWN,
+        ScrollLeft = DFCS_SCROLLLEFT,
+        ScrollRight = DFCS_SCROLLRIGHT,
+        ScrollComboBox = DFCS_SCROLLCOMBOBOX,
+        ScrollSizeGrip = DFCS_SCROLLSIZEGRIP,
+        ScrollSizeGripRight = DFCS_SCROLLSIZEGRIPRIGHT,
+        ButtonCheck = DFCS_BUTTONCHECK,
+        ButtonRadioImage = DFCS_BUTTONRADIOIMAGE,
+        ButtonRadioMask = DFCS_BUTTONRADIOMASK,
+        ButtonRadio = DFCS_BUTTONRADIO,
+        Button3State = DFCS_BUTTON3STATE,
+        ButtonPush = DFCS_BUTTONPUSH,
+        Inactive = DFCS_INACTIVE,
+        Pushed = DFCS_PUSHED,
+        Checked = DFCS_CHECKED,
+        Transparent1 = DFCS_TRANSPARENT,
+        Hot = DFCS_HOT,
+        AdjustRect = DFCS_ADJUSTRECT,
+        Flat = DFCS_FLAT,
+        Mono = DFCS_MONO,
+    };
+
+    inline FrameState operator|(FrameState a, FrameState b) {
+        return static_cast<FrameState>(static_cast<uint32_t>(a) |
+                                       static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef BACKGROUNDMODE
+#define BACKGROUNDMODE
+
+    enum class BackGroundMode : int32_t {
+        Opaque = OPAQUE,
+        Transparent = TRANSPARENT,
+    };
+#endif
+#ifndef BINARYRASTERCODE
+#define BINARYRASTERCODE
+
+    enum class BinaryRasterCode : int32_t {
+        Black = R2_BLACK,             /*  0       */
+        NotMergePen = R2_NOTMERGEPEN, /* DPon     */
+        MaskNotPen = R2_MASKNOTPEN,   /* DPna     */
+        NotCopyPen = R2_NOTCOPYPEN,   /* PN       */
+        MaskPenNot = R2_MASKPENNOT,   /* PDna     */
+        Not = R2_NOT,                 /* Dn       */
+        XorPen = R2_XORPEN,           /* DPx      */
+        NotMaskPen = R2_NOTMASKPEN,   /* DPan     */
+        MaskPen = R2_MASKPEN,         /* DPa      */
+        NotXorPen = R2_NOTXORPEN,     /* DPxn     */
+        Nop = R2_NOP,                 /* D        */
+        MergeNotPen = R2_MERGENOTPEN, /* DPno     */
+        CopyPen = R2_COPYPEN,         /* P        */
+        MergePenNot = R2_MERGEPENNOT, /* PDno     */
+        MergePen = R2_MERGEPEN,       /* DPo      */
+        White = R2_WHITE,             /*  1       */
+    };
+
+    inline BinaryRasterCode operator|(BinaryRasterCode a, BinaryRasterCode b) {
+        return static_cast<BinaryRasterCode>(static_cast<int32_t>(a) |
+                                             static_cast<int32_t>(b));
+    }
+#endif
     class paint {
     public:
         paint(const paint &other) = delete;
@@ -23,18 +204,19 @@ namespace YanLib::ui::gdi {
 
         ~paint() = default;
 
-        static HDC begin_paint(HWND window_handle, PAINTSTRUCT* paint_struct);
+        static HDC begin(HWND window_handle, PAINTSTRUCT *paint_struct);
 
-        static bool end_paint(HWND window_handle,
-                              const PAINTSTRUCT* paint_struct);
+        static bool end(HWND window_handle, const PAINTSTRUCT *paint_struct);
 
         static bool draw_caption(HWND window_handle,
                                  HDC dc_handle,
-                                 const RECT* rect,
-                                 uint32_t flag);
+                                 const RECT *rect,
+                                 DrawOption option);
 
-        static bool
-        draw_edge(HDC dc_handle, RECT* rect, uint32_t edge, uint32_t flag);
+        static bool draw_edge(HDC dc_handle,
+                              RECT *rect,
+                              BorderStyle border = BorderStyle::Raised,
+                              BorderFlag flag = BorderFlag::Rect);
 
         static bool draw_state(HDC dc_handle,
                                HBRUSH brush_handle,
@@ -45,32 +227,35 @@ namespace YanLib::ui::gdi {
                                int32_t y,
                                int32_t width,
                                int32_t height,
-                               uint32_t flag);
+                               ImageTypeState flag);
 
-        static bool
-        draw_frame_control(HDC hdc, RECT* rect, uint32_t type, uint32_t state);
+        static bool draw_frame_control(HDC hdc,
+                                       RECT *rect,
+                                       FrameType type,
+                                       FrameState state);
 
-        static uint32_t gdi_get_batch_limit();
+        static uint32_t get_gdi_batch_limit();
 
-        static uint32_t gdi_set_batch_limit(uint32_t limit);
+        static uint32_t set_gdi_batch_limit(uint32_t limit);
 
         static COLORREF get_background_color(HDC dc_handle);
 
         static COLORREF set_background_color(HDC dc_handle, COLORREF color);
 
-        static int32_t get_background_mode(HDC dc_handle);
+        static BackGroundMode get_background_mode(HDC dc_handle);
 
-        static int32_t set_background_mode(HDC dc_handle, int32_t mode);
+        static BackGroundMode set_background_mode(HDC dc_handle,
+                                                  BackGroundMode mode);
 
-        static int32_t get_rop2(HDC dc_handle);
+        static BinaryRasterCode get_rop2(HDC dc_handle);
 
-        static int32_t set_rop2(HDC dc_handle, int32_t mode);
+        static BinaryRasterCode set_rop2(HDC dc_handle, BinaryRasterCode mode);
 
         static bool gray_string(HDC dc_handle,
                                 HBRUSH brush_handle,
                                 GRAYSTRINGPROC gray_string_proc,
                                 LPARAM lparam,
-                                int32_t cch_size,
+                                int32_t char_num,
                                 int32_t x,
                                 int32_t y,
                                 int32_t width,

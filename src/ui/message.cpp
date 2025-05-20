@@ -7,7 +7,7 @@
 
 namespace YanLib::ui {
     bool message::get(HWND window_handle,
-                      MSG* msg,
+                      MSG *msg,
                       uint32_t filter_min,
                       uint32_t filter_max) {
         int32_t result =
@@ -42,7 +42,7 @@ namespace YanLib::ui {
     }
 
     bool message::peek(HWND window_handle,
-                       MSG* msg,
+                       MSG *msg,
                        uint32_t filter_min,
                        uint32_t filter_max,
                        MessageRemove flag) {
@@ -82,7 +82,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    uint32_t message::register_window(const char* message) {
+    uint32_t message::register_window(const char *message) {
         uint32_t result = RegisterWindowMessageA(message);
         if (!result) {
             error_code = GetLastError();
@@ -90,7 +90,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    uint32_t message::register_window(const wchar_t* message) {
+    uint32_t message::register_window(const wchar_t *message) {
         uint32_t result = RegisterWindowMessageW(message);
         if (!result) {
             error_code = GetLastError();
@@ -123,7 +123,7 @@ namespace YanLib::ui {
                                 WPARAM wparam,
                                 LPARAM lparam,
                                 SENDASYNCPROC callback,
-                                ULONG_PTR data) {
+                                uintptr_t data) {
         if (!SendMessageCallbackW(window_handle, msg, wparam, lparam, callback,
                                   data)) {
             error_code = GetLastError();
@@ -136,7 +136,7 @@ namespace YanLib::ui {
                                   uint32_t msg,
                                   WPARAM wparam,
                                   LPARAM lparam,
-                                  DWORD_PTR* result,
+                                  uintptr_t *result,
                                   uint32_t milli_second,
                                   SendTimeoutFlag flag) {
         SetLastError(ERROR_SUCCESS);
@@ -166,7 +166,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool message::translate(const MSG* msg) {
+    bool message::translate(const MSG *msg) {
         return TranslateMessage(msg);
     }
 
@@ -178,16 +178,16 @@ namespace YanLib::ui {
         return true;
     }
 
-    LRESULT message::dispatch(const MSG* msg) {
+    LRESULT message::dispatch(const MSG *msg) {
         return DispatchMessageW(msg);
     }
 
-    bool message::call_filter(MSG* msg, int32_t code) {
+    bool message::call_filter(MSG *msg, int32_t code) {
         return CallMsgFilterW(msg, code);
     }
 
     bool message::get_current_input_source(
-            INPUT_MESSAGE_SOURCE* input_message_source) {
+            INPUT_MESSAGE_SOURCE *input_message_source) {
         if (!GetCurrentInputMessageSource(input_message_source)) {
             error_code = GetLastError();
             return false;
@@ -199,8 +199,9 @@ namespace YanLib::ui {
         return InSendMessage();
     }
 
-    bool message::use_send_func(SendType* type) {
+    bool message::use_send_func(SendType *type) {
         if (!type) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
         *type = static_cast<SendType>(InSendMessageEx(nullptr));
@@ -210,7 +211,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool message::is_dialog(HWND dialog_handle, MSG* msg) {
+    bool message::is_dialog(HWND dialog_handle, MSG *msg) {
         return IsDialogMessageW(dialog_handle, msg);
     }
 
@@ -221,30 +222,37 @@ namespace YanLib::ui {
     int32_t message::broadcast_system(uint32_t msg,
                                       WPARAM wparam,
                                       LPARAM lparam,
-                                      BroadcastResult* info,
+                                      BroadcastResult *info,
                                       BroadcastFlag flag) {
-        int32_t result =
-                BroadcastSystemMessageW(static_cast<uint32_t>(flag),
-                                        reinterpret_cast<unsigned long*>(info),
-                                        msg, wparam, lparam);
+        if (!info) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        auto temp = static_cast<unsigned long>(*info);
+        int32_t result = BroadcastSystemMessageW(static_cast<uint32_t>(flag),
+                                                 &temp, msg, wparam, lparam);
+        *info = static_cast<BroadcastResult>(temp);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int32_t message::broadcast_system(uint32_t msg,
-                                      /* RegularMessage */
+    int32_t message::broadcast_system(uint32_t msg /* RegularMessage */,
                                       WPARAM wparam,
                                       LPARAM lparam,
-                                      BSMINFO* bsm_info,
-                                      BroadcastResult* info,
+                                      BSMINFO *bsm_info,
+                                      BroadcastResult *info,
                                       BroadcastFlag flag) {
+        if (!info) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        auto temp = static_cast<unsigned long>(*info);
         int32_t result =
-                BroadcastSystemMessageExW(static_cast<uint32_t>(flag),
-                                          reinterpret_cast<unsigned long*>(
-                                                  info),
+                BroadcastSystemMessageExW(static_cast<uint32_t>(flag), &temp,
                                           msg, wparam, lparam, bsm_info);
+        *info = static_cast<BroadcastResult>(temp);
         if (!result) {
             error_code = GetLastError();
         }
@@ -269,7 +277,7 @@ namespace YanLib::ui {
 
     bool message::change_window_filter(HWND window_handle,
                                        uint32_t message,
-                                       CHANGEFILTERSTRUCT* change_filter_struct,
+                                       CHANGEFILTERSTRUCT *change_filter_struct,
                                        FilterAction action) {
         if (!ChangeWindowMessageFilterEx(window_handle, message,
                                          static_cast<uint32_t>(action),
@@ -281,8 +289,8 @@ namespace YanLib::ui {
     }
 
     MessageBoxResult message::box(HWND window_handle,
-                                  const char* text,
-                                  const char* caption,
+                                  const char *text,
+                                  const char *caption,
                                   MessageBoxType type) {
         int32_t result = MessageBoxA(window_handle, text, caption,
                                      static_cast<uint32_t>(type));
@@ -293,8 +301,8 @@ namespace YanLib::ui {
     }
 
     MessageBoxResult message::box(HWND window_handle,
-                                  const wchar_t* text,
-                                  const wchar_t* caption,
+                                  const wchar_t *text,
+                                  const wchar_t *caption,
                                   MessageBoxType type) {
         int32_t result = MessageBoxW(window_handle, text, caption,
                                      static_cast<uint32_t>(type));
@@ -305,8 +313,8 @@ namespace YanLib::ui {
     }
 
     MessageBoxResult message::box(HWND window_handle,
-                                  const char* text,
-                                  const char* caption,
+                                  const char *text,
+                                  const char *caption,
                                   uint16_t language_id,
                                   MessageBoxType type) {
         int32_t result =
@@ -319,8 +327,8 @@ namespace YanLib::ui {
     }
 
     MessageBoxResult message::box(HWND window_handle,
-                                  const wchar_t* text,
-                                  const wchar_t* caption,
+                                  const wchar_t *text,
+                                  const wchar_t *caption,
                                   uint16_t language_id,
                                   MessageBoxType type) {
         int32_t result =
@@ -332,11 +340,11 @@ namespace YanLib::ui {
         return static_cast<MessageBoxResult>(result);
     }
 
-    int32_t message::box(const MSGBOXPARAMSA* msgbox_param) {
+    int32_t message::box(const MSGBOXPARAMSA *msgbox_param) {
         return MessageBoxIndirectA(msgbox_param);
     }
 
-    int32_t message::box(const MSGBOXPARAMSW* msgbox_param) {
+    int32_t message::box(const MSGBOXPARAMSW *msgbox_param) {
         return MessageBoxIndirectW(msgbox_param);
     }
 

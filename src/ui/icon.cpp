@@ -21,8 +21,8 @@ namespace YanLib::ui {
                        int32_t height,
                        uint8_t planes,
                        uint8_t bits_pixel,
-                       const uint8_t* and_bits,
-                       const uint8_t* xor_bits) {
+                       const uint8_t *and_bits,
+                       const uint8_t *xor_bits) {
         HICON result = CreateIcon(instance_handle, width, height, planes,
                                   bits_pixel, and_bits, xor_bits);
         if (!result) {
@@ -35,7 +35,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HICON icon::create(uint8_t* res_buf,
+    HICON icon::create(uint8_t *res_buf,
                        uint32_t res_size,
                        bool is_icon,
                        uint32_t version) {
@@ -51,7 +51,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HICON icon::create(uint8_t* res_buf,
+    HICON icon::create(uint8_t *res_buf,
                        uint32_t res_size,
                        bool is_icon,
                        uint32_t version,
@@ -75,7 +75,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HICON icon::create(ICONINFO* icon_info) {
+    HICON icon::create(ICONINFO *icon_info) {
         HICON result = CreateIconIndirect(icon_info);
         if (!result) {
             error_code = GetLastError();
@@ -87,7 +87,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HICON icon::load(HINSTANCE instance_handle, const char* icon_name) {
+    HICON icon::load(HINSTANCE instance_handle, const char *icon_name) {
         HICON result = LoadIconA(instance_handle, icon_name);
         if (!result) {
             error_code = GetLastError();
@@ -95,7 +95,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HICON icon::load(HINSTANCE instance_handle, const wchar_t* icon_name) {
+    HICON icon::load(HINSTANCE instance_handle, const wchar_t *icon_name) {
         HICON result = LoadIconW(instance_handle, icon_name);
         if (!result) {
             error_code = GetLastError();
@@ -124,16 +124,16 @@ namespace YanLib::ui {
     }
 
     bool icon::draw(HDC dc_handle,
-                    int32_t x_left,
-                    int32_t y_top,
+                    int32_t left,
+                    int32_t top,
                     HICON icon_handle,
-                    int32_t cx_width,
-                    int32_t cy_width,
+                    int32_t width,
+                    int32_t height,
                     uint32_t step_if_ani_cur,
                     HBRUSH hbr_flicker_free_draw,
                     DrawIconFlag flag) {
-        if (!DrawIconEx(dc_handle, x_left, y_top, icon_handle, cx_width,
-                        cy_width, step_if_ani_cur, hbr_flicker_free_draw,
+        if (!DrawIconEx(dc_handle, left, top, icon_handle, width, height,
+                        step_if_ani_cur, hbr_flicker_free_draw,
                         static_cast<uint32_t>(flag))) {
             error_code = GetLastError();
             return false;
@@ -159,7 +159,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool icon::get_info(HICON icon_handle, ICONINFO* icon_info) {
+    bool icon::get_info(HICON icon_handle, ICONINFO *icon_info) {
         if (!GetIconInfo(icon_handle, icon_info)) {
             error_code = GetLastError();
             return false;
@@ -167,15 +167,15 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool icon::get_info(HICON icon_handle, ICONINFOEXA* icon_info) {
+    bool icon::get_info(HICON icon_handle, ICONINFOEXA *icon_info) {
         return GetIconInfoExA(icon_handle, icon_info);
     }
 
-    bool icon::get_info(HICON icon_handle, ICONINFOEXW* icon_info) {
+    bool icon::get_info(HICON icon_handle, ICONINFOEXW *icon_info) {
         return GetIconInfoExW(icon_handle, icon_info);
     }
 
-    int32_t icon::lookup_icon_id(uint8_t* res_buf, bool is_icon) {
+    int32_t icon::lookup_icon_id(uint8_t *res_buf, bool is_icon) {
         int32_t result = LookupIconIdFromDirectory(res_buf, is_icon);
         if (!result) {
             error_code = GetLastError();
@@ -183,7 +183,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    int32_t icon::lookup_icon_id(uint8_t* res_buf,
+    int32_t icon::lookup_icon_id(uint8_t *res_buf,
                                  bool is_icon,
                                  int32_t desired_width,
                                  int32_t desired_height,
@@ -198,12 +198,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    uint32_t icon::extract(const char* file_name,
+    uint32_t icon::extract(const char *file_name,
                            int32_t icon_index,
                            int32_t icon_width,
                            int32_t icon_height,
                            std::vector<HICON> &icon_handle,
-                           uint32_t* icon_id,
+                           uint32_t *icon_id,
                            IconFlag flag) {
         return PrivateExtractIconsA(file_name, icon_index, icon_width,
                                     icon_height, icon_handle.data(), icon_id,
@@ -211,12 +211,12 @@ namespace YanLib::ui {
                                     static_cast<uint32_t>(flag));
     }
 
-    uint32_t icon::extract(const wchar_t* file_name,
+    uint32_t icon::extract(const wchar_t *file_name,
                            int32_t icon_index,
                            int32_t icon_width,
                            int32_t icon_height,
                            std::vector<HICON> &icon_handle,
-                           uint32_t* icon_id,
+                           uint32_t *icon_id,
                            IconFlag flag) {
         return PrivateExtractIconsW(file_name, icon_index, icon_width,
                                     icon_height, icon_handle.data(), icon_id,

@@ -47,9 +47,9 @@ namespace YanLib::hash {
 
         explicit sha256(const std::string &data);
 
-        explicit sha256(const char* filename);
+        explicit sha256(const char *filename);
 
-        explicit sha256(const wchar_t* filename);
+        explicit sha256(const wchar_t *filename);
 
         ~sha256();
 

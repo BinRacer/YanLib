@@ -93,7 +93,7 @@ namespace YanLib::sys {
 
     class security {
     private:
-        void* env = nullptr;
+        void *env = nullptr;
         std::vector<HANDLE> token_handles = {};
         sync::rwlock rwlock = {};
         uint32_t error_code = 0;
@@ -128,37 +128,37 @@ namespace YanLib::sys {
 
         HANDLE
         copy_token(HANDLE existing_token_handle = nullptr,
-                   SECURITY_ATTRIBUTES* sa = nullptr,
+                   SECURITY_ATTRIBUTES *sa = nullptr,
                    SECURITY_IMPERSONATION_LEVEL sil = SecurityIdentification,
                    TOKEN_TYPE token_type = TokenPrimary);
 
-        void* create_env_block(HANDLE token_handle, bool is_inherit = false);
+        void *create_env_block(HANDLE token_handle, bool is_inherit = false);
 
         SECURITY_ATTRIBUTES
         create_attrs(bool is_inherit = true,
                      PSECURITY_DESCRIPTOR security_descriptor = nullptr);
 
         SECURITY_DESCRIPTOR create_descriptor(bool is_dacl_present = true,
-                                              ACL* acl = nullptr,
+                                              ACL *acl = nullptr,
                                               bool is_dacl_defaulted = false);
 
         bool is_valid_descriptor(PSECURITY_DESCRIPTOR security_descriptor);
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool enable_privilege(HANDLE proc_handle,
-                              const wchar_t* privilege = L"SeDebugPrivilege");
+                              const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool disable_privilege(HANDLE proc_handle,
-                               const wchar_t* privilege = L"SeDebugPrivilege");
+                               const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool enable_privilege(uint32_t pid,
-                              const wchar_t* privilege = L"SeDebugPrivilege");
+                              const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool disable_privilege(uint32_t pid,
-                               const wchar_t* privilege = L"SeDebugPrivilege");
+                               const wchar_t *privilege = L"SeDebugPrivilege");
 
         // SE_DEBUG_NAME = TEXT("SeDebugPrivilege")
         bool enable_debug(HANDLE proc_handle);

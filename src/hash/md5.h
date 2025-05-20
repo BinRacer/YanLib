@@ -47,9 +47,9 @@ namespace YanLib::hash {
 
         explicit md5(const std::string &data);
 
-        explicit md5(const char* filename);
+        explicit md5(const char *filename);
 
-        explicit md5(const wchar_t* filename);
+        explicit md5(const wchar_t *filename);
 
         ~md5();
 

@@ -51,11 +51,11 @@ namespace YanLib::ui {
         ~window_class() = default;
 
         WNDCLASSEXA
-        make(const char* class_name,
+        make(const char *class_name,
              WNDPROC window_proc,
              HINSTANCE instance_handle,
              ClassStyle style = ClassStyle::HRedraw | ClassStyle::VRedraw,
-             const char* menu_name = nullptr,
+             const char *menu_name = nullptr,
              int32_t class_extra_size = 0,
              int32_t window_extra_size = 0,
              HICON icon_handle = LoadIconW(nullptr, IDI_APPLICATION),
@@ -65,11 +65,11 @@ namespace YanLib::ui {
              HICON icon_small_handle = nullptr);
 
         WNDCLASSEXW
-        make(const wchar_t* class_name,
+        make(const wchar_t *class_name,
              WNDPROC window_proc,
              HINSTANCE instance_handle,
              ClassStyle style = ClassStyle::HRedraw | ClassStyle::VRedraw,
-             const wchar_t* menu_name = nullptr,
+             const wchar_t *menu_name = nullptr,
              int32_t class_extra_size = 0,
              int32_t window_extra_size = 0,
              HICON icon_handle = LoadIconW(nullptr, IDI_APPLICATION),
@@ -78,40 +78,40 @@ namespace YanLib::ui {
                      static_cast<HBRUSH>(GetStockObject(WHITE_BRUSH)),
              HICON icon_small_handle = nullptr);
 
-        ATOM register_class(const WNDCLASSEXA* window_class);
+        ATOM register_class(const WNDCLASSEXA *window_class);
 
-        ATOM register_class(const WNDCLASSEXW* window_class);
+        ATOM register_class(const WNDCLASSEXW *window_class);
 
-        bool unregister_class(const char* class_name,
+        bool unregister_class(const char *class_name,
                               HINSTANCE instance_handle);
 
-        bool unregister_class(const wchar_t* class_name,
+        bool unregister_class(const wchar_t *class_name,
                               HINSTANCE instance_handle);
 
         bool get_info(HINSTANCE instance_handle,
-                      const char* class_name,
-                      WNDCLASSA* window_class);
+                      const char *class_name,
+                      WNDCLASSA *window_class);
 
         bool get_info(HINSTANCE instance_handle,
-                      const wchar_t* class_name,
-                      WNDCLASSW* window_class);
+                      const wchar_t *class_name,
+                      WNDCLASSW *window_class);
 
         bool get_info(HINSTANCE instance_handle,
-                      const char* class_name,
-                      WNDCLASSEXA* window_class);
+                      const char *class_name,
+                      WNDCLASSEXA *window_class);
 
         bool get_info(HINSTANCE instance_handle,
-                      const wchar_t* class_name,
-                      WNDCLASSEXW* window_class);
+                      const wchar_t *class_name,
+                      WNDCLASSEXW *window_class);
 
         uint32_t get_long(HWND window_handle, int32_t index);
 
         uint32_t set_long(HWND window_handle, int32_t index, int32_t value);
 
-        ULONG_PTR get_long_ptr(HWND window_handle, int32_t index);
+        uintptr_t get_long_ptr(HWND window_handle, int32_t index);
 
-        ULONG_PTR
-        set_long_ptr(HWND window_handle, int32_t index, LONG_PTR value);
+        uintptr_t
+        set_long_ptr(HWND window_handle, int32_t index, intptr_t value);
 
         uint16_t get_word(HWND window_handle, int32_t index);
 

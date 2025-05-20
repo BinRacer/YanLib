@@ -43,12 +43,12 @@ namespace YanLib::helper {
         std::wstring result;
         HLOCAL hlocal = nullptr;
         uint32_t system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
-        uint32_t is_ok =
-                FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM |
-                                       FORMAT_MESSAGE_IGNORE_INSERTS |
-                                       FORMAT_MESSAGE_ALLOCATE_BUFFER,
-                               nullptr, error_code, system_locale,
-                               reinterpret_cast<wchar_t*>(&hlocal), 0, nullptr);
+        uint32_t is_ok = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM |
+                                                FORMAT_MESSAGE_IGNORE_INSERTS |
+                                                FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                                        nullptr, error_code, system_locale,
+                                        reinterpret_cast<wchar_t *>(&hlocal), 0,
+                                        nullptr);
         if (!is_ok) {
             // Is it a network-related error?
             const HMODULE module_handle =
@@ -60,14 +60,14 @@ namespace YanLib::helper {
                                                FORMAT_MESSAGE_IGNORE_INSERTS |
                                                FORMAT_MESSAGE_ALLOCATE_BUFFER,
                                        module_handle, error_code, system_locale,
-                                       reinterpret_cast<wchar_t*>(&hlocal), 0,
+                                       reinterpret_cast<wchar_t *>(&hlocal), 0,
                                        nullptr);
                 FreeLibrary(module_handle);
             }
         }
 
         if (is_ok && (hlocal != nullptr)) {
-            result = static_cast<wchar_t*>(LocalLock(hlocal));
+            result = static_cast<wchar_t *>(LocalLock(hlocal));
             LocalFree(hlocal);
         }
         return result;

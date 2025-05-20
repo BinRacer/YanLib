@@ -26,9 +26,9 @@ namespace YanLib::mem {
         file_handles.clear();
     }
 
-    HANDLE mmap::create(const char* file_name,
-                        const char* mmap_name,
-                        SECURITY_ATTRIBUTES* sa,
+    HANDLE mmap::create(const char *file_name,
+                        const char *mmap_name,
+                        SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
                         uint32_t max_high,
                         uint32_t max_low) {
@@ -56,9 +56,9 @@ namespace YanLib::mem {
         return mmap_handle;
     }
 
-    HANDLE mmap::create(const wchar_t* file_name,
-                        const wchar_t* mmap_name,
-                        SECURITY_ATTRIBUTES* sa,
+    HANDLE mmap::create(const wchar_t *file_name,
+                        const wchar_t *mmap_name,
+                        SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
                         uint32_t max_high,
                         uint32_t max_low) {
@@ -87,8 +87,8 @@ namespace YanLib::mem {
     }
 
     HANDLE mmap::create(HANDLE file_handle,
-                        const char* mmap_name,
-                        SECURITY_ATTRIBUTES* sa,
+                        const char *mmap_name,
+                        SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
                         uint32_t max_high,
                         uint32_t max_low) {
@@ -106,8 +106,8 @@ namespace YanLib::mem {
     }
 
     HANDLE mmap::create(HANDLE file_handle,
-                        const wchar_t* mmap_name,
-                        SECURITY_ATTRIBUTES* sa,
+                        const wchar_t *mmap_name,
+                        SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
                         uint32_t max_high,
                         uint32_t max_low) {
@@ -125,7 +125,7 @@ namespace YanLib::mem {
     }
 
     HANDLE
-    mmap::open(const char* mmap_name, MemoryAccess access, bool is_inherit) {
+    mmap::open(const char *mmap_name, MemoryAccess access, bool is_inherit) {
         HANDLE mmap_handle =
                 OpenFileMappingA(static_cast<uint32_t>(access),
                                  is_inherit ? TRUE : FALSE, mmap_name);
@@ -140,7 +140,7 @@ namespace YanLib::mem {
     }
 
     HANDLE
-    mmap::open(const wchar_t* mmap_name, MemoryAccess access, bool is_inherit) {
+    mmap::open(const wchar_t *mmap_name, MemoryAccess access, bool is_inherit) {
         HANDLE mmap_handle =
                 OpenFileMappingW(static_cast<uint32_t>(access),
                                  is_inherit ? TRUE : FALSE, mmap_name);
@@ -154,12 +154,12 @@ namespace YanLib::mem {
         return mmap_handle;
     }
 
-    void* mmap::mmap_file(HANDLE mmap_handle,
+    void *mmap::mmap_file(HANDLE mmap_handle,
                           MemoryAccess access,
                           uint32_t offset_high,
                           uint32_t offset_low,
                           SIZE_T size) {
-        void* address =
+        void *address =
                 MapViewOfFile(mmap_handle, static_cast<uint32_t>(access),
                               offset_high, offset_low, size);
         if (!address) {
@@ -172,7 +172,7 @@ namespace YanLib::mem {
         return address;
     }
 
-    bool mmap::unmap_file(const void* addr) {
+    bool mmap::unmap_file(const void *addr) {
         if (!addr) {
             return false;
         }
@@ -190,22 +190,22 @@ namespace YanLib::mem {
     }
 
     bool
-    mmap::read(void* addr, uint8_t* buf, int64_t size, uint64_t offset) const {
+    mmap::read(void *addr, uint8_t *buf, int64_t size, uint64_t offset) const {
         if (!buf || !addr) {
             return false;
         }
-        memcpy_s(buf, size, static_cast<uint8_t*>(addr) + offset, size);
+        memcpy_s(buf, size, static_cast<uint8_t *>(addr) + offset, size);
         return true;
     }
 
-    bool mmap::write(void* addr,
-                     const uint8_t* buf,
+    bool mmap::write(void *addr,
+                     const uint8_t *buf,
                      int64_t size,
                      uint64_t offset) const {
         if (!buf || !addr) {
             return false;
         }
-        memcpy_s(static_cast<uint8_t*>(addr) + offset, size, buf, size);
+        memcpy_s(static_cast<uint8_t *>(addr) + offset, size, buf, size);
         FlushViewOfFile(addr, 0);
         return true;
     }

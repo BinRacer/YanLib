@@ -16,36 +16,38 @@ namespace YanLib::ui {
         dialog_modeless_handle.clear();
     }
 
-    INT_PTR dialog::create(HINSTANCE instance_handle,
-                           const char* template_name,
-                           HWND parent_window_handle,
-                           DLGPROC dialog_func) {
-        INT_PTR result = DialogBoxParamA(instance_handle, template_name,
-                                         parent_window_handle, dialog_func, 0L);
+    intptr_t dialog::create(HINSTANCE instance_handle,
+                            const char *template_name,
+                            HWND parent_window_handle,
+                            DLGPROC dialog_func) {
+        intptr_t result =
+                DialogBoxParamA(instance_handle, template_name,
+                                parent_window_handle, dialog_func, 0L);
         if (result == -1) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    INT_PTR dialog::create(HINSTANCE instance_handle,
-                           const wchar_t* template_name,
-                           HWND parent_window_handle,
-                           DLGPROC dialog_func) {
-        INT_PTR result = DialogBoxParamW(instance_handle, template_name,
-                                         parent_window_handle, dialog_func, 0L);
+    intptr_t dialog::create(HINSTANCE instance_handle,
+                            const wchar_t *template_name,
+                            HWND parent_window_handle,
+                            DLGPROC dialog_func) {
+        intptr_t result =
+                DialogBoxParamW(instance_handle, template_name,
+                                parent_window_handle, dialog_func, 0L);
         if (result == -1) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    INT_PTR dialog::create(HINSTANCE instance_handle,
-                           const char* template_name,
-                           HWND parent_window_handle,
-                           DLGPROC dialog_func,
-                           LPARAM init_param) {
-        INT_PTR result =
+    intptr_t dialog::create(HINSTANCE instance_handle,
+                            const char *template_name,
+                            HWND parent_window_handle,
+                            DLGPROC dialog_func,
+                            LPARAM init_param) {
+        intptr_t result =
                 DialogBoxParamA(instance_handle, template_name,
                                 parent_window_handle, dialog_func, init_param);
         if (result == -1) {
@@ -54,12 +56,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    INT_PTR dialog::create(HINSTANCE instance_handle,
-                           const wchar_t* template_name,
-                           HWND parent_window_handle,
-                           DLGPROC dialog_func,
-                           LPARAM init_param) {
-        INT_PTR result =
+    intptr_t dialog::create(HINSTANCE instance_handle,
+                            const wchar_t *template_name,
+                            HWND parent_window_handle,
+                            DLGPROC dialog_func,
+                            LPARAM init_param) {
+        intptr_t result =
                 DialogBoxParamW(instance_handle, template_name,
                                 parent_window_handle, dialog_func, init_param);
         if (result == -1) {
@@ -68,11 +70,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    INT_PTR dialog::create(HINSTANCE instance_handle,
-                           const DLGTEMPLATE* dialog_template,
-                           HWND parent_window_handle,
-                           DLGPROC dialog_func) {
-        INT_PTR result =
+    intptr_t dialog::create(HINSTANCE instance_handle,
+                            const DLGTEMPLATE *dialog_template,
+                            HWND parent_window_handle,
+                            DLGPROC dialog_func) {
+        intptr_t result =
                 DialogBoxIndirectParamW(instance_handle, dialog_template,
                                         parent_window_handle, dialog_func, 0L);
         if (result == -1) {
@@ -81,12 +83,12 @@ namespace YanLib::ui {
         return result;
     }
 
-    INT_PTR dialog::create(HINSTANCE instance_handle,
-                           const DLGTEMPLATE* dialog_template,
-                           HWND parent_window_handle,
-                           DLGPROC dialog_func,
-                           LPARAM init_param) {
-        INT_PTR result =
+    intptr_t dialog::create(HINSTANCE instance_handle,
+                            const DLGTEMPLATE *dialog_template,
+                            HWND parent_window_handle,
+                            DLGPROC dialog_func,
+                            LPARAM init_param) {
+        intptr_t result =
                 DialogBoxIndirectParamW(instance_handle, dialog_template,
                                         parent_window_handle, dialog_func,
                                         init_param);
@@ -97,7 +99,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_modeless(HINSTANCE instance_handle,
-                                 const wchar_t* template_name,
+                                 const wchar_t *template_name,
                                  HWND parent_window_handle,
                                  DLGPROC dialog_func) {
         HWND result = CreateDialogParamW(instance_handle, template_name,
@@ -113,7 +115,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_modeless(HINSTANCE instance_handle,
-                                 const wchar_t* template_name,
+                                 const wchar_t *template_name,
                                  HWND parent_window_handle,
                                  DLGPROC dialog_func,
                                  LPARAM init_param) {
@@ -131,7 +133,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_modeless(HINSTANCE instance_handle,
-                                 const DLGTEMPLATE* dialog_template,
+                                 const DLGTEMPLATE *dialog_template,
                                  HWND parent_window_handle,
                                  DLGPROC dialog_func) {
         HWND result =
@@ -149,7 +151,7 @@ namespace YanLib::ui {
     }
 
     HWND dialog::create_modeless(HINSTANCE instance_handle,
-                                 const DLGTEMPLATE* dialog_template,
+                                 const DLGTEMPLATE *dialog_template,
                                  HWND parent_window_handle,
                                  DLGPROC dialog_func,
                                  LPARAM init_param) {
@@ -167,7 +169,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool dialog::destroy(HWND dialog_handle, INT_PTR result) {
+    bool dialog::destroy(HWND dialog_handle, intptr_t result) {
         if (!EndDialog(dialog_handle, result)) {
             error_code = GetLastError();
             return false;
@@ -224,7 +226,7 @@ namespace YanLib::ui {
     }
 
     int32_t dialog::fill_listbox(HWND dialog_handle,
-                                 char* path_spec,
+                                 char *path_spec,
                                  int32_t listbox_id,
                                  int32_t static_id,
                                  FileType file_type) {
@@ -238,7 +240,7 @@ namespace YanLib::ui {
     }
 
     int32_t dialog::fill_listbox(HWND dialog_handle,
-                                 wchar_t* path_spec,
+                                 wchar_t *path_spec,
                                  int32_t listbox_id,
                                  int32_t static_id,
                                  FileType file_type) {
@@ -252,7 +254,7 @@ namespace YanLib::ui {
     }
 
     int32_t dialog::fill_combobox(HWND dialog_handle,
-                                  char* path_spec,
+                                  char *path_spec,
                                   int32_t combobox_id,
                                   int32_t static_id,
                                   FileType file_type) {
@@ -266,7 +268,7 @@ namespace YanLib::ui {
     }
 
     int32_t dialog::fill_combobox(HWND dialog_handle,
-                                  wchar_t* path_spec,
+                                  wchar_t *path_spec,
                                   int32_t combobox_id,
                                   int32_t static_id,
                                   FileType file_type) {
@@ -343,7 +345,7 @@ namespace YanLib::ui {
 
     bool dialog::get_item_int(HWND dialog_handle,
                               int32_t item_id,
-                              uint32_t* value,
+                              uint32_t *value,
                               bool is_signed) {
         if (!value) {
             return false;
@@ -394,7 +396,7 @@ namespace YanLib::ui {
 
     bool dialog::set_item_text(HWND dialog_handle,
                                int32_t item_id,
-                               const char* text) {
+                               const char *text) {
         if (!SetDlgItemTextA(dialog_handle, item_id, text)) {
             error_code = GetLastError();
             return false;
@@ -404,7 +406,7 @@ namespace YanLib::ui {
 
     bool dialog::set_item_text(HWND dialog_handle,
                                int32_t item_id,
-                               const wchar_t* text) {
+                               const wchar_t *text) {
         if (!SetDlgItemTextW(dialog_handle, item_id, text)) {
             error_code = GetLastError();
             return false;
@@ -488,7 +490,7 @@ namespace YanLib::ui {
         return GetDialogBaseUnits();
     }
 
-    bool dialog::base_units_to_screen_point(HWND dialog_handle, RECT* rect) {
+    bool dialog::base_units_to_screen_point(HWND dialog_handle, RECT *rect) {
         if (!MapDialogRect(dialog_handle, rect)) {
             error_code = GetLastError();
             return false;

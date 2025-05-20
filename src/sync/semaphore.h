@@ -45,19 +45,19 @@ namespace YanLib::sync {
 
         ~semaphore();
 
-        bool create(SECURITY_ATTRIBUTES* sa = nullptr,
+        bool create(SECURITY_ATTRIBUTES *sa = nullptr,
                     int32_t initial_count = 1,
                     int32_t maximum_count = 1,
-                    const wchar_t* name = nullptr);
+                    const wchar_t *name = nullptr);
 
-        bool open(const wchar_t* name,
+        bool open(const wchar_t *name,
                   SemaphoreAccess access = SemaphoreAccess::All,
                   bool inherit_handle = false);
 
         bool wait(uint32_t milli_seconds = INFINITE);
 
         bool signal(int32_t release_count = 1,
-                    int32_t* previous_count = nullptr);
+                    int32_t *previous_count = nullptr);
 
         [[nodiscard]] uint32_t err_code() const;
 

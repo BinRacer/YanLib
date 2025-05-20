@@ -37,7 +37,7 @@ namespace YanLib::ui {
     }
 
     HRESULT window_aware::get_proc_dpi_aware(HANDLE proc_handle,
-                                             PROCESS_DPI_AWARENESS* dpi_aware) {
+                                             PROCESS_DPI_AWARENESS *dpi_aware) {
         return GetProcessDpiAwareness(proc_handle, dpi_aware);
     }
 

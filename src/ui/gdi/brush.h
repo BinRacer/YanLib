@@ -9,6 +9,75 @@
 #include <vector>
 
 namespace YanLib::ui::gdi {
+#ifndef BRUSHSTYLE
+#define BRUSHSTYLE
+
+    enum class BrushStyle : uint32_t {
+        Solid = BS_SOLID,
+        Null = BS_NULL,
+        Hollow = BS_HOLLOW,
+        Hatched = BS_HATCHED,
+        Pattern = BS_PATTERN,
+        Indexed = BS_INDEXED,
+        DibPattern = BS_DIBPATTERN,
+        DibPatternPt = BS_DIBPATTERNPT,
+        Pattern8X8 = BS_PATTERN8X8,
+        DibPattern8X8 = BS_DIBPATTERN8X8,
+        MonoPattern = BS_MONOPATTERN,
+    };
+#endif
+#ifndef HATCHSTYLE
+#define HATCHSTYLE
+
+    enum class HatchStyle : int32_t {
+        Horizontal = HS_HORIZONTAL, /* ----- */
+        Vertical = HS_VERTICAL,     /* ||||| */
+        FDiagonal = HS_FDIAGONAL,   /* \\\\\ */
+        BDiagonal = HS_BDIAGONAL,   /* ///// */
+        Cross = HS_CROSS,           /* +++++ */
+        DiagCross = HS_DIAGCROSS,   /* xxxxx */
+    };
+#endif
+#ifndef COLORTYPE
+#define COLORTYPE
+
+    enum class ColorType : int32_t {
+        Scrollbar = COLOR_SCROLLBAR,
+        Background = COLOR_BACKGROUND,
+        ActiveCaption = COLOR_ACTIVECAPTION,
+        InactiveCaption = COLOR_INACTIVECAPTION,
+        Menu = COLOR_MENU,
+        Window = COLOR_WINDOW,
+        WindowFrame = COLOR_WINDOWFRAME,
+        MenuText = COLOR_MENUTEXT,
+        WindowText = COLOR_WINDOWTEXT,
+        CaptionText = COLOR_CAPTIONTEXT,
+        ActiveBorder = COLOR_ACTIVEBORDER,
+        InactiveBorder = COLOR_INACTIVEBORDER,
+        AppWorkspace = COLOR_APPWORKSPACE,
+        Highlight = COLOR_HIGHLIGHT,
+        HighlightText = COLOR_HIGHLIGHTTEXT,
+        ButtonFace = COLOR_BTNFACE,
+        ButtonShadow = COLOR_BTNSHADOW,
+        GrayText = COLOR_GRAYTEXT,
+        ButtonText = COLOR_BTNTEXT,
+        InactiveCaptionText = COLOR_INACTIVECAPTIONTEXT,
+        ButtonHighlight = COLOR_BTNHIGHLIGHT,
+        DkShadow3d = COLOR_3DDKSHADOW,
+        Light3d = COLOR_3DLIGHT,
+        InfoText = COLOR_INFOTEXT,
+        InfoBackground = COLOR_INFOBK,
+        HotLight = COLOR_HOTLIGHT,
+        GradientActiveCaption = COLOR_GRADIENTACTIVECAPTION,
+        GradientInactiveCaption = COLOR_GRADIENTINACTIVECAPTION,
+        MenuHighlight = COLOR_MENUHILIGHT,
+        MenuBar = COLOR_MENUBAR,
+        Desktop = COLOR_DESKTOP,
+        Face3d = COLOR_3DFACE,
+        Shadow3d = COLOR_3DSHADOW,
+        Highlight3d = COLOR_3DHIGHLIGHT,
+    };
+#endif
     class brush {
     public:
         brush(const brush &other) = delete;
@@ -23,32 +92,37 @@ namespace YanLib::ui::gdi {
 
         ~brush() = default;
 
-        static HBRUSH create_solid_brush(COLORREF color);
+        static HBRUSH create_solid(COLORREF color);
 
-        static HBRUSH create_hatch_brush(int32_t hatch, COLORREF color);
+        static HBRUSH create_hatch(COLORREF color, HatchStyle hatch);
 
-        static HBRUSH create_pattern_brush(HBITMAP bitmap_handle);
+        static HBRUSH create_pattern(HBITMAP bitmap_handle);
 
-        static HBRUSH create_brush_indirect(const LOGBRUSH* log_brush);
+        static HBRUSH create(const LOGBRUSH *log_brush);
 
-        static HBRUSH create_dib_pattern_brush_pt(const void* packed_dib,
-                                                  uint32_t usage);
+        static LOGBRUSH
+        make(BrushStyle brush, COLORREF color, HatchStyle hatch);
 
-        static bool get_brush_org(HDC dc_handle, POINT* point);
+        static HBRUSH create_dib_pattern(const void *packed_dib,
+                                         bool use_rgb = true);
+
+        static bool get_origin(HDC dc_handle, POINT *point);
 
         static bool
-        set_brush_org(HDC dc_handle, int32_t x, int32_t y, POINT* point);
+        set_origin(HDC dc_handle, int32_t x, int32_t y, POINT *point);
 
-        static HBRUSH get_sys_color_brush(int32_t index);
+        static HBRUSH get_system(ColorType type);
 
-        static COLORREF set_dc_brush_color(HDC dc_handle, COLORREF color);
+        static COLORREF get_dc_color(HDC dc_handle);
 
-        static uint32_t get_sys_color(int32_t index);
+        static COLORREF set_dc_color(HDC dc_handle, COLORREF color);
+
+        static COLORREF get_system_color(ColorType type);
 
         // std::pair<result, error_code>
         static std::pair<bool, uint32_t>
-        set_sys_colors(const std::vector<int32_t> &ele,
-                       const std::vector<COLORREF> &rgb);
+        set_system_color(const std::vector<int32_t> &ele,
+                         const std::vector<COLORREF> &rgb);
     };
 } // namespace YanLib::ui::gdi
 #endif // BRUSH_H

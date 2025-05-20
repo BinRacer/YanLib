@@ -23,30 +23,41 @@ namespace YanLib::sys {
         return GetCurrentProcessorNumber();
     }
 
-    void processor::number(PROCESSOR_NUMBER* processor_number) {
+    void processor::number(PROCESSOR_NUMBER *processor_number) {
         GetCurrentProcessorNumberEx(processor_number);
     }
 
-    bool processor::logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buffer,
-                               uint32_t* real_size) {
-        if (!GetLogicalProcessorInformation(buffer,
-                                            reinterpret_cast<unsigned long*>(
-                                                    real_size))) {
-            error_code = GetLastError();
+    bool processor::logic_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buffer,
+                               uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!GetLogicalProcessorInformation(buffer, &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
     bool processor::logic_info(LOGICAL_PROCESSOR_RELATIONSHIP relationship_type,
-                               SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX* buffer,
-                               uint32_t* real_size) {
-        if (!GetLogicalProcessorInformationEx(relationship_type, buffer,
-                                              reinterpret_cast<unsigned long*>(
-                                                      real_size))) {
-            error_code = GetLastError();
+                               SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX *buffer,
+                               uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!GetLogicalProcessorInformationEx(relationship_type, buffer,
+                                              &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
@@ -63,27 +74,37 @@ namespace YanLib::sys {
         return GetMaximumProcessorGroupCount();
     }
 
-    bool processor::idle_cycle_time(uint32_t* buffer_length,
-                                    uint64_t* processor_idle_cycle_time) {
-        if (!QueryIdleProcessorCycleTime(reinterpret_cast<unsigned long*>(
-                                                 buffer_length),
-                                         processor_idle_cycle_time)) {
-            error_code = GetLastError();
+    bool processor::idle_cycle_time(uint32_t *buffer_length,
+                                    uint64_t *processor_idle_cycle_time) {
+        if (!buffer_length) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *buffer_length;
+        if (!QueryIdleProcessorCycleTime(&temp, processor_idle_cycle_time)) {
+            error_code = GetLastError();
+            *buffer_length = temp;
+            return false;
+        }
+        *buffer_length = temp;
         return true;
     }
 
     bool processor::idle_cycle_time(uint16_t group,
-                                    uint32_t* buffer_length,
-                                    uint64_t* processor_idle_cycle_time) {
-        if (!QueryIdleProcessorCycleTimeEx(group,
-                                           reinterpret_cast<unsigned long*>(
-                                                   buffer_length),
-                                           processor_idle_cycle_time)) {
-            error_code = GetLastError();
+                                    uint32_t *buffer_length,
+                                    uint64_t *processor_idle_cycle_time) {
+        if (!buffer_length) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *buffer_length;
+        if (!QueryIdleProcessorCycleTimeEx(group, &temp,
+                                           processor_idle_cycle_time)) {
+            error_code = GetLastError();
+            *buffer_length = temp;
+            return false;
+        }
+        *buffer_length = temp;
         return true;
     }
 

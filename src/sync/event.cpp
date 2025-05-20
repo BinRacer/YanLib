@@ -16,17 +16,17 @@ namespace YanLib::sync {
         }
     }
 
-    bool event::create(SECURITY_ATTRIBUTES* sa,
+    bool event::create(SECURITY_ATTRIBUTES *sa,
                        bool is_manual_reset,
                        bool is_initial_state,
-                       const wchar_t* name) {
+                       const wchar_t *name) {
         event_handle = CreateEventW(sa, is_manual_reset ? TRUE : FALSE,
                                     is_initial_state ? TRUE : FALSE, name);
         error_code = GetLastError();
         return event_handle != nullptr;
     }
 
-    bool event::open(const wchar_t* name, EventAccess access, bool is_inherit) {
+    bool event::open(const wchar_t *name, EventAccess access, bool is_inherit) {
         event_handle = OpenEventW(static_cast<uint32_t>(access),
                                   is_inherit ? TRUE : FALSE, name);
         error_code = GetLastError();

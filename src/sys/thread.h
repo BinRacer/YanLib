@@ -61,42 +61,42 @@ namespace YanLib::sys {
         ~thread();
 
         HANDLE create(LPTHREAD_START_ROUTINE start_addr,
-                      void* params,
+                      void *params,
                       size_t stack_size = 0,
-                      SECURITY_ATTRIBUTES* sa = nullptr);
+                      SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
-                                   void* params,
+                                   void *params,
                                    size_t stack_size = 0,
-                                   SECURITY_ATTRIBUTES* sa = nullptr);
+                                   SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                         void* params,
+                                         void *params,
                                          size_t stack_size,
-                                         SECURITY_ATTRIBUTES* sa = nullptr);
+                                         SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE create_remote(HANDLE proc_handle,
                              LPTHREAD_START_ROUTINE start_addr,
-                             void* params,
+                             void *params,
                              size_t stack_size = 0,
                              LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                             SECURITY_ATTRIBUTES* sa = nullptr);
+                             SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE create_remote_with_suspend(
                 HANDLE proc_handle,
                 LPTHREAD_START_ROUTINE start_addr,
-                void* params,
+                void *params,
                 size_t stack_size = 0,
                 LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                SECURITY_ATTRIBUTES* sa = nullptr);
+                SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE create_remote_with_stack_reserve(
                 HANDLE proc_handle,
                 LPTHREAD_START_ROUTINE start_addr,
-                void* params,
+                void *params,
                 size_t stack_size,
                 LPPROC_THREAD_ATTRIBUTE_LIST attr_list = nullptr,
-                SECURITY_ATTRIBUTES* sa = nullptr);
+                SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE curr_thread_handle();
 
@@ -122,9 +122,9 @@ namespace YanLib::sys {
 
         bool tls_free(uint32_t tls_index);
 
-        void* tls_get(uint32_t tls_index);
+        void *tls_get(uint32_t tls_index);
 
-        bool tls_set(uint32_t tls_index, void* tls_value);
+        bool tls_set(uint32_t tls_index, void *tls_value);
 
         uint32_t wait_for_input_idle(HANDLE proc_handle,
                                      uint32_t milli_seconds);
@@ -135,14 +135,14 @@ namespace YanLib::sys {
 
         bool init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                         uint32_t attr_count,
-                                        SIZE_T* size);
+                                        SIZE_T *size);
 
         bool update_proc_thread_attr(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                     DWORD_PTR attr,
-                                     void* value,
+                                     uintptr_t attr,
+                                     void *value,
                                      size_t bytes_size,
-                                     void* previous_value,
-                                     SIZE_T* ret_size);
+                                     void *previous_value,
+                                     SIZE_T *ret_size);
 
         void
         delete_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list);
@@ -172,7 +172,7 @@ namespace YanLib::sys {
 
         bool thread_info(HANDLE thread_handle,
                          THREAD_INFORMATION_CLASS thread_info_class,
-                         void* thread_info,
+                         void *thread_info,
                          uint32_t thread_info_size);
 
         bool is_io_pending(HANDLE thread_handle);
@@ -191,52 +191,52 @@ namespace YanLib::sys {
                                 bool is_disable_priority_boost);
 
         bool time_statistics(HANDLE thread_handle,
-                             FILETIME* creation_time,
-                             FILETIME* exit_time,
-                             FILETIME* kernel_time,
-                             FILETIME* user_time);
+                             FILETIME *creation_time,
+                             FILETIME *exit_time,
+                             FILETIME *kernel_time,
+                             FILETIME *user_time);
 
         HRESULT get_description(HANDLE thread_handle,
-                                wchar_t** thread_description);
+                                wchar_t **thread_description);
 
         HRESULT set_description(HANDLE thread_handle,
-                                const wchar_t* thread_description);
+                                const wchar_t *thread_description);
 
         bool get_group_affinity(HANDLE thread_handle,
-                                GROUP_AFFINITY* group_affinity);
+                                GROUP_AFFINITY *group_affinity);
 
         bool set_group_affinity(HANDLE thread_handle,
-                                const GROUP_AFFINITY* group_affinity,
-                                GROUP_AFFINITY* previous_group_affinity);
+                                const GROUP_AFFINITY *group_affinity,
+                                GROUP_AFFINITY *previous_group_affinity);
 
         bool get_ideal_processor(HANDLE thread_handle,
-                                 PROCESSOR_NUMBER* ideal_processor);
+                                 PROCESSOR_NUMBER *ideal_processor);
 
         bool set_ideal_processor(HANDLE thread_handle,
-                                 PROCESSOR_NUMBER* ideal_processor,
-                                 PROCESSOR_NUMBER* previous_ideal_processor);
+                                 PROCESSOR_NUMBER *ideal_processor,
+                                 PROCESSOR_NUMBER *previous_ideal_processor);
 
         bool get_info(HANDLE thread_handle,
                       THREAD_INFORMATION_CLASS thread_info_class,
-                      void* thread_info,
+                      void *thread_info,
                       uint32_t thread_information_size);
 
         bool set_info(HANDLE thread_handle,
                       THREAD_INFORMATION_CLASS thread_info_class,
-                      void* thread_info,
+                      void *thread_info,
                       uint32_t thread_information_size);
 
         bool
         query_idle_processor_cycle_time(uint16_t group,
-                                        uint32_t* buffer_length,
-                                        uint64_t* processor_idle_cycle_time);
+                                        uint32_t *buffer_length,
+                                        uint64_t *processor_idle_cycle_time);
 
-        bool query_cycle_time(HANDLE thread_handle, uint64_t* cycle_time);
+        bool query_cycle_time(HANDLE thread_handle, uint64_t *cycle_time);
 
-        DWORD_PTR set_affinity_mask(HANDLE thread_handle,
-                                    DWORD_PTR thread_affinity_mask);
+        uintptr_t set_affinity_mask(HANDLE thread_handle,
+                                    uintptr_t thread_affinity_mask);
 
-        bool set_stack_guarantee(uint32_t* bytes_stack);
+        bool set_stack_guarantee(uint32_t *bytes_stack);
 
         [[nodiscard]] uint32_t err_code() const;
 

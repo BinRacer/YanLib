@@ -76,16 +76,15 @@ namespace YanLib::ui {
                      int32_t height,
                      uint8_t planes,
                      uint8_t bits_pixel,
-                     const uint8_t* and_bits,
-                     const uint8_t* xor_bits);
+                     const uint8_t *and_bits,
+                     const uint8_t *xor_bits);
 
-        HICON
-        create(uint8_t* res_buf,
-               uint32_t res_size,
-               bool is_icon,
-               uint32_t version);
+        HICON create(uint8_t *res_buf,
+                     uint32_t res_size,
+                     bool is_icon,
+                     uint32_t version);
 
-        HICON create(uint8_t* res_buf,
+        HICON create(uint8_t *res_buf,
                      uint32_t res_size,
                      bool is_icon,
                      uint32_t version,
@@ -93,56 +92,56 @@ namespace YanLib::ui {
                      int32_t desired_height,
                      IconFlag flag);
 
-        HICON create(ICONINFO* icon_info);
+        HICON create(ICONINFO *icon_info);
 
-        HICON load(HINSTANCE instance_handle, const char* icon_name);
+        HICON load(HINSTANCE instance_handle, const char *icon_name);
 
-        HICON load(HINSTANCE instance_handle, const wchar_t* icon_name);
+        HICON load(HINSTANCE instance_handle, const wchar_t *icon_name);
 
         HICON copy(HICON icon_handle);
 
         bool draw(HDC dc_handle, int32_t x, int32_t y, HICON icon_handle);
 
         bool draw(HDC dc_handle,
-                  int32_t x_left,
-                  int32_t y_top,
+                  int32_t left,
+                  int32_t top,
                   HICON icon_handle,
-                  int32_t cx_width,
-                  int32_t cy_width,
+                  int32_t width,
+                  int32_t height,
                   uint32_t step_if_ani_cur,
                   HBRUSH hbr_flicker_free_draw,
                   DrawIconFlag flag);
 
         bool destroy(HICON icon_handle);
 
-        bool get_info(HICON icon_handle, ICONINFO* icon_info);
+        bool get_info(HICON icon_handle, ICONINFO *icon_info);
 
-        bool get_info(HICON icon_handle, ICONINFOEXA* icon_info);
+        bool get_info(HICON icon_handle, ICONINFOEXA *icon_info);
 
-        bool get_info(HICON icon_handle, ICONINFOEXW* icon_info);
+        bool get_info(HICON icon_handle, ICONINFOEXW *icon_info);
 
-        int32_t lookup_icon_id(uint8_t* res_buf, bool is_icon);
+        int32_t lookup_icon_id(uint8_t *res_buf, bool is_icon);
 
-        int32_t lookup_icon_id(uint8_t* res_buf,
+        int32_t lookup_icon_id(uint8_t *res_buf,
                                bool is_icon,
                                int32_t desired_width,
                                int32_t desired_height,
                                IconFlag flag);
 
-        uint32_t extract(const char* file_name,
+        uint32_t extract(const char *file_name,
                          int32_t icon_index,
                          int32_t icon_width,
                          int32_t icon_height,
                          std::vector<HICON> &icon_handle,
-                         uint32_t* icon_id,
+                         uint32_t *icon_id,
                          IconFlag flag);
 
-        uint32_t extract(const wchar_t* file_name,
+        uint32_t extract(const wchar_t *file_name,
                          int32_t icon_index,
                          int32_t icon_width,
                          int32_t icon_height,
                          std::vector<HICON> &icon_handle,
-                         uint32_t* icon_id,
+                         uint32_t *icon_id,
                          IconFlag flag);
 
         [[nodiscard]] uint32_t err_code() const;

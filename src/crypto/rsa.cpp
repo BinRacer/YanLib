@@ -48,29 +48,27 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            uint32_t publen = 0;
+            unsigned long publen = 0;
             if (!CryptExportKey(crypt_key_handle, 0, PUBLICKEYBLOB, 0, nullptr,
-                                reinterpret_cast<unsigned long*>(&publen))) {
+                                &publen)) {
                 error_code = GetLastError();
                 break;
             }
             pub_key.resize(publen);
             if (!CryptExportKey(crypt_key_handle, 0, PUBLICKEYBLOB, 0,
-                                pub_key.data(),
-                                reinterpret_cast<unsigned long*>(&publen))) {
+                                pub_key.data(), &publen)) {
                 error_code = GetLastError();
                 break;
             }
-            uint32_t privlen = 0;
+            unsigned long privlen = 0;
             if (!CryptExportKey(crypt_key_handle, 0, PRIVATEKEYBLOB, 0, nullptr,
-                                reinterpret_cast<unsigned long*>(&privlen))) {
+                                &privlen)) {
                 error_code = GetLastError();
                 break;
             }
             priv_key.resize(privlen);
             if (!CryptExportKey(crypt_key_handle, 0, PRIVATEKEYBLOB, 0,
-                                priv_key.data(),
-                                reinterpret_cast<unsigned long*>(&privlen))) {
+                                priv_key.data(), &privlen)) {
                 error_code = GetLastError();
                 break;
             }
@@ -98,18 +96,15 @@ namespace YanLib::crypto {
                 break;
             }
             std::vector<uint8_t> encode_data(data.begin(), data.end());
-            uint32_t data_size = data.size();
-            uint32_t raw_size = data.size();
+            unsigned long data_size = data.size();
+            unsigned long raw_size = data.size();
             if (!CryptEncrypt(crypt_key_handle, 0, TRUE, 0, encode_data.data(),
-                              reinterpret_cast<unsigned long*>(&data_size),
-                              0)) {
+                              &data_size, 0)) {
                 error_code = GetLastError();
                 if (error_code == ERROR_MORE_DATA) {
                     encode_data.resize(data_size);
                     if (!CryptEncrypt(crypt_key_handle, 0, TRUE, 0,
-                                      encode_data.data(),
-                                      reinterpret_cast<unsigned long*>(
-                                              &raw_size),
+                                      encode_data.data(), &raw_size,
                                       encode_data.size())) {
                         error_code = GetLastError();
                         break;
@@ -143,9 +138,9 @@ namespace YanLib::crypto {
                 break;
             }
             std::vector<uint8_t> decode_data(data.begin(), data.end());
-            uint32_t data_size = data.size();
+            unsigned long data_size = data.size();
             if (!CryptDecrypt(crypt_key_handle, 0, TRUE, 0, decode_data.data(),
-                              reinterpret_cast<unsigned long*>(&data_size))) {
+                              &data_size)) {
                 error_code = GetLastError();
                 break;
             }
@@ -211,7 +206,7 @@ namespace YanLib::crypto {
             size_t chunk_size = ((base64_pubkey.size() - pos) > 64)
                     ? 64
                     : base64_pubkey.size() - pos;
-            pubkey.append(reinterpret_cast<char*>(&base64_pubkey[pos]),
+            pubkey.append(reinterpret_cast<char *>(&base64_pubkey[pos]),
                           chunk_size);
             pubkey.push_back('\n');
             pos += chunk_size;
@@ -236,7 +231,7 @@ namespace YanLib::crypto {
             size_t chunk_size = ((base64_privkey.size() - pos) > 64)
                     ? 64
                     : base64_privkey.size() - pos;
-            privkey.append(reinterpret_cast<char*>(&base64_privkey[pos]),
+            privkey.append(reinterpret_cast<char *>(&base64_privkey[pos]),
                            chunk_size);
             privkey.push_back('\n');
             pos += chunk_size;

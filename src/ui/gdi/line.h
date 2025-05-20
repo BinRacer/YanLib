@@ -9,6 +9,21 @@
 #include <vector>
 
 namespace YanLib::ui::gdi {
+#ifndef POINTTYPE
+#define POINTTYPE
+
+    enum class PointType : uint8_t {
+        CloseFigure = PT_CLOSEFIGURE,
+        LineTo = PT_LINETO,
+        BezierTo = PT_BEZIERTO,
+        MoveTo = PT_MOVETO,
+    };
+
+    inline PointType operator|(PointType a, PointType b) {
+        return static_cast<PointType>(static_cast<uint8_t>(a) |
+                                      static_cast<uint8_t>(b));
+    }
+#endif
     class line {
     public:
         line(const line &other) = delete;
@@ -23,29 +38,32 @@ namespace YanLib::ui::gdi {
 
         ~line() = default;
 
-        static bool line_to(HDC dc_handle, int32_t x, int32_t y);
+        static bool to(HDC dc_handle, int32_t x, int32_t y);
 
-        static bool line_dda(int32_t x_start,
-                             int32_t y_start,
-                             int32_t x_end,
-                             int32_t y_end,
-                             LINEDDAPROC line_dda_proc,
-                             LPARAM data);
+        static bool dda(int32_t x_start,
+                        int32_t y_start,
+                        int32_t x_end,
+                        int32_t y_end,
+                        LINEDDAPROC line_dda_proc,
+                        LPARAM data);
 
-        static bool move_to(HDC dc_handle, int32_t x, int32_t y, POINT* point);
+        static bool move_to(HDC dc_handle, int32_t x, int32_t y, POINT *point);
 
-        static bool poly_line(HDC dc_handle, const std::vector<POINT> &point);
+        static bool poly(HDC dc_handle, const std::vector<POINT> &point);
 
-        static bool poly_line_to(HDC dc_handle,
-                                 const std::vector<POINT> &point);
+        static bool poly_to(HDC dc_handle, const std::vector<POINT> &point);
 
-        static bool poly_poly_line(HDC dc_handle,
+        static bool poly_poly(HDC dc_handle,
+                              const std::vector<POINT> &point,
+                              std::vector<uint32_t> &poly_count);
+
+        static bool poly_poly_safe(HDC dc_handle,
                                    const std::vector<POINT> &point,
                                    std::vector<uint32_t> &poly_count);
 
         static bool poly_draw(HDC dc_handle,
                               const std::vector<POINT> &point,
-                              const std::vector<uint8_t> &point_type);
+                              const std::vector<PointType> &point_type);
     };
 } // namespace YanLib::ui::gdi
 #endif // LINE_H

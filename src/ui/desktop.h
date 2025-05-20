@@ -58,29 +58,29 @@ namespace YanLib::ui {
 
         ~desktop();
 
-        HDESK create(const char* desktop_name,
+        HDESK create(const char *desktop_name,
                      bool allow_hook = false,
                      DesktopAccess access = DesktopAccess::CreateWindows |
                              DesktopAccess::ReadObjects |
                              DesktopAccess::WriteObjects,
-                     SECURITY_ATTRIBUTES* sa = nullptr,
+                     SECURITY_ATTRIBUTES *sa = nullptr,
                      uint32_t heap_size = 1024);
 
-        HDESK create(const wchar_t* desktop_name,
+        HDESK create(const wchar_t *desktop_name,
                      bool allow_hook = false,
                      DesktopAccess access = DesktopAccess::CreateWindows |
                              DesktopAccess::ReadObjects |
                              DesktopAccess::WriteObjects,
-                     SECURITY_ATTRIBUTES* sa = nullptr,
+                     SECURITY_ATTRIBUTES *sa = nullptr,
                      uint32_t heap_size = 1024);
 
-        HDESK open(const char* desktop_name,
+        HDESK open(const char *desktop_name,
                    bool allow_hook = false,
                    bool is_inherit = false,
                    DesktopAccess access = DesktopAccess::ReadObjects |
                            DesktopAccess::WriteObjects);
 
-        HDESK open(const wchar_t* desktop_name,
+        HDESK open(const wchar_t *desktop_name,
                    bool allow_hook = false,
                    bool is_inherit = false,
                    DesktopAccess access = DesktopAccess::ReadObjects |
@@ -171,21 +171,21 @@ namespace YanLib::ui {
 
         ~window_station();
 
-        HWINSTA create(const char* window_station_name,
+        HWINSTA create(const char *window_station_name,
                        uint32_t flag = 0,
                        StationAccess access = StationAccess::All,
-                       SECURITY_ATTRIBUTES* sa = nullptr);
+                       SECURITY_ATTRIBUTES *sa = nullptr);
 
-        HWINSTA create(const wchar_t* window_station_name,
+        HWINSTA create(const wchar_t *window_station_name,
                        uint32_t flag = 0,
                        StationAccess access = StationAccess::All,
-                       SECURITY_ATTRIBUTES* sa = nullptr);
+                       SECURITY_ATTRIBUTES *sa = nullptr);
 
-        HWINSTA open(const char* window_station_name,
+        HWINSTA open(const char *window_station_name,
                      bool is_inherit = false,
                      StationAccess access = StationAccess::All);
 
-        HWINSTA open(const wchar_t* window_station_name,
+        HWINSTA open(const wchar_t *window_station_name,
                      bool is_inherit = false,
                      StationAccess access = StationAccess::All);
 
@@ -203,13 +203,13 @@ namespace YanLib::ui {
 
         bool get_user_object_info(HANDLE desktop_or_station_handle,
                                   int32_t index,
-                                  void* buf,
+                                  void *buf,
                                   uint32_t size,
-                                  uint32_t* real_size);
+                                  uint32_t *real_size);
 
         bool set_user_object_info(HANDLE desktop_or_station_handle,
                                   int32_t index,
-                                  void* buf,
+                                  void *buf,
                                   uint32_t size);
 
         [[nodiscard]] uint32_t err_code() const;

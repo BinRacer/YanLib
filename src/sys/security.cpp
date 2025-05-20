@@ -77,7 +77,7 @@ namespace YanLib::sys {
     }
 
     HANDLE security::copy_token(HANDLE existing_token_handle,
-                                SECURITY_ATTRIBUTES* sa,
+                                SECURITY_ATTRIBUTES *sa,
                                 SECURITY_IMPERSONATION_LEVEL sil,
                                 TOKEN_TYPE token_type) {
         HANDLE token_handle = existing_token_handle ? existing_token_handle
@@ -97,7 +97,7 @@ namespace YanLib::sys {
         return ret_token;
     }
 
-    void* security::create_env_block(HANDLE token_handle, bool is_inherit) {
+    void *security::create_env_block(HANDLE token_handle, bool is_inherit) {
         if (env) {
             cleanup();
         }
@@ -120,7 +120,7 @@ namespace YanLib::sys {
     }
 
     SECURITY_DESCRIPTOR security::create_descriptor(bool is_dacl_present,
-                                                    ACL* acl,
+                                                    ACL *acl,
                                                     bool is_dacl_defaulted) {
         SECURITY_DESCRIPTOR sd;
         do {
@@ -146,7 +146,7 @@ namespace YanLib::sys {
     }
 
     bool security::enable_privilege(HANDLE proc_handle,
-                                    const wchar_t* privilege) {
+                                    const wchar_t *privilege) {
         helper::autoclean<HANDLE> token_handle(nullptr);
         do {
             if (!OpenProcessToken(proc_handle, TOKEN_ADJUST_PRIVILEGES,
@@ -174,7 +174,7 @@ namespace YanLib::sys {
     }
 
     bool security::disable_privilege(HANDLE proc_handle,
-                                     const wchar_t* privilege) {
+                                     const wchar_t *privilege) {
         helper::autoclean<HANDLE> token_handle(nullptr);
         do {
             if (!OpenProcessToken(proc_handle, TOKEN_ADJUST_PRIVILEGES,
@@ -201,7 +201,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool security::enable_privilege(uint32_t pid, const wchar_t* privilege) {
+    bool security::enable_privilege(uint32_t pid, const wchar_t *privilege) {
         do {
             helper::autoclean<HANDLE> proc_handle(nullptr);
             proc_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
@@ -215,7 +215,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool security::disable_privilege(uint32_t pid, const wchar_t* privilege) {
+    bool security::disable_privilege(uint32_t pid, const wchar_t *privilege) {
         do {
             helper::autoclean<HANDLE> proc_handle(nullptr);
             proc_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
@@ -268,7 +268,7 @@ namespace YanLib::sys {
         helper::autoclean<HANDLE> filter_token_handle(nullptr);
         TOKEN_ELEVATION_TYPE token_type = TokenElevationTypeDefault;
         int32_t is_admin = 0;
-        uint32_t size = 0;
+        unsigned long size = 0;
         do {
             if (!OpenProcessToken(process_handle, TOKEN_QUERY, token_handle)) {
                 error_code = GetLastError();
@@ -276,15 +276,14 @@ namespace YanLib::sys {
             }
             if (!GetTokenInformation(token_handle, TokenElevationType,
                                      &token_type, sizeof(TOKEN_ELEVATION_TYPE),
-                                     reinterpret_cast<unsigned long*>(&size))) {
+                                     &size)) {
                 error_code = GetLastError();
                 break;
             }
             uint8_t admin_sid[SECURITY_MAX_SID_SIZE] = {};
             size = sizeof(admin_sid);
             if (!CreateWellKnownSid(WinBuiltinAdministratorsSid, nullptr,
-                                    &admin_sid,
-                                    reinterpret_cast<unsigned long*>(&size))) {
+                                    &admin_sid, &size)) {
                 error_code = GetLastError();
                 break;
             }
@@ -294,7 +293,7 @@ namespace YanLib::sys {
             }
             if (!GetTokenInformation(token_handle, TokenLinkedToken,
                                      &filter_token_handle, sizeof(HANDLE),
-                                     reinterpret_cast<unsigned long*>(&size))) {
+                                     &size)) {
                 error_code = GetLastError();
                 break;
             }
@@ -320,10 +319,9 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            uint32_t size = 0;
+            unsigned long size = 0;
             if (!GetTokenInformation(token_handle, TokenIntegrityLevel, nullptr,
-                                     0,
-                                     reinterpret_cast<unsigned long*>(&size))) {
+                                     0, &size)) {
                 error_code = GetLastError();
                 if (error_code != ERROR_INSUFFICIENT_BUFFER) {
                     break;
@@ -331,10 +329,9 @@ namespace YanLib::sys {
             }
             std::vector<uint8_t> buf(size, '\0');
             auto token_info =
-                    reinterpret_cast<TOKEN_MANDATORY_LABEL*>(buf.data());
+                    reinterpret_cast<TOKEN_MANDATORY_LABEL *>(buf.data());
             if (!GetTokenInformation(token_handle, TokenIntegrityLevel,
-                                     token_info, size,
-                                     reinterpret_cast<unsigned long*>(&size))) {
+                                     token_info, size, &size)) {
                 error_code = GetLastError();
                 break;
             }
@@ -378,8 +375,7 @@ namespace YanLib::sys {
             size = sizeof(uint32_t);
             uint32_t policy = TOKEN_MANDATORY_POLICY_OFF;
             if (!GetTokenInformation(token_handle, TokenMandatoryPolicy,
-                                     &policy, size,
-                                     reinterpret_cast<unsigned long*>(&size))) {
+                                     &policy, size, &size)) {
                 error_code = GetLastError();
                 break;
             }
@@ -396,7 +392,7 @@ namespace YanLib::sys {
                 token_policy = TokenPolicy::NewProcessMin;
             }
 
-            ACL* sacl = nullptr;
+            ACL *sacl = nullptr;
             PSECURITY_DESCRIPTOR sd = nullptr;
             uint32_t ret = ERROR_SUCCESS;
             ret = GetSecurityInfo(process_handle, SE_KERNEL_OBJECT,
@@ -411,18 +407,18 @@ namespace YanLib::sys {
             }
             uint32_t resource = 0;
             uint32_t resource_policy = 0;
-            SYSTEM_MANDATORY_LABEL_ACE* ace = nullptr;
+            SYSTEM_MANDATORY_LABEL_ACE *ace = nullptr;
             if (sacl->AceCount <= 0) {
                 break;
             }
-            if (!GetAce(sacl, 0, reinterpret_cast<void**>(&ace))) {
+            if (!GetAce(sacl, 0, reinterpret_cast<void **>(&ace))) {
                 error_code = GetLastError();
                 break;
             }
             if (!ace) {
                 break;
             }
-            auto sid_ptr = reinterpret_cast<SID*>(&ace->SidStart);
+            auto sid_ptr = reinterpret_cast<SID *>(&ace->SidStart);
             resource = sid_ptr->SubAuthority[0];
             resource_policy = ace->Mask;
 

@@ -27,15 +27,15 @@ namespace YanLib::ui {
         return EnumPropsExW(window_handle, enum_func, lparam);
     }
 
-    void* window_prop::get(HWND window_handle, const char* key) {
+    void *window_prop::get(HWND window_handle, const char *key) {
         return GetPropA(window_handle, key);
     }
 
-    void* window_prop::get(HWND window_handle, const wchar_t* key) {
+    void *window_prop::get(HWND window_handle, const wchar_t *key) {
         return GetPropW(window_handle, key);
     }
 
-    bool window_prop::set(HWND window_handle, const char* key, void* value) {
+    bool window_prop::set(HWND window_handle, const char *key, void *value) {
         if (!SetPropA(window_handle, key, value)) {
             error_code = GetLastError();
             return false;
@@ -43,7 +43,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window_prop::set(HWND window_handle, const wchar_t* key, void* value) {
+    bool window_prop::set(HWND window_handle, const wchar_t *key, void *value) {
         if (!SetPropW(window_handle, key, value)) {
             error_code = GetLastError();
             return false;
@@ -51,11 +51,11 @@ namespace YanLib::ui {
         return true;
     }
 
-    void* window_prop::remove(HWND window_handle, const char* key) {
+    void *window_prop::remove(HWND window_handle, const char *key) {
         return RemovePropA(window_handle, key);
     }
 
-    void* window_prop::remove(HWND window_handle, const wchar_t* key) {
+    void *window_prop::remove(HWND window_handle, const wchar_t *key) {
         return RemovePropW(window_handle, key);
     }
     uint32_t window_prop::err_code() const {

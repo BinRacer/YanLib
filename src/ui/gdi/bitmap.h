@@ -9,6 +9,68 @@
 #include <vector>
 
 namespace YanLib::ui::gdi {
+#ifndef TERNARYRASTERCODE
+#define TERNARYRASTERCODE
+
+    enum class TernaryRasterCode : uint32_t {
+        SrcCopy = SRCCOPY,         /* dest = source                   */
+        SrcPaint = SRCPAINT,       /* dest = source OR dest           */
+        SrcAnd = SRCAND,           /* dest = source AND dest          */
+        SrcInvert = SRCINVERT,     /* dest = source XOR dest          */
+        SrcErase = SRCERASE,       /* dest = source AND (NOT dest )   */
+        NotSrcCopy = NOTSRCCOPY,   /* dest = (NOT source)             */
+        NotSrcErase = NOTSRCERASE, /* dest = (NOT src) AND (NOT dest) */
+        MergeCopy = MERGECOPY,     /* dest = (source AND pattern)     */
+        MergePaint = MERGEPAINT,   /* dest = (NOT source) OR dest     */
+        PatCopy = PATCOPY,         /* dest = pattern                  */
+        PatPaint = PATPAINT,       /* dest = DPSnoo                   */
+        PatInvert = PATINVERT,     /* dest = pattern XOR dest         */
+        DstInvert = DSTINVERT,     /* dest = (NOT dest)               */
+        Blackness = BLACKNESS,     /* dest = BLACK                    */
+        Whiteness = WHITENESS,     /* dest = WHITE                    */
+        NoMirrorBitmap = NOMIRRORBITMAP,
+        /* Do not Mirror the bitmap in this call */
+        CaptureBlt = CAPTUREBLT, /* Include layered windows */
+    };
+
+    inline TernaryRasterCode operator|(TernaryRasterCode a,
+                                       TernaryRasterCode b) {
+        return static_cast<TernaryRasterCode>(static_cast<uint32_t>(a) |
+                                              static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef GRADIENTMODE
+#define GRADIENTMODE
+
+    enum class GradientMode : uint32_t {
+        RectH = GRADIENT_FILL_RECT_H,
+        RectV = GRADIENT_FILL_RECT_V,
+        Triangle = GRADIENT_FILL_TRIANGLE,
+    };
+#endif
+#ifndef FLOODFILL
+#define FLOODFILL
+
+    enum class FloodFill : uint32_t {
+        Border = FLOODFILLBORDER,
+        Surface = FLOODFILLSURFACE,
+    };
+#endif
+#ifndef STRETCHMODE
+#define STRETCHMODE
+
+    enum class StretchMode : int32_t {
+        BlackOnWhite = BLACKONWHITE,
+        WhiteOnBlack = WHITEONBLACK,
+        ColorOnColor = COLORONCOLOR,
+        HalfTone = HALFTONE,
+        MaxStretchBltMode = MAXSTRETCHBLTMODE,
+        StretchAndScans = STRETCH_ANDSCANS,
+        StretchOrScans = STRETCH_ORSCANS,
+        StretchDeleteScans = STRETCH_DELETESCANS,
+        StretchHalfTone = STRETCH_HALFTONE,
+    };
+#endif
     class bitmap {
     public:
         bitmap(const bitmap &other) = delete;
@@ -26,42 +88,40 @@ namespace YanLib::ui::gdi {
         // bits.size() =
         //    (((width * planes * pixel_bits + 15) >> 4) << 1) * height;
         // pixel_bits = 1, 24, 32
-        static HBITMAP create_bitmap(int32_t width,
-                                     int32_t height,
-                                     uint32_t planes,
-                                     uint32_t pixel_bits,
-                                     const std::vector<uint8_t> &bits);
+        static HBITMAP create(int32_t width,
+                              int32_t height,
+                              uint32_t planes,
+                              uint32_t pixel_bits,
+                              const std::vector<uint8_t> &bits);
 
-        static HBITMAP create_bitmap_indirect(const BITMAP* bitmap);
+        static HBITMAP create(const BITMAP *bitmap);
 
-        static HBITMAP
-        create_compatible_bitmap(HDC dc_handle, int32_t x, int32_t y);
+        static HBITMAP create_compatible(HDC dc_handle, int32_t x, int32_t y);
 
-        static HBITMAP
-        create_di_bitmap(HDC dc_handle,
-                         const BITMAPINFOHEADER* bitmap_info_header,
-                         uint32_t flag,
-                         const std::vector<uint8_t> &bits,
-                         const BITMAPINFO* bitmap_info,
-                         uint32_t usage);
+        static HBITMAP create_di(HDC dc_handle,
+                                 const BITMAPINFOHEADER *bitmap_info_header,
+                                 const std::vector<uint8_t> &bits,
+                                 const BITMAPINFO *bitmap_info,
+                                 bool use_rgb = true,
+                                 bool init = true);
 
         // std::pair<result, error_code>
         static std::pair<HBITMAP, uint32_t>
         create_dib_section(HDC dc_handle,
-                           const BITMAPINFO* bitmap_info,
-                           uint32_t usage,
-                           void** bits,
+                           const BITMAPINFO *bitmap_info,
+                           void **bits,
                            HANDLE section_handle,
-                           uint32_t offset);
+                           uint32_t offset,
+                           bool use_rgb = true);
 
-        static HBITMAP load_bitmap(HINSTANCE hinstance_handle,
-                                   const char* bitmap_name);
+        static HBITMAP load(HINSTANCE hinstance_handle,
+                            const char *bitmap_name);
 
-        static HBITMAP load_bitmap(HINSTANCE hinstance_handle,
-                                   const wchar_t* bitmap_name);
+        static HBITMAP load(HINSTANCE hinstance_handle,
+                            const wchar_t *bitmap_name);
 
         // std::pair<result, error_code>
-        static std::pair<bool, uint32_t> bit_blt(HDC dc_handle_dst,
+        static std::pair<bool, uint32_t> bit_blk(HDC dc_handle_dst,
                                                  int32_t x,
                                                  int32_t y,
                                                  int32_t width,
@@ -69,10 +129,10 @@ namespace YanLib::ui::gdi {
                                                  HDC dc_handle_src,
                                                  int32_t x1,
                                                  int32_t y1,
-                                                 uint32_t rop);
+                                                 TernaryRasterCode rop);
 
         static bool plg_blt(HDC dc_handle_dst,
-                            const POINT* point,
+                            const POINT *point,
                             HDC dc_handle_src,
                             int32_t x_src,
                             int32_t y_src,
@@ -93,7 +153,8 @@ namespace YanLib::ui::gdi {
                              HBITMAP bitmap_mask_handle,
                              int32_t x_mask,
                              int32_t y_mask,
-                             uint32_t rop);
+                             TernaryRasterCode foreground,
+                             TernaryRasterCode background);
 
         static bool stretch_blt(HDC dc_handle_dst,
                                 int32_t x_dst,
@@ -105,14 +166,14 @@ namespace YanLib::ui::gdi {
                                 int32_t y_src,
                                 int32_t width_src,
                                 int32_t height_src,
-                                uint32_t rop);
+                                TernaryRasterCode rop);
 
         static bool pat_blt(HDC dc_handle,
                             int32_t x,
                             int32_t y,
                             int32_t width,
                             int32_t height,
-                            uint32_t rop);
+                            TernaryRasterCode rop);
 
         static bool transparent_blt(HDC dc_handle_dst,
                                     int32_t x_dst,
@@ -129,18 +190,18 @@ namespace YanLib::ui::gdi {
         static bool gradient_fill(HDC dc_handle,
                                   std::vector<TRIVERTEX> &vertex,
                                   std::vector<GRADIENT_TRIANGLE> &mesh,
-                                  uint32_t mode);
+                                  GradientMode mode);
 
         static bool gradient_fill(HDC dc_handle,
                                   std::vector<TRIVERTEX> &vertex,
                                   std::vector<GRADIENT_RECT> &mesh,
-                                  uint32_t mode);
+                                  GradientMode mode);
 
-        static bool ext_flood_fill(HDC dc_handle,
-                                   int32_t x,
-                                   int32_t y,
-                                   COLORREF color,
-                                   uint32_t type);
+        static bool flood_fill(HDC dc_handle,
+                               int32_t x,
+                               int32_t y,
+                               COLORREF color,
+                               FloodFill type = FloodFill::Border);
 
         static int32_t stretch_di_bits(HDC dc_handle,
                                        int32_t x_dst,
@@ -152,9 +213,9 @@ namespace YanLib::ui::gdi {
                                        int32_t width_src,
                                        int32_t height_src,
                                        std::vector<uint8_t> &bits,
-                                       const BITMAPINFO* bitmap_info,
-                                       uint32_t usage,
-                                       uint32_t rop);
+                                       const BITMAPINFO *bitmap_info,
+                                       TernaryRasterCode rop,
+                                       bool use_rgb = true);
 
         static bool alpha_blend(HDC dc_handle_dst,
                                 int32_t x_dst,
@@ -168,12 +229,12 @@ namespace YanLib::ui::gdi {
                                 int32_t height_src,
                                 BLENDFUNCTION blend_function);
 
-        static bool get_bitmap_dimension(HBITMAP bitmap_handle, SIZE* size);
+        static bool get_bitmap_dimension(HBITMAP bitmap_handle, SIZE *size);
 
         static bool set_bitmap_dimension(HBITMAP bitmap_handle,
                                          int32_t width,
                                          int32_t height,
-                                         SIZE* size);
+                                         SIZE *size);
 
         static uint32_t get_dib_color_table(HDC dc_handle,
                                             uint32_t index,
@@ -188,16 +249,16 @@ namespace YanLib::ui::gdi {
                                    uint32_t start_line,
                                    uint32_t line_num,
                                    std::vector<uint8_t> &bits,
-                                   BITMAPINFO* bitmap_info,
-                                   uint32_t usage);
+                                   BITMAPINFO *bitmap_info,
+                                   bool use_rgb = true);
 
         static int32_t set_di_bits(HDC dc_handle,
                                    HBITMAP bitmap_handle,
                                    uint32_t start_line,
                                    uint32_t line_num,
                                    std::vector<uint8_t> &bits,
-                                   const BITMAPINFO* bitmap_info,
-                                   uint32_t color_use);
+                                   const BITMAPINFO *bitmap_info,
+                                   bool use_rgb = true);
 
         static COLORREF get_pixel(HDC dc_handle, int32_t x, int32_t y);
 
@@ -207,9 +268,10 @@ namespace YanLib::ui::gdi {
         static bool
         set_pixel_near(HDC dc_handle, int32_t x, int32_t y, COLORREF color);
 
-        static int32_t get_stretch_blt_mode(HDC dc_handle);
+        static StretchMode get_stretch_blt_mode(HDC dc_handle);
 
-        static int32_t set_stretch_blt_mode(HDC dc_handle, int32_t mode);
+        static StretchMode set_stretch_blt_mode(HDC dc_handle,
+                                                StretchMode mode);
 
         static int32_t set_di_bits_to_device(HDC dc_handle,
                                              int32_t x_dst,
@@ -221,8 +283,8 @@ namespace YanLib::ui::gdi {
                                              uint32_t start_scan,
                                              uint32_t line_num,
                                              std::vector<uint8_t> &bits,
-                                             const BITMAPINFO* bitmap_info,
-                                             uint32_t color_use);
+                                             const BITMAPINFO *bitmap_info,
+                                             bool use_rgb = true);
     };
 } // namespace YanLib::ui::gdi
 #endif // BITMAP_H

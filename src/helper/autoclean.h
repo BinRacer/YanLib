@@ -29,9 +29,9 @@ namespace YanLib::helper {
 
         ~autoclean();
 
-        operator T&();
+        operator T &();
 
-        operator T*();
+        operator T *();
 
         autoclean &operator=(const T &other);
 

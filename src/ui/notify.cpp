@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 namespace YanLib::ui {
     HDEVNOTIFY notify::register_device(HWND window_handle,
-                                       void* notify_filter,
+                                       void *notify_filter,
                                        bool notify_all) {
         HDEVNOTIFY result = RegisterDeviceNotificationW(
                 window_handle, notify_filter,
@@ -19,7 +19,7 @@ namespace YanLib::ui {
     }
 
     HDEVNOTIFY notify::register_device(HANDLE service_handle,
-                                       void* notify_filter,
+                                       void *notify_filter,
                                        bool notify_all) {
         HDEVNOTIFY result = RegisterDeviceNotificationW(
                 service_handle, notify_filter,
@@ -40,7 +40,7 @@ namespace YanLib::ui {
     }
 
     HPOWERNOTIFY notify::register_power_setting(HWND window_handle,
-                                                const GUID* guid) {
+                                                const GUID *guid) {
         HPOWERNOTIFY result =
                 RegisterPowerSettingNotification(window_handle, guid,
                                                  DEVICE_NOTIFY_WINDOW_HANDLE);
@@ -51,7 +51,7 @@ namespace YanLib::ui {
     }
 
     HPOWERNOTIFY notify::register_power_setting(HANDLE service_handle,
-                                                const GUID* guid) {
+                                                const GUID *guid) {
         HPOWERNOTIFY result =
                 RegisterPowerSettingNotification(service_handle, guid,
                                                  DEVICE_NOTIFY_SERVICE_HANDLE);
@@ -80,7 +80,7 @@ namespace YanLib::ui {
     }
 
     HPOWERNOTIFY notify::register_suspend_resume(
-            DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS* subscribe) {
+            DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS *subscribe) {
         HPOWERNOTIFY result =
                 RegisterSuspendResumeNotification(subscribe,
                                                   DEVICE_NOTIFY_CALLBACK);

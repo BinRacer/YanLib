@@ -31,7 +31,7 @@ namespace YanLib::ui {
     }
 
     HBITMAP image::load_bitmap(HINSTANCE instance_handle,
-                               const char* image_name,
+                               const char *image_name,
                                int32_t cx,
                                int32_t cy,
                                ImageFlag flag) {
@@ -52,7 +52,7 @@ namespace YanLib::ui {
     }
 
     HBITMAP image::load_bitmap(HINSTANCE instance_handle,
-                               const wchar_t* image_name,
+                               const wchar_t *image_name,
                                int32_t cx,
                                int32_t cy,
                                ImageFlag flag) {
@@ -73,7 +73,7 @@ namespace YanLib::ui {
     }
 
     HICON image::load_icon(HINSTANCE instance_handle,
-                           const char* image_name,
+                           const char *image_name,
                            int32_t cx,
                            int32_t cy,
                            ImageFlag flag) {
@@ -94,7 +94,7 @@ namespace YanLib::ui {
     }
 
     HICON image::load_icon(HINSTANCE instance_handle,
-                           const wchar_t* image_name,
+                           const wchar_t *image_name,
                            int32_t cx,
                            int32_t cy,
                            ImageFlag flag) {
@@ -115,7 +115,7 @@ namespace YanLib::ui {
     }
 
     HCURSOR image::load_cursor(HINSTANCE instance_handle,
-                               const char* image_name,
+                               const char *image_name,
                                int32_t cx,
                                int32_t cy,
                                ImageFlag flag) {
@@ -136,7 +136,7 @@ namespace YanLib::ui {
     }
 
     HCURSOR image::load_cursor(HINSTANCE instance_handle,
-                               const wchar_t* image_name,
+                               const wchar_t *image_name,
                                int32_t cx,
                                int32_t cy,
                                ImageFlag flag) {

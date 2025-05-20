@@ -38,7 +38,7 @@ namespace YanLib::ui {
 
         bool set_blink_time(uint32_t milli_second);
 
-        bool get_pos(POINT* point);
+        bool get_pos(POINT *point);
 
         bool set_pos(int32_t x, int32_t y);
 

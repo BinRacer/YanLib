@@ -5,23 +5,51 @@
 #include "pen.h"
 
 namespace YanLib::ui::gdi {
-    HPEN pen::create_pen(int32_t style, int32_t width, COLORREF color) {
-        return CreatePen(style, width, color);
+    HPEN pen::create(COLORREF color, int32_t width, PenStyle style) {
+        return CreatePen(static_cast<int32_t>(style), width, color);
     }
 
-    HPEN pen::create_pen_indirect(const LOGPEN* log_pen) {
+    HPEN pen::create(const LOGPEN *log_pen) {
         return CreatePenIndirect(log_pen);
     }
 
-    HPEN pen::ext_create_pen(uint32_t pen_style,
-                             uint32_t width,
-                             const LOGBRUSH* log_brush,
-                             std::vector<uint32_t> &style) {
-        return ExtCreatePen(pen_style, width, log_brush, style.size(),
-                            reinterpret_cast<unsigned long*>(style.data()));
+    LOGPEN pen::make(COLORREF color, POINT width, PenStyle style) {
+        LOGPEN result = {};
+        result.lopnColor = color;
+        result.lopnWidth = width;
+        result.lopnStyle = static_cast<uint32_t>(style);
+        return result;
     }
 
-    COLORREF pen::set_dc_pen_color(HDC dc_handle, COLORREF color) {
+    HPEN pen::create(uint32_t width,
+                     const LOGBRUSH *log_brush,
+                     std::vector<uint32_t> &len,
+                     PenStyle style) {
+        return ExtCreatePen(static_cast<uint32_t>(style), width, log_brush,
+                            len.size(),
+                            len.empty() ? nullptr
+                                        : reinterpret_cast<unsigned long *>(
+                                                  len.data()));
+    }
+
+    HPEN pen::create_safe(uint32_t width,
+                          const LOGBRUSH *log_brush,
+                          std::vector<uint32_t> &len,
+                          PenStyle style) {
+        std::vector<unsigned long> temp(len.size());
+        for (const auto &item : len) {
+            temp.push_back(item);
+        }
+        HPEN result =
+                ExtCreatePen(static_cast<uint32_t>(style), width, log_brush,
+                             len.size(), temp.empty() ? nullptr : temp.data());
+        for (const auto &item : temp) {
+            len.push_back(item);
+        }
+        return result;
+    }
+
+    COLORREF pen::set_dc_color(HDC dc_handle, COLORREF color) {
         return SetDCPenColor(dc_handle, color);
     }
 } // namespace YanLib::ui::gdi

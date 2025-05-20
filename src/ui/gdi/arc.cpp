@@ -5,54 +5,58 @@
 #include "arc.h"
 
 namespace YanLib::ui::gdi {
-    bool arc::make_arc(HDC dc_handle,
-                       int32_t x1,
-                       int32_t y1,
-                       int32_t x2,
-                       int32_t y2,
-                       int32_t x3,
-                       int32_t y3,
-                       int32_t x4,
-                       int32_t y4) {
-        return Arc(dc_handle, x1, y1, x2, y2, x3, y3, x4, y4);
+    bool arc::make(HDC dc_handle,
+                   int32_t rect_left,
+                   int32_t rect_top,
+                   int32_t rect_right,
+                   int32_t rect_bottom,
+                   int32_t start_arc_x,
+                   int32_t start_arc_y,
+                   int32_t end_arc_x,
+                   int32_t end_arc_y) {
+        return Arc(dc_handle, rect_left, rect_top, rect_right, rect_bottom,
+                   start_arc_x, start_arc_y, end_arc_x, end_arc_y);
     }
 
-    bool arc::arc_to(HDC dc_handle,
-                     int32_t left,
-                     int32_t top,
-                     int32_t right,
-                     int32_t bottom,
-                     int32_t xr1,
-                     int32_t yr1,
-                     int32_t xr2,
-                     int32_t yr2) {
-        return ArcTo(dc_handle, left, top, right, bottom, xr1, yr1, xr2, yr2);
+    bool arc::to(HDC dc_handle,
+                 int32_t rect_left,
+                 int32_t rect_top,
+                 int32_t rect_right,
+                 int32_t rect_bottom,
+                 int32_t radial_x1,
+                 int32_t radial_y1,
+                 int32_t radial_x2,
+                 int32_t radial_y2) {
+        return ArcTo(dc_handle, rect_left, rect_top, rect_right, rect_bottom,
+                     radial_x1, radial_y1, radial_x2, radial_y2);
     }
 
-    bool arc::angle_arc(HDC dc_handle,
-                        int32_t x,
-                        int32_t y,
-                        uint32_t r,
-                        FLOAT start_angle,
-                        FLOAT sweep_angle) {
+    bool arc::angle(HDC dc_handle,
+                    int32_t x,
+                    int32_t y,
+                    uint32_t r,
+                    FLOAT start_angle,
+                    FLOAT sweep_angle) {
         return AngleArc(dc_handle, x, y, r, start_angle, sweep_angle);
     }
 
-    int32_t arc::get_arc_direction(HDC dc_handle) {
+    int32_t arc::get_direction(HDC dc_handle) {
         return GetArcDirection(dc_handle);
     }
 
-    int32_t arc::set_arc_direction(HDC dc_handle, int32_t direction) {
-        return SetArcDirection(dc_handle, direction);
+    int32_t arc::set_direction(HDC dc_handle, bool clock_wise) {
+        return SetArcDirection(dc_handle,
+                               clock_wise ? AD_CLOCKWISE : AD_COUNTERCLOCKWISE);
     }
 
     bool arc::poly_draw(HDC dc_handle,
                         const std::vector<POINT> &point,
-                        const std::vector<uint8_t> &point_type) {
+                        const std::vector<PointType> &point_type) {
         if (point.size() != point_type.size()) {
             return false;
         }
-        return PolyDraw(dc_handle, point.data(), point_type.data(),
+        return PolyDraw(dc_handle, point.data(),
+                        reinterpret_cast<const uint8_t *>(point_type.data()),
                         static_cast<int32_t>(point.size()));
     }
 } // namespace YanLib::ui::gdi

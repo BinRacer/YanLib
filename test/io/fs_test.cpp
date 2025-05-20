@@ -55,7 +55,7 @@ protected:
     }
 
     std::string temp_path;
-    const char* notepad = R"(C:\Windows\System32\notepad.exe)";
+    const char *notepad = R"(C:\Windows\System32\notepad.exe)";
     std::string read_notepad;
     std::string write_notepad;
     std::string fs_test_dir;

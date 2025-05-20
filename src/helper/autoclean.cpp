@@ -32,11 +32,11 @@ namespace YanLib::helper {
         }
     }
 
-    template <typename T, bool is_file> autoclean<T, is_file>::operator T&() {
+    template <typename T, bool is_file> autoclean<T, is_file>::operator T &() {
         return _value;
     }
 
-    template <typename T, bool is_file> autoclean<T, is_file>::operator T*() {
+    template <typename T, bool is_file> autoclean<T, is_file>::operator T *() {
         return &_value;
     }
 

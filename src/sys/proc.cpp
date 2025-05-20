@@ -4,7 +4,7 @@
 
 #include "proc.h"
 
-#include <algorithm>
+#include <complex>
 #include <memory>
 
 #include "security.h"
@@ -36,15 +36,15 @@ namespace YanLib::sys {
 
     NTSTATUS proc::nt_query_info_proc(HANDLE proc_handle,
                                       PROCESSINFOCLASS proc_info_class,
-                                      void* proc_info,
+                                      void *proc_info,
                                       uint32_t proc_info_len,
-                                      uint32_t* real_size) {
+                                      uint32_t *real_size) {
         typedef NTSTATUS(CALLBACK *
                          pfn)(HANDLE ProcessHandle,
                               PROCESSINFOCLASS ProcessInformationClass,
-                              void* ProcessInformation,
+                              void *ProcessInformation,
                               uint32_t ProcessInformationLength,
-                              uint32_t* ReturnLength OPTIONAL);
+                              uint32_t *ReturnLength OPTIONAL);
         NTSTATUS status = -1;
         HMODULE ntdll_module = nullptr;
         do {
@@ -69,13 +69,13 @@ namespace YanLib::sys {
         return status;
     }
 
-    PROCESS_INFORMATION proc::create(const char* app_name,
-                                     const char* cmdline,
-                                     SECURITY_ATTRIBUTES* proc_attrs,
-                                     SECURITY_ATTRIBUTES* thread_attrs,
+    PROCESS_INFORMATION proc::create(const char *app_name,
+                                     const char *cmdline,
+                                     SECURITY_ATTRIBUTES *proc_attrs,
+                                     SECURITY_ATTRIBUTES *thread_attrs,
                                      bool is_inherit,
                                      ProcCreateFlag create_flag,
-                                     const char* curr_dir) {
+                                     const char *curr_dir) {
         std::wstring app = helper::convert::str_to_wstr(app_name);
         std::wstring cmd = helper::convert::str_to_wstr(cmdline);
         std::wstring curr = helper::convert::str_to_wstr(curr_dir);
@@ -83,14 +83,14 @@ namespace YanLib::sys {
                       is_inherit, create_flag, nullptr, curr.data());
     }
 
-    PROCESS_INFORMATION proc::create(const wchar_t* app_name,
-                                     wchar_t* cmdline,
-                                     SECURITY_ATTRIBUTES* proc_attrs,
-                                     SECURITY_ATTRIBUTES* thread_attrs,
+    PROCESS_INFORMATION proc::create(const wchar_t *app_name,
+                                     wchar_t *cmdline,
+                                     SECURITY_ATTRIBUTES *proc_attrs,
+                                     SECURITY_ATTRIBUTES *thread_attrs,
                                      bool is_inherit,
                                      ProcCreateFlag create_flag,
-                                     void* env,
-                                     const wchar_t* curr_dir) {
+                                     void *env,
+                                     const wchar_t *curr_dir) {
         STARTUPINFOW si = {};
         PROCESS_INFORMATION pi = {};
         si.cb = sizeof(si);
@@ -108,13 +108,13 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION
-    proc::create_with_suspended(const char* app_name,
-                                const char* cmdline,
-                                SECURITY_ATTRIBUTES* proc_attrs,
-                                SECURITY_ATTRIBUTES* thread_attrs,
+    proc::create_with_suspended(const char *app_name,
+                                const char *cmdline,
+                                SECURITY_ATTRIBUTES *proc_attrs,
+                                SECURITY_ATTRIBUTES *thread_attrs,
                                 bool is_inherit,
                                 ProcCreateFlag create_flag,
-                                const char* curr_dir) {
+                                const char *curr_dir) {
         std::wstring app = helper::convert::str_to_wstr(app_name);
         std::wstring cmd = helper::convert::str_to_wstr(cmdline);
         std::wstring curr = helper::convert::str_to_wstr(curr_dir);
@@ -124,14 +124,14 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION
-    proc::create_with_suspended(const wchar_t* app_name,
-                                wchar_t* cmdline,
-                                SECURITY_ATTRIBUTES* proc_attrs,
-                                SECURITY_ATTRIBUTES* thread_attrs,
+    proc::create_with_suspended(const wchar_t *app_name,
+                                wchar_t *cmdline,
+                                SECURITY_ATTRIBUTES *proc_attrs,
+                                SECURITY_ATTRIBUTES *thread_attrs,
                                 bool is_inherit,
                                 ProcCreateFlag create_flag,
-                                void* env,
-                                const wchar_t* curr_dir) {
+                                void *env,
+                                const wchar_t *curr_dir) {
         STARTUPINFOW si = {};
         PROCESS_INFORMATION pi = {};
         si.cb = sizeof(si);
@@ -149,13 +149,13 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION proc::create_as_user(HANDLE token_handle,
-                                             const char* app_name,
-                                             const char* cmdline,
-                                             SECURITY_ATTRIBUTES* proc_attrs,
-                                             SECURITY_ATTRIBUTES* thread_attrs,
+                                             const char *app_name,
+                                             const char *cmdline,
+                                             SECURITY_ATTRIBUTES *proc_attrs,
+                                             SECURITY_ATTRIBUTES *thread_attrs,
                                              bool is_inherit,
                                              ProcCreateFlag create_flag,
-                                             const char* curr_dir) {
+                                             const char *curr_dir) {
         std::wstring app = helper::convert::str_to_wstr(app_name);
         std::wstring cmd = helper::convert::str_to_wstr(cmdline);
         std::wstring curr = helper::convert::str_to_wstr(curr_dir);
@@ -165,18 +165,18 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION proc::create_as_user(HANDLE token_handle,
-                                             const wchar_t* app_name,
-                                             wchar_t* cmdline,
-                                             SECURITY_ATTRIBUTES* proc_attrs,
-                                             SECURITY_ATTRIBUTES* thread_attrs,
+                                             const wchar_t *app_name,
+                                             wchar_t *cmdline,
+                                             SECURITY_ATTRIBUTES *proc_attrs,
+                                             SECURITY_ATTRIBUTES *thread_attrs,
                                              bool is_inherit,
                                              ProcCreateFlag create_flag,
-                                             void* env,
-                                             const wchar_t* curr_dir) {
+                                             void *env,
+                                             const wchar_t *curr_dir) {
         STARTUPINFOW si = {};
         PROCESS_INFORMATION pi = {};
         si.cb = sizeof(si);
-        void* environment = nullptr;
+        void *environment = nullptr;
         if (env) {
             environment = env;
         }
@@ -202,13 +202,13 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION
-    proc::create_session_zero(const char* app_name,
-                              const char* cmdline,
-                              SECURITY_ATTRIBUTES* proc_attrs,
-                              SECURITY_ATTRIBUTES* thread_attrs,
+    proc::create_session_zero(const char *app_name,
+                              const char *cmdline,
+                              SECURITY_ATTRIBUTES *proc_attrs,
+                              SECURITY_ATTRIBUTES *thread_attrs,
                               bool is_inherit,
                               ProcCreateFlag create_flag,
-                              const char* curr_dir) {
+                              const char *curr_dir) {
         std::wstring app = helper::convert::str_to_wstr(app_name);
         std::wstring cmd = helper::convert::str_to_wstr(cmdline);
         std::wstring curr = helper::convert::str_to_wstr(curr_dir);
@@ -218,14 +218,14 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION
-    proc::create_session_zero(const wchar_t* app_name,
-                              wchar_t* cmdline,
-                              SECURITY_ATTRIBUTES* proc_attrs,
-                              SECURITY_ATTRIBUTES* thread_attrs,
+    proc::create_session_zero(const wchar_t *app_name,
+                              wchar_t *cmdline,
+                              SECURITY_ATTRIBUTES *proc_attrs,
+                              SECURITY_ATTRIBUTES *thread_attrs,
                               bool is_inherit,
                               ProcCreateFlag create_flag,
-                              void* env,
-                              const wchar_t* curr_dir) {
+                              void *env,
+                              const wchar_t *curr_dir) {
         STARTUPINFOW si = {};
         PROCESS_INFORMATION pi = {};
         si.cb = sizeof(si);
@@ -236,7 +236,7 @@ namespace YanLib::sys {
             error_code = security.err_code();
             return {};
         }
-        void* environment = nullptr;
+        void *environment = nullptr;
         if (env) {
             environment = env;
         }
@@ -260,14 +260,14 @@ namespace YanLib::sys {
         return pi;
     }
 
-    PROCESS_INFORMATION proc::create_with_logon(const char* username,
-                                                const char* domain,
-                                                const char* password,
-                                                const char* app_name,
-                                                const char* cmdline,
+    PROCESS_INFORMATION proc::create_with_logon(const char *username,
+                                                const char *domain,
+                                                const char *password,
+                                                const char *app_name,
+                                                const char *cmdline,
                                                 LogonFlag logon_flag,
                                                 ProcCreateFlag create_flag,
-                                                const char* curr_dir) {
+                                                const char *curr_dir) {
         std::wstring user = helper::convert::str_to_wstr(username);
         std::wstring dom = helper::convert::str_to_wstr(domain);
         std::wstring pass = helper::convert::str_to_wstr(password);
@@ -279,15 +279,15 @@ namespace YanLib::sys {
                                  create_flag, nullptr, curr.data());
     }
 
-    PROCESS_INFORMATION proc::create_with_logon(const wchar_t* username,
-                                                const wchar_t* domain,
-                                                const wchar_t* password,
-                                                const wchar_t* app_name,
-                                                wchar_t* cmdline,
+    PROCESS_INFORMATION proc::create_with_logon(const wchar_t *username,
+                                                const wchar_t *domain,
+                                                const wchar_t *password,
+                                                const wchar_t *app_name,
+                                                wchar_t *cmdline,
                                                 LogonFlag logon_flag,
                                                 ProcCreateFlag create_flag,
-                                                void* env,
-                                                const wchar_t* curr_dir) {
+                                                void *env,
+                                                const wchar_t *curr_dir) {
         STARTUPINFOW si = {};
         PROCESS_INFORMATION pi = {};
         si.cb = sizeof(si);
@@ -298,7 +298,7 @@ namespace YanLib::sys {
             error_code = security.err_code();
             return {};
         }
-        void* environment = nullptr;
+        void *environment = nullptr;
         if (env) {
             environment = env;
         }
@@ -324,11 +324,11 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION proc::create_with_token(HANDLE token_handle,
-                                                const char* app_name,
-                                                const char* cmdline,
+                                                const char *app_name,
+                                                const char *cmdline,
                                                 LogonFlag logon_flag,
                                                 ProcCreateFlag create_flag,
-                                                const char* curr_dir) {
+                                                const char *curr_dir) {
         std::wstring app = helper::convert::str_to_wstr(app_name);
         std::wstring cmd = helper::convert::str_to_wstr(cmdline);
         std::wstring curr = helper::convert::str_to_wstr(curr_dir);
@@ -337,16 +337,16 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION proc::create_with_token(HANDLE token_handle,
-                                                const wchar_t* app_name,
-                                                wchar_t* cmdline,
+                                                const wchar_t *app_name,
+                                                wchar_t *cmdline,
                                                 LogonFlag logon_flag,
                                                 ProcCreateFlag create_flag,
-                                                void* env,
-                                                const wchar_t* curr_dir) {
+                                                void *env,
+                                                const wchar_t *curr_dir) {
         STARTUPINFOW si = {};
         PROCESS_INFORMATION pi = {};
         si.cb = sizeof(si);
-        void* environment = nullptr;
+        void *environment = nullptr;
         if (env) {
             environment = env;
         }
@@ -372,7 +372,7 @@ namespace YanLib::sys {
         return pi;
     }
 
-    bool proc::win_exec(const char* cmdline, ShowType show_flag) {
+    bool proc::win_exec(const char *cmdline, ShowType show_flag) {
         uint32_t ret = WinExec(cmdline, static_cast<uint32_t>(show_flag));
         if (ret <= 31 && ret > 0) {
             error_code = ret;
@@ -386,12 +386,12 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool proc::shell_exec(const char* file_name,
-                          const char* params,
-                          const char* dir,
+    bool proc::shell_exec(const char *file_name,
+                          const char *params,
+                          const char *dir,
                           ShowType show_flag,
                           HWND window_handle,
-                          const char* operation) {
+                          const char *operation) {
         HINSTANCE instance =
                 ShellExecuteA(window_handle, operation, file_name, params, dir,
                               static_cast<int32_t>(show_flag));
@@ -409,12 +409,12 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool proc::shell_exec(const wchar_t* file_name,
-                          const wchar_t* params,
-                          const wchar_t* dir,
+    bool proc::shell_exec(const wchar_t *file_name,
+                          const wchar_t *params,
+                          const wchar_t *dir,
                           ShowType show_flag,
                           HWND window_handle,
-                          const wchar_t* operation) {
+                          const wchar_t *operation) {
         HINSTANCE instance =
                 ShellExecuteW(window_handle, operation, file_name, params, dir,
                               static_cast<int32_t>(show_flag));
@@ -432,7 +432,7 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool proc::runas_elevated(const char* app_name, const char* cmdline) {
+    bool proc::runas_elevated(const char *app_name, const char *cmdline) {
         SHELLEXECUTEINFOA sei = {sizeof(SHELLEXECUTEINFOA)};
         sei.lpVerb = "runas";
         sei.lpFile = app_name;
@@ -444,7 +444,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::runas_elevated(const wchar_t* app_name, const wchar_t* cmdline) {
+    bool proc::runas_elevated(const wchar_t *app_name, const wchar_t *cmdline) {
         SHELLEXECUTEINFOW sei = {sizeof(SHELLEXECUTEINFOW)};
         sei.lpVerb = L"runas";
         sei.lpFile = app_name;
@@ -457,16 +457,16 @@ namespace YanLib::sys {
     }
 
     bool proc::fake_proc(HANDLE proc_handle,
-                         const char* app_name,
-                         const char* cmdline) {
+                         const char *app_name,
+                         const char *cmdline) {
         std::wstring app = helper::convert::str_to_wstr(app_name);
         std::wstring cmd = helper::convert::str_to_wstr(cmdline);
         return fake_proc(proc_handle, app.data(), cmd.data());
     }
 
     bool proc::fake_proc(HANDLE proc_handle,
-                         const wchar_t* app_name,
-                         const wchar_t* cmdline) {
+                         const wchar_t *app_name,
+                         const wchar_t *cmdline) {
         uint32_t size = 0;
         PROCESS_BASIC_INFORMATION pbi{};
         do {
@@ -594,37 +594,37 @@ namespace YanLib::sys {
     }
 
     uint32_t proc::exit_status(HANDLE proc_handle) {
-        uint32_t exit_status = 0;
-        if (!GetExitCodeProcess(proc_handle,
-                                reinterpret_cast<unsigned long*>(
-                                        &exit_status))) {
+        unsigned long exit_status = 0;
+        if (!GetExitCodeProcess(proc_handle, &exit_status)) {
             error_code = GetLastError();
         }
         return exit_status;
     }
 
-    bool proc::get_startup_info(STARTUPINFOA* info) {
+    bool proc::get_startup_info(STARTUPINFOA *info) {
         if (!info) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
         GetStartupInfoA(info);
         return true;
     }
 
-    bool proc::get_startup_info(STARTUPINFOW* info) {
+    bool proc::get_startup_info(STARTUPINFOW *info) {
         if (!info) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
         GetStartupInfoW(info);
         return true;
     }
 
-    void* proc::malloc(HANDLE proc_handle,
+    void *proc::malloc(HANDLE proc_handle,
                        size_t size,
-                       void* addr,
+                       void *addr,
                        AllocateType type,
                        MemoryProtect protect) {
-        void* address = VirtualAllocEx(proc_handle, addr, size,
+        void *address = VirtualAllocEx(proc_handle, addr, size,
                                        static_cast<uint32_t>(type),
                                        static_cast<uint32_t>(protect));
         if (!address) {
@@ -634,7 +634,7 @@ namespace YanLib::sys {
     }
 
     bool
-    proc::free(HANDLE proc_handle, void* addr, size_t size, AllocateType type) {
+    proc::free(HANDLE proc_handle, void *addr, size_t size, AllocateType type) {
         if (static_cast<uint32_t>(type) & MEM_RELEASE) {
             size = 0;
         }
@@ -646,12 +646,12 @@ namespace YanLib::sys {
         return true;
     }
 
-    void* proc::malloc_reserve(HANDLE proc_handle,
+    void *proc::malloc_reserve(HANDLE proc_handle,
                                size_t size,
-                               void* addr,
+                               void *addr,
                                AllocateType type,
                                MemoryProtect protect) {
-        void* address = VirtualAllocEx(proc_handle, addr, size,
+        void *address = VirtualAllocEx(proc_handle, addr, size,
                                        static_cast<uint32_t>(type),
                                        static_cast<uint32_t>(protect));
         if (!address) {
@@ -661,7 +661,7 @@ namespace YanLib::sys {
     }
 
     bool proc::free_reserve(HANDLE proc_handle,
-                            void* addr,
+                            void *addr,
                             size_t size,
                             AllocateType type) {
         if (!VirtualFreeEx(proc_handle, addr, size,
@@ -673,22 +673,28 @@ namespace YanLib::sys {
     }
 
     bool proc::mem_guard_attr(HANDLE proc_handle,
-                              void* addr,
+                              void *addr,
                               size_t size,
                               MemoryProtect protect,
-                              MemoryProtect* old_protect) {
-        if (!VirtualProtectEx(proc_handle, addr, size,
-                              static_cast<uint32_t>(protect),
-                              reinterpret_cast<unsigned long*>(old_protect))) {
-            error_code = GetLastError();
+                              MemoryProtect *old_protect) {
+        if (!old_protect) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        auto temp = static_cast<unsigned long>(*old_protect);
+        if (!VirtualProtectEx(proc_handle, addr, size,
+                              static_cast<uint32_t>(protect), &temp)) {
+            error_code = GetLastError();
+            *old_protect = static_cast<MemoryProtect>(temp);
+            return false;
+        }
+        *old_protect = static_cast<MemoryProtect>(temp);
         return true;
     }
 
     bool proc::query_mem(HANDLE proc_handle,
-                         const void* address,
-                         MEMORY_BASIC_INFORMATION* buffer,
+                         const void *address,
+                         MEMORY_BASIC_INFORMATION *buffer,
                          size_t len) {
         if (!VirtualQueryEx(proc_handle, address, buffer, len)) {
             error_code = GetLastError();
@@ -697,7 +703,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::global_mem_status(MEMORYSTATUSEX* buffer) {
+    bool proc::global_mem_status(MEMORYSTATUSEX *buffer) {
         if (!GlobalMemoryStatusEx(buffer)) {
             error_code = GetLastError();
             return false;
@@ -706,10 +712,10 @@ namespace YanLib::sys {
     }
 
     bool proc::read(HANDLE proc_handle,
-                    const void* base_addr,
-                    void* buf,
+                    const void *base_addr,
+                    void *buf,
                     size_t size,
-                    size_t* bytes_read) {
+                    size_t *bytes_read) {
         if (!ReadProcessMemory(proc_handle, base_addr, buf, size, bytes_read)) {
             error_code = GetLastError();
             return false;
@@ -718,10 +724,10 @@ namespace YanLib::sys {
     }
 
     bool proc::write(HANDLE proc_handle,
-                     void* base_addr,
-                     const void* buf,
+                     void *base_addr,
+                     const void *buf,
                      size_t size,
-                     size_t* bytes_written) {
+                     size_t *bytes_written) {
         if (!WriteProcessMemory(proc_handle, base_addr, buf, size,
                                 bytes_written)) {
             error_code = GetLastError();
@@ -731,7 +737,7 @@ namespace YanLib::sys {
     }
 
     std::vector<uint8_t>
-    proc::read(HANDLE proc_handle, const void* base_addr, size_t size) {
+    proc::read(HANDLE proc_handle, const void *base_addr, size_t size) {
         std::vector<uint8_t> buffer(size, 0);
         size_t bytes_read = 0;
         if (!ReadProcessMemory(proc_handle, base_addr, buffer.data(),
@@ -745,7 +751,7 @@ namespace YanLib::sys {
     }
 
     bool proc::write(HANDLE proc_handle,
-                     void* base_addr,
+                     void *base_addr,
                      const std::vector<uint8_t> &buf) {
         if (buf.empty()) {
             return false;
@@ -970,7 +976,7 @@ namespace YanLib::sys {
         // +0x020 ProcessParameters : Ptr64 _RTL_USER_PROCESS_PARAMETERS
         struct _peb {
             uint8_t fill[0x20];
-            void* process_parameters;
+            void *process_parameters;
         };
 
         // 0: kd> dt nt!_RTL_USER_PROCESS_PARAMETERS
@@ -996,7 +1002,7 @@ namespace YanLib::sys {
         // +0x008 Buffer           : Ptr64 Wchar
         struct _process_parameters {
             uint8_t fill[0x70 + 0x8];
-            void* cmdline;
+            void *cmdline;
         };
         HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
         uint32_t ret_size = 0;
@@ -1080,35 +1086,31 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            uint32_t size = 0;
-            GetTokenInformation(token_handle, TokenUser, nullptr, 0,
-                                reinterpret_cast<unsigned long*>(&size));
+            unsigned long size = 0;
+            GetTokenInformation(token_handle, TokenUser, nullptr, 0, &size);
             error_code = GetLastError();
             if (error_code != ERROR_INSUFFICIENT_BUFFER) {
                 break;
             }
             std::vector<uint8_t> token_user(size, 0);
             if (!GetTokenInformation(token_handle, TokenUser, token_user.data(),
-                                     token_user.size(),
-                                     reinterpret_cast<unsigned long*>(&size))) {
+                                     token_user.size(), &size)) {
                 error_code = GetLastError();
                 break;
             }
             SID_NAME_USE snu;
-            TCHAR user[MAX_PATH];
-            uint32_t user_size = MAX_PATH;
-            uint32_t* user_size_ptr = &user_size;
-            TCHAR domain[MAX_PATH];
-            uint32_t domain_size = MAX_PATH;
-            uint32_t* domain_size_ptr = &domain_size;
-            if (!LookupAccountSidW(
-                        nullptr,
-                        reinterpret_cast<TOKEN_USER*>(token_user.data())
-                                ->User.Sid,
-                        user, reinterpret_cast<unsigned long*>(user_size_ptr),
-                        domain,
-                        reinterpret_cast<unsigned long*>(domain_size_ptr),
-                        &snu)) {
+            wchar_t user[MAX_PATH];
+            unsigned long user_size = MAX_PATH;
+            unsigned long *user_size_ptr = &user_size;
+            wchar_t domain[MAX_PATH];
+            unsigned long domain_size = MAX_PATH;
+            unsigned long *domain_size_ptr = &domain_size;
+            if (!LookupAccountSidW(nullptr,
+                                   reinterpret_cast<TOKEN_USER *>(
+                                           token_user.data())
+                                           ->User.Sid,
+                                   user, user_size_ptr, domain, domain_size_ptr,
+                                   &snu)) {
                 error_code = GetLastError();
                 break;
             }
@@ -1147,12 +1149,10 @@ namespace YanLib::sys {
                               bool native_name) {
         HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
         image_name.resize(MAX_PATH, '\0');
-        uint32_t size = MAX_PATH;
+        unsigned long size = MAX_PATH;
         if (!QueryFullProcessImageNameA(process_handle,
                                         native_name ? PROCESS_NAME_NATIVE : 0,
-                                        image_name.data(),
-                                        reinterpret_cast<unsigned long*>(
-                                                &size))) {
+                                        image_name.data(), &size)) {
             error_code = GetLastError();
             return false;
         }
@@ -1168,12 +1168,10 @@ namespace YanLib::sys {
                               bool native_name) {
         HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
         image_name.resize(MAX_PATH, L'\0');
-        uint32_t size = MAX_PATH;
+        unsigned long size = MAX_PATH;
         if (!QueryFullProcessImageNameW(process_handle,
                                         native_name ? PROCESS_NAME_NATIVE : 0,
-                                        image_name.data(),
-                                        reinterpret_cast<unsigned long*>(
-                                                &size))) {
+                                        image_name.data(), &size)) {
             error_code = GetLastError();
             return false;
         }
@@ -1184,7 +1182,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    void* proc::image_base() {
+    void *proc::image_base() {
         IMAGE_DOS_HEADER dos_header{};
         IMAGE_NT_HEADERS64 nt_headers64{};
         IMAGE_NT_HEADERS32 nt_headers32{};
@@ -1194,7 +1192,7 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            auto* base = reinterpret_cast<uint8_t*>(hmodule);
+            auto *base = reinterpret_cast<uint8_t *>(hmodule);
             memcpy(&dos_header, base, sizeof(dos_header));
             if (dos_header.e_magic != IMAGE_DOS_SIGNATURE) {
                 break;
@@ -1206,7 +1204,7 @@ namespace YanLib::sys {
             }
             if (nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ||
                 nt_headers64.FileHeader.Machine == IMAGE_FILE_MACHINE_ARM64) {
-                return reinterpret_cast<void*>(
+                return reinterpret_cast<void *>(
                         nt_headers64.OptionalHeader.ImageBase);
             }
             else {
@@ -1215,7 +1213,7 @@ namespace YanLib::sys {
                 if (nt_headers32.Signature != IMAGE_NT_SIGNATURE) {
                     break;
                 }
-                return reinterpret_cast<void*>(static_cast<int64_t>(
+                return reinterpret_cast<void *>(static_cast<int64_t>(
                         nt_headers32.OptionalHeader.ImageBase));
             }
         }
@@ -1223,7 +1221,7 @@ namespace YanLib::sys {
         return nullptr;
     }
 
-    void* proc::image_base(HANDLE proc_handle) {
+    void *proc::image_base(HANDLE proc_handle) {
         HANDLE process_handle = proc_handle ? proc_handle : GetCurrentProcess();
         PROCESS_BASIC_INFORMATION pbi;
         NTSTATUS status =
@@ -1233,11 +1231,11 @@ namespace YanLib::sys {
         if (!NT_SUCCESS(status)) {
             return nullptr;
         }
-        void* baseAddr = pbi.PebBaseAddress->Reserved3[1];
+        void *baseAddr = pbi.PebBaseAddress->Reserved3[1];
         return baseAddr;
     }
 
-    void* proc::image_base(uint32_t pid) {
+    void *proc::image_base(uint32_t pid) {
         return image_base(pid_to_handle(pid));
     }
 
@@ -1274,9 +1272,8 @@ namespace YanLib::sys {
     }
 
     uint32_t proc::handle_count(HANDLE proc_handle) {
-        uint32_t count = 0;
-        if (!GetProcessHandleCount(proc_handle,
-                                   reinterpret_cast<unsigned long*>(&count))) {
+        unsigned long count = 0;
+        if (!GetProcessHandleCount(proc_handle, &count)) {
             error_code = GetLastError();
         }
         return count;
@@ -1288,7 +1285,7 @@ namespace YanLib::sys {
 
     bool proc::get_info(HANDLE proc_handle,
                         PROCESS_INFORMATION_CLASS proc_info_class,
-                        void* proc_info,
+                        void *proc_info,
                         uint32_t proc_info_size) {
         if (!GetProcessInformation(proc_handle, proc_info_class, proc_info,
                                    proc_info_size)) {
@@ -1300,7 +1297,7 @@ namespace YanLib::sys {
 
     bool proc::set_info(HANDLE proc_handle,
                         PROCESS_INFORMATION_CLASS proc_info_class,
-                        void* proc_info,
+                        void *proc_info,
                         uint32_t proc_info_size) {
         if (!SetProcessInformation(proc_handle, proc_info_class, proc_info,
                                    proc_info_size)) {
@@ -1323,7 +1320,7 @@ namespace YanLib::sys {
 
     bool proc::get_module_info(HANDLE proc_handle,
                                HMODULE module_handle,
-                               MODULEINFO* mod_info,
+                               MODULEINFO *mod_info,
                                uint32_t mod_info_size) {
         if (!GetModuleInformation(proc_handle, module_handle, mod_info,
                                   mod_info_size)) {
@@ -1333,20 +1330,25 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buf,
-                                      uint32_t* real_size) {
-        if (!GetLogicalProcessorInformation(buf,
-                                            reinterpret_cast<unsigned long*>(
-                                                    real_size))) {
-            error_code = GetLastError();
+    bool proc::logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buf,
+                                      uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!GetLogicalProcessorInformation(buf, &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
     bool proc::get_affinity_mask(HANDLE proc_handle,
-                                 DWORD_PTR* proc_affinity_mask,
-                                 DWORD_PTR* system_affinity_mask) {
+                                 uintptr_t *proc_affinity_mask,
+                                 uintptr_t *system_affinity_mask) {
         if (!GetProcessAffinityMask(proc_handle, proc_affinity_mask,
                                     system_affinity_mask)) {
             error_code = GetLastError();
@@ -1356,7 +1358,7 @@ namespace YanLib::sys {
     }
 
     bool proc::set_affinity_mask(HANDLE proc_handle,
-                                 DWORD_PTR proc_affinity_mask) {
+                                 uintptr_t proc_affinity_mask) {
         if (!SetProcessAffinityMask(proc_handle, proc_affinity_mask)) {
             error_code = GetLastError();
             return false;
@@ -1365,8 +1367,8 @@ namespace YanLib::sys {
     }
 
     bool proc::get_group_affinity(HANDLE proc_handle,
-                                  uint16_t* group_count,
-                                  uint16_t* group_array) {
+                                  uint16_t *group_count,
+                                  uint16_t *group_array) {
         if (!GetProcessGroupAffinity(proc_handle, group_count, group_array)) {
             error_code = GetLastError();
             return false;
@@ -1374,7 +1376,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::io_counters(HANDLE proc_handle, IO_COUNTERS* io_counters) {
+    bool proc::io_counters(HANDLE proc_handle, IO_COUNTERS *io_counters) {
         if (!GetProcessIoCounters(proc_handle, io_counters)) {
             error_code = GetLastError();
             return false;
@@ -1385,7 +1387,7 @@ namespace YanLib::sys {
     bool
     proc::get_mitigation_policy(HANDLE proc_handle,
                                 PROCESS_MITIGATION_POLICY mitigation_policy,
-                                void* buffer,
+                                void *buffer,
                                 size_t len) {
         if (!GetProcessMitigationPolicy(proc_handle, mitigation_policy, buffer,
                                         len)) {
@@ -1397,7 +1399,7 @@ namespace YanLib::sys {
 
     bool
     proc::set_mitigation_policy(PROCESS_MITIGATION_POLICY mitigation_policy,
-                                void* buffer,
+                                void *buffer,
                                 size_t len) {
         if (!SetProcessMitigationPolicy(mitigation_policy, buffer, len)) {
             error_code = GetLastError();
@@ -1425,17 +1427,21 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::get_shutdown_params(uint32_t* level, bool* show_retry_dialog) {
-        uint32_t flag = 0;
-        if (!GetProcessShutdownParameters(reinterpret_cast<unsigned long*>(
-                                                  level),
-                                          reinterpret_cast<unsigned long*>(
-                                                  &flag))) {
+    bool proc::get_shutdown_params(uint32_t *level, bool *show_retry_dialog) {
+        if (!level || !show_retry_dialog) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        unsigned long temp = *level;
+        unsigned long flag = *show_retry_dialog;
+        if (!GetProcessShutdownParameters(&temp, &flag)) {
             error_code = GetLastError();
             *show_retry_dialog = flag == SHUTDOWN_NORETRY;
+            *level = temp;
             return false;
         }
         *show_retry_dialog = flag == SHUTDOWN_NORETRY;
+        *level = temp;
         return true;
     }
 
@@ -1449,10 +1455,10 @@ namespace YanLib::sys {
     }
 
     bool proc::time_statistics(HANDLE proc_handle,
-                               FILETIME* creation_time,
-                               FILETIME* exit_time,
-                               FILETIME* kernel_time,
-                               FILETIME* user_time) {
+                               FILETIME *creation_time,
+                               FILETIME *exit_time,
+                               FILETIME *kernel_time,
+                               FILETIME *user_time) {
         if (!GetProcessTimes(proc_handle, creation_time, exit_time, kernel_time,
                              user_time)) {
             error_code = GetLastError();
@@ -1470,8 +1476,8 @@ namespace YanLib::sys {
     }
 
     bool proc::get_working_set_size(HANDLE proc_handle,
-                                    SIZE_T* min_working_set_size,
-                                    SIZE_T* max_working_set_size) {
+                                    SIZE_T *min_working_set_size,
+                                    SIZE_T *max_working_set_size) {
         if (GetProcessWorkingSetSize(proc_handle, min_working_set_size,
                                      max_working_set_size)) {
             error_code = GetLastError();
@@ -1493,14 +1499,19 @@ namespace YanLib::sys {
 
     bool proc::get_processor_system_cycle_time(
             uint16_t group,
-            SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION* buffer,
-            uint32_t* real_size) {
-        if (!GetProcessorSystemCycleTime(group, buffer,
-                                         reinterpret_cast<unsigned long*>(
-                                                 real_size))) {
-            error_code = GetLastError();
+            SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION *buffer,
+            uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!GetProcessorSystemCycleTime(group, buffer, &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
@@ -1512,19 +1523,21 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::is_exe_search_path(const char* exe_name) {
+    bool proc::is_exe_search_path(const char *exe_name) {
         return NeedCurrentDirectoryForExePathA(exe_name);
     }
 
-    bool proc::is_exe_search_path(const wchar_t* exe_name) {
+    bool proc::is_exe_search_path(const wchar_t *exe_name) {
         return NeedCurrentDirectoryForExePathW(exe_name);
     }
 
-    bool proc::get_affinity_update_mode(HANDLE proc_handle, bool* auto_update) {
-        uint32_t flag = 0;
-        if (!QueryProcessAffinityUpdateMode(proc_handle,
-                                            reinterpret_cast<unsigned long*>(
-                                                    &flag))) {
+    bool proc::get_affinity_update_mode(HANDLE proc_handle, bool *auto_update) {
+        if (!auto_update) {
+            error_code = STATUS_ACCESS_VIOLATION;
+            return false;
+        }
+        unsigned long flag = 0;
+        if (!QueryProcessAffinityUpdateMode(proc_handle, &flag)) {
             error_code = GetLastError();
             *auto_update = flag;
             return false;
@@ -1542,7 +1555,7 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::all_thread_cycle_time(HANDLE proc_handle, uint64_t* cycle_time) {
+    bool proc::all_thread_cycle_time(HANDLE proc_handle, uint64_t *cycle_time) {
         if (!QueryProcessCycleTime(proc_handle, cycle_time)) {
             error_code = GetLastError();
             return false;

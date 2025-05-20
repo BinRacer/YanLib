@@ -7,7 +7,7 @@
 #include <memory>
 
 namespace YanLib::io {
-    pe64::pe64(const char* file_name) {
+    pe64::pe64(const char *file_name) {
         do {
             mmap_handle = mmap.create(file_name);
             if (!mmap_handle) {
@@ -19,10 +19,10 @@ namespace YanLib::io {
         while (false);
     }
 
-    pe64::pe64(const wchar_t* file_name) {
+    pe64::pe64(const wchar_t *file_name) {
         do {
             mmap_handle =
-                    mmap.create(file_name, static_cast<wchar_t*>(nullptr));
+                    mmap.create(file_name, static_cast<wchar_t *>(nullptr));
             if (!mmap_handle) {
                 error_code = mmap.err_code();
                 break;
@@ -34,7 +34,8 @@ namespace YanLib::io {
 
     pe64::pe64(HANDLE file_handle) {
         do {
-            mmap_handle = mmap.create(file_handle, static_cast<char*>(nullptr));
+            mmap_handle =
+                    mmap.create(file_handle, static_cast<char *>(nullptr));
             if (!mmap_handle) {
                 error_code = mmap.err_code();
                 break;
@@ -51,17 +52,17 @@ namespace YanLib::io {
                 error_code = mmap.err_code();
                 break;
             }
-            _dos_header = static_cast<IMAGE_DOS_HEADER*>(addr);
+            _dos_header = static_cast<IMAGE_DOS_HEADER *>(addr);
             if (_dos_header->e_magic != IMAGE_DOS_SIGNATURE) {
                 break;
             }
-            _nt_headers = reinterpret_cast<IMAGE_NT_HEADERS64*>(
-                    static_cast<uint8_t*>(addr) + _dos_header->e_lfanew);
+            _nt_headers = reinterpret_cast<IMAGE_NT_HEADERS64 *>(
+                    static_cast<uint8_t *>(addr) + _dos_header->e_lfanew);
             if (_nt_headers->Signature != IMAGE_NT_SIGNATURE) {
                 break;
             }
-            _section_header = reinterpret_cast<IMAGE_SECTION_HEADER*>(
-                    reinterpret_cast<uint8_t*>(_nt_headers) +
+            _section_header = reinterpret_cast<IMAGE_SECTION_HEADER *>(
+                    reinterpret_cast<uint8_t *>(_nt_headers) +
                     sizeof(IMAGE_NT_HEADERS64));
             if (_nt_headers->FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ||
                 _nt_headers->FileHeader.Machine == IMAGE_FILE_MACHINE_ARM64 ||
@@ -91,7 +92,7 @@ namespace YanLib::io {
     }
 
     bool pe64::get_dos_header(IMAGE_DOS_HEADER &dos_header) {
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(&dos_header),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(&dos_header),
                        sizeof(IMAGE_DOS_HEADER))) {
             error_code = mmap.err_code();
             return false;
@@ -100,7 +101,7 @@ namespace YanLib::io {
     }
 
     bool pe64::set_dos_header(IMAGE_DOS_HEADER &dos_header) {
-        if (!mmap.write(_dos_header, reinterpret_cast<uint8_t*>(&dos_header),
+        if (!mmap.write(_dos_header, reinterpret_cast<uint8_t *>(&dos_header),
                         sizeof(IMAGE_DOS_HEADER))) {
             error_code = mmap.err_code();
             return false;
@@ -109,7 +110,7 @@ namespace YanLib::io {
     }
 
     bool pe64::get_nt_headers(IMAGE_NT_HEADERS64 &nt_headers) {
-        if (!mmap.read(_nt_headers, reinterpret_cast<uint8_t*>(&nt_headers),
+        if (!mmap.read(_nt_headers, reinterpret_cast<uint8_t *>(&nt_headers),
                        sizeof(IMAGE_NT_HEADERS64))) {
             error_code = mmap.err_code();
             return false;
@@ -118,7 +119,7 @@ namespace YanLib::io {
     }
 
     bool pe64::set_nt_headers(IMAGE_NT_HEADERS64 &nt_headers) {
-        if (!mmap.write(_nt_headers, reinterpret_cast<uint8_t*>(&nt_headers),
+        if (!mmap.write(_nt_headers, reinterpret_cast<uint8_t *>(&nt_headers),
                         sizeof(IMAGE_NT_HEADERS64))) {
             error_code = mmap.err_code();
             return false;
@@ -127,7 +128,7 @@ namespace YanLib::io {
     }
 
     bool pe64::get_nt_signature(uint32_t &signature) {
-        if (!mmap.read(_nt_headers, reinterpret_cast<uint8_t*>(&signature),
+        if (!mmap.read(_nt_headers, reinterpret_cast<uint8_t *>(&signature),
                        sizeof(uint32_t),
                        offsetof(IMAGE_NT_HEADERS64, Signature))) {
             error_code = mmap.err_code();
@@ -137,7 +138,7 @@ namespace YanLib::io {
     }
 
     bool pe64::set_nt_signature(uint32_t &signature) {
-        if (!mmap.write(_nt_headers, reinterpret_cast<uint8_t*>(&signature),
+        if (!mmap.write(_nt_headers, reinterpret_cast<uint8_t *>(&signature),
                         sizeof(uint32_t),
                         offsetof(IMAGE_NT_HEADERS64, Signature))) {
             error_code = mmap.err_code();
@@ -147,7 +148,7 @@ namespace YanLib::io {
     }
 
     bool pe64::get_file_header(IMAGE_FILE_HEADER &file_header) {
-        if (!mmap.read(_nt_headers, reinterpret_cast<uint8_t*>(&file_header),
+        if (!mmap.read(_nt_headers, reinterpret_cast<uint8_t *>(&file_header),
                        sizeof(IMAGE_FILE_HEADER),
                        offsetof(IMAGE_NT_HEADERS64, FileHeader))) {
             error_code = mmap.err_code();
@@ -157,7 +158,7 @@ namespace YanLib::io {
     }
 
     bool pe64::set_file_header(IMAGE_FILE_HEADER &file_header) {
-        if (!mmap.write(_nt_headers, reinterpret_cast<uint8_t*>(&file_header),
+        if (!mmap.write(_nt_headers, reinterpret_cast<uint8_t *>(&file_header),
                         sizeof(IMAGE_FILE_HEADER),
                         offsetof(IMAGE_NT_HEADERS64, FileHeader))) {
             error_code = mmap.err_code();
@@ -168,7 +169,7 @@ namespace YanLib::io {
 
     bool pe64::get_optional_header(IMAGE_OPTIONAL_HEADER64 &optional_header) {
         if (!mmap.read(_nt_headers,
-                       reinterpret_cast<uint8_t*>(&optional_header),
+                       reinterpret_cast<uint8_t *>(&optional_header),
                        sizeof(IMAGE_OPTIONAL_HEADER64),
                        offsetof(IMAGE_NT_HEADERS64, OptionalHeader))) {
             error_code = mmap.err_code();
@@ -179,7 +180,7 @@ namespace YanLib::io {
 
     bool pe64::set_optional_header(IMAGE_OPTIONAL_HEADER64 &optional_header) {
         if (!mmap.write(_nt_headers,
-                        reinterpret_cast<uint8_t*>(&optional_header),
+                        reinterpret_cast<uint8_t *>(&optional_header),
                         sizeof(IMAGE_OPTIONAL_HEADER64),
                         offsetof(IMAGE_NT_HEADERS64, OptionalHeader))) {
             error_code = mmap.err_code();
@@ -192,7 +193,7 @@ namespace YanLib::io {
         constexpr size_t entries = IMAGE_NUMBEROF_DIRECTORY_ENTRIES;
         _data_table_list.resize(entries);
         if (!mmap.read(_nt_headers,
-                       reinterpret_cast<uint8_t*>(_data_table_list.data()),
+                       reinterpret_cast<uint8_t *>(_data_table_list.data()),
                        sizeof(IMAGE_DATA_DIRECTORY) * entries,
                        offsetof(IMAGE_NT_HEADERS64, OptionalHeader) +
                                offsetof(IMAGE_OPTIONAL_HEADER64,
@@ -209,7 +210,7 @@ namespace YanLib::io {
             return false;
         }
         if (!mmap.write(_nt_headers,
-                        reinterpret_cast<uint8_t*>(data_table.data()),
+                        reinterpret_cast<uint8_t *>(data_table.data()),
                         sizeof(IMAGE_DATA_DIRECTORY) * entries,
                         offsetof(IMAGE_NT_HEADERS64, OptionalHeader) +
                                 offsetof(IMAGE_OPTIONAL_HEADER64,
@@ -224,7 +225,7 @@ namespace YanLib::io {
         const size_t count = _nt_headers->FileHeader.NumberOfSections;
         _section_header_list.resize(count);
         if (!mmap.read(_section_header,
-                       reinterpret_cast<uint8_t*>(_section_header_list.data()),
+                       reinterpret_cast<uint8_t *>(_section_header_list.data()),
                        static_cast<int64_t>(sizeof(IMAGE_SECTION_HEADER) *
                                             count))) {
             error_code = mmap.err_code();
@@ -240,7 +241,7 @@ namespace YanLib::io {
             return false;
         }
         if (!mmap.write(_section_header,
-                        reinterpret_cast<uint8_t*>(section_headers.data()),
+                        reinterpret_cast<uint8_t *>(section_headers.data()),
                         static_cast<int64_t>(sizeof(IMAGE_SECTION_HEADER) *
                                              count))) {
             error_code = mmap.err_code();
@@ -261,7 +262,7 @@ namespace YanLib::io {
         if (offset == 0) {
             return false;
         }
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(&export_table),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(&export_table),
                        sizeof(IMAGE_EXPORT_DIRECTORY), offset)) {
             error_code = mmap.err_code();
             return false;
@@ -281,7 +282,7 @@ namespace YanLib::io {
         if (offset == 0) {
             return false;
         }
-        if (!mmap.write(_dos_header, reinterpret_cast<uint8_t*>(&export_table),
+        if (!mmap.write(_dos_header, reinterpret_cast<uint8_t *>(&export_table),
                         sizeof(IMAGE_EXPORT_DIRECTORY), offset)) {
             error_code = mmap.err_code();
             return false;
@@ -290,17 +291,17 @@ namespace YanLib::io {
     }
 
     std::vector<std::string>
-    pe64::get_export_func_name_string(IMAGE_EXPORT_DIRECTORY* export_table) {
+    pe64::get_export_func_name_string(IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
-        auto start_name_addr = reinterpret_cast<uint32_t*>(
-                reinterpret_cast<uint8_t*>(_dos_header) +
+        auto start_name_addr = reinterpret_cast<uint32_t *>(
+                reinterpret_cast<uint8_t *>(_dos_header) +
                 rva_to_foa(export_table->AddressOfNames));
         std::vector<std::string> result;
         for (int32_t i = 0; i < export_table->NumberOfNames; i++) {
-            auto name_addr = reinterpret_cast<char*>(
-                                     reinterpret_cast<uint8_t*>(_dos_header)) +
+            auto name_addr = reinterpret_cast<char *>(
+                                     reinterpret_cast<uint8_t *>(_dos_header)) +
                     rva_to_foa(start_name_addr[i]);
             result.emplace_back(name_addr);
         }
@@ -308,12 +309,12 @@ namespace YanLib::io {
     }
 
     std::vector<uint32_t>
-    pe64::get_export_func_name(IMAGE_EXPORT_DIRECTORY* export_table) {
+    pe64::get_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
         std::vector<uint32_t> result(export_table->NumberOfNames, 0);
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(result.data()),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(result.data()),
                        static_cast<int64_t>(sizeof(uint32_t) *
                                             export_table->NumberOfNames),
                        rva_to_foa(export_table->AddressOfNames))) {
@@ -323,14 +324,14 @@ namespace YanLib::io {
         return result;
     }
 
-    bool pe64::set_export_func_name(IMAGE_EXPORT_DIRECTORY* export_table,
+    bool pe64::set_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table,
                                     std::vector<uint32_t> &func_name_addrs) {
         if (!export_table ||
             func_name_addrs.size() != export_table->NumberOfNames) {
             return false;
         }
         if (!mmap.write(_dos_header,
-                        reinterpret_cast<uint8_t*>(func_name_addrs.data()),
+                        reinterpret_cast<uint8_t *>(func_name_addrs.data()),
                         static_cast<int64_t>(sizeof(uint32_t) *
                                              export_table->NumberOfNames),
                         rva_to_foa(export_table->AddressOfNames))) {
@@ -341,12 +342,12 @@ namespace YanLib::io {
     }
 
     std::vector<uint32_t>
-    pe64::get_export_func_addr(IMAGE_EXPORT_DIRECTORY* export_table) {
+    pe64::get_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
         std::vector<uint32_t> result(export_table->NumberOfFunctions, 0);
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(result.data()),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(result.data()),
                        static_cast<int64_t>(sizeof(uint32_t) *
                                             export_table->NumberOfFunctions),
                        rva_to_foa(export_table->AddressOfFunctions))) {
@@ -356,14 +357,14 @@ namespace YanLib::io {
         return result;
     }
 
-    bool pe64::set_export_func_addr(IMAGE_EXPORT_DIRECTORY* export_table,
+    bool pe64::set_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table,
                                     std::vector<uint32_t> &func_addrs) {
         if (!export_table ||
             func_addrs.size() != export_table->NumberOfFunctions) {
             return false;
         }
         if (!mmap.write(_dos_header,
-                        reinterpret_cast<uint8_t*>(func_addrs.data()),
+                        reinterpret_cast<uint8_t *>(func_addrs.data()),
                         static_cast<int64_t>(sizeof(uint32_t) *
                                              export_table->NumberOfFunctions),
                         rva_to_foa(export_table->AddressOfFunctions))) {
@@ -374,12 +375,12 @@ namespace YanLib::io {
     }
 
     std::vector<uint16_t>
-    pe64::get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY* export_table) {
+    pe64::get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
         std::vector<uint16_t> result(export_table->NumberOfFunctions, 0);
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(result.data()),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(result.data()),
                        static_cast<int64_t>(sizeof(uint16_t) *
                                             export_table->NumberOfFunctions),
                        rva_to_foa(export_table->AddressOfNameOrdinals))) {
@@ -389,14 +390,14 @@ namespace YanLib::io {
         return result;
     }
 
-    bool pe64::set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY* export_table,
+    bool pe64::set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
                                        std::vector<uint16_t> &func_ordinals) {
         if (!export_table ||
             func_ordinals.size() != export_table->NumberOfFunctions) {
             return false;
         }
         if (!mmap.write(_dos_header,
-                        reinterpret_cast<uint8_t*>(func_ordinals.data()),
+                        reinterpret_cast<uint8_t *>(func_ordinals.data()),
                         static_cast<int64_t>(sizeof(uint16_t) *
                                              export_table->NumberOfFunctions),
                         rva_to_foa(export_table->AddressOfNameOrdinals))) {
@@ -418,8 +419,8 @@ namespace YanLib::io {
         if (offset == 0) {
             return {};
         }
-        auto import_table = reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR*>(
-                reinterpret_cast<uint8_t*>(_dos_header) + offset);
+        auto import_table = reinterpret_cast<IMAGE_IMPORT_DESCRIPTOR *>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
         size_t count = 0;
         while (import_table->OriginalFirstThunk ||
                import_table->TimeDateStamp || import_table->ForwarderChain ||
@@ -428,7 +429,7 @@ namespace YanLib::io {
             import_table++;
         }
         std::vector<IMAGE_IMPORT_DESCRIPTOR> result(count, {});
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(result.data()),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(result.data()),
                        static_cast<int64_t>(sizeof(IMAGE_IMPORT_DESCRIPTOR) *
                                             count),
                        offset)) {
@@ -455,7 +456,7 @@ namespace YanLib::io {
             return false;
         }
         if (!mmap.write(_dos_header,
-                        reinterpret_cast<uint8_t*>(import_table.data()),
+                        reinterpret_cast<uint8_t *>(import_table.data()),
                         static_cast<int64_t>(sizeof(IMAGE_IMPORT_DESCRIPTOR) *
                                              import_table.size()),
                         offset)) {
@@ -472,8 +473,8 @@ namespace YanLib::io {
         }
         std::vector<std::string> result;
         for (const auto &entry : import_table) {
-            auto name = reinterpret_cast<char*>(
-                    reinterpret_cast<uint8_t*>(_dos_header) +
+            auto name = reinterpret_cast<char *>(
+                    reinterpret_cast<uint8_t *>(_dos_header) +
                     rva_to_foa(entry.Name));
             result.emplace_back(name);
         }
@@ -536,15 +537,15 @@ namespace YanLib::io {
         if (offset == 0) {
             return {};
         }
-        auto thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64*>(
-                reinterpret_cast<uint8_t*>(_dos_header) + offset);
+        auto thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
         size_t count = 0;
         while (thunk_data->u1.AddressOfData != 0) {
             count++;
             thunk_data++;
         }
         std::vector<IMAGE_THUNK_DATA64> result(count, {});
-        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t*>(result.data()),
+        if (!mmap.read(_dos_header, reinterpret_cast<uint8_t *>(result.data()),
                        sizeof(IMAGE_THUNK_DATA64) * count, offset)) {
             error_code = mmap.err_code();
             return {};
@@ -563,7 +564,7 @@ namespace YanLib::io {
             return false;
         }
         if (!mmap.write(_dos_header,
-                        reinterpret_cast<uint8_t*>(thunk_datas.data()),
+                        reinterpret_cast<uint8_t *>(thunk_datas.data()),
                         sizeof(IMAGE_THUNK_DATA64) * thunk_datas.size(),
                         offset)) {
             error_code = mmap.err_code();
@@ -580,10 +581,10 @@ namespace YanLib::io {
         std::vector<std::string> result;
         for (const auto &entry : thunk_datas) {
             if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
-                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(
-                        reinterpret_cast<uint8_t*>(_dos_header) +
+                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
+                        reinterpret_cast<uint8_t *>(_dos_header) +
                         rva_to_foa(entry.u1.AddressOfData));
-                result.emplace_back(reinterpret_cast<char*>(&func_name->Name));
+                result.emplace_back(reinterpret_cast<char *>(&func_name->Name));
             }
             else {
                 result.emplace_back();
@@ -600,13 +601,13 @@ namespace YanLib::io {
         std::vector<ImportTableFuncName> result;
         for (const auto &entry : thunk_datas) {
             if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
-                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(
-                        reinterpret_cast<uint8_t*>(_dos_header) +
+                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
+                        reinterpret_cast<uint8_t *>(_dos_header) +
                         rva_to_foa(entry.u1.AddressOfData));
                 ImportTableFuncName temp_func_name = {};
                 temp_func_name.hint = func_name->Hint;
                 temp_func_name.name.append(
-                        reinterpret_cast<char*>(&func_name->Name));
+                        reinterpret_cast<char *>(&func_name->Name));
                 result.push_back(temp_func_name);
             }
             else {
@@ -626,12 +627,12 @@ namespace YanLib::io {
         int32_t is_all_ordinals = 0;
         for (int32_t i = 0; i < thunk_datas.size(); i++) {
             if (!(thunk_datas[i].u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
-                auto func_name_addr = reinterpret_cast<IMAGE_IMPORT_BY_NAME*>(
-                        reinterpret_cast<uint8_t*>(_dos_header) +
+                auto func_name_addr = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
+                        reinterpret_cast<uint8_t *>(_dos_header) +
                         rva_to_foa(thunk_datas[i].u1.AddressOfData));
                 func_name_addr->Hint = func_name[i].hint;
                 auto len = strlen(
-                        reinterpret_cast<char*>(&(func_name_addr->Name)));
+                        reinterpret_cast<char *>(&(func_name_addr->Name)));
                 memset(&(func_name_addr->Name), 0, len);
                 memcpy_s(&(func_name_addr->Name), func_name[i].name.size(),
                          func_name[i].name.data(), func_name[i].name.size());
@@ -720,13 +721,13 @@ namespace YanLib::io {
         std::vector<std::string> result;
         for (const auto &entry : forwarder_chain) {
             size_t offset = rva_to_foa(entry.second);
-            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64*>(
-                    reinterpret_cast<uint8_t*>(_dos_header) + offset);
+            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                    reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (entry.first != static_cast<uint32_t>(-1)) {
                 auto target_thunk_data = original_thunk_data[entry.first];
                 auto forwarder_string =
-                        reinterpret_cast<char*>(
-                                reinterpret_cast<uint8_t*>(_dos_header)) +
+                        reinterpret_cast<char *>(
+                                reinterpret_cast<uint8_t *>(_dos_header)) +
                         rva_to_foa(target_thunk_data.u1.ForwarderString);
                 result.emplace_back(forwarder_string);
             }
@@ -746,8 +747,8 @@ namespace YanLib::io {
         std::vector<uint64_t> result;
         for (const auto &entry : forwarder_chain) {
             size_t offset = rva_to_foa(entry.second);
-            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64*>(
-                    reinterpret_cast<uint8_t*>(_dos_header) + offset);
+            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                    reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (entry.first != static_cast<uint32_t>(-1)) {
                 auto target_thunk_data = original_thunk_data[entry.first];
                 result.push_back(target_thunk_data.u1.ForwarderString);
@@ -770,8 +771,8 @@ namespace YanLib::io {
         int32_t is_no_forward = 0;
         for (int32_t i = 0; i < forwarder_chain.size(); i++) {
             size_t offset = rva_to_foa(forwarder_chain[i].second);
-            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64*>(
-                    reinterpret_cast<uint8_t*>(_dos_header) + offset);
+            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                    reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (forwarder_chain[i].first != static_cast<uint32_t>(-1)) {
                 auto target_thunk_data =
                         original_thunk_data[forwarder_chain[i].first];
@@ -800,15 +801,15 @@ namespace YanLib::io {
         if (offset == 0) {
             return {};
         }
-        auto relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
-                reinterpret_cast<uint8_t*>(_dos_header) + offset);
+        auto relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
         std::vector<RelocationTable> result;
         while (relocation_table->VirtualAddress) {
             RelocationTable relocation = {};
             relocation.virtual_address = relocation_table->VirtualAddress;
             relocation.size_of_block = relocation_table->SizeOfBlock;
-            auto item_addr = reinterpret_cast<uint16_t*>(
-                    reinterpret_cast<uint8_t*>(relocation_table) +
+            auto item_addr = reinterpret_cast<uint16_t *>(
+                    reinterpret_cast<uint8_t *>(relocation_table) +
                     sizeof(IMAGE_BASE_RELOCATION));
             auto item_count = (relocation_table->SizeOfBlock -
                                sizeof(IMAGE_BASE_RELOCATION)) /
@@ -818,8 +819,8 @@ namespace YanLib::io {
             memcpy_s(relocation.items.data(), sizeof(uint16_t) * item_count,
                      item_addr, sizeof(uint16_t) * item_count);
             result.push_back(relocation);
-            relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
-                    reinterpret_cast<uint8_t*>(relocation_table) +
+            relocation_table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
+                    reinterpret_cast<uint8_t *>(relocation_table) +
                     relocation_table->SizeOfBlock);
         }
         return result;
@@ -838,11 +839,11 @@ namespace YanLib::io {
         if (offset == 0) {
             return false;
         }
-        auto table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
-                reinterpret_cast<uint8_t*>(_dos_header) + offset);
+        auto table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
+                reinterpret_cast<uint8_t *>(_dos_header) + offset);
         for (const auto &entry : relocation_table) {
-            auto item_addr = reinterpret_cast<uint16_t*>(
-                    reinterpret_cast<uint8_t*>(table) +
+            auto item_addr = reinterpret_cast<uint16_t *>(
+                    reinterpret_cast<uint8_t *>(table) +
                     sizeof(IMAGE_BASE_RELOCATION));
             auto item_count =
                     (table->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) /
@@ -851,8 +852,8 @@ namespace YanLib::io {
                      entry.items.data(), sizeof(uint16_t) * item_count);
             table->VirtualAddress = entry.virtual_address;
             table->SizeOfBlock = entry.size_of_block;
-            table = reinterpret_cast<IMAGE_BASE_RELOCATION*>(
-                    reinterpret_cast<uint8_t*>(table) + table->SizeOfBlock);
+            table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
+                    reinterpret_cast<uint8_t *>(table) + table->SizeOfBlock);
         }
         return true;
     }

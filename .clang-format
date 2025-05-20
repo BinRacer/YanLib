@@ -76,7 +76,7 @@ NamespaceIndentation: All
 PackConstructorInitializers: BinPack
 PenaltyBreakBeforeFirstCallParameter: 200
 PenaltyExcessCharacter: 1000
-PointerAlignment: Left
+PointerAlignment: Right
 ReferenceAlignment: Right
 SortIncludes: Never
 SpaceAfterCStyleCast: false

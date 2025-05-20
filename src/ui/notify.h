@@ -26,27 +26,27 @@ namespace YanLib::ui {
         ~notify() = default;
 
         HDEVNOTIFY register_device(HWND window_handle,
-                                   void* notify_filter,
+                                   void *notify_filter,
                                    bool notify_all = true);
 
         HDEVNOTIFY register_device(HANDLE service_handle,
-                                   void* notify_filter,
+                                   void *notify_filter,
                                    bool notify_all = true);
 
         bool unregister_device(HDEVNOTIFY device_notify_handle);
 
         HPOWERNOTIFY register_power_setting(HWND window_handle,
-                                            const GUID* guid);
+                                            const GUID *guid);
 
         HPOWERNOTIFY register_power_setting(HANDLE service_handle,
-                                            const GUID* guid);
+                                            const GUID *guid);
 
         bool unregister_power_setting(HPOWERNOTIFY power_notify_handle);
 
         HPOWERNOTIFY register_suspend_resume(HWND window_handle);
 
         HPOWERNOTIFY
-        register_suspend_resume(DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS* subscribe);
+        register_suspend_resume(DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS *subscribe);
 
         bool unregister_suspend_resume(HPOWERNOTIFY power_notify_handle);
 

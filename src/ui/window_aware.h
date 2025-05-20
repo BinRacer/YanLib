@@ -44,7 +44,7 @@ namespace YanLib::ui {
         bool set_proc_dpi_context(DPI_AWARENESS_CONTEXT value);
 
         HRESULT get_proc_dpi_aware(HANDLE proc_handle,
-                                   PROCESS_DPI_AWARENESS* dpi_aware);
+                                   PROCESS_DPI_AWARENESS *dpi_aware);
 
         HRESULT set_proc_dpi_aware(PROCESS_DPI_AWARENESS dpi_aware);
 

@@ -31,7 +31,7 @@ namespace YanLib::ui {
         return menu_handle;
     }
 
-    HMENU menu::load(HINSTANCE instance_handle, const char* menu_name) {
+    HMENU menu::load(HINSTANCE instance_handle, const char *menu_name) {
         HMENU menu_handle = LoadMenuA(instance_handle, menu_name);
         if (!menu_handle) {
             error_code = GetLastError();
@@ -43,7 +43,7 @@ namespace YanLib::ui {
         return menu_handle;
     }
 
-    HMENU menu::load(HINSTANCE instance_handle, const wchar_t* menu_name) {
+    HMENU menu::load(HINSTANCE instance_handle, const wchar_t *menu_name) {
         HMENU menu_handle = LoadMenuW(instance_handle, menu_name);
         if (!menu_handle) {
             error_code = GetLastError();
@@ -66,10 +66,10 @@ namespace YanLib::ui {
             size += (menu_template.text.size() * sizeof(wchar_t));
         }
         std::vector<uint8_t> buffer(size, '\0');
-        auto header = reinterpret_cast<MENUITEMTEMPLATEHEADER*>(buffer.data());
+        auto header = reinterpret_cast<MENUITEMTEMPLATEHEADER *>(buffer.data());
         header->versionNumber = 0;
         header->offset = 0;
-        auto menu_item = reinterpret_cast<MENUITEMTEMPLATE*>(
+        auto menu_item = reinterpret_cast<MENUITEMTEMPLATE *>(
                 buffer.data() + sizeof(MENUITEMTEMPLATEHEADER));
         for (const auto &menu_template : menu_templates) {
             menu_item->mtOption = menu_template.option;
@@ -78,8 +78,8 @@ namespace YanLib::ui {
                      menu_template.text.size() * sizeof(wchar_t),
                      menu_template.text.data(),
                      menu_template.text.size() * sizeof(wchar_t));
-            menu_item = reinterpret_cast<MENUITEMTEMPLATE*>(
-                    reinterpret_cast<uint8_t*>(menu_item->mtString) +
+            menu_item = reinterpret_cast<MENUITEMTEMPLATE *>(
+                    reinterpret_cast<uint8_t *>(menu_item->mtString) +
                     (menu_template.text.size() + 1) * sizeof(wchar_t));
         }
         HMENU menu_handle = LoadMenuIndirectW(buffer.data());
@@ -119,11 +119,11 @@ namespace YanLib::ui {
             size += (menu_template.text.size() * sizeof(wchar_t));
         }
         std::vector<uint8_t> buffer(size, '\0');
-        auto header = reinterpret_cast<MenuTemplateHeader*>(buffer.data());
+        auto header = reinterpret_cast<MenuTemplateHeader *>(buffer.data());
         header->dwVersion = 1;
         header->dwOffset = 4;
         header->dwHelpId = help_id;
-        auto menu_item = reinterpret_cast<MenuTemplateItem*>(
+        auto menu_item = reinterpret_cast<MenuTemplateItem *>(
                 buffer.data() + sizeof(MenuTemplateHeader));
         for (const auto &menu_template : menu_templates) {
             menu_item->dwType = menu_template.type;
@@ -134,8 +134,8 @@ namespace YanLib::ui {
                      menu_template.text.size() * sizeof(wchar_t),
                      menu_template.text.data(),
                      menu_template.text.size() * sizeof(wchar_t));
-            menu_item = reinterpret_cast<MenuTemplateItem*>(
-                    reinterpret_cast<uint8_t*>(menu_item->mtString) +
+            menu_item = reinterpret_cast<MenuTemplateItem *>(
+                    reinterpret_cast<uint8_t *>(menu_item->mtString) +
                     (menu_template.text.size() + 1) * sizeof(wchar_t));
         }
         HMENU menu_handle = LoadMenuIndirectW(buffer.data());
@@ -150,8 +150,8 @@ namespace YanLib::ui {
     }
 
     bool menu::append(HMENU menu_handle,
-                      UINT_PTR item_id,
-                      const char* item_text,
+                      uintptr_t item_id,
+                      const char *item_text,
                       MenuFlag flag) {
         if (!AppendMenuA(menu_handle, static_cast<uint32_t>(flag), item_id,
                          item_text)) {
@@ -162,8 +162,8 @@ namespace YanLib::ui {
     }
 
     bool menu::append(HMENU menu_handle,
-                      UINT_PTR item_id,
-                      const wchar_t* item_text,
+                      uintptr_t item_id,
+                      const wchar_t *item_text,
                       MenuFlag flag) {
         if (!AppendMenuW(menu_handle, static_cast<uint32_t>(flag), item_id,
                          item_text)) {
@@ -175,8 +175,8 @@ namespace YanLib::ui {
 
     bool menu::insert(HMENU menu_handle,
                       uint32_t pos,
-                      UINT_PTR item_id,
-                      const char* item_text,
+                      uintptr_t item_id,
+                      const char *item_text,
                       MenuFlag flag) {
         if (!InsertMenuA(menu_handle, pos, static_cast<uint32_t>(flag), item_id,
                          item_text)) {
@@ -188,8 +188,8 @@ namespace YanLib::ui {
 
     bool menu::insert(HMENU menu_handle,
                       uint32_t pos,
-                      UINT_PTR item_id,
-                      const wchar_t* item_text,
+                      uintptr_t item_id,
+                      const wchar_t *item_text,
                       MenuFlag flag) {
         if (!InsertMenuW(menu_handle, pos, static_cast<uint32_t>(flag), item_id,
                          item_text)) {
@@ -255,8 +255,8 @@ namespace YanLib::ui {
 
     bool menu::modify(HMENU menu_handle,
                       uint32_t pos,
-                      UINT_PTR item_id,
-                      const char* item_text,
+                      uintptr_t item_id,
+                      const char *item_text,
                       MenuFlag flag) {
         if (!ModifyMenuA(menu_handle, pos, static_cast<uint32_t>(flag), item_id,
                          item_text)) {
@@ -268,8 +268,8 @@ namespace YanLib::ui {
 
     bool menu::modify(HMENU menu_handle,
                       uint32_t pos,
-                      UINT_PTR item_id,
-                      const wchar_t* item_text,
+                      uintptr_t item_id,
+                      const wchar_t *item_text,
                       MenuFlag flag) {
         if (!ModifyMenuW(menu_handle, pos, static_cast<uint32_t>(flag), item_id,
                          item_text)) {
@@ -301,7 +301,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool menu::get_info(HMENU menu_handle, MENUINFO* memu_info) {
+    bool menu::get_info(HMENU menu_handle, MENUINFO *memu_info) {
         if (!GetMenuInfo(menu_handle, memu_info)) {
             error_code = GetLastError();
             return false;
@@ -309,7 +309,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool menu::set_info(HMENU menu_handle, const MENUINFO* memu_info) {
+    bool menu::set_info(HMENU menu_handle, const MENUINFO *memu_info) {
         if (!SetMenuInfo(menu_handle, memu_info)) {
             error_code = GetLastError();
             return false;
@@ -319,7 +319,7 @@ namespace YanLib::ui {
 
     bool menu::get_bar_info(HWND window_handle,
                             int32_t item_id,
-                            MENUBARINFO* menu_bar_info,
+                            MENUBARINFO *menu_bar_info,
                             ObjectID flag) {
         if (!GetMenuBarInfo(window_handle, static_cast<int32_t>(flag), item_id,
                             menu_bar_info)) {
@@ -381,7 +381,7 @@ namespace YanLib::ui {
 
     bool menu::insert_item(HMENU menu_handle,
                            uint32_t pos,
-                           const MENUITEMINFOA* menu_item_info,
+                           const MENUITEMINFOA *menu_item_info,
                            bool is_pos) {
         if (!InsertMenuItemA(menu_handle, pos, is_pos ? TRUE : FALSE,
                              menu_item_info)) {
@@ -393,7 +393,7 @@ namespace YanLib::ui {
 
     bool menu::insert_item(HMENU menu_handle,
                            uint32_t pos,
-                           const MENUITEMINFOW* menu_item_info,
+                           const MENUITEMINFOW *menu_item_info,
                            bool is_pos) {
         if (!InsertMenuItemW(menu_handle, pos, is_pos ? TRUE : FALSE,
                              menu_item_info)) {
@@ -405,7 +405,7 @@ namespace YanLib::ui {
 
     bool menu::get_item_info(HMENU menu_handle,
                              uint32_t pos,
-                             MENUITEMINFOA* menu_item_info,
+                             MENUITEMINFOA *menu_item_info,
                              bool is_pos) {
         if (!GetMenuItemInfoA(menu_handle, pos, is_pos ? TRUE : FALSE,
                               menu_item_info)) {
@@ -417,7 +417,7 @@ namespace YanLib::ui {
 
     bool menu::get_item_info(HMENU menu_handle,
                              uint32_t pos,
-                             MENUITEMINFOW* menu_item_info,
+                             MENUITEMINFOW *menu_item_info,
                              bool is_pos) {
         if (!GetMenuItemInfoW(menu_handle, pos, is_pos ? TRUE : FALSE,
                               menu_item_info)) {
@@ -429,7 +429,7 @@ namespace YanLib::ui {
 
     bool menu::set_item_info(HMENU menu_handle,
                              uint32_t pos,
-                             const MENUITEMINFOA* menu_item_info,
+                             const MENUITEMINFOA *menu_item_info,
                              bool is_pos) {
         if (!SetMenuItemInfoA(menu_handle, pos, is_pos ? TRUE : FALSE,
                               menu_item_info)) {
@@ -441,7 +441,7 @@ namespace YanLib::ui {
 
     bool menu::set_item_info(HMENU menu_handle,
                              uint32_t pos,
-                             const MENUITEMINFOW* menu_item_info,
+                             const MENUITEMINFOW *menu_item_info,
                              bool is_pos) {
         if (!SetMenuItemInfoW(menu_handle, pos, is_pos ? TRUE : FALSE,
                               menu_item_info)) {
@@ -496,7 +496,7 @@ namespace YanLib::ui {
     bool menu::get_item_rect(HWND window_handle,
                              HMENU menu_handle,
                              uint32_t pos,
-                             RECT* rect) {
+                             RECT *rect) {
         if (!GetMenuItemRect(window_handle, menu_handle, pos, rect)) {
             error_code = GetLastError();
             return false;
@@ -591,7 +591,7 @@ namespace YanLib::ui {
                            int32_t x,
                            int32_t y,
                            HWND window_handle,
-                           TPMPARAMS* tpm_params,
+                           TPMPARAMS *tpm_params,
                            TrackPopup flag) {
         if (!TrackPopupMenuEx(menu_handle, static_cast<uint32_t>(flag), x, y,
                               window_handle, tpm_params)) {

@@ -21,8 +21,8 @@ namespace YanLib::ui {
                            int32_t y_hotspot,
                            int32_t width,
                            int32_t height,
-                           const void* and_plane,
-                           const void* xor_plane) {
+                           const void *and_plane,
+                           const void *xor_plane) {
         HCURSOR result = CreateCursor(instance_handle, x_hotspot, y_hotspot,
                                       width, height, and_plane, xor_plane);
         if (!result) {
@@ -35,7 +35,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HCURSOR cursor::load(HINSTANCE instance_handle, const char* cursor_name) {
+    HCURSOR cursor::load(HINSTANCE instance_handle, const char *cursor_name) {
         HCURSOR result = LoadCursorA(instance_handle, cursor_name);
         if (!result) {
             error_code = GetLastError();
@@ -44,7 +44,7 @@ namespace YanLib::ui {
     }
 
     HCURSOR cursor::load(HINSTANCE instance_handle,
-                         const wchar_t* cursor_name) {
+                         const wchar_t *cursor_name) {
         HCURSOR result = LoadCursorW(instance_handle, cursor_name);
         if (!result) {
             error_code = GetLastError();
@@ -52,7 +52,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HCURSOR cursor::load(const char* file_name) {
+    HCURSOR cursor::load(const char *file_name) {
         HCURSOR result = LoadCursorFromFileA(file_name);
         if (!result) {
             error_code = GetLastError();
@@ -60,7 +60,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HCURSOR cursor::load(const wchar_t* file_name) {
+    HCURSOR cursor::load(const wchar_t *file_name) {
         HCURSOR result = LoadCursorFromFileW(file_name);
         if (!result) {
             error_code = GetLastError();
@@ -68,7 +68,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool cursor::clip(const RECT* rect) {
+    bool cursor::clip(const RECT *rect) {
         if (!ClipCursor(rect)) {
             error_code = GetLastError();
             return false;
@@ -96,7 +96,7 @@ namespace YanLib::ui {
         return SetCursor(cursor_handle);
     }
 
-    bool cursor::get_info(CURSORINFO* cursor_info) {
+    bool cursor::get_info(CURSORINFO *cursor_info) {
         if (!GetCursorInfo(cursor_info)) {
             error_code = GetLastError();
             return false;
@@ -104,7 +104,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_pos(POINT* point) {
+    bool cursor::get_pos(POINT *point) {
         if (!GetCursorPos(point)) {
             error_code = GetLastError();
             return false;
@@ -120,7 +120,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_clip(RECT* rect) {
+    bool cursor::get_clip(RECT *rect) {
         if (!GetClipCursor(rect)) {
             error_code = GetLastError();
             return false;
@@ -128,7 +128,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_physical_pos(POINT* point) {
+    bool cursor::get_physical_pos(POINT *point) {
         if (!GetPhysicalCursorPos(point)) {
             error_code = GetLastError();
             return false;
@@ -144,7 +144,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool cursor::get_pointer_id(uint32_t pointer_id, uint32_t* cursor_id) {
+    bool cursor::get_pointer_id(uint32_t pointer_id, uint32_t *cursor_id) {
         if (!GetPointerCursorId(pointer_id, cursor_id)) {
             error_code = GetLastError();
             return false;
@@ -153,7 +153,7 @@ namespace YanLib::ui {
     }
 
     bool cursor::get_pointer_device(HANDLE device_handle,
-                                    uint32_t* cursor_count,
+                                    uint32_t *cursor_count,
                                     POINTER_DEVICE_CURSOR_INFO cursor[]) {
         if (!GetPointerDeviceCursors(device_handle, cursor_count, cursor)) {
             error_code = GetLastError();

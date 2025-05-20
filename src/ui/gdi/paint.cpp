@@ -5,24 +5,28 @@
 #include "paint.h"
 
 namespace YanLib::ui::gdi {
-    HDC paint::begin_paint(HWND window_handle, PAINTSTRUCT* paint_struct) {
+    HDC paint::begin(HWND window_handle, PAINTSTRUCT *paint_struct) {
         return BeginPaint(window_handle, paint_struct);
     }
 
-    bool paint::end_paint(HWND window_handle, const PAINTSTRUCT* paint_struct) {
+    bool paint::end(HWND window_handle, const PAINTSTRUCT *paint_struct) {
         return EndPaint(window_handle, paint_struct);
     }
 
     bool paint::draw_caption(HWND window_handle,
                              HDC dc_handle,
-                             const RECT* rect,
-                             uint32_t flag) {
-        return DrawCaption(window_handle, dc_handle, rect, flag);
+                             const RECT *rect,
+                             DrawOption option) {
+        return DrawCaption(window_handle, dc_handle, rect,
+                           static_cast<uint32_t>(option));
     }
 
-    bool
-    paint::draw_edge(HDC dc_handle, RECT* rect, uint32_t edge, uint32_t flag) {
-        return DrawEdge(dc_handle, rect, edge, flag);
+    bool paint::draw_edge(HDC dc_handle,
+                          RECT *rect,
+                          BorderStyle border,
+                          BorderFlag flag) {
+        return DrawEdge(dc_handle, rect, static_cast<uint32_t>(border),
+                        static_cast<uint32_t>(flag));
     }
 
     bool paint::draw_state(HDC dc_handle,
@@ -34,23 +38,25 @@ namespace YanLib::ui::gdi {
                            int32_t y,
                            int32_t width,
                            int32_t height,
-                           uint32_t flag) {
+                           ImageTypeState flag) {
         return DrawStateW(dc_handle, brush_handle, draw_state_proc, lparam,
-                          wparam, x, y, width, height, flag);
+                          wparam, x, y, width, height,
+                          static_cast<uint32_t>(flag));
     }
 
     bool paint::draw_frame_control(HDC hdc,
-                                   RECT* rect,
-                                   uint32_t type,
-                                   uint32_t state) {
-        return DrawFrameControl(hdc, rect, type, state);
+                                   RECT *rect,
+                                   FrameType type,
+                                   FrameState state) {
+        return DrawFrameControl(hdc, rect, static_cast<uint32_t>(type),
+                                static_cast<uint32_t>(state));
     }
 
-    uint32_t paint::gdi_get_batch_limit() {
+    uint32_t paint::get_gdi_batch_limit() {
         return GdiGetBatchLimit();
     }
 
-    uint32_t paint::gdi_set_batch_limit(uint32_t limit) {
+    uint32_t paint::set_gdi_batch_limit(uint32_t limit) {
         return GdiSetBatchLimit(limit);
     }
 
@@ -62,33 +68,36 @@ namespace YanLib::ui::gdi {
         return SetBkColor(dc_handle, color);
     }
 
-    int32_t paint::get_background_mode(HDC dc_handle) {
-        return GetBkMode(dc_handle);
+    BackGroundMode paint::get_background_mode(HDC dc_handle) {
+        return static_cast<BackGroundMode>(GetBkMode(dc_handle));
     }
 
-    int32_t paint::set_background_mode(HDC dc_handle, int32_t mode) {
-        return SetBkMode(dc_handle, mode);
+    BackGroundMode paint::set_background_mode(HDC dc_handle,
+                                              BackGroundMode mode) {
+        return static_cast<BackGroundMode>(
+                SetBkMode(dc_handle, static_cast<int32_t>(mode)));
     }
 
-    int32_t paint::get_rop2(HDC dc_handle) {
-        return GetROP2(dc_handle);
+    BinaryRasterCode paint::get_rop2(HDC dc_handle) {
+        return static_cast<BinaryRasterCode>(GetROP2(dc_handle));
     }
 
-    int32_t paint::set_rop2(HDC dc_handle, int32_t mode) {
-        return SetROP2(dc_handle, mode);
+    BinaryRasterCode paint::set_rop2(HDC dc_handle, BinaryRasterCode mode) {
+        return static_cast<BinaryRasterCode>(
+                SetROP2(dc_handle, static_cast<int32_t>(mode)));
     }
 
     bool paint::gray_string(HDC dc_handle,
                             HBRUSH brush_handle,
                             GRAYSTRINGPROC gray_string_proc,
                             LPARAM lparam,
-                            int32_t cch_size,
+                            int32_t char_num,
                             int32_t x,
                             int32_t y,
                             int32_t width,
                             int32_t height) {
         return GrayStringW(dc_handle, brush_handle, gray_string_proc, lparam,
-                           cch_size, x, y, width, height);
+                           char_num, x, y, width, height);
     }
 
     std::pair<int32_t, uint32_t> paint::load_string(HINSTANCE instance_handle,

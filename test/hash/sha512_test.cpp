@@ -53,7 +53,7 @@ protected:
     std::vector<uint8_t> data_vec{};
     std::string ciphertext_str{};
     std::vector<uint8_t> ciphertext_vec{};
-    const wchar_t* zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
+    const wchar_t *zlib = L"..\\..\\test\\testdata\\zlibd1_64.dll";
     std::string zlib_str{};
     std::vector<uint8_t> zlib_vec{};
 };

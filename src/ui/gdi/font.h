@@ -8,6 +8,154 @@
 #include <Windows.h>
 
 namespace YanLib::ui::gdi {
+#ifndef CHARSET
+#define CHARSET
+
+    enum class Charset : uint32_t {
+        ANSI = ANSI_CHARSET,
+        DEFAULT = DEFAULT_CHARSET,
+        SYMBOL = SYMBOL_CHARSET,
+        SHIFTJIS = SHIFTJIS_CHARSET,
+        HANGEUL = HANGEUL_CHARSET,
+        HANGUL = HANGUL_CHARSET,
+        GB2312 = GB2312_CHARSET,
+        CHINESEBIG5 = CHINESEBIG5_CHARSET,
+        OEM = OEM_CHARSET,
+        JOHAB = JOHAB_CHARSET,
+        HEBREW = HEBREW_CHARSET,
+        ARABIC = ARABIC_CHARSET,
+        GREEK = GREEK_CHARSET,
+        TURKISH = TURKISH_CHARSET,
+        VIETNAMESE = VIETNAMESE_CHARSET,
+        THAI = THAI_CHARSET,
+        EASTEUROPE = EASTEUROPE_CHARSET,
+        RUSSIAN = RUSSIAN_CHARSET,
+        MAC = MAC_CHARSET,
+        BALTIC = BALTIC_CHARSET,
+    };
+#endif
+#ifndef FONTWEIGHT
+#define FONTWEIGHT
+
+    enum class FontWeight : int32_t {
+        DontCare = FW_DONTCARE,
+        Thin = FW_THIN,
+        ExtraLight = FW_EXTRALIGHT,
+        Light = FW_LIGHT,
+        Normal = FW_NORMAL,
+        Medium = FW_MEDIUM,
+        SemiBold = FW_SEMIBOLD,
+        Bold = FW_BOLD,
+        ExtraBold = FW_EXTRABOLD,
+        Heavy = FW_HEAVY,
+        UltraLight = FW_ULTRALIGHT,
+        Regular = FW_REGULAR,
+        DemiBold = FW_DEMIBOLD,
+        UltraBold = FW_ULTRABOLD,
+        Black = FW_BLACK,
+    };
+#endif
+#ifndef FONTOUTPRECISION
+#define FONTOUTPRECISION
+
+    enum class FontOutPrecision : uint32_t {
+        Default = OUT_DEFAULT_PRECIS,
+        String = OUT_STRING_PRECIS,
+        Character = OUT_CHARACTER_PRECIS,
+        Stroke = OUT_STROKE_PRECIS,
+        TrueType = OUT_TT_PRECIS,
+        Device = OUT_DEVICE_PRECIS,
+        Raster = OUT_RASTER_PRECIS,
+        TrueTypeOnly = OUT_TT_ONLY_PRECIS,
+        Outline = OUT_OUTLINE_PRECIS,
+        ScreenOutline = OUT_SCREEN_OUTLINE_PRECIS,
+        PostScriptOnly = OUT_PS_ONLY_PRECIS,
+    };
+#endif
+#ifndef FONTCLIPPRECISION
+#define FONTCLIPPRECISION
+
+    enum class FontClipPrecision : uint32_t {
+        Default = CLIP_DEFAULT_PRECIS,
+        Character = CLIP_CHARACTER_PRECIS,
+        Stroke = CLIP_STROKE_PRECIS,
+        Mask = CLIP_MASK,
+        LHAngles = CLIP_LH_ANGLES,
+        TrueTypeAlways = CLIP_TT_ALWAYS,
+        DFADisable = CLIP_DFA_DISABLE,
+        Embedded = CLIP_EMBEDDED,
+    };
+#endif
+#ifndef FONTQUALITY
+#define FONTQUALITY
+
+    enum class FontQuality : uint32_t {
+        Default = DEFAULT_QUALITY,
+        Draft = DRAFT_QUALITY,
+        Proof = PROOF_QUALITY,
+        NonAntiAliased = NONANTIALIASED_QUALITY,
+        AntiAliased = ANTIALIASED_QUALITY,
+        ClearType = CLEARTYPE_QUALITY,
+        ClearTypeNatural = CLEARTYPE_NATURAL_QUALITY,
+    };
+#endif
+#ifndef FONTPITCH
+#define FONTPITCH
+
+    enum class FontPitch : uint32_t {
+        Default = DEFAULT_PITCH,
+        Fixed = FIXED_PITCH,
+        Variable = VARIABLE_PITCH,
+    };
+#endif
+#ifndef FONTFAMILY
+#define FONTFAMILY
+
+    enum class FontFamily : uint32_t {
+        DontCare = FF_DONTCARE,
+        Roman = FF_ROMAN,
+        Swiss = FF_SWISS,
+        Modern = FF_MODERN,
+        Script = FF_SCRIPT,
+        Decorative = FF_DECORATIVE,
+    };
+#endif
+#ifndef FONTTYPE
+#define FONTTYPE
+    enum class FontType : uint32_t {
+        Private = FR_PRIVATE,
+        NotEnum = FR_NOT_ENUM,
+    };
+#endif
+#ifndef LANGINFO
+#define LANGINFO
+    enum class LangInfo : uint32_t {
+        DBCS = GCP_DBCS,
+        ReOrder = GCP_REORDER,
+        UseKerning = GCP_USEKERNING,
+        GlyphShape = GCP_GLYPHSHAPE,
+        Ligate = GCP_LIGATE,
+        Diacritic = GCP_DIACRITIC,
+        Kashida = GCP_KASHIDA,
+        Error = GCP_ERROR,
+        Mask = FLI_MASK,
+        Justify = GCP_JUSTIFY,
+        Glyphs = FLI_GLYPHS,
+        ClassIn = GCP_CLASSIN,
+        MaxExtent = GCP_MAXEXTENT,
+        JustifyIn = GCP_JUSTIFYIN,
+        DisplayZWG = GCP_DISPLAYZWG,
+        SymSwapOff = GCP_SYMSWAPOFF,
+        NumericOverride = GCP_NUMERICOVERRIDE,
+        NeutralOverride = GCP_NEUTRALOVERRIDE,
+        NumericsLatin = GCP_NUMERICSLATIN,
+        NumericsLocal = GCP_NUMERICSLOCAL,
+    };
+    inline LangInfo operator|(LangInfo a, LangInfo b) {
+        return static_cast<LangInfo>(static_cast<uint32_t>(a) |
+                                     static_cast<uint32_t>(b));
+    }
+#endif
     class font {
     public:
         font(const font &other) = delete;
@@ -22,122 +170,125 @@ namespace YanLib::ui::gdi {
 
         ~font() = default;
 
-        static HFONT create_font(const char* face_name, /* "宋体" */
-                                 uint32_t charset = GB2312_CHARSET,
-                                 int32_t height = 12,
-                                 int32_t width = 0,
-                                 int32_t escapement = 0,
-                                 int32_t orientation = 0,
-                                 int32_t weight = 0,
-                                 bool is_italic = false,
-                                 bool is_underline = false,
-                                 bool is_strike_out = false,
-                                 uint32_t out_precision = 0,
-                                 uint32_t clip_precision = 0,
-                                 uint32_t quality = 0,
-                                 uint32_t pitch_and_family = 0);
+        static HFONT create(const char *face_name /* "宋体" */,
+                            Charset charset = Charset::GB2312,
+                            int32_t height = 12,
+                            int32_t width = 0,
+                            int32_t escapement = 0,
+                            int32_t orientation = 0,
+                            FontWeight weight = FontWeight::DontCare,
+                            bool is_italic = false,
+                            bool is_underline = false,
+                            bool is_strike_out = false,
+                            FontOutPrecision output = FontOutPrecision::Default,
+                            FontClipPrecision clip = FontClipPrecision::Default,
+                            FontQuality quality = FontQuality::Default,
+                            FontPitch pitch = FontPitch::Default,
+                            FontFamily family = FontFamily::DontCare);
 
-        static HFONT create_font(const wchar_t* face_name, /* L"宋体" */
-                                 uint32_t charset = GB2312_CHARSET,
-                                 int32_t height = 12,
-                                 int32_t width = 0,
-                                 int32_t escapement = 0,
-                                 int32_t orientation = 0,
-                                 int32_t weight = 0,
-                                 bool is_italic = false,
-                                 bool is_underline = false,
-                                 bool is_strike_out = false,
-                                 uint32_t out_precision = 0,
-                                 uint32_t clip_precision = 0,
-                                 uint32_t quality = 0,
-                                 uint32_t pitch_and_family = 0);
+        static HFONT create(const wchar_t *face_name /* L"宋体" */,
+                            Charset charset = Charset::GB2312,
+                            int32_t height = 12,
+                            int32_t width = 0,
+                            int32_t escapement = 0,
+                            int32_t orientation = 0,
+                            FontWeight weight = FontWeight::DontCare,
+                            bool is_italic = false,
+                            bool is_underline = false,
+                            bool is_strike_out = false,
+                            FontOutPrecision output = FontOutPrecision::Default,
+                            FontClipPrecision clip = FontClipPrecision::Default,
+                            FontQuality quality = FontQuality::Default,
+                            FontPitch pitch = FontPitch::Default,
+                            FontFamily family = FontFamily::DontCare);
 
-        static HFONT create_font_indirect(const LOGFONTA* log_font);
+        static HFONT create(const LOGFONTA *log_font);
 
-        static HFONT create_font_indirect(const LOGFONTW* log_font);
+        static HFONT create(const LOGFONTW *log_font);
 
-        static LOGFONTA make_log_font(const char* face_name, /* "宋体" */
-                                      uint8_t char_set = GB2312_CHARSET,
-                                      int32_t height = 12,
-                                      int32_t width = 0,
-                                      int32_t escapement = 0,
-                                      int32_t orientation = 0,
-                                      int32_t weight = 0,
-                                      bool is_italic = false,
-                                      bool is_underline = false,
-                                      bool is_strike_out = false,
-                                      uint8_t out_precision = 0,
-                                      uint8_t clip_precision = 0,
-                                      uint8_t quality = 0,
-                                      uint8_t pitch_and_family = 0);
+        static LOGFONTA
+        make(const char *face_name /* "宋体" */,
+             Charset charset = Charset::GB2312,
+             int32_t height = 12,
+             int32_t width = 0,
+             int32_t escapement = 0,
+             int32_t orientation = 0,
+             FontWeight weight = FontWeight::DontCare,
+             bool is_italic = false,
+             bool is_underline = false,
+             bool is_strike_out = false,
+             FontOutPrecision output = FontOutPrecision::Default,
+             FontClipPrecision clip = FontClipPrecision::Default,
+             FontQuality quality = FontQuality::Default,
+             FontPitch pitch = FontPitch::Default,
+             FontFamily family = FontFamily::DontCare);
 
-        static LOGFONTW make_log_font(const wchar_t* face_name, /* L"宋体" */
-                                      uint8_t char_set = GB2312_CHARSET,
-                                      int32_t height = 12,
-                                      int32_t width = 0,
-                                      int32_t escapement = 0,
-                                      int32_t orientation = 0,
-                                      int32_t weight = 0,
-                                      bool is_italic = false,
-                                      bool is_underline = false,
-                                      bool is_strike_out = false,
-                                      uint8_t out_precision = 0,
-                                      uint8_t clip_precision = 0,
-                                      uint8_t quality = 0,
-                                      uint8_t pitch_and_family = 0);
+        static LOGFONTW
+        make(const wchar_t *face_name /* L"宋体" */,
+             Charset charset = Charset::GB2312,
+             int32_t height = 12,
+             int32_t width = 0,
+             int32_t escapement = 0,
+             int32_t orientation = 0,
+             FontWeight weight = FontWeight::DontCare,
+             bool is_italic = false,
+             bool is_underline = false,
+             bool is_strike_out = false,
+             FontOutPrecision output = FontOutPrecision::Default,
+             FontClipPrecision clip = FontClipPrecision::Default,
+             FontQuality quality = FontQuality::Default,
+             FontPitch pitch = FontPitch::Default,
+             FontFamily family = FontFamily::DontCare);
 
-        static HFONT
-        create_font_indirect(const ENUMLOGFONTEXDVA* enum_log_font);
+        static HFONT create(const ENUMLOGFONTEXDVA *enum_log_font);
 
-        static HFONT
-        create_font_indirect(const ENUMLOGFONTEXDVW* enum_log_font);
+        static HFONT create(const ENUMLOGFONTEXDVW *enum_log_font);
 
-        static HANDLE add_font_mem_resource(void* file_view,
-                                            uint32_t size,
-                                            uint32_t* num_fonts);
+        static HANDLE add_mem_resource(void *file_view,
+                                       uint32_t file_view_size,
+                                       uint32_t *num_fonts);
 
-        static bool remove_font_mem_resource(HANDLE font_res_handle);
+        static bool remove_mem_resource(HANDLE font_res_handle);
 
-        static int32_t add_font_resource(const char* font_file_name);
+        static int32_t add_resource(const char *font_file_name);
 
-        static int32_t add_font_resource(const wchar_t* font_file_name);
+        static int32_t add_resource(const wchar_t *font_file_name);
 
-        static bool remove_font_resource(const char* font_file_name);
+        static bool remove_resource(const char *font_file_name);
 
-        static bool remove_font_resource(const wchar_t* font_file_name);
+        static bool remove_resource(const wchar_t *font_file_name);
 
-        static int32_t add_font_resource(const char* font_file_name,
-                                         uint32_t font_type);
+        static int32_t add_resource(const char *font_file_name,
+                                    FontType type /* FontType::NotEnum */);
 
-        static int32_t add_font_resource(const wchar_t* font_file_name,
-                                         uint32_t font_type);
+        static int32_t add_resource(const wchar_t *font_file_name,
+                                    FontType type /* FontType::NotEnum */);
 
-        static int32_t remove_font_resource(const char* font_file_name,
-                                            uint32_t font_type);
+        static int32_t remove_resource(const char *font_file_name,
+                                       FontType type /* FontType::NotEnum */);
 
-        static int32_t remove_font_resource(const wchar_t* font_file_name,
-                                            uint32_t font_type);
+        static int32_t remove_resource(const wchar_t *font_file_name,
+                                       FontType type /* FontType::NotEnum */);
 
-        static int32_t enum_font_families(HDC dc_handle,
-                                          LOGFONTA* log_font,
-                                          FONTENUMPROCA font_enum_proc,
-                                          LPARAM lparam);
+        static int32_t enum_families(HDC dc_handle,
+                                     LOGFONTA *log_font,
+                                     FONTENUMPROCA font_enum_proc,
+                                     LPARAM lparam);
 
-        static int32_t enum_font_families(HDC dc_handle,
-                                          LOGFONTW* log_font,
-                                          FONTENUMPROCW font_enum_proc,
-                                          LPARAM lparam);
+        static int32_t enum_families(HDC dc_handle,
+                                     LOGFONTW *log_font,
+                                     FONTENUMPROCW font_enum_proc,
+                                     LPARAM lparam);
 
-        static uint32_t get_font_data(HDC dc_handle,
-                                      uint32_t table,
-                                      uint32_t offset,
-                                      void* buf,
-                                      uint32_t size);
+        static uint32_t get_data(HDC dc_handle,
+                                 void *buf,
+                                 uint32_t size,
+                                 uint32_t table = 0x6E616D65 /* name table */,
+                                 uint32_t offset = 0);
 
-        static uint32_t get_font_language_info(HDC dc_handle);
+        static LangInfo get_language_info(HDC dc_handle);
 
-        static uint32_t get_font_unicode_ranges(HDC dc_handle,
-                                                GLYPHSET* glyph_set);
+        static uint32_t get_unicode_ranges(HDC dc_handle, GLYPHSET *glyph_set);
     };
 } // namespace YanLib::ui::gdi
 #endif // FONT_H

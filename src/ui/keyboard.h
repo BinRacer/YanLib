@@ -450,13 +450,13 @@ namespace YanLib::ui {
 
         int32_t get_layout_list(std::vector<HKL> &layout_handle);
 
-        bool get_layout_name(char* name);
+        bool get_layout_name(char *name);
 
-        bool get_layout_name(wchar_t* name);
+        bool get_layout_name(wchar_t *name);
 
-        bool get_state(uint8_t* key_state);
+        bool get_state(uint8_t *key_state);
 
-        bool set_state(uint8_t* key_state);
+        bool set_state(uint8_t *key_state);
 
         int32_t get_type(int32_t type_flag);
 
@@ -475,7 +475,7 @@ namespace YanLib::ui {
         void send_event(VirtualKey vk,
                         uint8_t scan = 0,
                         KeyEvent kv = KeyEvent::ExtendedKey | KeyEvent::KeyDown,
-                        ULONG_PTR extra_info = 0);
+                        uintptr_t extra_info = 0);
 
         uint32_t send_input(std::vector<INPUT> &input);
 
@@ -492,19 +492,19 @@ namespace YanLib::ui {
 
         uint32_t oem_key_scan(uint16_t oem_char);
 
-        bool vk_key_scan(char ch, ModKey6* mod_key, VirtualKey* vk);
+        bool vk_key_scan(char ch, ModKey6 *mod_key, VirtualKey *vk);
 
-        bool vk_key_scan(wchar_t ch, ModKey6* mod_key, VirtualKey* vk);
+        bool vk_key_scan(wchar_t ch, ModKey6 *mod_key, VirtualKey *vk);
 
         bool vk_key_scan(char ch,
                          HKL layout_handle,
-                         ModKey6* mod_key,
-                         VirtualKey* vk);
+                         ModKey6 *mod_key,
+                         VirtualKey *vk);
 
         bool vk_key_scan(wchar_t ch,
                          HKL layout_handle,
-                         ModKey6* mod_key,
-                         VirtualKey* vk);
+                         ModKey6 *mod_key,
+                         VirtualKey *vk);
 
         HWND get_focus();
 
@@ -512,29 +512,29 @@ namespace YanLib::ui {
 
         int32_t to_ascii(VirtualKey vk,
                          uint32_t scan_code,
-                         const uint8_t* key_state,
-                         uint8_t* ch1,
-                         uint8_t* ch2,
+                         const uint8_t *key_state,
+                         uint8_t *ch1,
+                         uint8_t *ch2,
                          bool menu_active = false);
 
         int32_t to_ascii(VirtualKey vk,
                          HKL layout_handle,
                          uint32_t scan_code,
-                         const uint8_t* key_state,
-                         uint8_t* ch1,
-                         uint8_t* ch2,
+                         const uint8_t *key_state,
+                         uint8_t *ch1,
+                         uint8_t *ch2,
                          bool menu_active = false);
 
         int32_t to_unicode(VirtualKey vk,
                            uint32_t scan_code,
-                           const uint8_t* key_state,
+                           const uint8_t *key_state,
                            std::wstring &buf,
                            bool menu_active = false);
 
         int32_t to_unicode(VirtualKey vk,
                            HKL layout_handle,
                            uint32_t scan_code,
-                           const uint8_t* key_state,
+                           const uint8_t *key_state,
                            std::wstring &buf,
                            bool menu_active = false);
 
@@ -551,36 +551,36 @@ namespace YanLib::ui {
         uint32_t wait_for_input_idle(HANDLE proc_handle,
                                      uint32_t milli_seconds);
 
-        LRESULT default_raw_input_proc(RAWINPUT** raw_input,
+        LRESULT default_raw_input_proc(RAWINPUT **raw_input,
                                        int32_t input,
                                        uint32_t header_size);
 
         uint16_t get_raw_input_code_wparam(WPARAM wparam);
 
-        uint32_t get_raw_input_buffer(RAWINPUT* buf,
-                                      uint32_t* size,
+        uint32_t get_raw_input_buffer(RAWINPUT *buf,
+                                      uint32_t *size,
                                       uint32_t header_size);
 
         uint32_t get_raw_input_data(HRAWINPUT raw_input,
                                     uint32_t command,
-                                    void* buf,
-                                    uint32_t* size,
+                                    void *buf,
+                                    uint32_t *size,
                                     uint32_t header_size);
 
         uint32_t get_raw_input_device_info(HANDLE device_handle,
                                            uint32_t command,
-                                           void* buf,
-                                           uint32_t* size);
+                                           void *buf,
+                                           uint32_t *size);
 
         uint32_t
         get_raw_input_device_list(RAWINPUTDEVICELIST raw_input_device_list[],
-                                  uint32_t* real_num);
+                                  uint32_t *real_num);
 
         uint32_t
         get_registered_raw_input_devices(RAWINPUTDEVICE raw_input_devices[],
-                                         uint32_t* real_num);
+                                         uint32_t *real_num);
 
-        RAWINPUT* next_raw_input_block(RAWINPUT* raw_input);
+        RAWINPUT *next_raw_input_block(RAWINPUT *raw_input);
 
         bool
         register_raw_input_devices(const RAWINPUTDEVICE raw_input_devices[],

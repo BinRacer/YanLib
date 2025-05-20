@@ -91,7 +91,7 @@ namespace YanLib::ui {
 
         bool unregister_window(HWND window_handle);
 
-        bool what_flag(HWND window_handle, RegisterFlag* flag);
+        bool what_flag(HWND window_handle, RegisterFlag *flag);
 
         bool close_input_handle(HTOUCHINPUT touch_input_handle);
 
@@ -99,19 +99,19 @@ namespace YanLib::ui {
                             std::vector<TOUCHINPUT> &input);
 
         bool get_pointer_frame_info(uint32_t pointer_id,
-                                    uint32_t* real_num,
+                                    uint32_t *real_num,
                                     POINTER_TOUCH_INFO touch_info[]);
 
         bool get_pointer_frame_info_history(uint32_t pointer_id,
-                                            uint32_t* row,
-                                            uint32_t* col,
+                                            uint32_t *row,
+                                            uint32_t *col,
                                             POINTER_TOUCH_INFO touch_info[]);
 
         bool get_pointer_info(uint32_t pointer_id,
-                              POINTER_TOUCH_INFO* touch_info);
+                              POINTER_TOUCH_INFO *touch_info);
 
         bool get_pointer_info_history(uint32_t pointer_id,
-                                      uint32_t* real_num,
+                                      uint32_t *real_num,
                                       POINTER_TOUCH_INFO touch_info[]);
 
         uint16_t get_pointer_id(WPARAM wparam);
@@ -121,18 +121,18 @@ namespace YanLib::ui {
         bool inject_input(const std::vector<POINTER_TOUCH_INFO> &contacts);
 
         LRESULT pack_hit_testing_proximity_evaluation(
-                const TOUCH_HIT_TESTING_INPUT* hit_testing_input,
-                const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION* proximity_eval);
+                const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
+                const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
 
         bool evaluate_proximity_to_polygon(
                 const std::vector<POINT> &control_polygon,
-                const TOUCH_HIT_TESTING_INPUT* hit_testing_input,
-                TOUCH_HIT_TESTING_PROXIMITY_EVALUATION* proximity_eval);
+                const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
+                TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
 
         bool evaluate_proximity_to_rect(
-                const RECT* control_bounding_box,
-                const TOUCH_HIT_TESTING_INPUT* hit_testing_input,
-                TOUCH_HIT_TESTING_PROXIMITY_EVALUATION* proximity_eval);
+                const RECT *control_bounding_box,
+                const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
+                TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval);
 
         int32_t coord_to_pixel(int32_t coordinate);
 
@@ -141,11 +141,11 @@ namespace YanLib::ui {
         double gid_rotate_angle_from_argument(uint16_t param);
 
         bool get_gesture_extra_args(HGESTUREINFO gesture_info_handle,
-                                    uint8_t* buf,
+                                    uint8_t *buf,
                                     uint32_t size);
 
         bool get_gesture_info(HGESTUREINFO gesture_info_handle,
-                              GESTUREINFO* gesture_info);
+                              GESTUREINFO *gesture_info);
 
         bool close_gesture_info_handle(HGESTUREINFO gesture_info_handle);
 

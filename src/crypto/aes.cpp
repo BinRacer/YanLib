@@ -160,14 +160,14 @@ namespace YanLib::crypto {
 
             KeyBlob blob = make_blob(key_bytes);
             if (!CryptImportKey(crypt_prov_handle,
-                                reinterpret_cast<uint8_t*>(&blob), sizeof(blob),
-                                0, 0, &crypt_key_handle)) {
+                                reinterpret_cast<uint8_t *>(&blob),
+                                sizeof(blob), 0, 0, &crypt_key_handle)) {
                 error_code = GetLastError();
                 break;
             }
             auto aes_mode = static_cast<uint32_t>(mode);
             if (!CryptSetKeyParam(crypt_key_handle, KP_MODE,
-                                  reinterpret_cast<uint8_t*>(&aes_mode), 0)) {
+                                  reinterpret_cast<uint8_t *>(&aes_mode), 0)) {
                 error_code = GetLastError();
                 break;
             }
@@ -201,18 +201,15 @@ namespace YanLib::crypto {
                 default:
                     make_pkcs7_padding(data_bytes);
             }
-            uint32_t data_size = data_bytes.size();
-            uint32_t raw_size = data_bytes.size();
+            unsigned long data_size = data_bytes.size();
+            unsigned long raw_size = data_bytes.size();
             if (!CryptEncrypt(crypt_key_handle, 0, FALSE, 0, data_bytes.data(),
-                              reinterpret_cast<unsigned long*>(&data_size),
-                              0)) {
+                              &data_size, 0)) {
                 error_code = GetLastError();
                 if (error_code == ERROR_MORE_DATA) {
                     data_bytes.resize(data_size);
                     if (!CryptEncrypt(crypt_key_handle, 0, FALSE, 0,
-                                      data_bytes.data(),
-                                      reinterpret_cast<unsigned long*>(
-                                              &raw_size),
+                                      data_bytes.data(), &raw_size,
                                       data_bytes.size())) {
                         error_code = GetLastError();
                         break;
@@ -233,9 +230,9 @@ namespace YanLib::crypto {
     bool aes::decode_process(std::vector<uint8_t> &data_bytes,
                              AesPadding padding) {
         do {
-            uint32_t data_size = data_bytes.size();
+            unsigned long data_size = data_bytes.size();
             if (!CryptDecrypt(crypt_key_handle, 0, FALSE, 0, data_bytes.data(),
-                              reinterpret_cast<unsigned long*>(&data_size))) {
+                              &data_size)) {
                 error_code = GetLastError();
                 break;
             }

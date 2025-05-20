@@ -31,15 +31,15 @@ namespace YanLib::ui {
 
         HACCEL create_table(std::vector<ACCEL> &accel);
 
-        HACCEL load(HINSTANCE instance_handle, const char* table_name);
+        HACCEL load(HINSTANCE instance_handle, const char *table_name);
 
-        HACCEL load(HINSTANCE instance_handle, const wchar_t* table_name);
+        HACCEL load(HINSTANCE instance_handle, const wchar_t *table_name);
 
         bool destroy_table(HACCEL accel_handle);
 
-        int32_t translate(HWND window_handle, HACCEL accel_handle, MSG* msg);
+        int32_t translate(HWND window_handle, HACCEL accel_handle, MSG *msg);
 
-        bool translate_mdi_sys(HWND client_window_handle, MSG* msg);
+        bool translate_mdi_sys(HWND client_window_handle, MSG *msg);
 
         int32_t copy_table(HACCEL accel_handle_src,
                            std::vector<ACCEL> &accel_dst);

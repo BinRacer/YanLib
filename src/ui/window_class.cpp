@@ -6,11 +6,11 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui {
-    WNDCLASSEXA window_class::make(const char* class_name,
+    WNDCLASSEXA window_class::make(const char *class_name,
                                    WNDPROC window_proc,
                                    HINSTANCE instance_handle,
                                    ClassStyle style,
-                                   const char* menu_name,
+                                   const char *menu_name,
                                    int32_t class_extra_size,
                                    int32_t window_extra_size,
                                    HICON icon_handle,
@@ -33,11 +33,11 @@ namespace YanLib::ui {
         return result;
     }
 
-    WNDCLASSEXW window_class::make(const wchar_t* class_name,
+    WNDCLASSEXW window_class::make(const wchar_t *class_name,
                                    WNDPROC window_proc,
                                    HINSTANCE instance_handle,
                                    ClassStyle style,
-                                   const wchar_t* menu_name,
+                                   const wchar_t *menu_name,
                                    int32_t class_extra_size,
                                    int32_t window_extra_size,
                                    HICON icon_handle,
@@ -60,7 +60,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    ATOM window_class::register_class(const WNDCLASSEXA* window_class) {
+    ATOM window_class::register_class(const WNDCLASSEXA *window_class) {
         ATOM result = RegisterClassExA(window_class);
         if (!result) {
             error_code = GetLastError();
@@ -68,7 +68,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    ATOM window_class::register_class(const WNDCLASSEXW* window_class) {
+    ATOM window_class::register_class(const WNDCLASSEXW *window_class) {
         ATOM result = RegisterClassExW(window_class);
         if (!result) {
             error_code = GetLastError();
@@ -76,7 +76,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window_class::unregister_class(const char* class_name,
+    bool window_class::unregister_class(const char *class_name,
                                         HINSTANCE instance_handle) {
         if (!UnregisterClassA(class_name, instance_handle)) {
             error_code = GetLastError();
@@ -85,7 +85,7 @@ namespace YanLib::ui {
         return true;
     }
 
-    bool window_class::unregister_class(const wchar_t* class_name,
+    bool window_class::unregister_class(const wchar_t *class_name,
                                         HINSTANCE instance_handle) {
         if (!UnregisterClassW(class_name, instance_handle)) {
             error_code = GetLastError();
@@ -95,8 +95,8 @@ namespace YanLib::ui {
     }
 
     bool window_class::get_info(HINSTANCE instance_handle,
-                                const char* class_name,
-                                WNDCLASSA* window_class) {
+                                const char *class_name,
+                                WNDCLASSA *window_class) {
         if (!GetClassInfoA(instance_handle, class_name, window_class)) {
             error_code = GetLastError();
             return false;
@@ -105,8 +105,8 @@ namespace YanLib::ui {
     }
 
     bool window_class::get_info(HINSTANCE instance_handle,
-                                const wchar_t* class_name,
-                                WNDCLASSW* window_class) {
+                                const wchar_t *class_name,
+                                WNDCLASSW *window_class) {
         if (!GetClassInfoW(instance_handle, class_name, window_class)) {
             error_code = GetLastError();
             return false;
@@ -115,8 +115,8 @@ namespace YanLib::ui {
     }
 
     bool window_class::get_info(HINSTANCE instance_handle,
-                                const char* class_name,
-                                WNDCLASSEXA* window_class) {
+                                const char *class_name,
+                                WNDCLASSEXA *window_class) {
         if (!GetClassInfoExA(instance_handle, class_name, window_class)) {
             error_code = GetLastError();
             return false;
@@ -125,8 +125,8 @@ namespace YanLib::ui {
     }
 
     bool window_class::get_info(HINSTANCE instance_handle,
-                                const wchar_t* class_name,
-                                WNDCLASSEXW* window_class) {
+                                const wchar_t *class_name,
+                                WNDCLASSEXW *window_class) {
         if (!GetClassInfoExW(instance_handle, class_name, window_class)) {
             error_code = GetLastError();
             return false;
@@ -151,18 +151,18 @@ namespace YanLib::ui {
         return result;
     }
 
-    ULONG_PTR window_class::get_long_ptr(HWND window_handle, int32_t index) {
-        ULONG_PTR result = GetClassLongPtrW(window_handle, index);
+    uintptr_t window_class::get_long_ptr(HWND window_handle, int32_t index) {
+        uintptr_t result = GetClassLongPtrW(window_handle, index);
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    ULONG_PTR window_class::set_long_ptr(HWND window_handle,
+    uintptr_t window_class::set_long_ptr(HWND window_handle,
                                          int32_t index,
-                                         LONG_PTR value) {
-        ULONG_PTR result = SetClassLongPtrW(window_handle, index, value);
+                                         intptr_t value) {
+        uintptr_t result = SetClassLongPtrW(window_handle, index, value);
         if (!result) {
             error_code = GetLastError();
         }

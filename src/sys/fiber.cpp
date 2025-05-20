@@ -17,12 +17,12 @@ namespace YanLib::sys {
         fiber_addrs.clear();
     }
 
-    void* fiber::create(LPFIBER_START_ROUTINE start_addr,
-                        void* params,
+    void *fiber::create(LPFIBER_START_ROUTINE start_addr,
+                        void *params,
                         size_t commit,
                         size_t reserve,
                         bool switch_float) {
-        void* addr = CreateFiberEx(commit, reserve,
+        void *addr = CreateFiberEx(commit, reserve,
                                    switch_float ? FIBER_FLAG_FLOAT_SWITCH : 0,
                                    start_addr, params);
         if (!addr) {
@@ -51,15 +51,15 @@ namespace YanLib::sys {
         return true;
     }
 
-    void* fiber::fls_get_value(uint32_t index) {
-        void* value = FlsGetValue(index);
+    void *fiber::fls_get_value(uint32_t index) {
+        void *value = FlsGetValue(index);
         if (!value) {
             error_code = GetLastError();
         }
         return value;
     }
 
-    bool fiber::fls_set_value(uint32_t index, void* value) {
+    bool fiber::fls_set_value(uint32_t index, void *value) {
         if (!FlsSetValue(index, value)) {
             error_code = GetLastError();
             return false;
@@ -71,7 +71,7 @@ namespace YanLib::sys {
         return IsThreadAFiber();
     }
 
-    void fiber::switch_to_fiber(void* addr) {
+    void fiber::switch_to_fiber(void *addr) {
         SwitchToFiber(addr);
     }
 
@@ -86,8 +86,8 @@ namespace YanLib::sys {
         fiber_lock.read_lock();
     }
 
-    void* fiber::thread_to_fiber(void* params, bool switch_float) {
-        void* addr =
+    void *fiber::thread_to_fiber(void *params, bool switch_float) {
+        void *addr =
                 ConvertThreadToFiberEx(params,
                                        switch_float ? FIBER_FLAG_FLOAT_SWITCH
                                                     : 0);
@@ -102,7 +102,7 @@ namespace YanLib::sys {
     }
 
     bool fiber::fiber_to_thread() {
-        void* addr = GetCurrentFiber();
+        void *addr = GetCurrentFiber();
         if (!addr) {
             error_code = GetLastError();
             return false;

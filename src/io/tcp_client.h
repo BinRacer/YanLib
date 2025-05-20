@@ -35,12 +35,12 @@ namespace YanLib::io {
 
         [[nodiscard]] bool is_ok() const;
 
-        bool connect(const char* remote_ip = "127.0.0.1",
+        bool connect(const char *remote_ip = "127.0.0.1",
                      uint16_t remote_port = 8080);
 
-        int32_t read(char* buf, int32_t len, int32_t flags = 0);
+        int32_t read(char *buf, int32_t len, int32_t flags = 0);
 
-        int32_t write(const char* buf, int32_t len, int32_t flags = 0);
+        int32_t write(const char *buf, int32_t len, int32_t flags = 0);
 
         std::string read_string(int32_t buffer_size = 1024);
 

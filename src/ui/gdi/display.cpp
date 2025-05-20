@@ -5,130 +5,164 @@
 #include "display.h"
 
 namespace YanLib::ui::gdi {
-    bool display::enum_display_devices(const char* device_name,
-                                       uint32_t device_index,
-                                       DISPLAY_DEVICEA* display_device,
-                                       uint32_t flag) {
+    bool display::enum_devices(const char *device_name,
+                               uint32_t device_index,
+                               DISPLAY_DEVICEA *display_device,
+                               bool interface_name) {
         return EnumDisplayDevicesA(device_name, device_index, display_device,
-                                   flag);
+                                   interface_name
+                                           ? EDD_GET_DEVICE_INTERFACE_NAME
+                                           : 0);
     }
 
-    bool display::enum_display_devices(const wchar_t* device_name,
-                                       uint32_t device_index,
-                                       DISPLAY_DEVICEW* display_device,
-                                       uint32_t flag) {
+    bool display::enum_devices(const wchar_t *device_name,
+                               uint32_t device_index,
+                               DISPLAY_DEVICEW *display_device,
+                               bool interface_name) {
         return EnumDisplayDevicesW(device_name, device_index, display_device,
-                                   flag);
+                                   interface_name
+                                           ? EDD_GET_DEVICE_INTERFACE_NAME
+                                           : 0);
     }
 
-    bool display::enum_display_settings(const char* device_name,
-                                        uint32_t mode,
-                                        DEVMODEA* device_mode) {
-        return EnumDisplaySettingsA(device_name, mode, device_mode);
+    bool display::enum_settings(const char *device_name,
+                                DEVMODEA *device_mode,
+                                SettingMode mode) {
+        return EnumDisplaySettingsA(device_name, static_cast<uint32_t>(mode),
+                                    device_mode);
     }
 
-    bool display::enum_display_settings(const wchar_t* device_name,
-                                        uint32_t mode,
-                                        DEVMODEW* device_mode) {
-        return EnumDisplaySettingsW(device_name, mode, device_mode);
+    bool display::enum_settings(const wchar_t *device_name,
+                                DEVMODEW *device_mode,
+                                SettingMode mode) {
+        return EnumDisplaySettingsW(device_name, static_cast<uint32_t>(mode),
+                                    device_mode);
     }
 
-    bool display::enum_display_settings(const char* device_name,
-                                        uint32_t mode,
-                                        DEVMODEA* device_mode,
-                                        uint32_t flag) {
-        return EnumDisplaySettingsExA(device_name, mode, device_mode, flag);
+    bool display::enum_settings(const char *device_name,
+                                DEVMODEA *device_mode,
+                                SettingMode mode,
+                                SettingFlag flag) {
+        return EnumDisplaySettingsExA(device_name, static_cast<uint32_t>(mode),
+                                      device_mode, static_cast<uint32_t>(flag));
     }
 
-    bool display::enum_display_settings(const wchar_t* device_name,
-                                        uint32_t mode,
-                                        DEVMODEW* device_mode,
-                                        uint32_t flag) {
-        return EnumDisplaySettingsExW(device_name, mode, device_mode, flag);
+    bool display::enum_settings(const wchar_t *device_name,
+                                DEVMODEW *device_mode,
+                                SettingMode mode,
+                                SettingFlag flag) {
+        return EnumDisplaySettingsExW(device_name, static_cast<uint32_t>(mode),
+                                      device_mode, static_cast<uint32_t>(flag));
     }
 
-    int32_t display::display_config_get_device_info(
-            DISPLAYCONFIG_DEVICE_INFO_HEADER* request_packet) {
+    int32_t display::config_get_device_info(
+            DISPLAYCONFIG_DEVICE_INFO_HEADER *request_packet) {
         return DisplayConfigGetDeviceInfo(request_packet);
     }
 
-    int32_t display::display_config_set_device_info(
-            DISPLAYCONFIG_DEVICE_INFO_HEADER* request_packet) {
+    int32_t display::config_set_device_info(
+            DISPLAYCONFIG_DEVICE_INFO_HEADER *request_packet) {
         return DisplayConfigSetDeviceInfo(request_packet);
     }
 
-    bool display::get_display_auto_rotation_preferences(
-            ORIENTATION_PREFERENCE* orientation) {
-        return GetDisplayAutoRotationPreferences(orientation);
-    }
-
-    bool display::set_display_auto_rotation_preferences(
-            ORIENTATION_PREFERENCE orientation) {
-        return SetDisplayAutoRotationPreferences(orientation);
-    }
-
-    bool display::get_display_auto_rotation_preferences_by_pid(
-            uint32_t pid,
-            ORIENTATION_PREFERENCE* orientation) {
-        int32_t is_ok = 0;
-        if (!GetDisplayAutoRotationPreferencesByProcessId(pid, orientation,
-                                                          &is_ok)) {
+    bool
+    display::get_auto_rotation_preferences(OrientationPreference *orientation) {
+        if (!orientation) {
             return false;
         }
+        auto temp = static_cast<ORIENTATION_PREFERENCE>(*orientation);
+        bool is_ok = GetDisplayAutoRotationPreferences(&temp);
+        *orientation = static_cast<OrientationPreference>(temp);
         return is_ok;
     }
 
-    int32_t display::get_display_config_buffer_sizes(
-            uint32_t flag,
-            uint32_t* num_path_array_elements,
-            uint32_t* num_mode_info_array_elements) {
-        return GetDisplayConfigBufferSizes(flag, num_path_array_elements,
-                                           num_mode_info_array_elements);
+    bool
+    display::set_auto_rotation_preferences(OrientationPreference orientation) {
+        return SetDisplayAutoRotationPreferences(
+                static_cast<ORIENTATION_PREFERENCE>(orientation));
     }
 
-    int32_t display::get_display_config(uint32_t flag,
-                                        uint32_t* real_path_info_num,
-                                        DISPLAYCONFIG_PATH_INFO path_info[],
-                                        uint32_t* real_model_info_num,
-                                        DISPLAYCONFIG_MODE_INFO mode_info[],
-                                        DISPLAYCONFIG_TOPOLOGY_ID* curr_id) {
-        return QueryDisplayConfig(flag, real_path_info_num, path_info,
-                                  real_model_info_num, mode_info, curr_id);
+    bool display::get_auto_rotation_preferences_by_pid(
+            uint32_t pid,
+            OrientationPreference *orientation) {
+        if (!orientation) {
+            return false;
+        }
+        auto temp = static_cast<ORIENTATION_PREFERENCE>(*orientation);
+        int32_t is_ok = 0;
+        if (!GetDisplayAutoRotationPreferencesByProcessId(pid, &temp, &is_ok)) {
+            *orientation = static_cast<OrientationPreference>(temp);
+            return false;
+        }
+        *orientation = static_cast<OrientationPreference>(temp);
+        return is_ok;
     }
 
-    int32_t
-    display::set_display_config(std::vector<DISPLAYCONFIG_PATH_INFO> &path_info,
+    int32_t display::get_config_buffer_size(uint32_t *path_info_num,
+                                            uint32_t *mode_info_num,
+                                            GetDisplayConfig flag) {
+        return GetDisplayConfigBufferSizes(static_cast<uint32_t>(flag),
+                                           path_info_num, mode_info_num);
+    }
+
+    int32_t display::get_config(uint32_t *real_path_info_num,
+                                DISPLAYCONFIG_PATH_INFO path_info[],
+                                uint32_t *real_model_info_num,
+                                DISPLAYCONFIG_MODE_INFO mode_info[],
+                                TopologyID *id,
+                                GetDisplayConfig flag) {
+        if (flag & GetDisplayConfig::DatabaseCurrent) {
+            if (!id) {
+                return ERROR_INVALID_PARAMETER;
+            }
+            auto temp = static_cast<DISPLAYCONFIG_TOPOLOGY_ID>(*id);
+            bool is_ok =
+                    QueryDisplayConfig(static_cast<uint32_t>(flag),
+                                       real_path_info_num, path_info,
+                                       real_model_info_num, mode_info, &temp);
+            *id = static_cast<TopologyID>(temp);
+            return is_ok;
+        }
+        return QueryDisplayConfig(static_cast<uint32_t>(flag),
+                                  real_path_info_num, path_info,
+                                  real_model_info_num, mode_info, nullptr);
+    }
+
+    int32_t display::set_config(std::vector<DISPLAYCONFIG_PATH_INFO> &path_info,
                                 std::vector<DISPLAYCONFIG_MODE_INFO> &mode_info,
-                                uint32_t flag) {
-        return SetDisplayConfig(path_info.size(), path_info.data(),
-                                mode_info.size(), mode_info.data(), flag);
+                                SetDisplayConfig flag) {
+        return ::SetDisplayConfig(path_info.size(), path_info.data(),
+                                  mode_info.size(), mode_info.data(),
+                                  static_cast<uint32_t>(flag));
     }
 
-    int32_t display::change_display_settings(DEVMODEA* device_mode,
-                                             uint32_t flag) {
-        return ChangeDisplaySettingsA(device_mode, flag);
+    ChangedDisplayConfigResult
+    display::change_settings(DEVMODEA *device_mode, ChangedDisplayConfig flag) {
+        return static_cast<ChangedDisplayConfigResult>(
+                ChangeDisplaySettingsA(device_mode,
+                                       static_cast<uint32_t>(flag)));
     }
 
-    int32_t display::change_display_settings(DEVMODEW* device_mode,
-                                             uint32_t flag) {
-        return ChangeDisplaySettingsW(device_mode, flag);
+    ChangedDisplayConfigResult
+    display::change_settings(DEVMODEW *device_mode, ChangedDisplayConfig flag) {
+        return static_cast<ChangedDisplayConfigResult>(
+                ChangeDisplaySettingsW(device_mode,
+                                       static_cast<uint32_t>(flag)));
     }
 
-    int32_t display::change_display_settings(const char* device_name,
-                                             DEVMODEA* device_mode,
-                                             HWND window_handle,
-                                             uint32_t flag,
-                                             void* lparam) {
-        return ChangeDisplaySettingsExA(device_name, device_mode, window_handle,
-                                        flag, lparam);
+    int32_t display::change_settings(const char *device_name,
+                                     DEVMODEA *device_mode,
+                                     void *lparam,
+                                     ChangedDisplayConfig flag) {
+        return ChangeDisplaySettingsExA(device_name, device_mode, nullptr,
+                                        static_cast<uint32_t>(flag), lparam);
     }
 
-    int32_t display::change_display_settings(const wchar_t* device_name,
-                                             DEVMODEW* device_mode,
-                                             HWND window_handle,
-                                             uint32_t flag,
-                                             void* lparam) {
-        return ChangeDisplaySettingsExW(device_name, device_mode, window_handle,
-                                        flag, lparam);
+    int32_t display::change_settings(const wchar_t *device_name,
+                                     DEVMODEW *device_mode,
+                                     void *lparam,
+                                     ChangedDisplayConfig flag) {
+        return ChangeDisplaySettingsExW(device_name, device_mode, nullptr,
+                                        static_cast<uint32_t>(flag), lparam);
     }
 } // namespace YanLib::ui::gdi

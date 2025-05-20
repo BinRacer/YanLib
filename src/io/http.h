@@ -48,9 +48,9 @@ namespace YanLib::io {
 
         bool url_crack(uint32_t flag = ICU_DECODE | ICU_ESCAPE);
 
-        bool add_header(const char* headers, uint32_t headers_length = -1);
+        bool add_header(const char *headers, uint32_t headers_length = -1);
 
-        bool add_header(const wchar_t* headers, uint32_t headers_length = -1);
+        bool add_header(const wchar_t *headers, uint32_t headers_length = -1);
 
         bool add_header(const std::string &headers);
 
@@ -76,74 +76,74 @@ namespace YanLib::io {
         bool get_headers_vec(std::vector<std::wstring> &headers);
 
         bool
-        query_option(uint32_t option, void* buffer, uint32_t* buffer_length);
+        query_option(uint32_t option, void *buffer, uint32_t *buffer_length);
 
-        bool set_option(uint32_t option, void* buffer, uint32_t buffer_length);
+        bool set_option(uint32_t option, void *buffer, uint32_t buffer_length);
 
-        bool open(const char* agent_name, /* "MiniCurl/0.1" */
+        bool open(const char *agent_name /* "MiniCurl/0.1" */,
                   uint32_t access_type = INTERNET_OPEN_TYPE_PRECONFIG,
-                  const char* proxy = nullptr,
-                  const char* proxy_bypass = nullptr,
+                  const char *proxy = nullptr,
+                  const char *proxy_bypass = nullptr,
                   uint32_t flag = 0);
 
-        bool open(const wchar_t* agent_name, /* L"MiniCurl/0.1" */
+        bool open(const wchar_t *agent_name /* L"MiniCurl/0.1" */,
                   uint32_t access_type = INTERNET_OPEN_TYPE_PRECONFIG,
-                  const wchar_t* proxy = nullptr,
-                  const wchar_t* proxy_bypass = nullptr,
+                  const wchar_t *proxy = nullptr,
+                  const wchar_t *proxy_bypass = nullptr,
                   uint32_t flag = 0);
 
         bool connect(uint32_t service = INTERNET_SERVICE_HTTP,
                      uint32_t flag = 0,
-                     DWORD_PTR context = 0);
+                     uintptr_t context = 0);
 
         bool
-        open_request(const char* verb, /* "GET" */
-                     const char* version = "HTTP/1.1",
-                     const char* referrer = nullptr,
-                     const char** accept_types = nullptr,
+        open_request(const char *verb /* "GET" */,
+                     const char *version = "HTTP/1.1",
+                     const char *referrer = nullptr,
+                     const char **accept_types = nullptr,
                      uint32_t flag = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
                              INTERNET_FLAG_KEEP_CONNECTION |
                              INTERNET_FLAG_NO_AUTH | INTERNET_FLAG_NO_COOKIES |
                              INTERNET_FLAG_NO_UI | INTERNET_FLAG_RELOAD,
-                     DWORD_PTR context = 0);
+                     uintptr_t context = 0);
 
         bool
-        open_request(const wchar_t* verb, /* L"GET" */
-                     const wchar_t* version = L"HTTP/1.1",
-                     const wchar_t* referrer = nullptr,
-                     const wchar_t** accept_types = nullptr,
+        open_request(const wchar_t *verb /* L"GET" */,
+                     const wchar_t *version = L"HTTP/1.1",
+                     const wchar_t *referrer = nullptr,
+                     const wchar_t **accept_types = nullptr,
                      uint32_t flag = INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP |
                              INTERNET_FLAG_KEEP_CONNECTION |
                              INTERNET_FLAG_NO_AUTH | INTERNET_FLAG_NO_COOKIES |
                              INTERNET_FLAG_NO_UI | INTERNET_FLAG_RELOAD,
-                     DWORD_PTR context = 0);
+                     uintptr_t context = 0);
 
         uint32_t get_content_length();
 
-        bool send_request(const char* headers,     /* nullptr */
-                          uint32_t headers_length, /* 0 */
-                          void* optional = nullptr,
+        bool send_request(const char *headers /* nullptr */,
+                          uint32_t headers_length /* 0 */,
+                          void *optional = nullptr,
                           uint32_t optional_length = 0);
 
-        bool send_request(const wchar_t* headers,  /* nullptr */
-                          uint32_t headers_length, /* 0 */
-                          void* optional = nullptr,
+        bool send_request(const wchar_t *headers /* nullptr */,
+                          uint32_t headers_length /* 0 */,
+                          void *optional = nullptr,
                           uint32_t optional_length = 0);
 
-        bool send_request_ex(INTERNET_BUFFERSW* buffers_in,
-                             INTERNET_BUFFERSW* buffers_out = nullptr,
+        bool send_request_ex(INTERNET_BUFFERSW *buffers_in,
+                             INTERNET_BUFFERSW *buffers_out = nullptr,
                              uint32_t flag = 0,
-                             DWORD_PTR context = 0);
+                             uintptr_t context = 0);
 
-        bool end_request_ex(INTERNET_BUFFERSW* buffers_out = nullptr,
+        bool end_request_ex(INTERNET_BUFFERSW *buffers_out = nullptr,
                             uint32_t flag = 0,
-                            DWORD_PTR context = 0);
+                            uintptr_t context = 0);
 
-        bool read(void* buf, uint32_t size, uint32_t* ret_size);
+        bool read(void *buf, uint32_t size, uint32_t *ret_size);
 
         std::vector<uint8_t> read_bytes(int32_t buffer_size = 1024);
 
-        bool write(const void* buf, uint32_t size, uint32_t* ret_size);
+        bool write(const void *buf, uint32_t size, uint32_t *ret_size);
 
         uint32_t write_bytes(const std::vector<uint8_t> &vec);
 
@@ -158,16 +158,16 @@ namespace YanLib::io {
         read_bytes_to_end(const std::wstring &input_url);
 
         static uint32_t download(const std::string &input_url,
-                                 const char* file_name);
+                                 const char *file_name);
 
         static uint32_t download(const std::wstring &input_url,
-                                 const wchar_t* file_name);
+                                 const wchar_t *file_name);
 
         static uint32_t upload(const std::string &input_url,
-                               const char* file_name);
+                               const char *file_name);
 
         static uint32_t upload(const std::wstring &input_url,
-                               const wchar_t* file_name);
+                               const wchar_t *file_name);
 
         [[nodiscard]] uint32_t err_code() const;
 

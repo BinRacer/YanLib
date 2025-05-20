@@ -8,6 +8,27 @@
 #include <cstdint>
 
 namespace YanLib::ui::gdi {
+#ifndef REGIONSTYLE
+#define REGIONSTYLE
+
+    enum class RegionStyle : int32_t {
+        And = RGN_AND,
+        Or = RGN_OR,
+        Xor = RGN_XOR,
+        Diff = RGN_DIFF,
+        Copy = RGN_COPY,
+    };
+#endif
+#ifndef REGIONFLAG
+#define REGIONFLAG
+
+    enum class RegionFlag : int32_t {
+        Error = ERROR,
+        NullRegion = NULLREGION,
+        SimpleRegion = SIMPLEREGION,
+        ComplexRegion = COMPLEXREGION,
+    };
+#endif
     class clip {
     public:
         clip(const clip &other) = delete;
@@ -22,38 +43,38 @@ namespace YanLib::ui::gdi {
 
         ~clip() = default;
 
-        static bool select_clip_path(HDC dc_handle, int32_t mode);
+        static bool select_region(HDC dc_handle, RegionStyle style);
 
-        static int32_t select_clip_region(HDC dc_handle, HRGN region_handle);
+        static RegionFlag select_region(HDC dc_handle, HRGN region_handle);
 
-        static int32_t
-        select_clip_region(HDC dc_handle, HRGN region_handle, int32_t mode);
+        static RegionFlag
+        select_region(HDC dc_handle, HRGN region_handle, RegionStyle style);
 
-        static int32_t exclude_clip_rect(HDC dc_handle,
+        static RegionFlag exclude_rect(HDC dc_handle,
+                                       int32_t left,
+                                       int32_t top,
+                                       int32_t right,
+                                       int32_t bottom);
+
+        static RegionFlag intersect_rect(HDC dc_handle,
                                          int32_t left,
                                          int32_t top,
                                          int32_t right,
                                          int32_t bottom);
 
-        static int32_t intersect_clip_rect(HDC dc_handle,
-                                           int32_t left,
-                                           int32_t top,
-                                           int32_t right,
-                                           int32_t bottom);
+        static RegionFlag offset_region(HDC dc_handle, int32_t x, int32_t y);
 
-        static int32_t offset_clip_region(HDC dc_handle, int32_t x, int32_t y);
+        static bool contains(HDC dc_handle, const RECT *rect);
 
-        static bool rect_visible(HDC dc_handle, const RECT* rect);
+        static bool contains(HDC dc_handle, int32_t x, int32_t y);
 
-        static bool point_visible(HDC dc_handle, int32_t x, int32_t y);
+        static RegionFlag get_border(HDC dc_handle, RECT *rect);
 
-        static int32_t get_clip_box(HDC dc_handle, RECT* rect);
-
-        static int32_t get_clip_region(HDC dc_handle, HRGN region_handle);
+        static int32_t get_region(HDC dc_handle, HRGN region_handle);
 
         static int32_t get_meta_region(HDC dc_handle, HRGN region_handle);
 
-        static int32_t set_meta_region(HDC dc_handle);
+        static RegionFlag set_meta_region(HDC dc_handle);
 
         static int32_t get_random_region(HDC dc_handle, HRGN region_handle);
     };

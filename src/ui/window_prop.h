@@ -35,17 +35,17 @@ namespace YanLib::ui {
         int32_t
         enumerate(HWND window_handle, PROPENUMPROCEXW enum_func, LPARAM lparam);
 
-        void* get(HWND window_handle, const char* key);
+        void *get(HWND window_handle, const char *key);
 
-        void* get(HWND window_handle, const wchar_t* key);
+        void *get(HWND window_handle, const wchar_t *key);
 
-        bool set(HWND window_handle, const char* key, void* value);
+        bool set(HWND window_handle, const char *key, void *value);
 
-        bool set(HWND window_handle, const wchar_t* key, void* value);
+        bool set(HWND window_handle, const wchar_t *key, void *value);
 
-        void* remove(HWND window_handle, const char* key);
+        void *remove(HWND window_handle, const char *key);
 
-        void* remove(HWND window_handle, const wchar_t* key);
+        void *remove(HWND window_handle, const wchar_t *key);
 
         [[nodiscard]] uint32_t err_code() const;
 

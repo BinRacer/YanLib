@@ -15,8 +15,8 @@ namespace YanLib::mem {
         }
     }
 
-    void* allocate::malloc(size_t size) {
-        void* address = VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT,
+    void *allocate::malloc(size_t size) {
+        void *address = VirtualAlloc(nullptr, size, MEM_RESERVE | MEM_COMMIT,
                                      PAGE_READWRITE);
         if (!address) {
             error_code = GetLastError();
@@ -28,7 +28,7 @@ namespace YanLib::mem {
         return address;
     }
 
-    bool allocate::free(void* addr) {
+    bool allocate::free(void *addr) {
         if (!addr) {
             return false;
         }
@@ -46,8 +46,8 @@ namespace YanLib::mem {
         return true;
     }
 
-    void* allocate::malloc_reserve(size_t size) {
-        void* address =
+    void *allocate::malloc_reserve(size_t size) {
+        void *address =
                 VirtualAlloc(nullptr, size, MEM_RESERVE, PAGE_READWRITE);
         if (!address) {
             error_code = GetLastError();
@@ -59,7 +59,7 @@ namespace YanLib::mem {
         return address;
     }
 
-    bool allocate::free_reserve(void* addr, size_t size) {
+    bool allocate::free_reserve(void *addr, size_t size) {
         if (!addr) {
             return false;
         }
@@ -77,7 +77,7 @@ namespace YanLib::mem {
         return true;
     }
 
-    void* allocate::realloc(void* old_addr, size_t new_size) {
+    void *allocate::realloc(void *old_addr, size_t new_size) {
         free(old_addr);
         return malloc(new_size);
     }

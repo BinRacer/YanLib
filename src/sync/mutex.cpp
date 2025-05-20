@@ -16,15 +16,15 @@ namespace YanLib::sync {
         }
     }
 
-    bool mutex::create(SECURITY_ATTRIBUTES* sa,
+    bool mutex::create(SECURITY_ATTRIBUTES *sa,
                        bool is_initial_owner,
-                       const wchar_t* name) {
+                       const wchar_t *name) {
         mutex_handle = CreateMutexW(sa, is_initial_owner ? TRUE : FALSE, name);
         error_code = GetLastError();
         return mutex_handle != nullptr;
     }
 
-    bool mutex::open(const wchar_t* name, MutexAccess access, bool is_inherit) {
+    bool mutex::open(const wchar_t *name, MutexAccess access, bool is_inherit) {
         mutex_handle = OpenMutexW(static_cast<uint32_t>(access),
                                   is_inherit ? TRUE : FALSE, name);
         error_code = GetLastError();

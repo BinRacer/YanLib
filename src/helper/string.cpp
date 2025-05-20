@@ -21,7 +21,7 @@ namespace YanLib::helper {
         return it != text.end();
     }
 
-    bool string::strstri(const wchar_t* text, const wchar_t* substr) {
+    bool string::strstri(const wchar_t *text, const wchar_t *substr) {
         if (!text || !substr || wcslen(text) == 0 || wcslen(substr) == 0)
             return false;
 
@@ -29,7 +29,7 @@ namespace YanLib::helper {
             return std::towlower(a) == std::towlower(b);
         };
 
-        const wchar_t* result =
+        const wchar_t *result =
                 std::search(text, text + wcslen(text), substr,
                             substr + wcslen(substr), case_insensitive_compare);
 

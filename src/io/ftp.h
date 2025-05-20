@@ -59,62 +59,62 @@ namespace YanLib::io {
 
         bool url_crack(uint32_t flag = ICU_DECODE | ICU_ESCAPE);
 
-        bool open(const char* agent_name, /* "MiniFTP/0.1" */
+        bool open(const char *agent_name /* "MiniFTP/0.1" */,
                   uint32_t access_type = INTERNET_OPEN_TYPE_PRECONFIG,
-                  const char* proxy = nullptr,
-                  const char* proxy_bypass = nullptr,
+                  const char *proxy = nullptr,
+                  const char *proxy_bypass = nullptr,
                   uint32_t flag = 0);
 
-        bool open(const wchar_t* agent_name, /* L"MiniFTP/0.1" */
+        bool open(const wchar_t *agent_name /* L"MiniFTP/0.1" */,
                   uint32_t access_type = INTERNET_OPEN_TYPE_PRECONFIG,
-                  const wchar_t* proxy = nullptr,
-                  const wchar_t* proxy_bypass = nullptr,
+                  const wchar_t *proxy = nullptr,
+                  const wchar_t *proxy_bypass = nullptr,
                   uint32_t flag = 0);
 
         bool connect(uint32_t service = INTERNET_SERVICE_FTP,
                      uint32_t flag = INTERNET_FLAG_PASSIVE,
-                     DWORD_PTR context = 0);
+                     uintptr_t context = 0);
 
-        HINTERNET open_file(const char* file_name,
+        HINTERNET open_file(const char *file_name,
                             uint32_t access = GENERIC_READ,
                             uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                                     INTERNET_FLAG_RELOAD |
                                     INTERNET_FLAG_TRANSFER_BINARY,
-                            DWORD_PTR context = 0);
+                            uintptr_t context = 0);
 
-        HINTERNET open_file(const wchar_t* file_name,
+        HINTERNET open_file(const wchar_t *file_name,
                             uint32_t access = GENERIC_READ,
                             uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                                     INTERNET_FLAG_RELOAD |
                                     INTERNET_FLAG_TRANSFER_BINARY,
-                            DWORD_PTR context = 0);
+                            uintptr_t context = 0);
 
-        HINTERNET create_file(const char* file_name,
+        HINTERNET create_file(const char *file_name,
                               uint32_t access = GENERIC_WRITE,
                               uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                                       INTERNET_FLAG_RELOAD |
                                       INTERNET_FLAG_TRANSFER_BINARY,
-                              DWORD_PTR context = 0);
+                              uintptr_t context = 0);
 
-        HINTERNET create_file(const wchar_t* file_name,
+        HINTERNET create_file(const wchar_t *file_name,
                               uint32_t access = GENERIC_WRITE,
                               uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                                       INTERNET_FLAG_RELOAD |
                                       INTERNET_FLAG_TRANSFER_BINARY,
-                              DWORD_PTR context = 0);
+                              uintptr_t context = 0);
 
         bool read(HINTERNET file_handle,
-                  void* buf,
+                  void *buf,
                   uint32_t size,
-                  uint32_t* ret_size);
+                  uint32_t *ret_size);
 
         std::vector<uint8_t> read_bytes(HINTERNET file_handle,
                                         int32_t buffer_size = 1024);
 
         bool write(HINTERNET file_handle,
-                   const void* buf,
+                   const void *buf,
                    uint32_t size,
-                   uint32_t* ret_size);
+                   uint32_t *ret_size);
 
         uint32_t write_bytes(HINTERNET file_handle,
                              const std::vector<uint8_t> &data);
@@ -125,9 +125,9 @@ namespace YanLib::io {
 
         bool pwd(std::wstring &path);
 
-        bool cd(const char* dir);
+        bool cd(const char *dir);
 
-        bool cd(const wchar_t* dir);
+        bool cd(const wchar_t *dir);
 
         bool ls(std::vector<std::string> &files,
                 std::vector<std::string> &dirs);
@@ -141,65 +141,65 @@ namespace YanLib::io {
         bool ls_full_path(std::vector<std::wstring> &files,
                           std::vector<std::wstring> &dirs);
 
-        bool mkdir(const char* dir);
+        bool mkdir(const char *dir);
 
-        bool mkdir(const wchar_t* dir);
+        bool mkdir(const wchar_t *dir);
 
-        bool rmdir(const char* dir);
+        bool rmdir(const char *dir);
 
-        bool rmdir(const wchar_t* dir);
+        bool rmdir(const wchar_t *dir);
 
-        bool rm(const char* file_name);
+        bool rm(const char *file_name);
 
-        bool rm(const wchar_t* file_name);
+        bool rm(const wchar_t *file_name);
 
-        bool rename(const char* existing_name, const char* new_name);
+        bool rename(const char *existing_name, const char *new_name);
 
-        bool rename(const wchar_t* existing_name, const wchar_t* new_name);
+        bool rename(const wchar_t *existing_name, const wchar_t *new_name);
 
-        std::vector<uint8_t> command(const char* command);
+        std::vector<uint8_t> command(const char *command);
 
-        std::vector<uint8_t> command(const wchar_t* command);
+        std::vector<uint8_t> command(const wchar_t *command);
 
-        bool download(const char* remote_file,
-                      const char* new_file,
+        bool download(const char *remote_file,
+                      const char *new_file,
                       bool is_fail_if_exists = false,
                       uint32_t flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                       uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                               INTERNET_FLAG_RELOAD |
                               INTERNET_FLAG_TRANSFER_BINARY,
-                      DWORD_PTR context = 0);
+                      uintptr_t context = 0);
 
-        bool download(const wchar_t* remote_file,
-                      const wchar_t* new_file,
+        bool download(const wchar_t *remote_file,
+                      const wchar_t *new_file,
                       bool is_fail_if_exists = false,
                       uint32_t flags_and_attrs = FILE_ATTRIBUTE_NORMAL,
                       uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                               INTERNET_FLAG_RELOAD |
                               INTERNET_FLAG_TRANSFER_BINARY,
-                      DWORD_PTR context = 0);
+                      uintptr_t context = 0);
 
-        bool upload(const char* local_file,
-                    const char* new_remote_file,
+        bool upload(const char *local_file,
+                    const char *new_remote_file,
                     uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                             INTERNET_FLAG_RELOAD |
                             INTERNET_FLAG_TRANSFER_BINARY,
-                    DWORD_PTR context = 0);
+                    uintptr_t context = 0);
 
-        bool upload(const wchar_t* local_file,
-                    const wchar_t* new_remote_file,
+        bool upload(const wchar_t *local_file,
+                    const wchar_t *new_remote_file,
                     uint32_t flag = FTP_TRANSFER_TYPE_BINARY |
                             INTERNET_FLAG_RELOAD |
                             INTERNET_FLAG_TRANSFER_BINARY,
-                    DWORD_PTR context = 0);
+                    uintptr_t context = 0);
 
-        uint32_t download2(HINTERNET remote_file, const char* local_file);
+        uint32_t download2(HINTERNET remote_file, const char *local_file);
 
-        uint32_t download2(HINTERNET remote_file, const wchar_t* local_file);
+        uint32_t download2(HINTERNET remote_file, const wchar_t *local_file);
 
-        uint32_t upload2(HINTERNET remote_file, const char* local_file);
+        uint32_t upload2(HINTERNET remote_file, const char *local_file);
 
-        uint32_t upload2(HINTERNET remote_file, const wchar_t* local_file);
+        uint32_t upload2(HINTERNET remote_file, const wchar_t *local_file);
 
         [[nodiscard]] uint32_t err_code() const;
 

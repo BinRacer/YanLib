@@ -12,7 +12,7 @@
 namespace YanLib::mem {
     class heap {
         std::vector<HANDLE> heap_handles = {};
-        std::vector<std::pair<HANDLE, void*>> mem_list = {};
+        std::vector<std::pair<HANDLE, void *>> mem_list = {};
         sync::rwlock heap_rwlock = {};
         sync::rwlock mem_rwlock = {};
         uint32_t error_code = 0;
@@ -36,15 +36,15 @@ namespace YanLib::mem {
 
         HANDLE open();
 
-        void* malloc(HANDLE heap_handle, size_t size);
+        void *malloc(HANDLE heap_handle, size_t size);
 
-        void* realloc(HANDLE heap_handle, void* addr, size_t new_size);
+        void *realloc(HANDLE heap_handle, void *addr, size_t new_size);
 
-        bool free(HANDLE heap_handle, void* addr);
+        bool free(HANDLE heap_handle, void *addr);
 
-        size_t size(HANDLE heap_handle, void* addr) const;
+        size_t size(HANDLE heap_handle, void *addr) const;
 
-        bool is_ok(HANDLE heap_handle, void* addr) const;
+        bool is_ok(HANDLE heap_handle, void *addr) const;
 
         bool lock(HANDLE heap_handle);
 

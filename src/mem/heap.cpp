@@ -51,8 +51,8 @@ namespace YanLib::mem {
         return heap_handle;
     }
 
-    void* heap::malloc(HANDLE heap_handle, size_t size) {
-        void* addr = HeapAlloc(heap_handle, HEAP_ZERO_MEMORY, size);
+    void *heap::malloc(HANDLE heap_handle, size_t size) {
+        void *addr = HeapAlloc(heap_handle, HEAP_ZERO_MEMORY, size);
         if (!addr) {
             return nullptr;
         }
@@ -62,8 +62,8 @@ namespace YanLib::mem {
         return addr;
     }
 
-    void* heap::realloc(HANDLE heap_handle, void* addr, size_t new_size) {
-        void* address =
+    void *heap::realloc(HANDLE heap_handle, void *addr, size_t new_size) {
+        void *address =
                 HeapReAlloc(heap_handle, HEAP_ZERO_MEMORY, addr, new_size);
         if (!address) {
             return nullptr;
@@ -74,7 +74,7 @@ namespace YanLib::mem {
         return address;
     }
 
-    bool heap::free(HANDLE heap_handle, void* addr) {
+    bool heap::free(HANDLE heap_handle, void *addr) {
         if (!heap_handle || !addr) {
             return false;
         }
@@ -92,11 +92,11 @@ namespace YanLib::mem {
         return true;
     }
 
-    size_t heap::size(HANDLE heap_handle, void* addr) const {
+    size_t heap::size(HANDLE heap_handle, void *addr) const {
         return HeapSize(heap_handle, 0, addr);
     }
 
-    bool heap::is_ok(HANDLE heap_handle, void* addr) const {
+    bool heap::is_ok(HANDLE heap_handle, void *addr) const {
         return HeapValidate(heap_handle, 0, addr);
     }
 

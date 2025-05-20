@@ -3,6 +3,9 @@
 //
 
 #include "desktop.h"
+
+#include <complex>
+
 #include "helper/convert.h"
 
 namespace YanLib::ui {
@@ -16,10 +19,10 @@ namespace YanLib::ui {
         desktop_handles.clear();
     }
 
-    HDESK desktop::create(const char* desktop_name,
+    HDESK desktop::create(const char *desktop_name,
                           bool allow_hook,
                           DesktopAccess access,
-                          SECURITY_ATTRIBUTES* sa,
+                          SECURITY_ATTRIBUTES *sa,
                           uint32_t heap_size) {
         HDESK result =
                 CreateDesktopExA(desktop_name, nullptr, nullptr,
@@ -36,10 +39,10 @@ namespace YanLib::ui {
         return result;
     }
 
-    HDESK desktop::create(const wchar_t* desktop_name,
+    HDESK desktop::create(const wchar_t *desktop_name,
                           bool allow_hook,
                           DesktopAccess access,
-                          SECURITY_ATTRIBUTES* sa,
+                          SECURITY_ATTRIBUTES *sa,
                           uint32_t heap_size) {
         HDESK result =
                 CreateDesktopExW(desktop_name, nullptr, nullptr,
@@ -56,7 +59,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HDESK desktop::open(const char* desktop_name,
+    HDESK desktop::open(const char *desktop_name,
                         bool allow_hook,
                         bool is_inherit,
                         DesktopAccess access) {
@@ -74,7 +77,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HDESK desktop::open(const wchar_t* desktop_name,
+    HDESK desktop::open(const wchar_t *desktop_name,
                         bool allow_hook,
                         bool is_inherit,
                         DesktopAccess access) {
@@ -211,10 +214,10 @@ namespace YanLib::ui {
         window_station_handles.clear();
     }
 
-    HWINSTA window_station::create(const char* window_station_name,
+    HWINSTA window_station::create(const char *window_station_name,
                                    uint32_t flag,
                                    StationAccess access,
-                                   SECURITY_ATTRIBUTES* sa) {
+                                   SECURITY_ATTRIBUTES *sa) {
         HWINSTA result =
                 CreateWindowStationA(window_station_name, flag,
                                      static_cast<uint32_t>(access), sa);
@@ -228,10 +231,10 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWINSTA window_station::create(const wchar_t* window_station_name,
+    HWINSTA window_station::create(const wchar_t *window_station_name,
                                    uint32_t flag,
                                    StationAccess access,
-                                   SECURITY_ATTRIBUTES* sa) {
+                                   SECURITY_ATTRIBUTES *sa) {
         HWINSTA result =
                 CreateWindowStationW(window_station_name, flag,
                                      static_cast<uint32_t>(access), sa);
@@ -245,7 +248,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWINSTA window_station::open(const char* window_station_name,
+    HWINSTA window_station::open(const char *window_station_name,
                                  bool is_inherit,
                                  StationAccess access) {
         HWINSTA result = OpenWindowStationA(window_station_name,
@@ -261,7 +264,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    HWINSTA window_station::open(const wchar_t* window_station_name,
+    HWINSTA window_station::open(const wchar_t *window_station_name,
                                  bool is_inherit,
                                  StationAccess access) {
         HWINSTA result = OpenWindowStationW(window_station_name,
@@ -341,22 +344,27 @@ namespace YanLib::ui {
 
     bool window_station::get_user_object_info(HANDLE desktop_or_station_handle,
                                               int32_t index,
-                                              void* buf,
+                                              void *buf,
                                               uint32_t size,
-                                              uint32_t* real_size) {
-        if (!GetUserObjectInformationW(desktop_or_station_handle, index, buf,
-                                       size,
-                                       reinterpret_cast<unsigned long*>(
-                                               real_size))) {
-            error_code = GetLastError();
+                                              uint32_t *real_size) {
+        if (!real_size) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *real_size;
+        if (!GetUserObjectInformationW(desktop_or_station_handle, index, buf,
+                                       size, &temp)) {
+            error_code = GetLastError();
+            *real_size = temp;
+            return false;
+        }
+        *real_size = temp;
         return true;
     }
 
     bool window_station::set_user_object_info(HANDLE desktop_or_station_handle,
                                               int32_t index,
-                                              void* buf,
+                                              void *buf,
                                               uint32_t size) {
         if (!SetUserObjectInformationW(desktop_or_station_handle, index, buf,
                                        size)) {

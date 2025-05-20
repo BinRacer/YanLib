@@ -31,7 +31,7 @@ namespace YanLib::ui {
     }
 
     HACCEL accelerator::load(HINSTANCE instance_handle,
-                             const char* table_name) {
+                             const char *table_name) {
         HACCEL result = LoadAcceleratorsA(instance_handle, table_name);
         if (!result) {
             error_code = GetLastError();
@@ -40,7 +40,7 @@ namespace YanLib::ui {
     }
 
     HACCEL accelerator::load(HINSTANCE instance_handle,
-                             const wchar_t* table_name) {
+                             const wchar_t *table_name) {
         HACCEL result = LoadAcceleratorsW(instance_handle, table_name);
         if (!result) {
             error_code = GetLastError();
@@ -63,7 +63,7 @@ namespace YanLib::ui {
     }
 
     int32_t
-    accelerator::translate(HWND window_handle, HACCEL accel_handle, MSG* msg) {
+    accelerator::translate(HWND window_handle, HACCEL accel_handle, MSG *msg) {
         int32_t result =
                 TranslateAcceleratorW(window_handle, accel_handle, msg);
         if (!result) {
@@ -72,7 +72,7 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool accelerator::translate_mdi_sys(HWND client_window_handle, MSG* msg) {
+    bool accelerator::translate_mdi_sys(HWND client_window_handle, MSG *msg) {
         return TranslateMDISysAccel(client_window_handle, msg);
     }
 

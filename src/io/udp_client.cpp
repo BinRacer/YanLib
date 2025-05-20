@@ -44,11 +44,11 @@ namespace YanLib::io {
         return init_done;
     }
 
-    int32_t udp_client::read(char* buf,
+    int32_t udp_client::read(char *buf,
                              int32_t len,
                              int32_t flags,
-                             sockaddr* from,
-                             int32_t* from_len) {
+                             sockaddr *from,
+                             int32_t *from_len) {
         int32_t number_of_bytes =
                 recvfrom(client_socket, buf, len, flags, from, from_len);
         if (number_of_bytes == SOCKET_ERROR) {
@@ -57,10 +57,10 @@ namespace YanLib::io {
         return number_of_bytes;
     }
 
-    int32_t udp_client::write(const char* buf,
+    int32_t udp_client::write(const char *buf,
                               int32_t len,
                               int32_t flags,
-                              const sockaddr* to,
+                              const sockaddr *to,
                               int32_t to_len) {
         int32_t number_of_bytes =
                 sendto(client_socket, buf, len, flags, to, to_len);
@@ -70,7 +70,7 @@ namespace YanLib::io {
         return number_of_bytes;
     }
 
-    int32_t udp_client::read(char* buf,
+    int32_t udp_client::read(char *buf,
                              int32_t len,
                              std::string &remote_ip,
                              uint16_t &remote_port) {
@@ -79,7 +79,7 @@ namespace YanLib::io {
             int32_t client_size = sizeof(client_addr);
             int32_t number_of_bytes =
                     recvfrom(client_socket, buf, len, 0,
-                             reinterpret_cast<sockaddr*>(&client_addr),
+                             reinterpret_cast<sockaddr *>(&client_addr),
                              &client_size);
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
@@ -98,7 +98,7 @@ namespace YanLib::io {
             int32_t client_size = sizeof(client_addr);
             int32_t number_of_bytes =
                     recvfrom(client_socket, buf, len, 0,
-                             reinterpret_cast<sockaddr*>(&client_addr),
+                             reinterpret_cast<sockaddr *>(&client_addr),
                              &client_size);
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
@@ -114,7 +114,7 @@ namespace YanLib::io {
         }
     }
 
-    int32_t udp_client::write(char* buf,
+    int32_t udp_client::write(char *buf,
                               int32_t len,
                               std::string &remote_ip,
                               uint16_t &remote_port) {
@@ -127,7 +127,7 @@ namespace YanLib::io {
             }
             int32_t number_of_bytes =
                     sendto(client_socket, buf, len, 0,
-                           reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+                           reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             }
@@ -142,7 +142,7 @@ namespace YanLib::io {
             }
             int32_t number_of_bytes =
                     sendto(client_socket, buf, len, 0,
-                           reinterpret_cast<sockaddr*>(&addr), sizeof(addr));
+                           reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             }

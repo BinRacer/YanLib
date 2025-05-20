@@ -5,42 +5,44 @@
 #include "bitmap.h"
 
 namespace YanLib::ui::gdi {
-    HBITMAP bitmap::create_bitmap(int32_t width,
-                                  int32_t height,
-                                  uint32_t planes,
-                                  uint32_t pixel_bits,
-                                  const std::vector<uint8_t> &bits) {
+    HBITMAP bitmap::create(int32_t width,
+                           int32_t height,
+                           uint32_t planes,
+                           uint32_t pixel_bits,
+                           const std::vector<uint8_t> &bits) {
         return CreateBitmap(width, height, planes, pixel_bits, bits.data());
     }
 
-    HBITMAP bitmap::create_bitmap_indirect(const BITMAP* bitmap) {
+    HBITMAP bitmap::create(const BITMAP *bitmap) {
         return CreateBitmapIndirect(bitmap);
     }
 
-    HBITMAP
-    bitmap::create_compatible_bitmap(HDC dc_handle, int32_t x, int32_t y) {
+    HBITMAP bitmap::create_compatible(HDC dc_handle, int32_t x, int32_t y) {
         return CreateCompatibleBitmap(dc_handle, x, y);
     }
 
-    HBITMAP bitmap::create_di_bitmap(HDC dc_handle,
-                                     const BITMAPINFOHEADER* bitmap_info_header,
-                                     uint32_t flag,
-                                     const std::vector<uint8_t> &bits,
-                                     const BITMAPINFO* bitmap_info,
-                                     uint32_t usage) {
-        return CreateDIBitmap(dc_handle, bitmap_info_header, flag, bits.data(),
-                              bitmap_info, usage);
+    HBITMAP bitmap::create_di(HDC dc_handle,
+                              const BITMAPINFOHEADER *bitmap_info_header,
+                              const std::vector<uint8_t> &bits,
+                              const BITMAPINFO *bitmap_info,
+                              bool use_rgb,
+                              bool init) {
+        return CreateDIBitmap(dc_handle, bitmap_info_header,
+                              init ? CBM_INIT : 0, bits.data(), bitmap_info,
+                              use_rgb ? DIB_RGB_COLORS : DIB_PAL_COLORS);
     }
 
     std::pair<HBITMAP, uint32_t>
     bitmap::create_dib_section(HDC dc_handle,
-                               const BITMAPINFO* bitmap_info,
-                               uint32_t usage,
-                               void** bits,
+                               const BITMAPINFO *bitmap_info,
+                               void **bits,
                                HANDLE section_handle,
-                               uint32_t offset) {
-        HBITMAP result = CreateDIBSection(dc_handle, bitmap_info, usage, bits,
-                                          section_handle, offset);
+                               uint32_t offset,
+                               bool use_rgb) {
+        HBITMAP result =
+                CreateDIBSection(dc_handle, bitmap_info,
+                                 use_rgb ? DIB_RGB_COLORS : DIB_PAL_COLORS,
+                                 bits, section_handle, offset);
         uint32_t error_code = 0;
         if (!result) {
             error_code = GetLastError();
@@ -48,17 +50,16 @@ namespace YanLib::ui::gdi {
         return std::make_pair(result, error_code);
     }
 
-    HBITMAP bitmap::load_bitmap(HINSTANCE hinstance_handle,
-                                const char* bitmap_name) {
+    HBITMAP bitmap::load(HINSTANCE hinstance_handle, const char *bitmap_name) {
         return LoadBitmapA(hinstance_handle, bitmap_name);
     }
 
-    HBITMAP bitmap::load_bitmap(HINSTANCE hinstance_handle,
-                                const wchar_t* bitmap_name) {
+    HBITMAP bitmap::load(HINSTANCE hinstance_handle,
+                         const wchar_t *bitmap_name) {
         return LoadBitmapW(hinstance_handle, bitmap_name);
     }
 
-    std::pair<bool, uint32_t> bitmap::bit_blt(HDC dc_handle_dst,
+    std::pair<bool, uint32_t> bitmap::bit_blk(HDC dc_handle_dst,
                                               int32_t x,
                                               int32_t y,
                                               int32_t width,
@@ -66,10 +67,10 @@ namespace YanLib::ui::gdi {
                                               HDC dc_handle_src,
                                               int32_t x1,
                                               int32_t y1,
-                                              uint32_t rop) {
+                                              TernaryRasterCode rop) {
         uint32_t error_code = 0;
         if (!BitBlt(dc_handle_dst, x, y, width, height, dc_handle_src, x1, y1,
-                    rop)) {
+                    static_cast<uint32_t>(rop))) {
             error_code = GetLastError();
             return std::make_pair(false, error_code);
         }
@@ -77,7 +78,7 @@ namespace YanLib::ui::gdi {
     }
 
     bool bitmap::plg_blt(HDC dc_handle_dst,
-                         const POINT* point,
+                         const POINT *point,
                          HDC dc_handle_src,
                          int32_t x_src,
                          int32_t y_src,
@@ -101,10 +102,13 @@ namespace YanLib::ui::gdi {
                           HBITMAP bitmap_mask_handle,
                           int32_t x_mask,
                           int32_t y_mask,
-                          uint32_t rop) {
+                          TernaryRasterCode foreground,
+                          TernaryRasterCode background) {
         return MaskBlt(dc_handle_dst, x_dst, y_dst, width, height,
                        dc_handle_src, x_src, y_src, bitmap_mask_handle, x_mask,
-                       y_mask, rop);
+                       y_mask,
+                       MAKEROP4(static_cast<uint32_t>(foreground),
+                                static_cast<uint32_t>(background)));
     }
 
     bool bitmap::stretch_blt(HDC dc_handle_dst,
@@ -117,10 +121,10 @@ namespace YanLib::ui::gdi {
                              int32_t y_src,
                              int32_t width_src,
                              int32_t height_src,
-                             uint32_t rop) {
+                             TernaryRasterCode rop) {
         return StretchBlt(dc_handle_dst, x_dst, y_dst, width_dst, height_dst,
                           dc_handle_src, x_src, y_src, width_src, height_src,
-                          rop);
+                          static_cast<uint32_t>(rop));
     }
 
     bool bitmap::pat_blt(HDC dc_handle,
@@ -128,8 +132,9 @@ namespace YanLib::ui::gdi {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         uint32_t rop) {
-        return PatBlt(dc_handle, x, y, width, height, rop);
+                         TernaryRasterCode rop) {
+        return PatBlt(dc_handle, x, y, width, height,
+                      static_cast<uint32_t>(rop));
     }
 
     bool bitmap::transparent_blt(HDC dc_handle_dst,
@@ -151,25 +156,28 @@ namespace YanLib::ui::gdi {
     bool bitmap::gradient_fill(HDC dc_handle,
                                std::vector<TRIVERTEX> &vertex,
                                std::vector<GRADIENT_TRIANGLE> &mesh,
-                               uint32_t mode) {
+                               GradientMode mode) {
         return GradientFill(dc_handle, vertex.data(), vertex.size(),
-                            mesh.data(), mesh.size(), mode);
+                            mesh.data(), mesh.size(),
+                            static_cast<uint32_t>(mode));
     }
 
     bool bitmap::gradient_fill(HDC dc_handle,
                                std::vector<TRIVERTEX> &vertex,
                                std::vector<GRADIENT_RECT> &mesh,
-                               uint32_t mode) {
+                               GradientMode mode) {
         return GradientFill(dc_handle, vertex.data(), vertex.size(),
-                            mesh.data(), mesh.size(), mode);
+                            mesh.data(), mesh.size(),
+                            static_cast<uint32_t>(mode));
     }
 
-    bool bitmap::ext_flood_fill(HDC dc_handle,
-                                int32_t x,
-                                int32_t y,
-                                COLORREF color,
-                                uint32_t type) {
-        return ExtFloodFill(dc_handle, x, y, color, type);
+    bool bitmap::flood_fill(HDC dc_handle,
+                            int32_t x,
+                            int32_t y,
+                            COLORREF color,
+                            FloodFill type) {
+        return ExtFloodFill(dc_handle, x, y, color,
+                            static_cast<uint32_t>(type));
     }
 
     int32_t bitmap::stretch_di_bits(HDC dc_handle,
@@ -182,12 +190,14 @@ namespace YanLib::ui::gdi {
                                     int32_t width_src,
                                     int32_t height_src,
                                     std::vector<uint8_t> &bits,
-                                    const BITMAPINFO* bitmap_info,
-                                    uint32_t usage,
-                                    uint32_t rop) {
+                                    const BITMAPINFO *bitmap_info,
+                                    TernaryRasterCode rop,
+                                    bool use_rgb) {
         return StretchDIBits(dc_handle, x_dst, y_dst, width_dst, height_dst,
                              x_src, y_src, width_src, height_src, bits.data(),
-                             bitmap_info, usage, rop);
+                             bitmap_info,
+                             use_rgb ? DIB_RGB_COLORS : DIB_PAL_COLORS,
+                             static_cast<uint32_t>(rop));
     }
 
     bool bitmap::alpha_blend(HDC dc_handle_dst,
@@ -206,14 +216,14 @@ namespace YanLib::ui::gdi {
                           blend_function);
     }
 
-    bool bitmap::get_bitmap_dimension(HBITMAP bitmap_handle, SIZE* size) {
+    bool bitmap::get_bitmap_dimension(HBITMAP bitmap_handle, SIZE *size) {
         return GetBitmapDimensionEx(bitmap_handle, size);
     }
 
     bool bitmap::set_bitmap_dimension(HBITMAP bitmap_handle,
                                       int32_t width,
                                       int32_t height,
-                                      SIZE* size) {
+                                      SIZE *size) {
         return SetBitmapDimensionEx(bitmap_handle, width, height, size);
     }
 
@@ -234,10 +244,11 @@ namespace YanLib::ui::gdi {
                                 uint32_t start_line,
                                 uint32_t line_num,
                                 std::vector<uint8_t> &bits,
-                                BITMAPINFO* bitmap_info,
-                                uint32_t usage) {
+                                BITMAPINFO *bitmap_info,
+                                bool use_rgb) {
         return GetDIBits(dc_handle, bitmap_handle, start_line, line_num,
-                         bits.data(), bitmap_info, usage);
+                         bits.data(), bitmap_info,
+                         use_rgb ? DIB_RGB_COLORS : DIB_PAL_COLORS);
     }
 
     int32_t bitmap::set_di_bits(HDC dc_handle,
@@ -245,10 +256,11 @@ namespace YanLib::ui::gdi {
                                 uint32_t start_line,
                                 uint32_t line_num,
                                 std::vector<uint8_t> &bits,
-                                const BITMAPINFO* bitmap_info,
-                                uint32_t color_use) {
+                                const BITMAPINFO *bitmap_info,
+                                bool use_rgb) {
         return SetDIBits(dc_handle, bitmap_handle, start_line, line_num,
-                         bits.data(), bitmap_info, color_use);
+                         bits.data(), bitmap_info,
+                         use_rgb ? DIB_RGB_COLORS : DIB_PAL_COLORS);
     }
 
     COLORREF bitmap::get_pixel(HDC dc_handle, int32_t x, int32_t y) {
@@ -267,12 +279,13 @@ namespace YanLib::ui::gdi {
         return SetPixelV(dc_handle, x, y, color);
     }
 
-    int32_t bitmap::get_stretch_blt_mode(HDC dc_handle) {
-        return GetStretchBltMode(dc_handle);
+    StretchMode bitmap::get_stretch_blt_mode(HDC dc_handle) {
+        return static_cast<StretchMode>(GetStretchBltMode(dc_handle));
     }
 
-    int32_t bitmap::set_stretch_blt_mode(HDC dc_handle, int32_t mode) {
-        return SetStretchBltMode(dc_handle, mode);
+    StretchMode bitmap::set_stretch_blt_mode(HDC dc_handle, StretchMode mode) {
+        return static_cast<StretchMode>(
+                SetStretchBltMode(dc_handle, static_cast<int32_t>(mode)));
     }
 
     int32_t bitmap::set_di_bits_to_device(HDC dc_handle,
@@ -285,10 +298,11 @@ namespace YanLib::ui::gdi {
                                           uint32_t start_scan,
                                           uint32_t line_num,
                                           std::vector<uint8_t> &bits,
-                                          const BITMAPINFO* bitmap_info,
-                                          uint32_t color_use) {
+                                          const BITMAPINFO *bitmap_info,
+                                          bool use_rgb) {
         return SetDIBitsToDevice(dc_handle, x_dst, y_dst, width, height, x_src,
                                  y_src, start_scan, line_num, bits.data(),
-                                 bitmap_info, color_use);
+                                 bitmap_info,
+                                 use_rgb ? DIB_RGB_COLORS : DIB_PAL_COLORS);
     }
 } // namespace YanLib::ui::gdi

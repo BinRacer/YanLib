@@ -58,37 +58,37 @@ namespace YanLib::ui {
         ~image();
 
         HBITMAP load_bitmap(HINSTANCE instance_handle,
-                            const char* image_name,
+                            const char *image_name,
                             int32_t cx,
                             int32_t cy,
                             ImageFlag flag);
 
         HBITMAP load_bitmap(HINSTANCE instance_handle,
-                            const wchar_t* image_name,
+                            const wchar_t *image_name,
                             int32_t cx,
                             int32_t cy,
                             ImageFlag flag);
 
         HICON load_icon(HINSTANCE instance_handle,
-                        const char* image_name,
+                        const char *image_name,
                         int32_t cx,
                         int32_t cy,
                         ImageFlag flag);
 
         HICON load_icon(HINSTANCE instance_handle,
-                        const wchar_t* image_name,
+                        const wchar_t *image_name,
                         int32_t cx,
                         int32_t cy,
                         ImageFlag flag);
 
         HCURSOR load_cursor(HINSTANCE instance_handle,
-                            const char* image_name,
+                            const char *image_name,
                             int32_t cx,
                             int32_t cy,
                             ImageFlag flag);
 
         HCURSOR load_cursor(HINSTANCE instance_handle,
-                            const wchar_t* image_name,
+                            const wchar_t *image_name,
                             int32_t cx,
                             int32_t cy,
                             ImageFlag flag);

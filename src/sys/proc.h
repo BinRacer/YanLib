@@ -215,9 +215,9 @@ namespace YanLib::sys {
 
         NTSTATUS nt_query_info_proc(HANDLE proc_handle,
                                     PROCESSINFOCLASS proc_info_class,
-                                    void* proc_info,
+                                    void *proc_info,
                                     uint32_t proc_info_len,
-                                    uint32_t* real_size);
+                                    uint32_t *real_size);
 
     public:
         proc(const proc &other) = delete;
@@ -233,177 +233,177 @@ namespace YanLib::sys {
         ~proc();
 
         PROCESS_INFORMATION
-        create(const char* app_name,
-               const char* cmdline = nullptr,
-               SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-               SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+        create(const char *app_name,
+               const char *cmdline = nullptr,
+               SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+               SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                bool is_inherit = false,
                ProcCreateFlag create_flag = ProcCreateFlag::Default,
-               const char* curr_dir = nullptr);
+               const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create(const wchar_t* app_name,
-               wchar_t* cmdline = nullptr,
-               SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-               SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+        create(const wchar_t *app_name,
+               wchar_t *cmdline = nullptr,
+               SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+               SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                bool is_inherit = false,
                ProcCreateFlag create_flag = ProcCreateFlag::Default,
-               void* env = nullptr,
-               const wchar_t* curr_dir = nullptr);
+               void *env = nullptr,
+               const wchar_t *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create_with_suspended(const char* app_name,
-                              const char* cmdline = nullptr,
-                              SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-                              SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+        create_with_suspended(const char *app_name,
+                              const char *cmdline = nullptr,
+                              SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+                              SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                               bool is_inherit = false,
                               ProcCreateFlag create_flag =
                                       ProcCreateFlag::NormalPriorityClass |
                                       ProcCreateFlag::CreateSuspended,
-                              const char* curr_dir = nullptr);
+                              const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create_with_suspended(const wchar_t* app_name,
-                              wchar_t* cmdline = nullptr,
-                              SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-                              SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+        create_with_suspended(const wchar_t *app_name,
+                              wchar_t *cmdline = nullptr,
+                              SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+                              SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                               bool is_inherit = false,
                               ProcCreateFlag create_flag =
                                       ProcCreateFlag::NormalPriorityClass |
                                       ProcCreateFlag::CreateSuspended,
-                              void* env = nullptr,
-                              const wchar_t* curr_dir = nullptr);
+                              void *env = nullptr,
+                              const wchar_t *curr_dir = nullptr);
 
         PROCESS_INFORMATION
         create_as_user(HANDLE token_handle,
-                       const char* app_name,
-                       const char* cmdline = nullptr,
-                       SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-                       SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+                       const char *app_name,
+                       const char *cmdline = nullptr,
+                       SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+                       SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                        bool is_inherit = false,
                        ProcCreateFlag create_flag =
                                ProcCreateFlag::NormalPriorityClass |
                                ProcCreateFlag::CreateUnicodeEnvironment,
-                       const char* curr_dir = nullptr);
+                       const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
         create_as_user(HANDLE token_handle,
-                       const wchar_t* app_name,
-                       wchar_t* cmdline = nullptr,
-                       SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-                       SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+                       const wchar_t *app_name,
+                       wchar_t *cmdline = nullptr,
+                       SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+                       SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                        bool is_inherit = false,
                        ProcCreateFlag create_flag =
                                ProcCreateFlag::NormalPriorityClass |
                                ProcCreateFlag::CreateUnicodeEnvironment,
-                       void* env = nullptr,
-                       const wchar_t* curr_dir = nullptr);
+                       void *env = nullptr,
+                       const wchar_t *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create_session_zero(const char* app_name,
-                            const char* cmdline = nullptr,
-                            SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-                            SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+        create_session_zero(const char *app_name,
+                            const char *cmdline = nullptr,
+                            SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+                            SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                             bool is_inherit = false,
                             ProcCreateFlag create_flag =
                                     ProcCreateFlag::NormalPriorityClass |
                                     ProcCreateFlag::CreateUnicodeEnvironment |
                                     ProcCreateFlag::CreateNewConsole,
-                            const char* curr_dir = nullptr);
+                            const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create_session_zero(const wchar_t* app_name,
-                            wchar_t* cmdline = nullptr,
-                            SECURITY_ATTRIBUTES* proc_attrs = nullptr,
-                            SECURITY_ATTRIBUTES* thread_attrs = nullptr,
+        create_session_zero(const wchar_t *app_name,
+                            wchar_t *cmdline = nullptr,
+                            SECURITY_ATTRIBUTES *proc_attrs = nullptr,
+                            SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                             bool is_inherit = false,
                             ProcCreateFlag create_flag =
                                     ProcCreateFlag::NormalPriorityClass |
                                     ProcCreateFlag::CreateUnicodeEnvironment |
                                     ProcCreateFlag::CreateNewConsole,
-                            void* env = nullptr,
-                            const wchar_t* curr_dir = nullptr);
+                            void *env = nullptr,
+                            const wchar_t *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create_with_logon(const char* username,
-                          const char* domain,
-                          const char* password,
-                          const char* app_name,
-                          const char* cmdline = nullptr,
+        create_with_logon(const char *username,
+                          const char *domain,
+                          const char *password,
+                          const char *app_name,
+                          const char *cmdline = nullptr,
                           LogonFlag logon_flag = LogonFlag::WithProfile,
                           ProcCreateFlag create_flag =
                                   ProcCreateFlag::NormalPriorityClass |
                                   ProcCreateFlag::CreateUnicodeEnvironment |
                                   ProcCreateFlag::CreateNewConsole,
-                          const char* curr_dir = nullptr);
+                          const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
-        create_with_logon(const wchar_t* username,
-                          const wchar_t* domain,
-                          const wchar_t* password,
-                          const wchar_t* app_name,
-                          wchar_t* cmdline = nullptr,
+        create_with_logon(const wchar_t *username,
+                          const wchar_t *domain,
+                          const wchar_t *password,
+                          const wchar_t *app_name,
+                          wchar_t *cmdline = nullptr,
                           LogonFlag logon_flag = LogonFlag::WithProfile,
                           ProcCreateFlag create_flag =
                                   ProcCreateFlag::NormalPriorityClass |
                                   ProcCreateFlag::CreateUnicodeEnvironment |
                                   ProcCreateFlag::CreateNewConsole,
-                          void* env = nullptr,
-                          const wchar_t* curr_dir = nullptr);
-
-        PROCESS_INFORMATION
-        create_with_token(HANDLE token_handle,
-                          const char* app_name,
-                          const char* cmdline = nullptr,
-                          LogonFlag logon_flag = LogonFlag::WithProfile,
-                          ProcCreateFlag create_flag =
-                                  ProcCreateFlag::NormalPriorityClass |
-                                  ProcCreateFlag::CreateUnicodeEnvironment |
-                                  ProcCreateFlag::CreateNewConsole,
-                          const char* curr_dir = nullptr);
+                          void *env = nullptr,
+                          const wchar_t *curr_dir = nullptr);
 
         PROCESS_INFORMATION
         create_with_token(HANDLE token_handle,
-                          const wchar_t* app_name,
-                          wchar_t* cmdline = nullptr,
+                          const char *app_name,
+                          const char *cmdline = nullptr,
                           LogonFlag logon_flag = LogonFlag::WithProfile,
                           ProcCreateFlag create_flag =
                                   ProcCreateFlag::NormalPriorityClass |
                                   ProcCreateFlag::CreateUnicodeEnvironment |
                                   ProcCreateFlag::CreateNewConsole,
-                          void* env = nullptr,
-                          const wchar_t* curr_dir = nullptr);
+                          const char *curr_dir = nullptr);
 
-        bool win_exec(const char* cmdline,
+        PROCESS_INFORMATION
+        create_with_token(HANDLE token_handle,
+                          const wchar_t *app_name,
+                          wchar_t *cmdline = nullptr,
+                          LogonFlag logon_flag = LogonFlag::WithProfile,
+                          ProcCreateFlag create_flag =
+                                  ProcCreateFlag::NormalPriorityClass |
+                                  ProcCreateFlag::CreateUnicodeEnvironment |
+                                  ProcCreateFlag::CreateNewConsole,
+                          void *env = nullptr,
+                          const wchar_t *curr_dir = nullptr);
+
+        bool win_exec(const char *cmdline,
                       ShowType show_flag = ShowType::ShowDefault);
 
-        bool shell_exec(const char* file_name,
-                        const char* params = nullptr,
-                        const char* dir = nullptr,
+        bool shell_exec(const char *file_name,
+                        const char *params = nullptr,
+                        const char *dir = nullptr,
                         ShowType show_flag = ShowType::ShowDefault,
                         HWND window_handle = nullptr,
-                        const char* operation = nullptr);
+                        const char *operation = nullptr);
 
-        bool shell_exec(const wchar_t* file_name,
-                        const wchar_t* params = nullptr,
-                        const wchar_t* dir = nullptr,
+        bool shell_exec(const wchar_t *file_name,
+                        const wchar_t *params = nullptr,
+                        const wchar_t *dir = nullptr,
                         ShowType show_flag = ShowType::ShowDefault,
                         HWND window_handle = nullptr,
-                        const wchar_t* operation = nullptr);
+                        const wchar_t *operation = nullptr);
 
-        bool runas_elevated(const char* app_name,
-                            const char* cmdline = nullptr);
+        bool runas_elevated(const char *app_name,
+                            const char *cmdline = nullptr);
 
-        bool runas_elevated(const wchar_t* app_name,
-                            const wchar_t* cmdline = nullptr);
-
-        bool fake_proc(HANDLE proc_handle,
-                       const char* app_name,
-                       const char* cmdline);
+        bool runas_elevated(const wchar_t *app_name,
+                            const wchar_t *cmdline = nullptr);
 
         bool fake_proc(HANDLE proc_handle,
-                       const wchar_t* app_name,
-                       const wchar_t* cmdline);
+                       const char *app_name,
+                       const char *cmdline);
+
+        bool fake_proc(HANDLE proc_handle,
+                       const wchar_t *app_name,
+                       const wchar_t *cmdline);
 
         bool wait_child(HANDLE child_proc_handle,
                         uint32_t milli_seconds = INFINITE);
@@ -430,63 +430,63 @@ namespace YanLib::sys {
 
         uint32_t exit_status(HANDLE proc_handle);
 
-        bool get_startup_info(STARTUPINFOA* info);
+        bool get_startup_info(STARTUPINFOA *info);
 
-        bool get_startup_info(STARTUPINFOW* info);
+        bool get_startup_info(STARTUPINFOW *info);
 
-        void* malloc(HANDLE proc_handle,
+        void *malloc(HANDLE proc_handle,
                      size_t size,
-                     void* addr = nullptr,
+                     void *addr = nullptr,
                      AllocateType type = AllocateType::Commit |
                              AllocateType::Reserve,
                      MemoryProtect protect = MemoryProtect::ReadWrite);
 
         bool free(HANDLE proc_handle,
-                  void* addr,
+                  void *addr,
                   size_t size = 0,
                   AllocateType type = AllocateType::Release);
 
-        void* malloc_reserve(HANDLE proc_handle,
+        void *malloc_reserve(HANDLE proc_handle,
                              size_t size,
-                             void* addr = nullptr,
+                             void *addr = nullptr,
                              AllocateType type = AllocateType::Reserve,
                              MemoryProtect protect = MemoryProtect::ReadWrite);
 
         bool free_reserve(HANDLE proc_handle,
-                          void* addr,
+                          void *addr,
                           size_t size,
                           AllocateType type = AllocateType::DeCommit);
 
         bool mem_guard_attr(HANDLE proc_handle,
-                            void* addr,
+                            void *addr,
                             size_t size,
                             MemoryProtect protect,
-                            MemoryProtect* old_protect);
+                            MemoryProtect *old_protect);
 
         bool query_mem(HANDLE proc_handle,
-                       const void* address,
-                       MEMORY_BASIC_INFORMATION* buffer,
+                       const void *address,
+                       MEMORY_BASIC_INFORMATION *buffer,
                        size_t len);
 
-        bool global_mem_status(MEMORYSTATUSEX* buffer);
+        bool global_mem_status(MEMORYSTATUSEX *buffer);
 
         bool read(HANDLE proc_handle,
-                  const void* base_addr,
-                  void* buf,
+                  const void *base_addr,
+                  void *buf,
                   size_t size,
-                  size_t* bytes_read);
+                  size_t *bytes_read);
 
         bool write(HANDLE proc_handle,
-                   void* base_addr,
-                   const void* buf,
+                   void *base_addr,
+                   const void *buf,
                    size_t size,
-                   size_t* bytes_written);
+                   size_t *bytes_written);
 
         std::vector<uint8_t>
-        read(HANDLE proc_handle, const void* base_addr, size_t size);
+        read(HANDLE proc_handle, const void *base_addr, size_t size);
 
         bool write(HANDLE proc_handle,
-                   void* base_addr,
+                   void *base_addr,
                    const std::vector<uint8_t> &buf);
 
         void flush_write_buffer();
@@ -541,11 +541,11 @@ namespace YanLib::sys {
                             std::wstring &image_name,
                             bool native_name = false);
 
-        void* image_base();
+        void *image_base();
 
-        void* image_base(HANDLE proc_handle);
+        void *image_base(HANDLE proc_handle);
 
-        void* image_base(uint32_t pid);
+        void *image_base(uint32_t pid);
 
         uint32_t get_priority(HANDLE proc_handle);
 
@@ -561,12 +561,12 @@ namespace YanLib::sys {
 
         bool get_info(HANDLE proc_handle,
                       PROCESS_INFORMATION_CLASS proc_info_class,
-                      void* proc_info,
+                      void *proc_info,
                       uint32_t proc_info_size);
 
         bool set_info(HANDLE proc_handle,
                       PROCESS_INFORMATION_CLASS proc_info_class,
-                      void* proc_info,
+                      void *proc_info,
                       uint32_t proc_info_size);
 
         bool get_mem_info(HANDLE proc_handle,
@@ -575,32 +575,32 @@ namespace YanLib::sys {
 
         bool get_module_info(HANDLE proc_handle,
                              HMODULE module_handle,
-                             MODULEINFO* mod_info,
+                             MODULEINFO *mod_info,
                              uint32_t mod_info_size);
 
-        bool logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION* buf,
-                                    uint32_t* real_size);
+        bool logical_processor_info(SYSTEM_LOGICAL_PROCESSOR_INFORMATION *buf,
+                                    uint32_t *real_size);
 
         bool get_affinity_mask(HANDLE proc_handle,
-                               DWORD_PTR* proc_affinity_mask,
-                               DWORD_PTR* system_affinity_mask);
+                               uintptr_t *proc_affinity_mask,
+                               uintptr_t *system_affinity_mask);
 
         bool set_affinity_mask(HANDLE proc_handle,
-                               DWORD_PTR proc_affinity_mask);
+                               uintptr_t proc_affinity_mask);
 
         bool get_group_affinity(HANDLE proc_handle,
-                                uint16_t* group_count,
-                                uint16_t* group_array);
+                                uint16_t *group_count,
+                                uint16_t *group_array);
 
-        bool io_counters(HANDLE proc_handle, IO_COUNTERS* io_counters);
+        bool io_counters(HANDLE proc_handle, IO_COUNTERS *io_counters);
 
         bool get_mitigation_policy(HANDLE proc_handle,
                                    PROCESS_MITIGATION_POLICY mitigation_policy,
-                                   void* buffer,
+                                   void *buffer,
                                    size_t len);
 
         bool set_mitigation_policy(PROCESS_MITIGATION_POLICY mitigation_policy,
-                                   void* buffer,
+                                   void *buffer,
                                    size_t len);
 
         bool get_priority_boost(HANDLE proc_handle);
@@ -608,21 +608,21 @@ namespace YanLib::sys {
         bool set_priority_boost(HANDLE proc_handle,
                                 bool is_disable_priority_boost);
 
-        bool get_shutdown_params(uint32_t* level, bool* show_retry_dialog);
+        bool get_shutdown_params(uint32_t *level, bool *show_retry_dialog);
 
         bool set_shutdown_params(uint32_t level, bool show_retry_dialog);
 
         bool time_statistics(HANDLE proc_handle,
-                             FILETIME* creation_time,
-                             FILETIME* exit_time,
-                             FILETIME* kernel_time,
-                             FILETIME* user_time);
+                             FILETIME *creation_time,
+                             FILETIME *exit_time,
+                             FILETIME *kernel_time,
+                             FILETIME *user_time);
 
         uint32_t system_version(uint32_t pid);
 
         bool get_working_set_size(HANDLE proc_handle,
-                                  SIZE_T* min_working_set_size,
-                                  SIZE_T* max_working_set_size);
+                                  SIZE_T *min_working_set_size,
+                                  SIZE_T *max_working_set_size);
 
         bool set_working_set_size(HANDLE proc_handle,
                                   size_t min_working_set_size,
@@ -630,20 +630,20 @@ namespace YanLib::sys {
 
         bool get_processor_system_cycle_time(
                 uint16_t group,
-                SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION* buffer,
-                uint32_t* real_size);
+                SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION *buffer,
+                uint32_t *real_size);
 
         bool is_microsoft_store_app(HANDLE proc_handle);
 
-        bool is_exe_search_path(const char* exe_name);
+        bool is_exe_search_path(const char *exe_name);
 
-        bool is_exe_search_path(const wchar_t* exe_name);
+        bool is_exe_search_path(const wchar_t *exe_name);
 
-        bool get_affinity_update_mode(HANDLE proc_handle, bool* auto_update);
+        bool get_affinity_update_mode(HANDLE proc_handle, bool *auto_update);
 
         bool set_affinity_update_mode(HANDLE proc_handle, bool auto_update);
 
-        bool all_thread_cycle_time(HANDLE proc_handle, uint64_t* cycle_time);
+        bool all_thread_cycle_time(HANDLE proc_handle, uint64_t *cycle_time);
 
         bool set_restriction_exemption(bool is_enable_exemption);
 

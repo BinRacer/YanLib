@@ -36,7 +36,7 @@ namespace YanLib::ui {
     }
 
     bool scroll::get_info(HWND window_handle,
-                          SCROLLBARINFO* scroll_bar_info,
+                          SCROLLBARINFO *scroll_bar_info,
                           ObjectID object_id) {
         if (!GetScrollBarInfo(window_handle, static_cast<int32_t>(object_id),
                               scroll_bar_info)) {
@@ -47,7 +47,7 @@ namespace YanLib::ui {
     }
 
     bool scroll::get_info(HWND window_handle,
-                          SCROLLINFO* scroll_info,
+                          SCROLLINFO *scroll_info,
                           ScrollType scroll_type) {
         if (!GetScrollInfo(window_handle, static_cast<uint32_t>(scroll_type),
                            scroll_info)) {
@@ -58,7 +58,7 @@ namespace YanLib::ui {
     }
 
     int32_t scroll::set_info(HWND window_handle,
-                             SCROLLINFO* scroll_info,
+                             SCROLLINFO *scroll_info,
                              ScrollType scroll_type,
                              bool is_redraw) {
         return SetScrollInfo(window_handle, static_cast<uint32_t>(scroll_type),
@@ -88,8 +88,8 @@ namespace YanLib::ui {
     }
 
     bool scroll::get_range(HWND window_handle,
-                           int32_t* min_pos,
-                           int32_t* max_pos,
+                           int32_t *min_pos,
+                           int32_t *max_pos,
                            ScrollType scroll_type) {
         if (!GetScrollRange(window_handle, static_cast<uint32_t>(scroll_type),
                             min_pos, max_pos)) {
@@ -115,8 +115,8 @@ namespace YanLib::ui {
     bool scroll::scroll_window(HWND window_handle,
                                int32_t x_amount,
                                int32_t y_amount,
-                               const RECT* rect,
-                               const RECT* clip_rect) {
+                               const RECT *rect,
+                               const RECT *clip_rect) {
         if (!ScrollWindow(window_handle, x_amount, y_amount, rect, clip_rect)) {
             error_code = GetLastError();
             return false;
@@ -127,10 +127,10 @@ namespace YanLib::ui {
     int32_t scroll::scroll_window_extend(HWND window_handle,
                                          int32_t dx,
                                          int32_t dy,
-                                         const RECT* rect_scroll,
-                                         const RECT* rect_clip,
+                                         const RECT *rect_scroll,
+                                         const RECT *rect_clip,
                                          HRGN region_handle_update,
-                                         RECT* rect_update,
+                                         RECT *rect_update,
                                          ScrollFlag flag) {
         int32_t result =
                 ScrollWindowEx(window_handle, dx, dy, rect_scroll, rect_clip,

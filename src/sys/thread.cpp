@@ -20,13 +20,12 @@ namespace YanLib::sys {
     }
 
     HANDLE thread::create(LPTHREAD_START_ROUTINE start_addr,
-                          void* params,
+                          void *params,
                           size_t stack_size,
-                          SECURITY_ATTRIBUTES* sa) {
-        uint32_t tid = 0;
+                          SECURITY_ATTRIBUTES *sa) {
+        unsigned long tid = 0;
         HANDLE thread_handle =
-                CreateThread(sa, stack_size, start_addr, params, 0,
-                             reinterpret_cast<unsigned long*>(&tid));
+                CreateThread(sa, stack_size, start_addr, params, 0, &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return nullptr;
@@ -38,14 +37,12 @@ namespace YanLib::sys {
     }
 
     HANDLE thread::create_with_suspend(LPTHREAD_START_ROUTINE start_addr,
-                                       void* params,
+                                       void *params,
                                        size_t stack_size,
-                                       SECURITY_ATTRIBUTES* sa) {
-        uint32_t tid = 0;
-        HANDLE thread_handle =
-                CreateThread(sa, stack_size, start_addr, params,
-                             CREATE_SUSPENDED,
-                             reinterpret_cast<unsigned long*>(&tid));
+                                       SECURITY_ATTRIBUTES *sa) {
+        unsigned long tid = 0;
+        HANDLE thread_handle = CreateThread(sa, stack_size, start_addr, params,
+                                            CREATE_SUSPENDED, &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return nullptr;
@@ -57,14 +54,13 @@ namespace YanLib::sys {
     }
 
     HANDLE thread::create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                             void* params,
+                                             void *params,
                                              size_t stack_size,
-                                             SECURITY_ATTRIBUTES* sa) {
-        uint32_t tid = 0;
+                                             SECURITY_ATTRIBUTES *sa) {
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateThread(sa, stack_size, start_addr, params,
-                             STACK_SIZE_PARAM_IS_A_RESERVATION,
-                             reinterpret_cast<unsigned long*>(&tid));
+                             STACK_SIZE_PARAM_IS_A_RESERVATION, &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return nullptr;
@@ -77,15 +73,14 @@ namespace YanLib::sys {
 
     HANDLE thread::create_remote(HANDLE proc_handle,
                                  LPTHREAD_START_ROUTINE start_addr,
-                                 void* params,
+                                 void *params,
                                  size_t stack_size,
                                  LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                 SECURITY_ATTRIBUTES* sa) {
-        uint32_t tid = 0;
+                                 SECURITY_ATTRIBUTES *sa) {
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateRemoteThreadEx(proc_handle, sa, stack_size, start_addr,
-                                     params, 0, attr_list,
-                                     reinterpret_cast<unsigned long*>(&tid));
+                                     params, 0, attr_list, &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return nullptr;
@@ -99,15 +94,14 @@ namespace YanLib::sys {
     HANDLE
     thread::create_remote_with_suspend(HANDLE proc_handle,
                                        LPTHREAD_START_ROUTINE start_addr,
-                                       void* params,
+                                       void *params,
                                        size_t stack_size,
                                        LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                       SECURITY_ATTRIBUTES* sa) {
-        uint32_t tid = 0;
+                                       SECURITY_ATTRIBUTES *sa) {
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateRemoteThreadEx(proc_handle, sa, stack_size, start_addr,
-                                     params, CREATE_SUSPENDED, attr_list,
-                                     reinterpret_cast<unsigned long*>(&tid));
+                                     params, CREATE_SUSPENDED, attr_list, &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return nullptr;
@@ -121,16 +115,15 @@ namespace YanLib::sys {
     HANDLE thread::create_remote_with_stack_reserve(
             HANDLE proc_handle,
             LPTHREAD_START_ROUTINE start_addr,
-            void* params,
+            void *params,
             size_t stack_size,
             LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-            SECURITY_ATTRIBUTES* sa) {
-        uint32_t tid = 0;
+            SECURITY_ATTRIBUTES *sa) {
+        unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateRemoteThreadEx(proc_handle, sa, stack_size, start_addr,
                                      params, STACK_SIZE_PARAM_IS_A_RESERVATION,
-                                     attr_list,
-                                     reinterpret_cast<unsigned long*>(&tid));
+                                     attr_list, &tid);
         if (!thread_handle) {
             error_code = GetLastError();
             return nullptr;
@@ -223,15 +216,15 @@ namespace YanLib::sys {
         return true;
     }
 
-    void* thread::tls_get(uint32_t tls_index) {
-        void* tls_value = TlsGetValue(tls_index);
+    void *thread::tls_get(uint32_t tls_index) {
+        void *tls_value = TlsGetValue(tls_index);
         if (!tls_value) {
             error_code = GetLastError();
         }
         return tls_value;
     }
 
-    bool thread::tls_set(uint32_t tls_index, void* tls_value) {
+    bool thread::tls_set(uint32_t tls_index, void *tls_value) {
         if (!TlsSetValue(tls_index, tls_value)) {
             error_code = GetLastError();
             return false;
@@ -258,7 +251,7 @@ namespace YanLib::sys {
     bool
     thread::init_proc_thread_attr_list(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
                                        uint32_t attr_count,
-                                       SIZE_T* size) {
+                                       SIZE_T *size) {
         if (!InitializeProcThreadAttributeList(attr_list, attr_count, 0,
                                                size)) {
             error_code = GetLastError();
@@ -268,11 +261,11 @@ namespace YanLib::sys {
     }
 
     bool thread::update_proc_thread_attr(LPPROC_THREAD_ATTRIBUTE_LIST attr_list,
-                                         DWORD_PTR attr,
-                                         void* value,
+                                         uintptr_t attr,
+                                         void *value,
                                          size_t bytes_size,
-                                         void* previous_value,
-                                         SIZE_T* ret_size) {
+                                         void *previous_value,
+                                         SIZE_T *ret_size) {
         if (!UpdateProcThreadAttribute(attr_list, 0, attr, value, bytes_size,
                                        previous_value, ret_size)) {
             error_code = GetLastError();
@@ -355,9 +348,8 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::exit_status(HANDLE thread_handle) {
-        uint32_t exit_code = 0;
-        if (!GetExitCodeThread(thread_handle,
-                               reinterpret_cast<unsigned long*>(&exit_code))) {
+        unsigned long exit_code = 0;
+        if (!GetExitCodeThread(thread_handle, &exit_code)) {
             error_code = GetLastError();
         }
         return exit_code;
@@ -365,7 +357,7 @@ namespace YanLib::sys {
 
     bool thread::thread_info(HANDLE thread_handle,
                              THREAD_INFORMATION_CLASS thread_info_class,
-                             void* thread_info,
+                             void *thread_info,
                              uint32_t thread_info_size) {
         if (!get_info(thread_handle, thread_info_class, thread_info,
                       thread_info_size)) {
@@ -435,10 +427,10 @@ namespace YanLib::sys {
     }
 
     bool thread::time_statistics(HANDLE thread_handle,
-                                 FILETIME* creation_time,
-                                 FILETIME* exit_time,
-                                 FILETIME* kernel_time,
-                                 FILETIME* user_time) {
+                                 FILETIME *creation_time,
+                                 FILETIME *exit_time,
+                                 FILETIME *kernel_time,
+                                 FILETIME *user_time) {
         if (!GetThreadTimes(thread_handle, creation_time, exit_time,
                             kernel_time, user_time)) {
             error_code = GetLastError();
@@ -448,17 +440,17 @@ namespace YanLib::sys {
     }
 
     HRESULT thread::get_description(HANDLE thread_handle,
-                                    wchar_t** thread_description) {
+                                    wchar_t **thread_description) {
         return GetThreadDescription(thread_handle, thread_description);
     }
 
     HRESULT thread::set_description(HANDLE thread_handle,
-                                    const wchar_t* thread_description) {
+                                    const wchar_t *thread_description) {
         return SetThreadDescription(thread_handle, thread_description);
     }
 
     bool thread::get_group_affinity(HANDLE thread_handle,
-                                    GROUP_AFFINITY* group_affinity) {
+                                    GROUP_AFFINITY *group_affinity) {
         if (!GetThreadGroupAffinity(thread_handle, group_affinity)) {
             error_code = GetLastError();
             return false;
@@ -467,8 +459,8 @@ namespace YanLib::sys {
     }
 
     bool thread::set_group_affinity(HANDLE thread_handle,
-                                    const GROUP_AFFINITY* group_affinity,
-                                    GROUP_AFFINITY* previous_group_affinity) {
+                                    const GROUP_AFFINITY *group_affinity,
+                                    GROUP_AFFINITY *previous_group_affinity) {
         if (!SetThreadGroupAffinity(thread_handle, group_affinity,
                                     previous_group_affinity)) {
             error_code = GetLastError();
@@ -478,7 +470,7 @@ namespace YanLib::sys {
     }
 
     bool thread::get_ideal_processor(HANDLE thread_handle,
-                                     PROCESSOR_NUMBER* ideal_processor) {
+                                     PROCESSOR_NUMBER *ideal_processor) {
         if (!GetThreadIdealProcessorEx(thread_handle, ideal_processor)) {
             error_code = GetLastError();
             return false;
@@ -488,8 +480,8 @@ namespace YanLib::sys {
 
     bool
     thread::set_ideal_processor(HANDLE thread_handle,
-                                PROCESSOR_NUMBER* ideal_processor,
-                                PROCESSOR_NUMBER* previous_ideal_processor) {
+                                PROCESSOR_NUMBER *ideal_processor,
+                                PROCESSOR_NUMBER *previous_ideal_processor) {
         if (!SetThreadIdealProcessorEx(thread_handle, ideal_processor,
                                        previous_ideal_processor)) {
             error_code = GetLastError();
@@ -500,7 +492,7 @@ namespace YanLib::sys {
 
     bool thread::get_info(HANDLE thread_handle,
                           THREAD_INFORMATION_CLASS thread_info_class,
-                          void* thread_info,
+                          void *thread_info,
                           uint32_t thread_information_size) {
         if (!GetThreadInformation(thread_handle, thread_info_class, thread_info,
                                   thread_information_size)) {
@@ -512,7 +504,7 @@ namespace YanLib::sys {
 
     bool thread::set_info(HANDLE thread_handle,
                           THREAD_INFORMATION_CLASS thread_info_class,
-                          void* thread_info,
+                          void *thread_info,
                           uint32_t thread_information_size) {
         if (!SetThreadInformation(thread_handle, thread_info_class, thread_info,
                                   thread_information_size)) {
@@ -524,19 +516,24 @@ namespace YanLib::sys {
 
     bool thread::query_idle_processor_cycle_time(
             uint16_t group,
-            uint32_t* buffer_length,
-            uint64_t* processor_idle_cycle_time) {
-        if (QueryIdleProcessorCycleTimeEx(group,
-                                          reinterpret_cast<unsigned long*>(
-                                                  buffer_length),
-                                          processor_idle_cycle_time)) {
-            error_code = GetLastError();
+            uint32_t *buffer_length,
+            uint64_t *processor_idle_cycle_time) {
+        if (!buffer_length) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *buffer_length;
+        if (QueryIdleProcessorCycleTimeEx(group, &temp,
+                                          processor_idle_cycle_time)) {
+            error_code = GetLastError();
+            *buffer_length = temp;
+            return false;
+        }
+        *buffer_length = temp;
         return true;
     }
 
-    bool thread::query_cycle_time(HANDLE thread_handle, uint64_t* cycle_time) {
+    bool thread::query_cycle_time(HANDLE thread_handle, uint64_t *cycle_time) {
         if (!QueryThreadCycleTime(thread_handle, cycle_time)) {
             error_code = GetLastError();
             return false;
@@ -544,9 +541,9 @@ namespace YanLib::sys {
         return true;
     }
 
-    DWORD_PTR thread::set_affinity_mask(HANDLE thread_handle,
-                                        DWORD_PTR thread_affinity_mask) {
-        DWORD_PTR ret =
+    uintptr_t thread::set_affinity_mask(HANDLE thread_handle,
+                                        uintptr_t thread_affinity_mask) {
+        uintptr_t ret =
                 SetThreadAffinityMask(thread_handle, thread_affinity_mask);
         if (!ret) {
             error_code = GetLastError();
@@ -554,12 +551,18 @@ namespace YanLib::sys {
         return ret;
     }
 
-    bool thread::set_stack_guarantee(uint32_t* bytes_stack) {
-        if (!SetThreadStackGuarantee(
-                    reinterpret_cast<unsigned long*>(bytes_stack))) {
-            error_code = GetLastError();
+    bool thread::set_stack_guarantee(uint32_t *bytes_stack) {
+        if (!bytes_stack) {
+            error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
+        unsigned long temp = *bytes_stack;
+        if (!SetThreadStackGuarantee(&temp)) {
+            error_code = GetLastError();
+            *bytes_stack = temp;
+            return false;
+        }
+        *bytes_stack = temp;
         return true;
     }
 

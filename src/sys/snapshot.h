@@ -53,7 +53,7 @@ namespace YanLib::sys {
         std::vector<MODULEENTRY32W> modules{};
         std::unordered_set<HMODULE> module_handles{};
         std::vector<HEAPLIST32> heaps{};
-        std::unordered_set<ULONG_PTR> heap_ids{};
+        std::unordered_set<uintptr_t> heap_ids{};
         uint32_t error_code = 0;
 
         void cleanup();
@@ -83,7 +83,7 @@ namespace YanLib::sys {
 
         PROCESSENTRY32W find_proc(uint32_t pid);
 
-        PROCESSENTRY32W find_proc(const wchar_t* proc_name);
+        PROCESSENTRY32W find_proc(const wchar_t *proc_name);
 
         std::vector<THREADENTRY32> ls_threads(uint32_t pid = 0);
 
@@ -105,23 +105,23 @@ namespace YanLib::sys {
 
         void refresh_modules();
 
-        MODULEENTRY32W find_module(const wchar_t* proc_name);
+        MODULEENTRY32W find_module(const wchar_t *proc_name);
 
-        MODULEENTRY32W find_module(const void* address);
+        MODULEENTRY32W find_module(const void *address);
 
         std::vector<HEAPLIST32> ls_heaps(uint32_t pid = 0);
 
-        std::unordered_set<ULONG_PTR> ls_heap_ids(uint32_t pid = 0);
+        std::unordered_set<uintptr_t> ls_heap_ids(uint32_t pid = 0);
 
         void refresh_heaps();
 
-        HEAPLIST32 find_heap(ULONG_PTR heap_id);
+        HEAPLIST32 find_heap(uintptr_t heap_id);
 
         std::vector<HEAPLIST32> find_heaps(uint32_t pid);
 
         std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heap_list);
 
-        std::vector<HEAPENTRY32> find_heap_blocks(ULONG_PTR heap_id);
+        std::vector<HEAPENTRY32> find_heap_blocks(uintptr_t heap_id);
 
         std::vector<HEAPENTRY32> find_heap_blocks(uint32_t pid);
 
@@ -131,9 +131,9 @@ namespace YanLib::sys {
 
         uint32_t handle_to_pid(HANDLE proc_handle);
 
-        bool is_heap(HANDLE proc_handle, void* address);
+        bool is_heap(HANDLE proc_handle, void *address);
 
-        bool is_heap(uint32_t pid, void* address);
+        bool is_heap(uint32_t pid, void *address);
 
         [[nodiscard]] uint32_t err_code() const;
 

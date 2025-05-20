@@ -45,12 +45,12 @@ namespace YanLib::sync {
 
         ~event();
 
-        bool create(SECURITY_ATTRIBUTES* sa = nullptr,
+        bool create(SECURITY_ATTRIBUTES *sa = nullptr,
                     bool is_manual_reset = false,
                     bool is_initial_state = false,
-                    const wchar_t* name = nullptr);
+                    const wchar_t *name = nullptr);
 
-        bool open(const wchar_t* name,
+        bool open(const wchar_t *name,
                   EventAccess access = EventAccess::All,
                   bool is_inherit = false);
 

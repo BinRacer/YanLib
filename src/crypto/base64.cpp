@@ -7,7 +7,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::crypto {
-    std::vector<uint8_t> base64::encode(const uint8_t* data, size_t len) {
+    std::vector<uint8_t> base64::encode(const uint8_t *data, size_t len) {
         if (len <= 0)
             return {};
         constexpr uint8_t BASE64_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
@@ -42,7 +42,7 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<uint8_t> base64::decode(const uint8_t* data, size_t len) {
+    std::vector<uint8_t> base64::decode(const uint8_t *data, size_t len) {
         if (len <= 0 || len % 4 != 0)
             return {};
 
@@ -236,7 +236,7 @@ namespace YanLib::crypto {
         return false;
     }
 
-    std::vector<uint8_t> base64::encode_url(const uint8_t* data, size_t len) {
+    std::vector<uint8_t> base64::encode_url(const uint8_t *data, size_t len) {
         if (len <= 0)
             return {};
         constexpr uint8_t BASE64_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
@@ -281,7 +281,7 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<uint8_t> base64::decode_url(const uint8_t* data, size_t len) {
+    std::vector<uint8_t> base64::decode_url(const uint8_t *data, size_t len) {
         if (len <= 0)
             return {};
 

@@ -47,9 +47,9 @@ namespace YanLib::hash {
 
         explicit sha512(const std::string &data);
 
-        explicit sha512(const char* filename);
+        explicit sha512(const char *filename);
 
-        explicit sha512(const wchar_t* filename);
+        explicit sha512(const wchar_t *filename);
 
         ~sha512();
 

@@ -87,7 +87,7 @@ namespace YanLib::mem {
     private:
         std::vector<HANDLE> file_handles = {};
         std::vector<HANDLE> mmap_handles = {};
-        std::vector<void*> addr_list = {};
+        std::vector<void *> addr_list = {};
         sync::rwlock file_rwlock = {};
         sync::rwlock mmap_rwlock = {};
         sync::rwlock addr_rwlock = {};
@@ -106,58 +106,58 @@ namespace YanLib::mem {
 
         ~mmap();
 
-        HANDLE create(const char* file_name,
-                      const char* mmap_name = nullptr,
-                      SECURITY_ATTRIBUTES* sa = nullptr,
+        HANDLE create(const char *file_name,
+                      const char *mmap_name = nullptr,
+                      SECURITY_ATTRIBUTES *sa = nullptr,
                       MemoryProtect protect = MemoryProtect::ReadWrite,
                       uint32_t max_high = 0,
                       uint32_t max_low = 0);
 
-        HANDLE create(const wchar_t* file_name,
-                      const wchar_t* mmap_name = nullptr,
-                      SECURITY_ATTRIBUTES* sa = nullptr,
-                      MemoryProtect protect = MemoryProtect::ReadWrite,
-                      uint32_t max_high = 0,
-                      uint32_t max_low = 0);
-
-        HANDLE create(HANDLE file_handle,
-                      const char* mmap_name,
-                      SECURITY_ATTRIBUTES* sa = nullptr,
+        HANDLE create(const wchar_t *file_name,
+                      const wchar_t *mmap_name = nullptr,
+                      SECURITY_ATTRIBUTES *sa = nullptr,
                       MemoryProtect protect = MemoryProtect::ReadWrite,
                       uint32_t max_high = 0,
                       uint32_t max_low = 0);
 
         HANDLE create(HANDLE file_handle,
-                      const wchar_t* mmap_name,
-                      SECURITY_ATTRIBUTES* sa = nullptr,
+                      const char *mmap_name,
+                      SECURITY_ATTRIBUTES *sa = nullptr,
                       MemoryProtect protect = MemoryProtect::ReadWrite,
                       uint32_t max_high = 0,
                       uint32_t max_low = 0);
 
-        HANDLE open(const char* mmap_name,
+        HANDLE create(HANDLE file_handle,
+                      const wchar_t *mmap_name,
+                      SECURITY_ATTRIBUTES *sa = nullptr,
+                      MemoryProtect protect = MemoryProtect::ReadWrite,
+                      uint32_t max_high = 0,
+                      uint32_t max_low = 0);
+
+        HANDLE open(const char *mmap_name,
                     MemoryAccess access = MemoryAccess::Read |
                             MemoryAccess::Write,
                     bool is_inherit = false);
 
-        HANDLE open(const wchar_t* mmap_name,
+        HANDLE open(const wchar_t *mmap_name,
                     MemoryAccess access = MemoryAccess::Read |
                             MemoryAccess::Write,
                     bool is_inherit = false);
 
-        void* mmap_file(HANDLE mmap_handle,
+        void *mmap_file(HANDLE mmap_handle,
                         MemoryAccess access = MemoryAccess::Read |
                                 MemoryAccess::Write,
                         uint32_t offset_high = 0,
                         uint32_t offset_low = 0,
                         uint64_t size = 0);
 
-        bool unmap_file(const void* addr);
+        bool unmap_file(const void *addr);
 
         bool
-        read(void* addr, uint8_t* buf, int64_t size, uint64_t offset = 0) const;
+        read(void *addr, uint8_t *buf, int64_t size, uint64_t offset = 0) const;
 
-        bool write(void* addr,
-                   const uint8_t* buf,
+        bool write(void *addr,
+                   const uint8_t *buf,
                    int64_t size,
                    uint64_t offset = 0) const;
 

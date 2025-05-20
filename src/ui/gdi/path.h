@@ -9,6 +9,21 @@
 #include <vector>
 
 namespace YanLib::ui::gdi {
+#ifndef POINTTYPE
+#define POINTTYPE
+
+    enum class PointType : uint8_t {
+        CloseFigure = PT_CLOSEFIGURE,
+        LineTo = PT_LINETO,
+        BezierTo = PT_BEZIERTO,
+        MoveTo = PT_MOVETO,
+    };
+
+    inline PointType operator|(PointType a, PointType b) {
+        return static_cast<PointType>(static_cast<uint8_t>(a) |
+                                      static_cast<uint8_t>(b));
+    }
+#endif
     class path {
     public:
         path(const path &other) = delete;
@@ -23,33 +38,33 @@ namespace YanLib::ui::gdi {
 
         ~path() = default;
 
-        static bool begin_path(HDC dc_handle);
+        static bool begin(HDC dc_handle);
 
-        static bool end_path(HDC dc_handle);
+        static bool end(HDC dc_handle);
 
-        static int32_t get_path(HDC dc_handle,
-                                std::vector<POINT> &point,
-                                std::vector<uint8_t> &point_type);
+        static int32_t get(HDC dc_handle,
+                           std::vector<POINT> &point,
+                           std::vector<PointType> &point_type);
 
-        static bool fill_path(HDC dc_handle);
+        static bool fill(HDC dc_handle);
 
-        static bool abort_path(HDC dc_handle);
+        static bool abort(HDC dc_handle);
 
-        static bool flatten_path(HDC dc_handle);
+        static bool flatten(HDC dc_handle);
 
-        static bool stroke_and_fill_path(HDC dc_handle);
+        static bool stroke_and_fill(HDC dc_handle);
 
-        static bool stroke_path(HDC dc_handle);
+        static bool stroke(HDC dc_handle);
 
-        static bool widen_path(HDC dc_handle);
+        static bool widen(HDC dc_handle);
 
-        static HRGN path_to_region(HDC dc_handle);
+        static HRGN get_region(HDC dc_handle);
 
         static bool close_figure(HDC dc_handle);
 
-        static bool get_miter_limit(HDC dc_handle, FLOAT* limit);
+        static bool get_miter_limit(HDC dc_handle, FLOAT *limit);
 
-        static bool set_miter_limit(HDC dc_handle, FLOAT limit, FLOAT* old);
+        static bool set_miter_limit(HDC dc_handle, FLOAT limit, FLOAT *old);
     };
 } // namespace YanLib::ui::gdi
 #endif // PATH_H

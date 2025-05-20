@@ -35,24 +35,24 @@ namespace YanLib::io {
 
         [[nodiscard]] bool init_ok() const;
 
-        int32_t read(char* buf,
+        int32_t read(char *buf,
                      int32_t len,
                      int32_t flags,
-                     sockaddr* from,
-                     int32_t* from_len);
+                     sockaddr *from,
+                     int32_t *from_len);
 
-        int32_t write(const char* buf,
+        int32_t write(const char *buf,
                       int32_t len,
                       int32_t flags,
-                      const sockaddr* to,
+                      const sockaddr *to,
                       int32_t to_len);
 
-        int32_t read(char* buf,
+        int32_t read(char *buf,
                      int32_t len,
                      std::string &remote_ip,
                      uint16_t &remote_port);
 
-        int32_t write(char* buf,
+        int32_t write(char *buf,
                       int32_t len,
                       std::string &remote_ip,
                       uint16_t &remote_port);

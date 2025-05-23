@@ -3,11 +3,10 @@
 //
 
 #include "http.h"
-#include "helper/convert.h"
 #include "fs.h"
 
 namespace YanLib::io {
-    http::http(const std::string &input_url) {
+    http::http(const std::string &input_url, helper::CodePage code_page) {
         uc.dwStructSize = sizeof(uc);
         uc.dwSchemeLength = _countof(scheme) - 1;
         uc.dwHostNameLength = _countof(hostname) - 1;
@@ -21,7 +20,7 @@ namespace YanLib::io {
         uc.lpszPassword = password;
         uc.lpszUrlPath = urlpath;
         uc.lpszExtraInfo = extra_info;
-        url = helper::convert::str_to_wstr(input_url);
+        url = helper::convert::str_to_wstr(input_url, code_page);
     }
 
     http::http(const std::wstring &input_url) {
@@ -221,14 +220,17 @@ namespace YanLib::io {
     }
 
     bool
-    http::get_headers(std::unordered_map<std::wstring, std::wstring> &headers) {
+    http::get_headers(std::unordered_map<std::wstring, std::wstring> &headers,
+                      helper::CodePage code_page) {
         std::unordered_map<std::string, std::string> src_map;
         if (!get_headers(src_map))
             return false;
         headers.clear();
         for (const auto &pair : src_map) {
-            std::wstring key = helper::convert::str_to_wstr(pair.first);
-            std::wstring value = helper::convert::str_to_wstr(pair.second);
+            std::wstring key =
+                    helper::convert::str_to_wstr(pair.first, code_page);
+            std::wstring value =
+                    helper::convert::str_to_wstr(pair.second, code_page);
             headers.emplace(std::move(key), std::move(value));
         }
         return true;
@@ -273,14 +275,15 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::get_headers_vec(std::vector<std::wstring> &headers) {
+    bool http::get_headers_vec(std::vector<std::wstring> &headers,
+                               helper::CodePage code_page) {
         std::vector<std::string> src;
         if (!get_headers_vec(src)) {
             return false;
         }
         headers.clear();
         for (const auto &line : src) {
-            headers.push_back(helper::convert::str_to_wstr(line));
+            headers.push_back(helper::convert::str_to_wstr(line, code_page));
         }
         return true;
     }
@@ -357,11 +360,12 @@ namespace YanLib::io {
                             const char *referrer,
                             const char **accept_types,
                             uint32_t flag,
-                            uintptr_t context) {
+                            uintptr_t context,
+                            helper::CodePage code_page) {
         if (wcslen(extra_info) > 0) {
             wcscat_s(urlpath, _countof(urlpath) - 1, extra_info);
         }
-        std::string url = helper::convert::wstr_to_str(urlpath);
+        std::string url = helper::convert::wstr_to_str(urlpath, code_page);
         if (is_https) {
             flag = flag | INTERNET_FLAG_SECURE |
                     INTERNET_FLAG_IGNORE_CERT_CN_INVALID;
@@ -622,7 +626,8 @@ namespace YanLib::io {
     }
 
     // avoid read too big file
-    std::wstring http::read_wstring_to_end(const std::wstring &input_url) {
+    std::wstring http::read_wstring_to_end(const std::wstring &input_url,
+                                           helper::CodePage code_page) {
         do {
             http client(input_url);
             uint32_t content_length = 0;
@@ -653,7 +658,7 @@ namespace YanLib::io {
                 break;
             }
             body.shrink_to_fit();
-            return helper::convert::str_to_wstr(body);
+            return helper::convert::str_to_wstr(body, code_page);
         }
         while (false);
         return {};

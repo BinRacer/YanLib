@@ -5,6 +5,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 #include <Windows.h>
+#include <CommCtrl.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
@@ -17,6 +18,10 @@ namespace YanLib::ui {
         Unchecked = BST_UNCHECKED,
         Checked = BST_CHECKED,
         Indeterminate = BST_INDETERMINATE,
+        Pushed = BST_PUSHED,
+        Focus = BST_FOCUS,
+        DropDownPushed = BST_DROPDOWNPUSHED,
+        Hot = BST_HOT,
     };
 #endif
 #ifndef FILETYPE
@@ -145,11 +150,10 @@ namespace YanLib::ui {
                              int32_t last_button_id,
                              int32_t check_button_id);
 
-        LRESULT
-        default_proc(HWND dialog_handle,
-                     uint32_t msg,
-                     WPARAM wparam,
-                     LPARAM lparam);
+        LRESULT default_proc(HWND dialog_handle,
+                             uint32_t msg,
+                             WPARAM wparam,
+                             LPARAM lparam);
 
         int32_t fill_listbox(HWND dialog_handle,
                              char *path_spec,

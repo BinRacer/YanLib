@@ -3,13 +3,10 @@
 //
 
 #include "proc.h"
-
+#include "security.h"
+#include "helper/autoclean.h"
 #include <complex>
 #include <memory>
-
-#include "security.h"
-#include "helper/convert.h"
-#include "helper/autoclean.h"
 #include <UserEnv.h>
 
 #pragma comment(lib, "UserEnv.lib")
@@ -70,17 +67,27 @@ namespace YanLib::sys {
     }
 
     PROCESS_INFORMATION proc::create(const char *app_name,
-                                     const char *cmdline,
+                                     char *cmdline,
                                      SECURITY_ATTRIBUTES *proc_attrs,
                                      SECURITY_ATTRIBUTES *thread_attrs,
                                      bool is_inherit,
                                      ProcCreateFlag create_flag,
+                                     void *env,
                                      const char *curr_dir) {
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
-        std::wstring curr = helper::convert::str_to_wstr(curr_dir);
-        return create(app.data(), cmd.data(), proc_attrs, thread_attrs,
-                      is_inherit, create_flag, nullptr, curr.data());
+        STARTUPINFOA si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
+        if (!CreateProcessA(app_name, cmdline, proc_attrs, thread_attrs,
+                            is_inherit ? TRUE : FALSE,
+                            static_cast<uint32_t>(create_flag), env, curr_dir,
+                            &si, &pi)) {
+            error_code = GetLastError();
+            return {};
+        }
+        proc_info_rwlock.write_lock();
+        proc_infos.push_back(pi);
+        proc_info_rwlock.write_unlock();
+        return pi;
     }
 
     PROCESS_INFORMATION proc::create(const wchar_t *app_name,
@@ -109,18 +116,27 @@ namespace YanLib::sys {
 
     PROCESS_INFORMATION
     proc::create_with_suspended(const char *app_name,
-                                const char *cmdline,
+                                char *cmdline,
                                 SECURITY_ATTRIBUTES *proc_attrs,
                                 SECURITY_ATTRIBUTES *thread_attrs,
                                 bool is_inherit,
                                 ProcCreateFlag create_flag,
+                                void *env,
                                 const char *curr_dir) {
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
-        std::wstring curr = helper::convert::str_to_wstr(curr_dir);
-        return create_with_suspended(app.data(), cmd.data(), proc_attrs,
-                                     thread_attrs, is_inherit, create_flag,
-                                     nullptr, curr.data());
+        STARTUPINFOA si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
+        if (!CreateProcessA(app_name, cmdline, proc_attrs, thread_attrs,
+                            is_inherit ? TRUE : FALSE,
+                            static_cast<uint32_t>(create_flag), env, curr_dir,
+                            &si, &pi)) {
+            error_code = GetLastError();
+            return {};
+        }
+        proc_info_rwlock.write_lock();
+        proc_infos.push_back(pi);
+        proc_info_rwlock.write_unlock();
+        return pi;
     }
 
     PROCESS_INFORMATION
@@ -150,18 +166,39 @@ namespace YanLib::sys {
 
     PROCESS_INFORMATION proc::create_as_user(HANDLE token_handle,
                                              const char *app_name,
-                                             const char *cmdline,
+                                             char *cmdline,
                                              SECURITY_ATTRIBUTES *proc_attrs,
                                              SECURITY_ATTRIBUTES *thread_attrs,
                                              bool is_inherit,
                                              ProcCreateFlag create_flag,
+                                             void *env,
                                              const char *curr_dir) {
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
-        std::wstring curr = helper::convert::str_to_wstr(curr_dir);
-        return create_as_user(token_handle, app.data(), cmd.data(), proc_attrs,
-                              thread_attrs, is_inherit, create_flag, nullptr,
-                              curr.data());
+        STARTUPINFOA si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
+        void *environment = nullptr;
+        if (env) {
+            environment = env;
+        }
+        else {
+            security security;
+            environment = security.create_env_block(token_handle);
+            if (!environment) {
+                error_code = security.err_code();
+                return {};
+            }
+        }
+        if (!CreateProcessAsUserA(token_handle, app_name, cmdline, proc_attrs,
+                                  thread_attrs, is_inherit ? TRUE : FALSE,
+                                  static_cast<uint32_t>(create_flag),
+                                  environment, curr_dir, &si, &pi)) {
+            error_code = GetLastError();
+            return {};
+        }
+        proc_info_rwlock.write_lock();
+        proc_infos.push_back(pi);
+        proc_info_rwlock.write_unlock();
+        return pi;
     }
 
     PROCESS_INFORMATION proc::create_as_user(HANDLE token_handle,
@@ -203,18 +240,45 @@ namespace YanLib::sys {
 
     PROCESS_INFORMATION
     proc::create_session_zero(const char *app_name,
-                              const char *cmdline,
+                              char *cmdline,
                               SECURITY_ATTRIBUTES *proc_attrs,
                               SECURITY_ATTRIBUTES *thread_attrs,
                               bool is_inherit,
                               ProcCreateFlag create_flag,
+                              void *env,
                               const char *curr_dir) {
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
-        std::wstring curr = helper::convert::str_to_wstr(curr_dir);
-        return create_session_zero(app.data(), cmd.data(), proc_attrs,
-                                   thread_attrs, is_inherit, create_flag,
-                                   nullptr, curr.data());
+        STARTUPINFOA si = {};
+        PROCESS_INFORMATION pi = {};
+        si.cb = sizeof(si);
+        security security;
+        helper::autoclean<HANDLE> token_handle(nullptr);
+        token_handle = security.copy_token();
+        if (!token_handle.is_ok()) {
+            error_code = security.err_code();
+            return {};
+        }
+        void *environment = nullptr;
+        if (env) {
+            environment = env;
+        }
+        else {
+            environment = security.create_env_block(token_handle);
+            if (!environment) {
+                error_code = security.err_code();
+                return {};
+            }
+        }
+        if (!CreateProcessAsUserA(token_handle, app_name, cmdline, proc_attrs,
+                                  thread_attrs, is_inherit ? TRUE : FALSE,
+                                  static_cast<uint32_t>(create_flag),
+                                  environment, curr_dir, &si, &pi)) {
+            error_code = GetLastError();
+            return {};
+        }
+        proc_info_rwlock.write_lock();
+        proc_infos.push_back(pi);
+        proc_info_rwlock.write_unlock();
+        return pi;
     }
 
     PROCESS_INFORMATION
@@ -267,16 +331,18 @@ namespace YanLib::sys {
                                                 const char *cmdline,
                                                 LogonFlag logon_flag,
                                                 ProcCreateFlag create_flag,
-                                                const char *curr_dir) {
-        std::wstring user = helper::convert::str_to_wstr(username);
-        std::wstring dom = helper::convert::str_to_wstr(domain);
-        std::wstring pass = helper::convert::str_to_wstr(password);
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
-        std::wstring curr = helper::convert::str_to_wstr(curr_dir);
+                                                void *env,
+                                                const char *curr_dir,
+                                                helper::CodePage code_page) {
+        std::wstring user = helper::convert::str_to_wstr(username, code_page);
+        std::wstring dom = helper::convert::str_to_wstr(domain, code_page);
+        std::wstring pass = helper::convert::str_to_wstr(password, code_page);
+        std::wstring app = helper::convert::str_to_wstr(app_name, code_page);
+        std::wstring cmd = helper::convert::str_to_wstr(cmdline, code_page);
+        std::wstring curr = helper::convert::str_to_wstr(curr_dir, code_page);
         return create_with_logon(user.data(), dom.data(), pass.data(),
                                  app.data(), cmd.data(), logon_flag,
-                                 create_flag, nullptr, curr.data());
+                                 create_flag, env, curr.data());
     }
 
     PROCESS_INFORMATION proc::create_with_logon(const wchar_t *username,
@@ -328,12 +394,14 @@ namespace YanLib::sys {
                                                 const char *cmdline,
                                                 LogonFlag logon_flag,
                                                 ProcCreateFlag create_flag,
-                                                const char *curr_dir) {
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
-        std::wstring curr = helper::convert::str_to_wstr(curr_dir);
+                                                void *env,
+                                                const char *curr_dir,
+                                                helper::CodePage code_page) {
+        std::wstring app = helper::convert::str_to_wstr(app_name, code_page);
+        std::wstring cmd = helper::convert::str_to_wstr(cmdline, code_page);
+        std::wstring curr = helper::convert::str_to_wstr(curr_dir, code_page);
         return create_with_token(token_handle, app.data(), cmd.data(),
-                                 logon_flag, create_flag, nullptr, curr.data());
+                                 logon_flag, create_flag, env, curr.data());
     }
 
     PROCESS_INFORMATION proc::create_with_token(HANDLE token_handle,
@@ -458,9 +526,10 @@ namespace YanLib::sys {
 
     bool proc::fake_proc(HANDLE proc_handle,
                          const char *app_name,
-                         const char *cmdline) {
-        std::wstring app = helper::convert::str_to_wstr(app_name);
-        std::wstring cmd = helper::convert::str_to_wstr(cmdline);
+                         const char *cmdline,
+                         helper::CodePage code_page) {
+        std::wstring app = helper::convert::str_to_wstr(app_name, code_page);
+        std::wstring cmd = helper::convert::str_to_wstr(cmdline, code_page);
         return fake_proc(proc_handle, app.data(), cmd.data());
     }
 
@@ -772,13 +841,13 @@ namespace YanLib::sys {
         FlushProcessWriteBuffers();
     }
 
-    bool proc::get_env(std::string &env) {
+    bool proc::get_env(std::string &env, helper::CodePage code_page) {
         env.clear();
         std::wstring src;
         if (!get_env(src)) {
             return false;
         }
-        env = helper::convert::wstr_to_str(src);
+        env = helper::convert::wstr_to_str(src, code_page);
         return true;
     }
 
@@ -801,14 +870,15 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::get_env(std::vector<std::string> &env) {
+    bool proc::get_env(std::vector<std::string> &env,
+                       helper::CodePage code_page) {
         env.clear();
         std::vector<std::wstring> src;
         if (!get_env(src)) {
             return false;
         }
         for (const auto &line : src) {
-            env.push_back(helper::convert::wstr_to_str(line));
+            env.push_back(helper::convert::wstr_to_str(line, code_page));
         }
         return true;
     }
@@ -834,15 +904,16 @@ namespace YanLib::sys {
         return true;
     }
 
-    bool proc::get_env(std::unordered_map<std::string, std::string> &env) {
+    bool proc::get_env(std::unordered_map<std::string, std::string> &env,
+                       helper::CodePage code_page) {
         env.clear();
         std::unordered_map<std::wstring, std::wstring> src;
         if (!get_env(src)) {
             return false;
         }
         for (const auto &[key, value] : src) {
-            env.emplace(helper::convert::wstr_to_str(key),
-                        helper::convert::wstr_to_str(value));
+            env.emplace(helper::convert::wstr_to_str(key, code_page),
+                        helper::convert::wstr_to_str(value, code_page));
         }
         return true;
     }
@@ -946,12 +1017,14 @@ namespace YanLib::sys {
         cmdline = GetCommandLineW();
     }
 
-    bool proc::get_cmdline(HANDLE proc_handle, std::string &cmdline) {
+    bool proc::get_cmdline(HANDLE proc_handle,
+                           std::string &cmdline,
+                           helper::CodePage code_page) {
         std::wstring src;
         if (!get_cmdline(proc_handle, src) || src.empty()) {
             return false;
         }
-        cmdline = helper::convert::wstr_to_str(src);
+        cmdline = helper::convert::wstr_to_str(src, code_page);
         return true;
     }
 
@@ -1063,12 +1136,14 @@ namespace YanLib::sys {
         return get_cmdline(proc_handle, cmdline);
     }
 
-    bool proc::get_owner(HANDLE proc_handle, std::string &owner) {
+    bool proc::get_owner(HANDLE proc_handle,
+                         std::string &owner,
+                         helper::CodePage code_page) {
         std::wstring src;
         if (!get_owner(proc_handle, src) || src.empty()) {
             return false;
         }
-        owner = helper::convert::wstr_to_str(src);
+        owner = helper::convert::wstr_to_str(src, code_page);
         return true;
     }
 

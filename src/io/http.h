@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include "helper/convert.h"
 #pragma comment(lib, "WinInet.lib")
 
 namespace YanLib::io {
@@ -40,7 +41,8 @@ namespace YanLib::io {
 
         http() = delete;
 
-        explicit http(const std::string &input_url);
+        explicit http(const std::string &input_url,
+                      helper::CodePage code_page = helper::CodePage::GB2312);
 
         explicit http(const std::wstring &input_url);
 
@@ -69,11 +71,14 @@ namespace YanLib::io {
         bool get_headers(std::unordered_map<std::string, std::string> &headers);
 
         bool
-        get_headers(std::unordered_map<std::wstring, std::wstring> &headers);
+        get_headers(std::unordered_map<std::wstring, std::wstring> &headers,
+                    helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_headers_vec(std::vector<std::string> &headers);
 
-        bool get_headers_vec(std::vector<std::wstring> &headers);
+        bool
+        get_headers_vec(std::vector<std::wstring> &headers,
+                        helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool
         query_option(uint32_t option, void *buffer, uint32_t *buffer_length);
@@ -105,7 +110,8 @@ namespace YanLib::io {
                              INTERNET_FLAG_KEEP_CONNECTION |
                              INTERNET_FLAG_NO_AUTH | INTERNET_FLAG_NO_COOKIES |
                              INTERNET_FLAG_NO_UI | INTERNET_FLAG_RELOAD,
-                     uintptr_t context = 0);
+                     uintptr_t context = 0,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool
         open_request(const wchar_t *verb /* L"GET" */,
@@ -149,7 +155,9 @@ namespace YanLib::io {
 
         static std::string read_string_to_end(const std::string &input_url);
 
-        static std::wstring read_wstring_to_end(const std::wstring &input_url);
+        static std::wstring read_wstring_to_end(
+                const std::wstring &input_url,
+                helper::CodePage code_page = helper::CodePage::GB2312);
 
         static std::vector<uint8_t>
         read_bytes_to_end(const std::string &input_url);

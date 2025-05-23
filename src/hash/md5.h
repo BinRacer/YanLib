@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#include "helper/convert.h"
 
 namespace YanLib::hash {
     class md5 {
@@ -47,7 +48,8 @@ namespace YanLib::hash {
 
         explicit md5(const std::string &data);
 
-        explicit md5(const char *filename);
+        explicit md5(const char *filename,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         explicit md5(const wchar_t *filename);
 
@@ -57,7 +59,8 @@ namespace YanLib::hash {
 
         std::string hash_string();
 
-        std::wstring hash_wstring();
+        std::wstring
+        hash_wstring(helper::CodePage code_page = helper::CodePage::GB2312);
 
         [[nodiscard]] uint32_t err_code() const;
 

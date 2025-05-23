@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <winternl.h>
 #include <psapi.h>
+#include "helper/convert.h"
 #include "sync/rwlock.h"
 
 #pragma comment(lib, "ntdll.lib")
@@ -234,11 +235,12 @@ namespace YanLib::sys {
 
         PROCESS_INFORMATION
         create(const char *app_name,
-               const char *cmdline = nullptr,
+               char *cmdline = nullptr,
                SECURITY_ATTRIBUTES *proc_attrs = nullptr,
                SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                bool is_inherit = false,
                ProcCreateFlag create_flag = ProcCreateFlag::Default,
+               void *env = nullptr,
                const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
@@ -253,13 +255,14 @@ namespace YanLib::sys {
 
         PROCESS_INFORMATION
         create_with_suspended(const char *app_name,
-                              const char *cmdline = nullptr,
+                              char *cmdline = nullptr,
                               SECURITY_ATTRIBUTES *proc_attrs = nullptr,
                               SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                               bool is_inherit = false,
                               ProcCreateFlag create_flag =
                                       ProcCreateFlag::NormalPriorityClass |
                                       ProcCreateFlag::CreateSuspended,
+                              void *env = nullptr,
                               const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
@@ -277,13 +280,14 @@ namespace YanLib::sys {
         PROCESS_INFORMATION
         create_as_user(HANDLE token_handle,
                        const char *app_name,
-                       const char *cmdline = nullptr,
+                       char *cmdline = nullptr,
                        SECURITY_ATTRIBUTES *proc_attrs = nullptr,
                        SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                        bool is_inherit = false,
                        ProcCreateFlag create_flag =
                                ProcCreateFlag::NormalPriorityClass |
                                ProcCreateFlag::CreateUnicodeEnvironment,
+                       void *env = nullptr,
                        const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
@@ -301,7 +305,7 @@ namespace YanLib::sys {
 
         PROCESS_INFORMATION
         create_session_zero(const char *app_name,
-                            const char *cmdline = nullptr,
+                            char *cmdline = nullptr,
                             SECURITY_ATTRIBUTES *proc_attrs = nullptr,
                             SECURITY_ATTRIBUTES *thread_attrs = nullptr,
                             bool is_inherit = false,
@@ -309,6 +313,7 @@ namespace YanLib::sys {
                                     ProcCreateFlag::NormalPriorityClass |
                                     ProcCreateFlag::CreateUnicodeEnvironment |
                                     ProcCreateFlag::CreateNewConsole,
+                            void *env = nullptr,
                             const char *curr_dir = nullptr);
 
         PROCESS_INFORMATION
@@ -324,18 +329,20 @@ namespace YanLib::sys {
                             void *env = nullptr,
                             const wchar_t *curr_dir = nullptr);
 
-        PROCESS_INFORMATION
-        create_with_logon(const char *username,
-                          const char *domain,
-                          const char *password,
-                          const char *app_name,
-                          const char *cmdline = nullptr,
-                          LogonFlag logon_flag = LogonFlag::WithProfile,
-                          ProcCreateFlag create_flag =
-                                  ProcCreateFlag::NormalPriorityClass |
-                                  ProcCreateFlag::CreateUnicodeEnvironment |
-                                  ProcCreateFlag::CreateNewConsole,
-                          const char *curr_dir = nullptr);
+        PROCESS_INFORMATION create_with_logon(
+                const char *username,
+                const char *domain,
+                const char *password,
+                const char *app_name,
+                const char *cmdline = nullptr,
+                LogonFlag logon_flag = LogonFlag::WithProfile,
+                ProcCreateFlag create_flag =
+                        ProcCreateFlag::NormalPriorityClass |
+                        ProcCreateFlag::CreateUnicodeEnvironment |
+                        ProcCreateFlag::CreateNewConsole,
+                void *env = nullptr,
+                const char *curr_dir = nullptr,
+                helper::CodePage code_page = helper::CodePage::GB2312);
 
         PROCESS_INFORMATION
         create_with_logon(const wchar_t *username,
@@ -351,16 +358,18 @@ namespace YanLib::sys {
                           void *env = nullptr,
                           const wchar_t *curr_dir = nullptr);
 
-        PROCESS_INFORMATION
-        create_with_token(HANDLE token_handle,
-                          const char *app_name,
-                          const char *cmdline = nullptr,
-                          LogonFlag logon_flag = LogonFlag::WithProfile,
-                          ProcCreateFlag create_flag =
-                                  ProcCreateFlag::NormalPriorityClass |
-                                  ProcCreateFlag::CreateUnicodeEnvironment |
-                                  ProcCreateFlag::CreateNewConsole,
-                          const char *curr_dir = nullptr);
+        PROCESS_INFORMATION create_with_token(
+                HANDLE token_handle,
+                const char *app_name,
+                const char *cmdline = nullptr,
+                LogonFlag logon_flag = LogonFlag::WithProfile,
+                ProcCreateFlag create_flag =
+                        ProcCreateFlag::NormalPriorityClass |
+                        ProcCreateFlag::CreateUnicodeEnvironment |
+                        ProcCreateFlag::CreateNewConsole,
+                void *env = nullptr,
+                const char *curr_dir = nullptr,
+                helper::CodePage code_page = helper::CodePage::GB2312);
 
         PROCESS_INFORMATION
         create_with_token(HANDLE token_handle,
@@ -399,7 +408,8 @@ namespace YanLib::sys {
 
         bool fake_proc(HANDLE proc_handle,
                        const char *app_name,
-                       const char *cmdline);
+                       const char *cmdline,
+                       helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool fake_proc(HANDLE proc_handle,
                        const wchar_t *app_name,
@@ -491,15 +501,18 @@ namespace YanLib::sys {
 
         void flush_write_buffer();
 
-        bool get_env(std::string &env);
+        bool get_env(std::string &env,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_env(std::wstring &env);
 
-        bool get_env(std::vector<std::string> &env);
+        bool get_env(std::vector<std::string> &env,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_env(std::vector<std::wstring> &env);
 
-        bool get_env(std::unordered_map<std::string, std::string> &env);
+        bool get_env(std::unordered_map<std::string, std::string> &env,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_env(std::unordered_map<std::wstring, std::wstring> &env);
 
@@ -517,7 +530,9 @@ namespace YanLib::sys {
 
         void get_cmdline(std::wstring &cmdline);
 
-        bool get_cmdline(HANDLE proc_handle, std::string &cmdline);
+        bool get_cmdline(HANDLE proc_handle,
+                         std::string &cmdline,
+                         helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_cmdline(HANDLE proc_handle, std::wstring &cmdline);
 
@@ -525,7 +540,9 @@ namespace YanLib::sys {
 
         bool get_cmdline(uint32_t pid, std::wstring &cmdline);
 
-        bool get_owner(HANDLE proc_handle, std::string &owner);
+        bool get_owner(HANDLE proc_handle,
+                       std::string &owner,
+                       helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_owner(HANDLE proc_handle, std::wstring &owner);
 

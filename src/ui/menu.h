@@ -35,8 +35,8 @@ namespace YanLib::ui {
         Popup = MF_POPUP,
         MenuBarBreak = MF_MENUBARBREAK,
         MenuBreak = MF_MENUBREAK,
-        UnHighlight = MF_UNHILITE,
-        Highlight = MF_HILITE,
+        UnHiLite = MF_UNHILITE,
+        HiLite = MF_HILITE,
         Default = MF_DEFAULT,
         SysMenu = MF_SYSMENU,
         Help = MF_HELP,
@@ -57,10 +57,10 @@ namespace YanLib::ui {
         SGrayed = MFS_GRAYED,
         SDisabled = MFS_DISABLED,
         SChecked = MFS_CHECKED,
-        SHighlight = MFS_HILITE,
+        SHiLite = MFS_HILITE,
         SEnabled = MFS_ENABLED,
         SUnchecked = MFS_UNCHECKED,
-        SUnHighlight = MFS_UNHILITE,
+        SUnHiLite = MFS_UNHILITE,
         SDefault = MFS_DEFAULT,
     };
 
@@ -315,17 +315,17 @@ namespace YanLib::ui {
 
         int32_t get_item(HWND window_handle, HMENU menu_handle, POINT screen);
 
-        bool high_light_item(HWND window_handle,
-                             HMENU menu_handle,
-                             uint32_t pos,
-                             MenuFlag flag = MenuFlag::ByPosition |
-                                     MenuFlag::Highlight);
+        bool hilite_item(HWND window_handle,
+                         HMENU menu_handle,
+                         uint32_t pos,
+                         MenuFlag flag = MenuFlag::ByPosition |
+                                 MenuFlag::HiLite);
 
-        bool unhigh_light_item(HWND window_handle,
-                               HMENU menu_handle,
-                               uint32_t pos,
-                               MenuFlag flag = MenuFlag::ByPosition |
-                                       MenuFlag::UnHighlight);
+        bool unhilite_item(HWND window_handle,
+                           HMENU menu_handle,
+                           uint32_t pos,
+                           MenuFlag flag = MenuFlag::ByPosition |
+                                   MenuFlag::UnHiLite);
 
         MenuFlag check_item(HMENU menu_handle,
                             uint32_t pos,

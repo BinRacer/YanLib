@@ -3,7 +3,6 @@
 //
 
 #include "sha256.h"
-#include "helper/convert.h"
 #include "io/fs.h"
 
 namespace YanLib::hash {
@@ -28,12 +27,12 @@ namespace YanLib::hash {
         error_code = 0;
     }
 
-    sha256::sha256(const char *filename) {
+    sha256::sha256(const char *filename, helper::CodePage code_page) {
         crypt_prov_handle = 0;
         crypt_hash_handle = 0;
         data_bytes = {};
         hash_bytes = {};
-        file_name = helper::convert::str_to_wstr(filename);
+        file_name = helper::convert::str_to_wstr(filename, code_page);
         is_file = true;
         error_code = 0;
     }
@@ -234,8 +233,8 @@ namespace YanLib::hash {
         return format_hex_fast(hash_bytes);
     }
 
-    std::wstring sha256::hash_wstring() {
-        return helper::convert::str_to_wstr(hash_string());
+    std::wstring sha256::hash_wstring(helper::CodePage code_page) {
+        return helper::convert::str_to_wstr(hash_string(), code_page);
     }
 
     uint32_t sha256::err_code() const {

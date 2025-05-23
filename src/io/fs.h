@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include "helper/convert.h"
 
 namespace YanLib::io {
 #ifndef DESIREDACCESS
@@ -329,12 +330,16 @@ namespace YanLib::io {
         bool set_io_overlapped_range(uint8_t *overlapped_range_start,
                                      uint32_t length);
 
-        bool get_volume_info(VolumeInfoA *volume_info);
+        bool
+        get_volume_info(VolumeInfoA *volume_info,
+                        helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_volume_info(VolumeInfoW *volume_info);
 
-        bool get_final_path_name(std::string &path_name,
-                                 PathNameType type = PathNameType::Normalized);
+        bool get_final_path_name(
+                std::string &path_name,
+                PathNameType type = PathNameType::Normalized,
+                helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool get_final_path_name(std::wstring &path_name,
                                  PathNameType type = PathNameType::Normalized);
@@ -517,7 +522,8 @@ namespace YanLib::io {
         bool ls_device_name(std::vector<std::wstring> &device_names);
 
         std::vector<WIN32_FIND_STREAM_DATA>
-        ls_stream_data(const char *file_name);
+        ls_stream_data(const char *file_name,
+                       helper::CodePage code_page = helper::CodePage::GB2312);
 
         std::vector<WIN32_FIND_STREAM_DATA>
         ls_stream_data(const wchar_t *file_name);

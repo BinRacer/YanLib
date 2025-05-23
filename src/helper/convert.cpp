@@ -35,7 +35,36 @@ namespace YanLib::helper {
     }
 
     std::string convert::err_string(uint32_t error_code) {
-        std::string result = wstr_to_str(err_wstring(error_code));
+        std::string result;
+        HLOCAL hlocal = nullptr;
+        uint32_t system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
+        uint32_t is_ok =
+                FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM |
+                                       FORMAT_MESSAGE_IGNORE_INSERTS |
+                                       FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                               nullptr, error_code, system_locale,
+                               reinterpret_cast<char *>(&hlocal), 0, nullptr);
+        if (!is_ok) {
+            // Is it a network-related error?
+            const HMODULE module_handle =
+                    LoadLibraryExA("netmsg.dll", nullptr,
+                                   DONT_RESOLVE_DLL_REFERENCES);
+
+            if (module_handle != nullptr) {
+                is_ok = FormatMessageA(FORMAT_MESSAGE_FROM_HMODULE |
+                                               FORMAT_MESSAGE_IGNORE_INSERTS |
+                                               FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                                       module_handle, error_code, system_locale,
+                                       reinterpret_cast<char *>(&hlocal), 0,
+                                       nullptr);
+                FreeLibrary(module_handle);
+            }
+        }
+
+        if (is_ok && (hlocal != nullptr)) {
+            result = static_cast<char *>(LocalLock(hlocal));
+            LocalFree(hlocal);
+        }
         return result;
     }
 

@@ -8,6 +8,7 @@
 #include <WinInet.h>
 #include <string>
 #include <vector>
+#include "helper/convert.h"
 #include "sync/rwlock.h"
 #pragma comment(lib, "WinInet.lib")
 
@@ -41,14 +42,16 @@ namespace YanLib::io {
 
         ftp() = delete;
 
-        explicit ftp(const std::string &input_url);
+        explicit ftp(const std::string &input_url,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         explicit ftp(const std::wstring &input_url);
 
         explicit ftp(const std::string &ip,
                      const uint16_t &port,
                      const std::string &username = {},
-                     const std::string &password = {});
+                     const std::string &password = {},
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
         explicit ftp(const std::wstring &ip,
                      const uint16_t &port,

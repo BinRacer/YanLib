@@ -3,11 +3,10 @@
 //
 
 #include "ftp.h"
-#include "helper/convert.h"
 #include "fs.h"
 
 namespace YanLib::io {
-    ftp::ftp(const std::string &input_url) {
+    ftp::ftp(const std::string &input_url, helper::CodePage code_page) {
         uc.dwStructSize = sizeof(uc);
         uc.dwSchemeLength = _countof(scheme) - 1;
         uc.dwHostNameLength = _countof(_hostname) - 1;
@@ -21,7 +20,7 @@ namespace YanLib::io {
         uc.lpszPassword = _password;
         uc.lpszUrlPath = urlpath;
         uc.lpszExtraInfo = extra_info;
-        url = helper::convert::str_to_wstr(input_url);
+        url = helper::convert::str_to_wstr(input_url, code_page);
     }
 
     ftp::ftp(const std::wstring &input_url) {
@@ -44,7 +43,8 @@ namespace YanLib::io {
     ftp::ftp(const std::string &ip,
              const uint16_t &port,
              const std::string &username,
-             const std::string &password) {
+             const std::string &password,
+             helper::CodePage code_page) {
         uc.dwStructSize = sizeof(uc);
         uc.dwSchemeLength = _countof(scheme) - 1;
         uc.dwHostNameLength = _countof(_hostname) - 1;
@@ -60,11 +60,11 @@ namespace YanLib::io {
         uc.lpszExtraInfo = extra_info;
         std::wstring _url;
         _url.append(L"ftp://");
-        _url.append(helper::convert::str_to_wstr(username));
+        _url.append(helper::convert::str_to_wstr(username, code_page));
         _url.append(L":");
-        _url.append(helper::convert::str_to_wstr(password));
+        _url.append(helper::convert::str_to_wstr(password, code_page));
         _url.append(L"@");
-        _url.append(helper::convert::str_to_wstr(ip));
+        _url.append(helper::convert::str_to_wstr(ip, code_page));
         _url.append(L":");
         _url.append(std::to_wstring(port));
         _url.append(L"/");

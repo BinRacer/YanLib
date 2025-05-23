@@ -523,18 +523,18 @@ namespace YanLib::ui {
         return MenuItemFromPoint(window_handle, menu_handle, screen);
     }
 
-    bool menu::high_light_item(HWND window_handle,
-                               HMENU menu_handle,
-                               uint32_t pos,
-                               MenuFlag flag) {
+    bool menu::hilite_item(HWND window_handle,
+                           HMENU menu_handle,
+                           uint32_t pos,
+                           MenuFlag flag) {
         return HiliteMenuItem(window_handle, menu_handle, pos,
                               static_cast<uint32_t>(flag));
     }
 
-    bool menu::unhigh_light_item(HWND window_handle,
-                                 HMENU menu_handle,
-                                 uint32_t pos,
-                                 MenuFlag flag) {
+    bool menu::unhilite_item(HWND window_handle,
+                             HMENU menu_handle,
+                             uint32_t pos,
+                             MenuFlag flag) {
         return HiliteMenuItem(window_handle, menu_handle, pos,
                               static_cast<uint32_t>(flag));
     }

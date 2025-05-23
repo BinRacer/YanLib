@@ -137,10 +137,10 @@ namespace YanLib::helper {
         ~convert() = delete;
 
         static std::wstring str_to_wstr(const std::string &str,
-                                        CodePage code_page = CodePage::UTF8);
+                                        CodePage code_page = CodePage::GB2312);
 
         static std::string wstr_to_str(const std::wstring &wstr,
-                                       CodePage code_page = CodePage::UTF8);
+                                       CodePage code_page = CodePage::GB2312);
 
         static std::string err_string(uint32_t error_code);
 

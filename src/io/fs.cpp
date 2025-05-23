@@ -3,12 +3,8 @@
 //
 
 #include "fs.h"
-
 #include <memory>
-
-#include "helper/convert.h"
 #include <shlwapi.h>
-
 #pragma comment(lib, "shlwapi.lib")
 
 namespace YanLib::io {
@@ -343,7 +339,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::get_volume_info(VolumeInfoA *volume_info) {
+    bool fs::get_volume_info(VolumeInfoA *volume_info,
+                             helper::CodePage code_page) {
         if (!volume_info) {
             error_code = STATUS_ACCESS_VIOLATION;
             return false;
@@ -353,9 +350,10 @@ namespace YanLib::io {
         memset(volume_info_wide.get(), 0, sizeof(VolumeInfoW));
         if (get_volume_info(volume_info_wide.get())) {
             auto volume_name =
-                    helper::convert::wstr_to_str(volume_info_wide->volume_name);
+                    helper::convert::wstr_to_str(volume_info_wide->volume_name,
+                                                 code_page);
             auto file_system_name = helper::convert::wstr_to_str(
-                    volume_info_wide->file_system_name);
+                    volume_info_wide->file_system_name, code_page);
             memcpy_s(volume_info->volume_name, MAX_PATH, volume_name.data(),
                      volume_name.size());
             memcpy_s(volume_info->file_system_name, MAX_PATH,
@@ -392,13 +390,15 @@ namespace YanLib::io {
         return true;
     }
 
-    bool fs::get_final_path_name(std::string &path_name, PathNameType type) {
+    bool fs::get_final_path_name(std::string &path_name,
+                                 PathNameType type,
+                                 helper::CodePage code_page) {
         std::wstring src;
         if (!get_final_path_name(src, type)) {
             return false;
         }
         path_name.clear();
-        path_name.append(helper::convert::wstr_to_str(src));
+        path_name.append(helper::convert::wstr_to_str(src, code_page));
         return true;
     }
 
@@ -1262,8 +1262,9 @@ namespace YanLib::io {
     }
 
     std::vector<WIN32_FIND_STREAM_DATA>
-    fs_util::ls_stream_data(const char *file_name) {
-        std::wstring result = helper::convert::str_to_wstr(file_name);
+    fs_util::ls_stream_data(const char *file_name, helper::CodePage code_page) {
+        std::wstring result =
+                helper::convert::str_to_wstr(file_name, code_page);
         if (result.empty()) {
             return {};
         }

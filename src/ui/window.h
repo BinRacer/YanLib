@@ -934,16 +934,21 @@ namespace YanLib::ui {
 
         bool hibernate(bool wakeup_events_disabled = false);
 
-        bool create_shutdown_reason(HWND window_handle, std::string &reason);
+        bool create_shutdown_reason(
+                HWND window_handle,
+                std::string &reason,
+                helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool create_shutdown_reason(HWND window_handle,
                                     const std::wstring &reason);
 
         bool destroy_shutdown_reason(HWND window_handle);
 
-        bool query_shutdown_reason(HWND window_handle,
-                                   std::string &reason,
-                                   uint32_t *real_size);
+        bool query_shutdown_reason(
+                HWND window_handle,
+                std::string &reason,
+                uint32_t *real_size,
+                helper::CodePage code_page = helper::CodePage::GB2312);
 
         bool query_shutdown_reason(HWND window_handle,
                                    std::wstring &reason,
@@ -1231,9 +1236,9 @@ namespace YanLib::ui {
 
         int32_t get_text(HWND window_handle, std::wstring &text);
 
-        bool set_text(HWND window_handle, const char *text);
+        bool set_text(HWND window_handle, std::string &text);
 
-        bool set_text(HWND window_handle, const wchar_t *text);
+        bool set_text(HWND window_handle, std::wstring &text);
 
         int32_t get_text_length(HWND window_handle);
 
@@ -1245,7 +1250,10 @@ namespace YanLib::ui {
         std::pair<uint32_t, uint32_t>
         get_window_tid_and_pid(HWND window_handle);
 
-        int32_t get_direct_text(HWND window_handle, std::string &text);
+        int32_t
+        get_direct_text(HWND window_handle,
+                        std::string &text,
+                        helper::CodePage code_page = helper::CodePage::GB2312);
 
         int32_t get_direct_text(HWND window_handle, std::wstring &text);
 

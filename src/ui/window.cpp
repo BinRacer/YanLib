@@ -207,8 +207,9 @@ namespace YanLib::ui {
     }
 
     bool window::create_shutdown_reason(HWND window_handle,
-                                        std::string &reason) {
-        std::wstring data = helper::convert::str_to_wstr(reason);
+                                        std::string &reason,
+                                        helper::CodePage code_page) {
+        std::wstring data = helper::convert::str_to_wstr(reason, code_page);
         if (!ShutdownBlockReasonCreate(window_handle, data.data())) {
             error_code = GetLastError();
             return false;
@@ -235,12 +236,13 @@ namespace YanLib::ui {
 
     bool window::query_shutdown_reason(HWND window_handle,
                                        std::string &reason,
-                                       uint32_t *real_size) {
+                                       uint32_t *real_size,
+                                       helper::CodePage code_page) {
         if (!real_size) {
             error_code = STATUS_ACCESS_VIOLATION;
             return false;
         }
-        std::wstring data = helper::convert::str_to_wstr(reason);
+        std::wstring data = helper::convert::str_to_wstr(reason, code_page);
         unsigned long temp = data.size();
         if (!ShutdownBlockReasonQuery(window_handle, data.data(), &temp)) {
             error_code = GetLastError();
@@ -990,16 +992,16 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool window::set_text(HWND window_handle, const char *text) {
-        if (!SetWindowTextA(window_handle, text)) {
+    bool window::set_text(HWND window_handle, std::string &text) {
+        if (!SetWindowTextA(window_handle, text.data())) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool window::set_text(HWND window_handle, const wchar_t *text) {
-        if (!SetWindowTextW(window_handle, text)) {
+    bool window::set_text(HWND window_handle, std::wstring &text) {
+        if (!SetWindowTextW(window_handle, text.data())) {
             error_code = GetLastError();
             return false;
         }
@@ -1042,12 +1044,14 @@ namespace YanLib::ui {
         return std::make_pair(tid, pid);
     }
 
-    int32_t window::get_direct_text(HWND window_handle, std::string &text) {
+    int32_t window::get_direct_text(HWND window_handle,
+                                    std::string &text,
+                                    helper::CodePage code_page) {
         std::wstring data(text.size(), L'\0');
         int32_t result =
                 InternalGetWindowText(window_handle, data.data(),
                                       static_cast<int32_t>(data.size()));
-        text = helper::convert::wstr_to_str(data);
+        text = helper::convert::wstr_to_str(data, code_page);
         if (!result) {
             error_code = GetLastError();
         }

@@ -111,6 +111,69 @@ namespace YanLib::components {
                                      static_cast<uint32_t>(b));
     }
 #endif
+#ifndef COMBOBOXMESSAGE
+#define COMBOBOXMESSAGE
+    enum class ComboBoxMessage : uint32_t {
+        AddString = CB_ADDSTRING,
+        DeleteString = CB_DELETESTRING,
+        Dir = CB_DIR,
+        FindString = CB_FINDSTRING,
+        FindStringExact = CB_FINDSTRINGEXACT,
+        GetComboBoxInfo = CB_GETCOMBOBOXINFO,
+        GetCount = CB_GETCOUNT,
+        GetCueBanner = CB_GETCUEBANNER,
+        GetCurSel = CB_GETCURSEL,
+        GetDroppedControlRect = CB_GETDROPPEDCONTROLRECT,
+        GetDroppedState = CB_GETDROPPEDSTATE,
+        GetDroppedWidth = CB_GETDROPPEDWIDTH,
+        GetEditSel = CB_GETEDITSEL,
+        GetExtendedUI = CB_GETEXTENDEDUI,
+        GetHorizontalExtent = CB_GETHORIZONTALEXTENT,
+        GetItemData = CB_GETITEMDATA,
+        GetItemHeight = CB_GETITEMHEIGHT,
+        GetLBText = CB_GETLBTEXT,
+        GetLBTextLen = CB_GETLBTEXTLEN,
+        GetLocale = CB_GETLOCALE,
+        GetMinVisible = CB_GETMINVISIBLE,
+        GetTopIndex = CB_GETTOPINDEX,
+        InitStorage = CB_INITSTORAGE,
+        InsertString = CB_INSERTSTRING,
+        LimitText = CB_LIMITTEXT,
+        ResetContent = CB_RESETCONTENT,
+        SelectString = CB_SELECTSTRING,
+        SetCueBanner = CB_SETCUEBANNER,
+        SetCurSel = CB_SETCURSEL,
+        SetDroppedWidth = CB_SETDROPPEDWIDTH,
+        SetEditSel = CB_SETEDITSEL,
+        SetExtendedUI = CB_SETEXTENDEDUI,
+        SetHorizontalExtent = CB_SETHORIZONTALEXTENT,
+        SetItemData = CB_SETITEMDATA,
+        SetItemHeight = CB_SETITEMHEIGHT,
+        SetLocale = CB_SETLOCALE,
+        SetMinVisible = CB_SETMINVISIBLE,
+        SetTopIndex = CB_SETTOPINDEX,
+        ShowDropDown = CB_SHOWDROPDOWN,
+    };
+#endif
+#ifndef COMBOBOXNOTIFY
+#define COMBOBOXNOTIFY
+    enum class ComboBoxNotify : int32_t {
+        CloseUp = CBN_CLOSEUP,
+        DoubleClick = CBN_DBLCLK,
+        DropDown = CBN_DROPDOWN,
+        EditChange = CBN_EDITCHANGE,
+        EditUpdate = CBN_EDITUPDATE,
+        ErrSpace = CBN_ERRSPACE,
+        KillFocus = CBN_KILLFOCUS,
+        SelChange = CBN_SELCHANGE,
+        SelEndCancel = CBN_SELENDCANCEL,
+        SelEndOK = CBN_SELENDOK,
+        SetFocus = CBN_SETFOCUS,
+        CompareItem = WM_COMPAREITEM,
+        DrawItem = WM_DRAWITEM,
+        MeasureItem = WM_MEASUREITEM
+    };
+#endif
     class combobox {
     private:
         uint32_t error_code = 0;
@@ -293,6 +356,16 @@ namespace YanLib::components {
         int32_t get_min_visible(HWND combobox_handle);
 
         bool set_min_visible(HWND combobox_handle, int32_t num);
+
+        void show_drop_down(HWND combobox_handle);
+
+        void hide_drop_down(HWND combobox_handle);
+
+        bool is_drop_down_visible(HWND combobox_handle);
+
+        void get_dropped_control_rect(HWND combobox_handle, RECT *rect);
+
+        bool get_info(HWND combobox_handle, COMBOBOXINFO *combobox_info);
 
         [[nodiscard]] uint32_t err_code() const;
 

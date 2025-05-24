@@ -353,6 +353,29 @@ namespace YanLib::components {
         return ComboBox_SetMinVisible(combobox_handle, num);
     }
 
+    void combobox::show_drop_down(HWND combobox_handle) {
+        ComboBox_ShowDropdown(combobox_handle, TRUE);
+    }
+    void combobox::hide_drop_down(HWND combobox_handle) {
+        ComboBox_ShowDropdown(combobox_handle, FALSE);
+    }
+
+    bool combobox::is_drop_down_visible(HWND combobox_handle) {
+        return ComboBox_GetDroppedState(combobox_handle);
+    }
+
+    void combobox::get_dropped_control_rect(HWND combobox_handle, RECT *rect) {
+        ComboBox_GetDroppedControlRect(combobox_handle, rect);
+    }
+
+    bool combobox::get_info(HWND combobox_handle, COMBOBOXINFO *combobox_info) {
+        if (!GetComboBoxInfo(combobox_handle, combobox_info)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
     uint32_t combobox::err_code() const {
         return error_code;
     }

@@ -200,6 +200,8 @@ add_library(YanLib STATIC
         src/ui/components/button.h
         src/ui/components/animate.cpp
         src/ui/components/animate.h
+        src/ui/components/combobox.cpp
+        src/ui/components/combobox.h
 )
 
 target_include_directories(YanLib

@@ -4,12 +4,6 @@
 
 #include "animate.h"
 #include <windowsx.h>
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
 namespace YanLib::components {
     HWND animate::create(uintptr_t animate_id,
                          HWND parent_window_handle,

@@ -4,12 +4,21 @@
 
 #ifndef ANIMATE_H
 #define ANIMATE_H
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <cstdint>
 #include <string>
 #include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
+#pragma comment(linker, "\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 namespace YanLib::components {
 #ifndef WINDOWSTYLE
 #define WINDOWSTYLE

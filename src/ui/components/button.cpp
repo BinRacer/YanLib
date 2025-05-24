@@ -4,13 +4,6 @@
 
 #include "button.h"
 #include <windowsx.h>
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-
 namespace YanLib::components {
     HWND button::create(const char *button_text,
                         uintptr_t button_id,

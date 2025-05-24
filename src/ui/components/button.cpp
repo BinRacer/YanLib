@@ -13,7 +13,7 @@
 
 namespace YanLib::components {
     HWND button::create(const char *button_text,
-                        intptr_t button_id,
+                        uintptr_t button_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
                         int32_t x,
@@ -21,17 +21,15 @@ namespace YanLib::components {
                         int32_t width,
                         int32_t height,
                         ButtonStyle style,
-                        WindowStyle window_style,
-                        WindowExtendStyle extend_window_style,
-                        void *param) {
-        HWND result = CreateWindowExA(
-                static_cast<uint32_t>(extend_window_style), "Button",
-                button_text,
-                static_cast<uint32_t>(window_style) |
-                        static_cast<uint32_t>(style),
-                x, y, width, height, parent_window_handle,
-                reinterpret_cast<HMENU>(button_id),
-                reinterpret_cast<LPCREATESTRUCT>(lparam)->hInstance, param);
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "Button", button_text,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(button_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
         if (!result) {
             error_code = GetLastError();
         }
@@ -39,7 +37,7 @@ namespace YanLib::components {
     }
 
     HWND button::create(const wchar_t *button_text,
-                        intptr_t button_id,
+                        uintptr_t button_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
                         int32_t x,
@@ -47,17 +45,15 @@ namespace YanLib::components {
                         int32_t width,
                         int32_t height,
                         ButtonStyle style,
-                        WindowStyle window_style,
-                        WindowExtendStyle extend_window_style,
-                        void *param) {
-        HWND result = CreateWindowExW(
-                static_cast<uint32_t>(extend_window_style), L"Button",
-                button_text,
-                static_cast<uint32_t>(window_style) |
-                        static_cast<uint32_t>(style),
-                x, y, width, height, parent_window_handle,
-                reinterpret_cast<HMENU>(button_id),
-                reinterpret_cast<LPCREATESTRUCT>(lparam)->hInstance, param);
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"Button", button_text,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(button_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
         if (!result) {
             error_code = GetLastError();
         }

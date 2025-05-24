@@ -49,46 +49,6 @@ namespace YanLib::components {
                                         static_cast<uint32_t>(b));
     }
 #endif
-#ifndef WINDOWEXTENDSTYLE
-#define WINDOWEXTENDSTYLE
-
-    enum class WindowExtendStyle : uint32_t {
-        None = 0,
-        DialogModalFrame = WS_EX_DLGMODALFRAME,
-        NoParentNotify = WS_EX_NOPARENTNOTIFY,
-        TopMost = WS_EX_TOPMOST,
-        AcceptFiles = WS_EX_ACCEPTFILES,
-        Transparent = WS_EX_TRANSPARENT,
-        MdiChild = WS_EX_MDICHILD,
-        ToolWindow = WS_EX_TOOLWINDOW,
-        WindowEdge = WS_EX_WINDOWEDGE,
-        ClientEdge = WS_EX_CLIENTEDGE,
-        ContextHelp = WS_EX_CONTEXTHELP,
-        Right = WS_EX_RIGHT,
-        Left = WS_EX_LEFT,
-        RtlReading = WS_EX_RTLREADING,
-        LtrReading = WS_EX_LTRREADING,
-        LeftScrollBar = WS_EX_LEFTSCROLLBAR,
-        RightScrollBar = WS_EX_RIGHTSCROLLBAR,
-        ControlParent = WS_EX_CONTROLPARENT,
-        StaticEdge = WS_EX_STATICEDGE,
-        AppWindow = WS_EX_APPWINDOW,
-        OverlappedWindow = WS_EX_OVERLAPPEDWINDOW,
-        PaletteWindow = WS_EX_PALETTEWINDOW,
-        Layered = WS_EX_LAYERED,
-        NoInheritLayout = WS_EX_NOINHERITLAYOUT,
-        NoRedirectionBitmap = WS_EX_NOREDIRECTIONBITMAP,
-        LayoutRtl = WS_EX_LAYOUTRTL,
-        Composited = WS_EX_COMPOSITED,
-        NoActivate = WS_EX_NOACTIVATE,
-    };
-
-    inline WindowExtendStyle operator|(WindowExtendStyle a,
-                                       WindowExtendStyle b) {
-        return static_cast<WindowExtendStyle>(static_cast<uint32_t>(a) |
-                                              static_cast<uint32_t>(b));
-    }
-#endif
 #ifndef BUTTONSTYLE
 #define BUTTONSTYLE
 
@@ -223,35 +183,29 @@ namespace YanLib::components {
 
         ~button() = default;
 
-        HWND
-        create(const char *button_text,
-               intptr_t button_id,
-               HWND parent_window_handle,
-               LPARAM lparam,
-               int32_t x,
-               int32_t y,
-               int32_t width = 100,
-               int32_t height = 30,
-               ButtonStyle style = ButtonStyle::PushButton,
-               WindowStyle window_style = WindowStyle::Child |
-                       WindowStyle::Visible,
-               WindowExtendStyle extend_window_style = WindowExtendStyle::None,
-               void *param = nullptr);
+        HWND create(const char *button_text,
+                    uintptr_t button_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width = 100,
+                    int32_t height = 30,
+                    ButtonStyle style = ButtonStyle::PushButton,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
 
-        HWND
-        create(const wchar_t *button_text,
-               intptr_t button_id,
-               HWND parent_window_handle,
-               LPARAM lparam,
-               int32_t x,
-               int32_t y,
-               int32_t width = 100,
-               int32_t height = 30,
-               ButtonStyle style = ButtonStyle::PushButton,
-               WindowStyle window_style = WindowStyle::Child |
-                       WindowStyle::Visible,
-               WindowExtendStyle extend_window_style = WindowExtendStyle::None,
-               void *param = nullptr);
+        HWND create(const wchar_t *button_text,
+                    uintptr_t button_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width = 100,
+                    int32_t height = 30,
+                    ButtonStyle style = ButtonStyle::PushButton,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
 
         bool enable(HWND button_handle);
 

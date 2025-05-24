@@ -198,6 +198,8 @@ add_library(YanLib STATIC
         src/ui/gdi/paint.h
         src/ui/components/button.cpp
         src/ui/components/button.h
+        src/ui/components/animate.cpp
+        src/ui/components/animate.h
 )
 
 target_include_directories(YanLib

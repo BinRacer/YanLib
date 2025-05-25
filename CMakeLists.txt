@@ -206,6 +206,8 @@ add_library(YanLib STATIC
         src/ui/components/datetime.h
         src/ui/components/edit.cpp
         src/ui/components/edit.h
+        src/ui/components/header.cpp
+        src/ui/components/header.h
 )
 
 target_include_directories(YanLib

@@ -204,6 +204,8 @@ add_library(YanLib STATIC
         src/ui/components/combobox.h
         src/ui/components/datetime.cpp
         src/ui/components/datetime.h
+        src/ui/components/edit.cpp
+        src/ui/components/edit.h
 )
 
 target_include_directories(YanLib

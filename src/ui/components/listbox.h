@@ -1,0 +1,353 @@
+//
+// Created by forkernel on 2025/5/26.
+//
+
+#ifndef LISTBOX_H
+#define LISTBOX_H
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#include <Windows.h>
+#include <CommCtrl.h>
+#include <cstdint>
+#include <string>
+#include <vector>
+#include "helper/convert.h"
+#pragma comment(lib, "Comctl32.lib")
+#pragma comment(linker, "\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+namespace YanLib::components {
+#ifndef WINDOWSTYLE
+#define WINDOWSTYLE
+
+    enum class WindowStyle : uint32_t {
+        Overlapped = WS_OVERLAPPED,
+        Popup = WS_POPUP,
+        Child = WS_CHILD,
+        Minimize = WS_MINIMIZE,
+        Visible = WS_VISIBLE,
+        Disabled = WS_DISABLED,
+        ClipSiblings = WS_CLIPSIBLINGS,
+        ClipChildren = WS_CLIPCHILDREN,
+        Maximize = WS_MAXIMIZE,
+        Caption = WS_CAPTION,
+        Border = WS_BORDER,
+        DialogFrame = WS_DLGFRAME,
+        VScroll = WS_VSCROLL,
+        HScroll = WS_HSCROLL,
+        SysMenu = WS_SYSMENU,
+        ThickFrame = WS_THICKFRAME,
+        Group = WS_GROUP,
+        TabStop = WS_TABSTOP,
+        MinimizeBox = WS_MINIMIZEBOX,
+        MaximizeBox = WS_MAXIMIZEBOX,
+        Tiled = WS_TILED,
+        Iconic = WS_ICONIC,
+        SizeBox = WS_SIZEBOX,
+        TiledWindow = WS_TILEDWINDOW,
+        OverlappedWindow = WS_OVERLAPPEDWINDOW,
+        PopupWindow = WS_POPUPWINDOW,
+        ChildWindow = WS_CHILDWINDOW,
+    };
+
+    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
+        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
+                                        static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef LISTBOXSTYLE
+#define LISTBOXSTYLE
+    enum class ListBoxStyle : uint32_t {
+        Notify = LBS_NOTIFY,
+        Sort = LBS_SORT,
+        NoRedraw = LBS_NOREDRAW,
+        MultipleSelect = LBS_MULTIPLESEL,
+        OwnerDrawFixed = LBS_OWNERDRAWFIXED,
+        OwnerDrawVariable = LBS_OWNERDRAWVARIABLE,
+        HasStrings = LBS_HASSTRINGS,
+        UseTabStops = LBS_USETABSTOPS,
+        NoIntegralHeight = LBS_NOINTEGRALHEIGHT,
+        MultiColumn = LBS_MULTICOLUMN,
+        WantKeyboardInput = LBS_WANTKEYBOARDINPUT,
+        ExtendedSelect = LBS_EXTENDEDSEL,
+        DisableNoScroll = LBS_DISABLENOSCROLL,
+        NoData = LBS_NODATA,
+        NoSelect = LBS_NOSEL,
+        ComboBox = LBS_COMBOBOX,
+        Standard = LBS_STANDARD
+    };
+    inline ListBoxStyle operator|(ListBoxStyle a, ListBoxStyle b) {
+        return static_cast<ListBoxStyle>(static_cast<uint32_t>(a) |
+                                         static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef FILETYPE
+#define FILETYPE
+
+    enum class FileType : uint32_t {
+        ReadWrite = DDL_READWRITE,
+        ReadOnly = DDL_READONLY,
+        Hidden = DDL_HIDDEN,
+        System = DDL_SYSTEM,
+        Directory = DDL_DIRECTORY,
+        Archive = DDL_ARCHIVE,
+        PostMsgs = DDL_POSTMSGS,
+        Drives = DDL_DRIVES,
+        Exclusive = DDL_EXCLUSIVE,
+    };
+
+    inline FileType operator|(FileType a, FileType b) {
+        return static_cast<FileType>(static_cast<uint32_t>(a) |
+                                     static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef LISTBOXMESSAGE
+#define LISTBOXMESSAGE
+    enum class ListBoxMessage : uint32_t {
+        AddFile = LB_ADDFILE,
+        AddString = LB_ADDSTRING,
+        DeleteString = LB_DELETESTRING,
+        Dir = LB_DIR,
+        FindString = LB_FINDSTRING,
+        FindStringExact = LB_FINDSTRINGEXACT,
+        GetAnchorIndex = LB_GETANCHORINDEX,
+        GetCaretIndex = LB_GETCARETINDEX,
+        GetCount = LB_GETCOUNT,
+        GetCurSelect = LB_GETCURSEL,
+        GetHorizontalExtent = LB_GETHORIZONTALEXTENT,
+        GetItemData = LB_GETITEMDATA,
+        GetItemHeight = LB_GETITEMHEIGHT,
+        GetItemRect = LB_GETITEMRECT,
+        GetListBoxInfo = LB_GETLISTBOXINFO,
+        GetLocale = LB_GETLOCALE,
+        GetSelect = LB_GETSEL,
+        GetSelCount = LB_GETSELCOUNT,
+        GetSelItems = LB_GETSELITEMS,
+        GetText = LB_GETTEXT,
+        GetTextLen = LB_GETTEXTLEN,
+        GetTopIndex = LB_GETTOPINDEX,
+        InitStorage = LB_INITSTORAGE,
+        InsertString = LB_INSERTSTRING,
+        ItemFromPoint = LB_ITEMFROMPOINT,
+        ResetContent = LB_RESETCONTENT,
+        SelectString = LB_SELECTSTRING,
+        SelItemRange = LB_SELITEMRANGE,
+        SelItemRangeEx = LB_SELITEMRANGEEX,
+        SetAnchorIndex = LB_SETANCHORINDEX,
+        SetCaretIndex = LB_SETCARETINDEX,
+        SetColumnWidth = LB_SETCOLUMNWIDTH,
+        SetCount = LB_SETCOUNT,
+        SetCurSelect = LB_SETCURSEL,
+        SetHorizontalExtent = LB_SETHORIZONTALEXTENT,
+        SetItemData = LB_SETITEMDATA,
+        SetItemHeight = LB_SETITEMHEIGHT,
+        SetLocale = LB_SETLOCALE,
+        SetSelect = LB_SETSEL,
+        SetTabStops = LB_SETTABSTOPS,
+        SetTopIndex = LB_SETTOPINDEX
+    };
+#endif
+#ifndef LISTBOXNOTIFY
+#define LISTBOXNOTIFY
+    enum class ListBoxNotify : int32_t {
+        BeginDrag = DL_BEGINDRAG,
+        CancelDrag = DL_CANCELDRAG,
+        Dragging = DL_DRAGGING,
+        Dropped = DL_DROPPED,
+        DoubleClick = LBN_DBLCLK,
+        ErrSpace = LBN_ERRSPACE,
+        KillFocus = LBN_KILLFOCUS,
+        SelectCancel = LBN_SELCANCEL,
+        SelectChange = LBN_SELCHANGE,
+        SetFocus = LBN_SETFOCUS,
+        CharToItem = WM_CHARTOITEM,
+        CtlColorListBox = WM_CTLCOLORLISTBOX,
+        DeleteItem = WM_DELETEITEM,
+        VKeyToItem = WM_VKEYTOITEM
+    };
+#endif
+    class listbox {
+    private:
+        uint32_t error_code = 0;
+
+    public:
+        listbox(const listbox &other) = delete;
+
+        listbox(listbox &&other) = delete;
+
+        listbox &operator=(const listbox &other) = delete;
+
+        listbox &operator=(listbox &&other) = delete;
+
+        HWND create(uintptr_t listbox_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ListBoxStyle style = ListBoxStyle::HasStrings |
+                            ListBoxStyle::ExtendedSelect |
+                            ListBoxStyle::MultiColumn |
+                            ListBoxStyle::MultipleSelect |
+                            ListBoxStyle::Notify | ListBoxStyle::UseTabStops |
+                            ListBoxStyle::WantKeyboardInput,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::VScroll);
+
+        bool enable(HWND listbox_handle);
+
+        bool disable(HWND listbox_handle);
+
+        int32_t fill(HWND listbox_handle,
+                     const char *path_spec,
+                     FileType type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t fill(HWND listbox_handle,
+                     const wchar_t *path_spec,
+                     FileType type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite);
+
+        int32_t add_text(HWND listbox_handle,
+                         std::string &text,
+                         helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t add_text(HWND listbox_handle, std::wstring &text);
+
+        int32_t
+        find_text(HWND listbox_handle,
+                  std::string &text,
+                  int32_t index = -1,
+                  helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t
+        find_text(HWND listbox_handle, std::wstring &text, int32_t index = -1);
+
+        int32_t
+        find_text_exact(HWND listbox_handle,
+                        std::string &text,
+                        int32_t index = -1,
+                        helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t find_text_exact(HWND listbox_handle,
+                                std::wstring &text,
+                                int32_t index = -1);
+
+        int32_t
+        insert_text(HWND listbox_handle,
+                    std::string &text,
+                    int32_t index = -1,
+                    helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t insert_text(HWND listbox_handle,
+                            std::wstring &text,
+                            int32_t index = -1);
+
+        int32_t
+        select_text(HWND listbox_handle,
+                    std::string &text,
+                    int32_t index = -1,
+                    helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t select_text(HWND listbox_handle,
+                            std::wstring &text,
+                            int32_t index = -1);
+
+        int32_t delete_item(HWND listbox_handle, int32_t index);
+
+        int32_t get_item_text_len(HWND listbox_handle, int32_t index);
+
+        int32_t
+        get_item_text(HWND listbox_handle,
+                      std::string &text,
+                      int32_t index,
+                      helper::CodePage code_page = helper::CodePage::GB2312);
+
+        int32_t
+        get_item_text(HWND listbox_handle, std::wstring &text, int32_t index);
+
+        int32_t add_data(HWND listbox_handle, LPARAM data);
+
+        int32_t find_data(HWND listbox_handle, LPARAM data, int32_t index = -1);
+
+        LPARAM get_data(HWND listbox_handle, int32_t index);
+
+        int32_t set_data(HWND listbox_handle, LPARAM data, int32_t index);
+
+        int32_t
+        insert_data(HWND listbox_handle, LPARAM data, int32_t index = -1);
+
+        int32_t
+        select_data(HWND listbox_handle, LPARAM data, int32_t index = -1);
+
+        int32_t get_item_height(HWND listbox_handle, int32_t index);
+
+        int32_t
+        set_item_height(HWND listbox_handle, int32_t width, int32_t index);
+
+        bool get_item_rect(HWND listbox_handle, RECT *rect, int32_t index);
+
+        int32_t get_select_items(HWND listbox_handle,
+                                 std::vector<int32_t> &select_index);
+
+        bool set_item_range(HWND listbox_handle, int32_t start, int32_t end);
+
+        bool unset_item_range(HWND listbox_handle, int32_t start, int32_t end);
+
+        int32_t get_curr_select(HWND listbox_handle);
+
+        int32_t set_curr_select(HWND listbox_handle, int32_t index);
+
+        bool is_select(HWND listbox_handle, int32_t index);
+
+        bool set_select(HWND listbox_handle, int32_t index);
+
+        bool unset_select(HWND listbox_handle, int32_t index);
+
+        int32_t get_select_count(HWND listbox_handle);
+
+        int32_t get_caret_index(HWND listbox_handle);
+
+        bool set_caret_index(HWND listbox_handle, int32_t index);
+
+        int32_t get_top_index(HWND listbox_handle);
+
+        bool set_top_index(HWND listbox_handle, int32_t index);
+
+        void reset_content(HWND listbox_handle);
+
+        int32_t get_horiz_extent(HWND listbox_handle);
+
+        void set_horiz_extent(HWND listbox_handle, int32_t extent);
+
+        void set_all_colum_width(HWND listbox_handle, int32_t width);
+
+        int32_t get_item_count(HWND listbox_handle);
+
+        bool set_tab_stops(HWND listbox_handle,
+                           std::vector<int32_t> &tab_stops);
+
+        void draw_insert(HWND parent_window_handle,
+                         HWND listbox_handle,
+                         int32_t icon_id);
+
+        int32_t item_id_from_point(HWND listbox_handle,
+                                   POINT point,
+                                   bool auto_scroll = true);
+
+        bool modify_to_drag_list(HWND listbox_handle);
+
+        [[nodiscard]] uint32_t err_code() const;
+
+        [[nodiscard]] std::string err_string() const;
+
+        [[nodiscard]] std::wstring err_wstring() const;
+    };
+} // namespace YanLib::components
+#endif // LISTBOX_H

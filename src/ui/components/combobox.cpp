@@ -37,103 +37,171 @@ namespace YanLib::components {
         return ComboBox_Enable(combobox_handle, FALSE);
     }
 
-    ComboBoxRetCode combobox::fill(HWND combobox_handle,
-                                   char *path_spec,
-                                   FileType type,
-                                   helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_Dir(
-                combobox_handle, static_cast<uint32_t>(type),
-                helper::convert::str_to_wstr(path_spec, code_page).data()));
-    }
-
-    ComboBoxRetCode
-    combobox::fill(HWND combobox_handle, wchar_t *path_spec, FileType type) {
-        return static_cast<ComboBoxRetCode>(
+    int32_t combobox::fill(HWND combobox_handle,
+                           char *path_spec,
+                           FileType type,
+                           helper::CodePage code_page) {
+        int32_t result =
                 ComboBox_Dir(combobox_handle, static_cast<uint32_t>(type),
-                             path_spec));
+                             helper::convert::str_to_wstr(path_spec, code_page)
+                                     .data());
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::add_text(HWND combobox_handle,
-                                       std::string &text,
-                                       helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_AddString(
-                combobox_handle,
-                helper::convert::str_to_wstr(text, code_page).data()));
+    int32_t
+    combobox::fill(HWND combobox_handle, wchar_t *path_spec, FileType type) {
+        int32_t result = ComboBox_Dir(combobox_handle,
+                                      static_cast<uint32_t>(type), path_spec);
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::add_text(HWND combobox_handle,
-                                       std::wstring &text) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_AddString(combobox_handle, text.data()));
+    int32_t combobox::add_text(HWND combobox_handle,
+                               std::string &text,
+                               helper::CodePage code_page) {
+        int32_t result =
+                ComboBox_AddString(combobox_handle,
+                                   helper::convert::str_to_wstr(text, code_page)
+                                           .data());
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::insert_text(HWND combobox_handle,
-                                          std::string &text,
-                                          int32_t index,
-                                          helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_InsertString(
+    int32_t combobox::add_text(HWND combobox_handle, std::wstring &text) {
+        int32_t result = ComboBox_AddString(combobox_handle, text.data());
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int32_t combobox::insert_text(HWND combobox_handle,
+                                  std::string &text,
+                                  int32_t index,
+                                  helper::CodePage code_page) {
+        int32_t result = ComboBox_InsertString(
                 combobox_handle, index,
-                helper::convert::str_to_wstr(text, code_page).data()));
+                helper::convert::str_to_wstr(text, code_page).data());
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::insert_text(HWND combobox_handle,
-                                          std::wstring &text,
-                                          int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_InsertString(combobox_handle, index, text.data()));
+    int32_t combobox::insert_text(HWND combobox_handle,
+                                  std::wstring &text,
+                                  int32_t index) {
+        int32_t result =
+                ComboBox_InsertString(combobox_handle, index, text.data());
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::select_text(HWND combobox_handle,
-                                          std::string &text,
-                                          int32_t index,
-                                          helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_SelectString(
+    int32_t combobox::select_text(HWND combobox_handle,
+                                  std::string &text,
+                                  int32_t index,
+                                  helper::CodePage code_page) {
+        int32_t result = ComboBox_SelectString(
                 combobox_handle, index,
-                helper::convert::str_to_wstr(text, code_page).data()));
+                helper::convert::str_to_wstr(text, code_page).data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::select_text(HWND combobox_handle,
-                                          std::wstring &text,
-                                          int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_SelectString(combobox_handle, index, text.data()));
+    int32_t combobox::select_text(HWND combobox_handle,
+                                  std::wstring &text,
+                                  int32_t index) {
+        int32_t result =
+                ComboBox_SelectString(combobox_handle, index, text.data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::find_text(HWND combobox_handle,
-                                        std::string &text,
-                                        int32_t index,
-                                        helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_FindString(
+    int32_t combobox::find_text(HWND combobox_handle,
+                                std::string &text,
+                                int32_t index,
+                                helper::CodePage code_page) {
+        int32_t result = ComboBox_FindString(
                 combobox_handle, index,
-                helper::convert::str_to_wstr(text, code_page).data()));
+                helper::convert::str_to_wstr(text, code_page).data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::find_text(HWND combobox_handle,
-                                        std::wstring &text,
-                                        int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_FindString(combobox_handle, index, text.data()));
+    int32_t combobox::find_text(HWND combobox_handle,
+                                std::wstring &text,
+                                int32_t index) {
+        int32_t result =
+                ComboBox_FindString(combobox_handle, index, text.data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::find_exact_text(HWND combobox_handle,
-                                              std::string &text,
-                                              int32_t index,
-                                              helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_FindStringExact(
+    int32_t combobox::find_exact_text(HWND combobox_handle,
+                                      std::string &text,
+                                      int32_t index,
+                                      helper::CodePage code_page) {
+        int32_t result = ComboBox_FindStringExact(
                 combobox_handle, index,
-                helper::convert::str_to_wstr(text, code_page).data()));
+                helper::convert::str_to_wstr(text, code_page).data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::find_exact_text(HWND combobox_handle,
-                                              std::wstring &text,
-                                              int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_FindStringExact(combobox_handle, index, text.data()));
+    int32_t combobox::find_exact_text(HWND combobox_handle,
+                                      std::wstring &text,
+                                      int32_t index) {
+        int32_t result =
+                ComboBox_FindStringExact(combobox_handle, index, text.data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::delete_item(HWND combobox_handle, int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_DeleteString(combobox_handle, index));
+    int32_t combobox::delete_item(HWND combobox_handle, int32_t index) {
+        int32_t result = ComboBox_DeleteString(combobox_handle, index);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
     void combobox::clear(HWND combobox_handle) {
@@ -177,47 +245,61 @@ namespace YanLib::components {
         return ComboBox_GetLBTextLen(combobox_handle, index);
     }
 
-    ComboBoxRetCode combobox::get_item_text(HWND combobox_handle,
-                                            std::string &text,
-                                            int32_t index,
-                                            helper::CodePage code_page) {
-        return static_cast<ComboBoxRetCode>(ComboBox_GetLBText(
-                combobox_handle, index,
-                helper::convert::str_to_wstr(text, code_page).data()));
-    }
-
-    ComboBoxRetCode combobox::get_item_text(HWND combobox_handle,
-                                            std::wstring &text,
-                                            int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_GetLBText(combobox_handle, index, text.data()));
-    }
-
-    ComboBoxRetCode combobox::replace_item_text(HWND combobox_handle,
-                                                std::string &text,
-                                                int32_t index,
-                                                helper::CodePage code_page) {
-        ComboBoxRetCode result = static_cast<ComboBoxRetCode>(
-                ComboBox_DeleteString(combobox_handle, index));
-        if (result == ComboBoxRetCode::Error) {
-            return result;
+    int32_t combobox::get_item_text(HWND combobox_handle,
+                                    std::string &text,
+                                    int32_t index,
+                                    helper::CodePage code_page) {
+        int32_t result =
+                ComboBox_GetLBText(combobox_handle, index,
+                                   helper::convert::str_to_wstr(text, code_page)
+                                           .data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
         }
-        result = static_cast<ComboBoxRetCode>(ComboBox_InsertString(
-                combobox_handle, index,
-                helper::convert::str_to_wstr(text, code_page).data()));
         return result;
     }
 
-    ComboBoxRetCode combobox::replace_item_text(HWND combobox_handle,
-                                                std::wstring &text,
-                                                int32_t index) {
-        ComboBoxRetCode result = static_cast<ComboBoxRetCode>(
-                ComboBox_DeleteString(combobox_handle, index));
-        if (result == ComboBoxRetCode::Error) {
+    int32_t combobox::get_item_text(HWND combobox_handle,
+                                    std::wstring &text,
+                                    int32_t index) {
+        int32_t result =
+                ComboBox_GetLBText(combobox_handle, index, text.data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int32_t combobox::replace_item_text(HWND combobox_handle,
+                                        std::string &text,
+                                        int32_t index,
+                                        helper::CodePage code_page) {
+        int32_t result = ComboBox_DeleteString(combobox_handle, index);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
             return result;
         }
-        result = static_cast<ComboBoxRetCode>(
-                ComboBox_InsertString(combobox_handle, index, text.data()));
+        result = ComboBox_InsertString(
+                combobox_handle, index,
+                helper::convert::str_to_wstr(text, code_page).data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int32_t combobox::replace_item_text(HWND combobox_handle,
+                                        std::wstring &text,
+                                        int32_t index) {
+        int32_t result = ComboBox_DeleteString(combobox_handle, index);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+            return result;
+        }
+        result = ComboBox_InsertString(combobox_handle, index, text.data());
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
         return result;
     }
 
@@ -249,37 +331,58 @@ namespace YanLib::components {
         return result;
     }
 
-    ComboBoxRetCode combobox::add_data(HWND combobox_handle, LPARAM data) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_AddItemData(combobox_handle, data));
+    int32_t combobox::add_data(HWND combobox_handle, LPARAM data) {
+        int32_t result = ComboBox_AddItemData(combobox_handle, data);
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode
+    int32_t
     combobox::insert_data(HWND combobox_handle, LPARAM data, int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_InsertItemData(combobox_handle, index, data));
+        int32_t result = ComboBox_InsertItemData(combobox_handle, index, data);
+        if (result == CB_ERRSPACE) {
+            error_code = ERROR_OUTOFMEMORY;
+        }
+        else if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode
+    int32_t
     combobox::select_data(HWND combobox_handle, LPARAM data, int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_SelectItemData(combobox_handle, index, data));
+        int32_t result = ComboBox_SelectItemData(combobox_handle, index, data);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode
+    int32_t
     combobox::find_data(HWND combobox_handle, LPARAM data, int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_FindItemData(combobox_handle, index, data));
+        int32_t result = ComboBox_FindItemData(combobox_handle, index, data);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
     LPARAM combobox::get_data(HWND combobox_handle, int32_t index) {
         return ComboBox_GetItemData(combobox_handle, index);
     }
 
-    ComboBoxRetCode
+    int32_t
     combobox::set_data(HWND combobox_handle, LPARAM data, int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_SetItemData(combobox_handle, index, data));
+        int32_t result = ComboBox_SetItemData(combobox_handle, index, data);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
     bool combobox::get_prompt_banner(HWND combobox_handle,
@@ -316,15 +419,20 @@ namespace YanLib::components {
         return is_ok;
     }
 
-    ComboBoxRetCode combobox::get_curr_select(HWND combobox_handle) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_GetCurSel(combobox_handle));
+    int32_t combobox::get_curr_select(HWND combobox_handle) {
+        int32_t result = ComboBox_GetCurSel(combobox_handle);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::set_curr_select(HWND combobox_handle,
-                                              int32_t index) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_SetCurSel(combobox_handle, index));
+    int32_t combobox::set_curr_select(HWND combobox_handle, int32_t index) {
+        int32_t result = ComboBox_SetCurSel(combobox_handle, index);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
     bool combobox::is_extended_ui(HWND combobox_handle) {
@@ -335,14 +443,20 @@ namespace YanLib::components {
         return !(ComboBox_GetExtendedUI(combobox_handle));
     }
 
-    ComboBoxRetCode combobox::set_extended_ui(HWND combobox_handle) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_SetExtendedUI(combobox_handle, TRUE));
+    int32_t combobox::set_extended_ui(HWND combobox_handle) {
+        int32_t result = ComboBox_SetExtendedUI(combobox_handle, TRUE);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
-    ComboBoxRetCode combobox::set_default_ui(HWND combobox_handle) {
-        return static_cast<ComboBoxRetCode>(
-                ComboBox_SetExtendedUI(combobox_handle, FALSE));
+    int32_t combobox::set_default_ui(HWND combobox_handle) {
+        int32_t result = ComboBox_SetExtendedUI(combobox_handle, FALSE);
+        if (result == CB_ERR) {
+            error_code = GetLastError();
+        }
+        return result;
     }
 
     int32_t combobox::get_min_visible(HWND combobox_handle) {

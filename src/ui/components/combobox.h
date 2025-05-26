@@ -82,15 +82,6 @@ namespace YanLib::components {
                                           static_cast<uint32_t>(b));
     }
 #endif
-#ifndef COMBOBOXRETCODE
-#define COMBOBOXRETCODE
-
-    enum class ComboBoxRetCode : int32_t {
-        Ok = CB_OKAY,
-        Error = CB_ERR,
-        ErrorNoSpace = CB_ERRSPACE,
-    };
-#endif
 #ifndef FILETYPE
 #define FILETYPE
 
@@ -208,65 +199,63 @@ namespace YanLib::components {
 
         bool disable(HWND combobox_handle);
 
-        ComboBoxRetCode
-        fill(HWND combobox_handle,
-             char *path_spec,
-             FileType type = FileType::Drives | FileType::Directory |
-                     FileType::ReadWrite,
-             helper::CodePage code_page = helper::CodePage::GB2312);
+        int32_t fill(HWND combobox_handle,
+                     char *path_spec,
+                     FileType type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite,
+                     helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode fill(HWND combobox_handle,
-                             wchar_t *path_spec,
-                             FileType type = FileType::Drives |
-                                     FileType::Directory | FileType::ReadWrite);
+        int32_t fill(HWND combobox_handle,
+                     wchar_t *path_spec,
+                     FileType type = FileType::Drives | FileType::Directory |
+                             FileType::ReadWrite);
 
-        ComboBoxRetCode
-        add_text(HWND combobox_handle,
-                 std::string &text,
-                 helper::CodePage code_page = helper::CodePage::GB2312);
+        int32_t add_text(HWND combobox_handle,
+                         std::string &text,
+                         helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode add_text(HWND combobox_handle, std::wstring &text);
+        int32_t add_text(HWND combobox_handle, std::wstring &text);
 
-        ComboBoxRetCode
+        int32_t
         insert_text(HWND combobox_handle,
                     std::string &text,
                     int32_t index = -1,
                     helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode insert_text(HWND combobox_handle,
-                                    std::wstring &text,
-                                    int32_t index = -1);
+        int32_t insert_text(HWND combobox_handle,
+                            std::wstring &text,
+                            int32_t index = -1);
 
-        ComboBoxRetCode
+        int32_t
         select_text(HWND combobox_handle,
                     std::string &text,
                     int32_t index = -1,
                     helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode select_text(HWND combobox_handle,
-                                    std::wstring &text,
-                                    int32_t index = -1);
+        int32_t select_text(HWND combobox_handle,
+                            std::wstring &text,
+                            int32_t index = -1);
 
-        ComboBoxRetCode
+        int32_t
         find_text(HWND combobox_handle,
                   std::string &text,
                   int32_t index = -1,
                   helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode
+        int32_t
         find_text(HWND combobox_handle, std::wstring &text, int32_t index = -1);
 
-        ComboBoxRetCode
+        int32_t
         find_exact_text(HWND combobox_handle,
                         std::string &text,
                         int32_t index = -1,
                         helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode find_exact_text(HWND combobox_handle,
-                                        std::wstring &text,
-                                        int32_t index = -1);
+        int32_t find_exact_text(HWND combobox_handle,
+                                std::wstring &text,
+                                int32_t index = -1);
 
-        ComboBoxRetCode delete_item(HWND combobox_handle, int32_t index);
+        int32_t delete_item(HWND combobox_handle, int32_t index);
 
         void clear(HWND combobox_handle);
 
@@ -282,24 +271,24 @@ namespace YanLib::components {
 
         int32_t get_item_text_len(HWND combobox_handle, int32_t index);
 
-        ComboBoxRetCode
+        int32_t
         get_item_text(HWND combobox_handle,
                       std::string &text,
                       int32_t index,
                       helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode
+        int32_t
         get_item_text(HWND combobox_handle, std::wstring &text, int32_t index);
 
-        ComboBoxRetCode replace_item_text(
+        int32_t replace_item_text(
                 HWND combobox_handle,
                 std::string &text,
                 int32_t index,
                 helper::CodePage code_page = helper::CodePage::GB2312);
 
-        ComboBoxRetCode replace_item_text(HWND combobox_handle,
-                                          std::wstring &text,
-                                          int32_t index);
+        int32_t replace_item_text(HWND combobox_handle,
+                                  std::wstring &text,
+                                  int32_t index);
 
         int32_t get_item_height(HWND combobox_handle);
 
@@ -311,21 +300,20 @@ namespace YanLib::components {
 
         bool set_text(HWND combobox_handle, std::wstring &text);
 
-        ComboBoxRetCode add_data(HWND combobox_handle, LPARAM data);
+        int32_t add_data(HWND combobox_handle, LPARAM data);
 
-        ComboBoxRetCode
+        int32_t
         insert_data(HWND combobox_handle, LPARAM data, int32_t index = -1);
 
-        ComboBoxRetCode
+        int32_t
         select_data(HWND combobox_handle, LPARAM data, int32_t index = -1);
 
-        ComboBoxRetCode
+        int32_t
         find_data(HWND combobox_handle, LPARAM data, int32_t index = -1);
 
         LPARAM get_data(HWND combobox_handle, int32_t index);
 
-        ComboBoxRetCode
-        set_data(HWND combobox_handle, LPARAM data, int32_t index);
+        int32_t set_data(HWND combobox_handle, LPARAM data, int32_t index);
 
         bool get_prompt_banner(
                 HWND combobox_handle,
@@ -341,17 +329,17 @@ namespace YanLib::components {
 
         bool set_prompt_banner(HWND combobox_handle, std::wstring &text);
 
-        ComboBoxRetCode get_curr_select(HWND combobox_handle);
+        int32_t get_curr_select(HWND combobox_handle);
 
-        ComboBoxRetCode set_curr_select(HWND combobox_handle, int32_t index);
+        int32_t set_curr_select(HWND combobox_handle, int32_t index);
 
         bool is_extended_ui(HWND combobox_handle);
 
         bool is_default_ui(HWND combobox_handle);
 
-        ComboBoxRetCode set_extended_ui(HWND combobox_handle);
+        int32_t set_extended_ui(HWND combobox_handle);
 
-        ComboBoxRetCode set_default_ui(HWND combobox_handle);
+        int32_t set_default_ui(HWND combobox_handle);
 
         int32_t get_min_visible(HWND combobox_handle);
 

@@ -228,7 +228,7 @@ namespace YanLib::components {
     bool combobox::set_item_height(HWND combobox_handle,
                                    int32_t height,
                                    int32_t index) {
-        int result = ComboBox_SetItemHeight(combobox_handle, index, height);
+        int32_t result = ComboBox_SetItemHeight(combobox_handle, index, height);
         return result != CB_ERR;
     }
 

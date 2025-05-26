@@ -1,0 +1,316 @@
+//
+// Created by forkernel on 2025/5/26.
+//
+
+#ifndef IMAGE_LIST_H
+#define IMAGE_LIST_H
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
+#include <Windows.h>
+#include <CommCtrl.h>
+#include <commoncontrols.h>
+#include <cstdint>
+#include <vector>
+#pragma comment(lib, "Comctl32.lib")
+#pragma comment(linker, "\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+namespace YanLib::components {
+#ifndef WINDOWSTYLE
+#define WINDOWSTYLE
+    enum class WindowStyle : uint32_t {
+        Overlapped = WS_OVERLAPPED,
+        Popup = WS_POPUP,
+        Child = WS_CHILD,
+        Minimize = WS_MINIMIZE,
+        Visible = WS_VISIBLE,
+        Disabled = WS_DISABLED,
+        ClipSiblings = WS_CLIPSIBLINGS,
+        ClipChildren = WS_CLIPCHILDREN,
+        Maximize = WS_MAXIMIZE,
+        Caption = WS_CAPTION,
+        Border = WS_BORDER,
+        DialogFrame = WS_DLGFRAME,
+        VScroll = WS_VSCROLL,
+        HScroll = WS_HSCROLL,
+        SysMenu = WS_SYSMENU,
+        ThickFrame = WS_THICKFRAME,
+        Group = WS_GROUP,
+        TabStop = WS_TABSTOP,
+        MinimizeBox = WS_MINIMIZEBOX,
+        MaximizeBox = WS_MAXIMIZEBOX,
+        Tiled = WS_TILED,
+        Iconic = WS_ICONIC,
+        SizeBox = WS_SIZEBOX,
+        TiledWindow = WS_TILEDWINDOW,
+        OverlappedWindow = WS_OVERLAPPEDWINDOW,
+        PopupWindow = WS_POPUPWINDOW,
+        ChildWindow = WS_CHILDWINDOW,
+    };
+
+    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
+        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
+                                        static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef ILCREATEFLAG
+#define ILCREATEFLAG
+    enum class ILCreateFlag : uint32_t {
+        Mask = ILC_MASK,
+        Color = ILC_COLOR,
+        ColorDdb = ILC_COLORDDB,
+        Color4 = ILC_COLOR4,
+        Color8 = ILC_COLOR8,
+        Color16 = ILC_COLOR16,
+        Color24 = ILC_COLOR24,
+        Color32 = ILC_COLOR32,
+        Palette = ILC_PALETTE,
+        Mirror = ILC_MIRROR,
+        PerItemMirror = ILC_PERITEMMIRROR,
+        OriginalSize = ILC_ORIGINALSIZE,
+        HighQualityScale = ILC_HIGHQUALITYSCALE,
+    };
+    inline ILCreateFlag operator|(ILCreateFlag a, ILCreateFlag b) {
+        return static_cast<ILCreateFlag>(static_cast<uint32_t>(a) |
+                                         static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef IMAGEFLAG
+#define IMAGEFLAG
+
+    enum class ImageFlag : uint32_t {
+        DefaultColor = LR_DEFAULTCOLOR,
+        MonoChrome = LR_MONOCHROME,
+        Color = LR_COLOR,
+        CopyReturnOrg = LR_COPYRETURNORG,
+        CopyDeleteOrg = LR_COPYDELETEORG,
+        LoadFromFile = LR_LOADFROMFILE,
+        LoadTransParent = LR_LOADTRANSPARENT,
+        DefaultSize = LR_DEFAULTSIZE,
+        VgaColor = LR_VGACOLOR,
+        LoadMap3dColors = LR_LOADMAP3DCOLORS,
+        CreateDibSection = LR_CREATEDIBSECTION,
+        CopyFromResource = LR_COPYFROMRESOURCE,
+        Shared = LR_SHARED,
+    };
+
+    inline ImageFlag operator|(ImageFlag a, ImageFlag b) {
+        return static_cast<ImageFlag>(static_cast<uint32_t>(a) |
+                                      static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef ILDRAWFLAG
+#define ILDRAWFLAG
+    enum class ILDrawFlag : uint32_t {
+        Normal = ILD_NORMAL,
+        Transparent = ILD_TRANSPARENT,
+        Mask = ILD_MASK,
+        Image = ILD_IMAGE,
+        Rop = ILD_ROP,
+        Blend25 = ILD_BLEND25,
+        Blend50 = ILD_BLEND50,
+        OverlayMask = ILD_OVERLAYMASK,
+        PreserveAlpha = ILD_PRESERVEALPHA,
+        Scale = ILD_SCALE,
+        DpiScale = ILD_DPISCALE,
+        Async = ILD_ASYNC,
+        Selected = ILD_SELECTED,
+        Focus = ILD_FOCUS,
+        Blend = ILD_BLEND,
+    };
+    inline ILDrawFlag operator|(ILDrawFlag a, ILDrawFlag b) {
+        return static_cast<ILDrawFlag>(static_cast<uint32_t>(a) |
+                                       static_cast<uint32_t>(b));
+    }
+#endif
+    class image_list {
+    public:
+        image_list(const image_list &other) = delete;
+
+        image_list(image_list &&other) = delete;
+
+        image_list &operator=(const image_list &other) = delete;
+
+        image_list &operator=(image_list &&other) = delete;
+
+        static HIMAGELIST create(int32_t width,
+                                 int32_t height,
+                                 int32_t init,
+                                 int32_t grow,
+                                 ILCreateFlag flag = ILCreateFlag::Color32);
+
+        static int32_t add(HIMAGELIST image_list_handle,
+                           HBITMAP bitmap_handle,
+                           HBITMAP mask_bitmap_handle = nullptr);
+
+        static int32_t add_mask(HIMAGELIST image_list_handle,
+                                HBITMAP bitmap_handle,
+                                COLORREF mask);
+
+        static HRESULT com_create_instance(IImageList *image_list,
+                                           const IUnknown *unknown = nullptr);
+
+        static HRESULT com_create_instance(IImageList2 *image_list,
+                                           const IUnknown *unknown = nullptr);
+
+        static HRESULT query_interface(HIMAGELIST image_list_handle,
+                                       IImageList *image_list);
+
+        static HRESULT query_interface(HIMAGELIST image_list_handle,
+                                       IImageList2 *image_list);
+
+        static HIMAGELIST read(IStream *stream);
+
+        static HRESULT read(IStream *stream, IImageList *image_list);
+
+        static HRESULT read(IStream *stream, IImageList2 *image_list);
+
+        static bool write(IStream *stream, HIMAGELIST image_list_handle);
+
+        static bool
+        write(IStream *stream, HIMAGELIST image_list_handle, HRESULT *error);
+
+        static HIMAGELIST merge(HIMAGELIST image_list_handle1,
+                                int32_t index1,
+                                HIMAGELIST image_list_handle2,
+                                int32_t index2,
+                                int32_t offset_x,
+                                int32_t offset_y);
+
+        static bool replace(HIMAGELIST image_list_handle,
+                            int32_t index,
+                            HBITMAP bitmap_handle,
+                            HBITMAP mask_bitmap_handle = nullptr);
+
+        static bool copy(HIMAGELIST image_list_handle_dst,
+                         int32_t index_dst,
+                         HIMAGELIST image_list_handle_src,
+                         int32_t index_src);
+
+        static bool swap(HIMAGELIST image_list_handle_dst,
+                         int32_t index_dst,
+                         HIMAGELIST image_list_handle_src,
+                         int32_t index_src);
+
+        static HIMAGELIST duplicate(HIMAGELIST image_list_handle);
+
+        static bool remove(HIMAGELIST image_list_handle, int32_t index);
+
+        static bool remove_all(HIMAGELIST image_list_handle);
+
+        static bool destroy(HIMAGELIST image_list_handle);
+
+        static bool begin_drag(HIMAGELIST image_list_handle,
+                               int32_t index,
+                               int32_t hotspot_x,
+                               int32_t hotspot_y);
+
+        static bool drag_enter(HWND window_handle, int32_t x, int32_t y);
+
+        static bool drag_leave(HWND window_handle);
+
+        static bool drag_move(int32_t x, int32_t y);
+
+        static bool drag_show();
+
+        static bool drag_hide();
+
+        static HIMAGELIST get_drag_image(POINT *point,
+                                         POINT *hotspot = nullptr);
+
+        static bool set_drag_cursor_image(HIMAGELIST image_list_handle,
+                                          int32_t index,
+                                          int32_t hotspot_x,
+                                          int32_t hotspot_y);
+
+        static void end_drag();
+
+        static HIMAGELIST load_image(const char *file_path,
+                                     int32_t width,
+                                     COLORREF mask = CLR_DEFAULT,
+                                     HINSTANCE instance_handle = nullptr,
+                                     ImageFlag flag = ImageFlag::LoadFromFile |
+                                             ImageFlag::CreateDibSection);
+
+        static HIMAGELIST load_image(const wchar_t *file_path,
+                                     int32_t width,
+                                     COLORREF mask = CLR_DEFAULT,
+                                     HINSTANCE instance_handle = nullptr,
+                                     ImageFlag flag = ImageFlag::LoadFromFile |
+                                             ImageFlag::CreateDibSection);
+
+        static int32_t get_image_count(HIMAGELIST image_list_handle);
+
+        static bool set_image_count(HIMAGELIST image_list_handle,
+                                    uint32_t count);
+
+        static bool get_image_info(HIMAGELIST image_list_handle,
+                                   int32_t index,
+                                   IMAGEINFO *image_info);
+
+        static bool set_overlay_image(HIMAGELIST image_list_handle,
+                                      int32_t index,
+                                      int32_t overlay_index);
+
+        static int32_t add_icon(HIMAGELIST image_list_handle,
+                                HICON icon_handle);
+
+        static HICON extract_icon(HIMAGELIST image_list_handle, int32_t index);
+
+        static HICON get_icon(HIMAGELIST image_list_handle,
+                              int32_t index,
+                              ILDrawFlag flag = ILDrawFlag::Normal);
+
+        static bool get_icon_size(HIMAGELIST image_list_handle,
+                                  int32_t *width,
+                                  int32_t *height);
+
+        static bool set_icon_size(HIMAGELIST image_list_handle,
+                                  int32_t width,
+                                  int32_t height);
+
+        static int32_t replace_icon(HIMAGELIST image_list_handle,
+                                    int32_t index,
+                                    HICON icon_handle);
+
+        static HIMAGELIST load_bitmap(const char *bitmap_file,
+                                      int32_t width,
+                                      COLORREF mask = CLR_NONE,
+                                      HINSTANCE instance_handle = nullptr);
+
+        static HIMAGELIST load_bitmap(const wchar_t *bitmap_file,
+                                      int32_t width,
+                                      COLORREF mask = CLR_NONE,
+                                      HINSTANCE instance_handle = nullptr);
+
+        static bool draw(HIMAGELIST image_list_handle,
+                         int32_t index,
+                         HDC dc_handle,
+                         int32_t x,
+                         int32_t y,
+                         ILDrawFlag flag = ILDrawFlag::Normal);
+
+        static bool draw(HIMAGELIST image_list_handle,
+                         int32_t index,
+                         HDC dc_handle,
+                         int32_t x,
+                         int32_t y,
+                         int32_t width,
+                         int32_t height,
+                         COLORREF background = CLR_DEFAULT,
+                         COLORREF foreground = CLR_DEFAULT,
+                         ILDrawFlag flag = ILDrawFlag::Normal);
+
+        static bool draw(IMAGELISTDRAWPARAMS *image_list_draw_params);
+
+        static COLORREF get_background_color(HIMAGELIST image_list_handle);
+
+        static COLORREF set_background_color(HIMAGELIST image_list_handle,
+                                             COLORREF background);
+    };
+} // namespace YanLib::components
+#endif // IMAGE_LIST_H

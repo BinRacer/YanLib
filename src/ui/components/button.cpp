@@ -124,7 +124,7 @@ namespace YanLib::components {
 
     int32_t button::get_text_len(HWND button_handle) {
         SetLastError(ERROR_SUCCESS);
-        int result = GetWindowTextLengthW(button_handle);
+        int32_t result = GetWindowTextLengthW(button_handle);
         error_code = GetLastError();
         return result;
     }

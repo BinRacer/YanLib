@@ -210,6 +210,8 @@ add_library(YanLib STATIC
         src/ui/components/header.h
         src/ui/components/hotkey.cpp
         src/ui/components/hotkey.h
+        src/ui/components/image_list.cpp
+        src/ui/components/image_list.h
 )
 
 target_include_directories(YanLib

@@ -212,6 +212,8 @@ add_library(YanLib STATIC
         src/ui/components/hotkey.h
         src/ui/components/image_list.cpp
         src/ui/components/image_list.h
+        src/ui/components/ip_addr.cpp
+        src/ui/components/ip_addr.h
 )
 
 target_include_directories(YanLib

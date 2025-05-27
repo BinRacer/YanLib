@@ -216,6 +216,8 @@ add_library(YanLib STATIC
         src/ui/components/ip_addr.h
         src/ui/components/listbox.cpp
         src/ui/components/listbox.h
+        src/ui/components/listview.cpp
+        src/ui/components/listview.h
 )
 
 target_include_directories(YanLib

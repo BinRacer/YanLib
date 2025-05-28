@@ -236,6 +236,179 @@ namespace YanLib::components {
                                      static_cast<uint32_t>(b));
     }
 #endif
+#ifndef LISTVIEMESSAGE
+#define LISTVIEMESSAGE
+    enum class ListViewMessage : uint32_t {
+        ApproximateViewRect = LVM_APPROXIMATEVIEWRECT,
+        Arrange = LVM_ARRANGE,
+        CancelEditLabel = LVM_CANCELEDITLABEL,
+        CreateDragImage = LVM_CREATEDRAGIMAGE,
+        DeleteAllItems = LVM_DELETEALLITEMS,
+        DeleteColumn = LVM_DELETECOLUMN,
+        DeleteItem = LVM_DELETEITEM,
+        EditLabel = LVM_EDITLABEL,
+        EnableGroupView = LVM_ENABLEGROUPVIEW,
+        EnsureVisible = LVM_ENSUREVISIBLE,
+        FindItem = LVM_FINDITEM,
+        GetBackgroundColor = LVM_GETBKCOLOR,
+        GetBackgroundImage = LVM_GETBKIMAGE,
+        GetCallbackMask = LVM_GETCALLBACKMASK,
+        GetColumn = LVM_GETCOLUMN,
+        GetColumnOrderArray = LVM_GETCOLUMNORDERARRAY,
+        GetColumnWidth = LVM_GETCOLUMNWIDTH,
+        GetCountPerPage = LVM_GETCOUNTPERPAGE,
+        GetEditControl = LVM_GETEDITCONTROL,
+        GetEmptyText = LVM_GETEMPTYTEXT,
+        GetExtendedListViewStyle = LVM_GETEXTENDEDLISTVIEWSTYLE,
+        GetFocusedGroup = LVM_GETFOCUSEDGROUP,
+        GetFooterInfo = LVM_GETFOOTERINFO,
+        GetFooterItem = LVM_GETFOOTERITEM,
+        GetFooterItemRect = LVM_GETFOOTERITEMRECT,
+        GetFooterRect = LVM_GETFOOTERRECT,
+        GetGroupCount = LVM_GETGROUPCOUNT,
+        GetGroupInfo = LVM_GETGROUPINFO,
+        GetGroupInfoByIndex = LVM_GETGROUPINFOBYINDEX,
+        GetGroupMetrics = LVM_GETGROUPMETRICS,
+        GetGroupRect = LVM_GETGROUPRECT,
+        GetGroupState = LVM_GETGROUPSTATE,
+        GetHeader = LVM_GETHEADER,
+        GetHotCursor = LVM_GETHOTCURSOR,
+        GetHotItem = LVM_GETHOTITEM,
+        GetHoverTime = LVM_GETHOVERTIME,
+        GetImageList = LVM_GETIMAGELIST,
+        GetInsertMark = LVM_GETINSERTMARK,
+        GetInsertMarkColor = LVM_GETINSERTMARKCOLOR,
+        GetInsertMarkRect = LVM_GETINSERTMARKRECT,
+        GetISearchString = LVM_GETISEARCHSTRING,
+        GetItem = LVM_GETITEM,
+        GetItemCount = LVM_GETITEMCOUNT,
+        GetItemIndexRect = LVM_GETITEMINDEXRECT,
+        GetItemPosition = LVM_GETITEMPOSITION,
+        GetItemRect = LVM_GETITEMRECT,
+        GetItemSpacing = LVM_GETITEMSPACING,
+        GetItemState = LVM_GETITEMSTATE,
+        GetItemText = LVM_GETITEMTEXT,
+        GetNextItem = LVM_GETNEXTITEM,
+        GetNextItemIndex = LVM_GETNEXTITEMINDEX,
+        GetNumberOfWorkAreas = LVM_GETNUMBEROFWORKAREAS,
+        GetOrigin = LVM_GETORIGIN,
+        GetOutlineColor = LVM_GETOUTLINECOLOR,
+        GetSelectedColumn = LVM_GETSELECTEDCOLUMN,
+        GetSelectedCount = LVM_GETSELECTEDCOUNT,
+        GetSelectionMark = LVM_GETSELECTIONMARK,
+        GetStringWidth = LVM_GETSTRINGWIDTH,
+        GetSubItemRect = LVM_GETSUBITEMRECT,
+        GetTextBackgroundColor = LVM_GETTEXTBKCOLOR,
+        GetTextColor = LVM_GETTEXTCOLOR,
+        GetTileInfo = LVM_GETTILEINFO,
+        GetTileViewInfo = LVM_GETTILEVIEWINFO,
+        GetToolTips = LVM_GETTOOLTIPS,
+        GetTopIndex = LVM_GETTOPINDEX,
+        GetUnicodeFormat = LVM_GETUNICODEFORMAT,
+        GetView = LVM_GETVIEW,
+        GetViewRect = LVM_GETVIEWRECT,
+        GetWorkAreas = LVM_GETWORKAREAS,
+        HasGroup = LVM_HASGROUP,
+        HitTest = LVM_HITTEST,
+        InsertColumn = LVM_INSERTCOLUMN,
+        InsertGroup = LVM_INSERTGROUP,
+        InsertGroupSorted = LVM_INSERTGROUPSORTED,
+        InsertItem = LVM_INSERTITEM,
+        InsertMarkHitTest = LVM_INSERTMARKHITTEST,
+        IsGroupViewEnabled = LVM_ISGROUPVIEWENABLED,
+        IsItemVisible = LVM_ISITEMVISIBLE,
+        MapIdToIndex = LVM_MAPIDTOINDEX,
+        MapIndexToId = LVM_MAPINDEXTOID,
+        MoveGroup = LVM_MOVEGROUP,
+        MoveItemToGroup = LVM_MOVEITEMTOGROUP,
+        RedrawItems = LVM_REDRAWITEMS,
+        RemoveAllGroups = LVM_REMOVEALLGROUPS,
+        RemoveGroup = LVM_REMOVEGROUP,
+        Scroll = LVM_SCROLL,
+        SetBackgroundColor = LVM_SETBKCOLOR,
+        SetBackgroundImage = LVM_SETBKIMAGE,
+        SetCallbackMask = LVM_SETCALLBACKMASK,
+        SetColumn = LVM_SETCOLUMN,
+        SetColumnOrderArray = LVM_SETCOLUMNORDERARRAY,
+        SetColumnWidth = LVM_SETCOLUMNWIDTH,
+        SetExtendedListViewStyle = LVM_SETEXTENDEDLISTVIEWSTYLE,
+        SetGroupInfo = LVM_SETGROUPINFO,
+        SetGroupMetrics = LVM_SETGROUPMETRICS,
+        SetHotCursor = LVM_SETHOTCURSOR,
+        SetHotItem = LVM_SETHOTITEM,
+        SetHoverTime = LVM_SETHOVERTIME,
+        SetIconSpacing = LVM_SETICONSPACING,
+        SetImageList = LVM_SETIMAGELIST,
+        SetInfoTip = LVM_SETINFOTIP,
+        SetInsertMark = LVM_SETINSERTMARK,
+        SetInsertMarkColor = LVM_SETINSERTMARKCOLOR,
+        SetItem = LVM_SETITEM,
+        SetItemCount = LVM_SETITEMCOUNT,
+        SetItemIndexState = LVM_SETITEMINDEXSTATE,
+        SetItemPosition = LVM_SETITEMPOSITION,
+        SetItemPosition32 = LVM_SETITEMPOSITION32,
+        SetItemState = LVM_SETITEMSTATE,
+        SetItemText = LVM_SETITEMTEXT,
+        SetOutlineColor = LVM_SETOUTLINECOLOR,
+        SetSelectedColumn = LVM_SETSELECTEDCOLUMN,
+        SetSelectionMark = LVM_SETSELECTIONMARK,
+        SetTextBackgroundColor = LVM_SETTEXTBKCOLOR,
+        SetTextColor = LVM_SETTEXTCOLOR,
+        SetTileInfo = LVM_SETTILEINFO,
+        SetTileViewInfo = LVM_SETTILEVIEWINFO,
+        SetToolTips = LVM_SETTOOLTIPS,
+        SetUnicodeFormat = LVM_SETUNICODEFORMAT,
+        SetView = LVM_SETVIEW,
+        SetWorkAreas = LVM_SETWORKAREAS,
+        SortGroups = LVM_SORTGROUPS,
+        SortItems = LVM_SORTITEMS,
+        SortItemsEx = LVM_SORTITEMSEX,
+        SubItemHitTest = LVM_SUBITEMHITTEST,
+        Update = LVM_UPDATE
+    };
+#endif
+#ifndef LISTVIENOTIFY
+#define LISTVIENOTIFY
+    enum class ListViewNotify : uint32_t {
+        BeginDrag = LVN_BEGINDRAG,
+        BeginLabelEdit = LVN_BEGINLABELEDIT,
+        BeginRightDrag = LVN_BEGINRDRAG,
+        BeginScroll = LVN_BEGINSCROLL,
+        ColumnClick = LVN_COLUMNCLICK,
+        ColumnDropDown = LVN_COLUMNDROPDOWN,
+        ColumnOverflowClick = LVN_COLUMNOVERFLOWCLICK,
+        DeleteAllItems = LVN_DELETEALLITEMS,
+        DeleteItem = LVN_DELETEITEM,
+        EndLabelEdit = LVN_ENDLABELEDIT,
+        EndScroll = LVN_ENDSCROLL,
+        GetDispInfo = LVN_GETDISPINFO,
+        GetEmptyMarkup = LVN_GETEMPTYMARKUP,
+        GetInfoTip = LVN_GETINFOTIP,
+        HotTrack = LVN_HOTTRACK,
+        IncrementalSearch = LVN_INCREMENTALSEARCH,
+        InsertItem = LVN_INSERTITEM,
+        ItemActivate = LVN_ITEMACTIVATE,
+        ItemChanged = LVN_ITEMCHANGED,
+        ItemChanging = LVN_ITEMCHANGING,
+        KeyDown = LVN_KEYDOWN,
+        LinkClick = LVN_LINKCLICK,
+        MarqueeBegin = LVN_MARQUEEBEGIN,
+        OdCacheHint = LVN_ODCACHEHINT,
+        OdFindItem = LVN_ODFINDITEM,
+        OdStateChanged = LVN_ODSTATECHANGED,
+        SetDispInfo = LVN_SETDISPINFO,
+        Click = NM_CLICK,
+        CustomDraw = NM_CUSTOMDRAW,
+        DoubleClick = NM_DBLCLK,
+        Hover = NM_HOVER,
+        KillFocus = NM_KILLFOCUS,
+        RightClick = NM_RCLICK,
+        RightDoubleClick = NM_RDBLCLK,
+        ReleasedCapture = NM_RELEASEDCAPTURE,
+        Return = NM_RETURN,
+        SetFocus = NM_SETFOCUS
+    };
+#endif
     class listview {
     private:
         uint32_t error_code = 0;
@@ -558,6 +731,111 @@ namespace YanLib::components {
 
         bool set_text_color(HWND listview_handle, COLORREF color);
 
+        void get_tile_info(HWND listview_handle, LVTILEINFO *tile_info);
+
+        bool set_tile_info(HWND listview_handle, LVTILEINFO *tile_info);
+
+        void get_tile_view_info(HWND listview_handle,
+                                LVTILEVIEWINFO *tile_view_info);
+
+        bool set_tile_view_info(HWND listview_handle,
+                                LVTILEVIEWINFO *tile_view_info);
+
+        HWND get_tool_tips(HWND listview_handle);
+
+        HWND set_tool_tips(HWND listview_handle, HWND tool_tips_handle);
+
+        int32_t get_top_index(HWND listview_handle);
+
+        bool is_ansi_format(HWND listview_handle);
+
+        bool is_unicode_format(HWND listview_handle);
+
+        void set_ansi_format(HWND listview_handle);
+
+        void set_unicode_format(HWND listview_handle);
+
+        uint32_t get_view(HWND listview_handle);
+
+        bool set_view(HWND listview_handle, uint32_t view);
+
+        bool get_view_rect(HWND listview_handle, RECT *rect);
+
+        void get_work_areas(HWND listview_handle,
+                            std::vector<RECT> &work_areas);
+
+        void set_work_areas(HWND listview_handle,
+                            std::vector<RECT> &work_areas);
+
+        bool contains_group(HWND listview_handle, int32_t index);
+
+        int32_t hit_test(HWND listview_handle, LVHITTESTINFO *hit_test_info);
+
+        int32_t hit_test2(HWND listview_handle, LVHITTESTINFO *hit_test_info);
+
+        int32_t insert_column(HWND listview_handle,
+                              const LVCOLUMNW *column,
+                              int32_t index);
+
+        int32_t
+        insert_group(HWND listview_handle, LVGROUP *group, int32_t index);
+
+        void insert_group_sorted(HWND listview_handle,
+                                 LVINSERTGROUPSORTED *insert_group_sorted);
+
+        int32_t insert_item(HWND listview_handle, const LVITEMW *item);
+
+        bool insert_mark_hit_test(HWND listview_handle,
+                                  POINT *point,
+                                  LVINSERTMARK *insert_mark);
+
+        bool is_item_visible(HWND listview_handle, uint32_t index);
+
+        uint32_t map_id_to_index(HWND listview_handle, uint32_t id);
+
+        uint32_t map_index_to_id(HWND listview_handle, uint32_t index);
+
+        void
+        move_group(HWND listview_handle, int32_t index_from, int32_t index_to);
+
+        void move_item_to_group(HWND listview_handle,
+                                int32_t item_index,
+                                int32_t group_index);
+
+        bool redraw_items(HWND listview_handle, int32_t first, int32_t last);
+
+        void remove_all_groups(HWND listview_handle);
+
+        int32_t remove_group(HWND listview_handle, int32_t index);
+
+        bool scroll(HWND listview_handle, int32_t horiz, int32_t vert);
+
+        uint32_t
+        set_icon_spacing(HWND listview_handle, int32_t width, int32_t height);
+
+        bool set_info_tip(HWND listview_handle, LVSETINFOTIP *set_info_tip);
+
+        bool set_item_index_state(HWND listview_handle,
+                                  LVITEMINDEX *item_index,
+                                  LVItemState state,
+                                  LVItemState mask);
+
+        bool
+        sort_groups(HWND listview_handle, PFNLVGROUPCOMPARE fn, void *param3);
+
+        // int CALLBACK PFNLVCOMPARE(LPARAM lParam1, LPARAM lParam2, LPARAM
+        // lParam3);
+        bool sort_items(HWND listview_handle, PFNLVCOMPARE fn, void *param3);
+
+        bool sort_items2(HWND listview_handle, PFNLVCOMPARE fn, void *param3);
+
+        int32_t sub_item_hit_test(HWND listview_handle,
+                                  LVHITTESTINFO *hit_test_info);
+
+        int32_t sub_item_hit_test2(HWND listview_handle,
+                                   LVHITTESTINFO *hit_test_info);
+
+        bool update(HWND listview_handle, int32_t index);
 
         [[nodiscard]] uint32_t err_code() const;
 

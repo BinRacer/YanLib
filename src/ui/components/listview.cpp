@@ -598,6 +598,212 @@ namespace YanLib::components {
         return ListView_SetTextColor(listview_handle, color);
     }
 
+    void listview::get_tile_info(HWND listview_handle, LVTILEINFO *tile_info) {
+        ListView_GetTileInfo(listview_handle, tile_info);
+    }
+
+    bool listview::set_tile_info(HWND listview_handle, LVTILEINFO *tile_info) {
+        return ListView_SetTileInfo(listview_handle, tile_info);
+    }
+
+    void listview::get_tile_view_info(HWND listview_handle,
+                                      LVTILEVIEWINFO *tile_view_info) {
+        ListView_GetTileViewInfo(listview_handle, tile_view_info);
+    }
+
+    bool listview::set_tile_view_info(HWND listview_handle,
+                                      LVTILEVIEWINFO *tile_view_info) {
+        return ListView_SetTileViewInfo(listview_handle, tile_view_info);
+    }
+
+    HWND listview::get_tool_tips(HWND listview_handle) {
+        return ListView_GetToolTips(listview_handle);
+    }
+
+    HWND listview::set_tool_tips(HWND listview_handle, HWND tool_tips_handle) {
+        return ListView_SetToolTips(listview_handle, tool_tips_handle);
+    }
+
+    int32_t listview::get_top_index(HWND listview_handle) {
+        return ListView_GetTopIndex(listview_handle);
+    }
+
+    bool listview::is_ansi_format(HWND listview_handle) {
+        return !(ListView_GetUnicodeFormat(listview_handle));
+    }
+
+    bool listview::is_unicode_format(HWND listview_handle) {
+        return ListView_GetUnicodeFormat(listview_handle);
+    }
+
+    void listview::set_ansi_format(HWND listview_handle) {
+        ListView_SetUnicodeFormat(listview_handle, FALSE);
+    }
+
+    void listview::set_unicode_format(HWND listview_handle) {
+        ListView_SetUnicodeFormat(listview_handle, TRUE);
+    }
+
+    uint32_t listview::get_view(HWND listview_handle) {
+        return ListView_GetView(listview_handle);
+    }
+
+    bool listview::set_view(HWND listview_handle, uint32_t view) {
+        return ListView_SetView(listview_handle, view) == 1;
+    }
+
+    bool listview::get_view_rect(HWND listview_handle, RECT *rect) {
+        return ListView_GetViewRect(listview_handle, rect);
+    }
+
+    void listview::get_work_areas(HWND listview_handle,
+                                  std::vector<RECT> &work_areas) {
+        ListView_GetWorkAreas(listview_handle, work_areas.size(),
+                              work_areas.data());
+    }
+
+    void listview::set_work_areas(HWND listview_handle,
+                                  std::vector<RECT> &work_areas) {
+        ListView_SetWorkAreas(listview_handle, work_areas.size(),
+                              work_areas.data());
+    }
+
+    bool listview::contains_group(HWND listview_handle, int32_t index) {
+        return ListView_HasGroup(listview_handle, index);
+    }
+
+    int32_t listview::hit_test(HWND listview_handle,
+                               LVHITTESTINFO *hit_test_info) {
+        return ListView_HitTest(listview_handle, hit_test_info);
+    }
+
+    int32_t listview::hit_test2(HWND listview_handle,
+                                LVHITTESTINFO *hit_test_info) {
+        return ListView_HitTestEx(listview_handle, hit_test_info);
+    }
+
+    int32_t listview::insert_column(HWND listview_handle,
+                                    const LVCOLUMNW *column,
+                                    int32_t index) {
+        return ListView_InsertColumn(listview_handle, index, column);
+    }
+
+    int32_t listview::insert_group(HWND listview_handle,
+                                   LVGROUP *group,
+                                   int32_t index) {
+        return ListView_InsertGroup(listview_handle, index, group);
+    }
+
+    void
+    listview::insert_group_sorted(HWND listview_handle,
+                                  LVINSERTGROUPSORTED *insert_group_sorted) {
+        ListView_InsertGroupSorted(listview_handle, insert_group_sorted);
+    }
+
+    int32_t listview::insert_item(HWND listview_handle, const LVITEMW *item) {
+        return ListView_InsertItem(listview_handle, item);
+    }
+
+    bool listview::insert_mark_hit_test(HWND listview_handle,
+                                        POINT *point,
+                                        LVINSERTMARK *insert_mark) {
+        return ListView_InsertMarkHitTest(listview_handle, point, insert_mark);
+    }
+
+    bool listview::is_item_visible(HWND listview_handle, uint32_t index) {
+        return ListView_IsItemVisible(listview_handle, index);
+    }
+
+    uint32_t listview::map_id_to_index(HWND listview_handle, uint32_t id) {
+        return ListView_MapIDToIndex(listview_handle, id);
+    }
+
+    uint32_t listview::map_index_to_id(HWND listview_handle, uint32_t index) {
+        return ListView_MapIndexToID(listview_handle, index);
+    }
+
+    void listview::move_group(HWND listview_handle,
+                              int32_t index_from,
+                              int32_t index_to) {
+        ListView_MoveGroup(listview_handle, index_from, index_to);
+    }
+
+    void listview::move_item_to_group(HWND listview_handle,
+                                      int32_t item_index,
+                                      int32_t group_index) {
+        ListView_MoveItemToGroup(listview_handle, item_index, group_index);
+    }
+
+    bool
+    listview::redraw_items(HWND listview_handle, int32_t first, int32_t last) {
+        return ListView_RedrawItems(listview_handle, first, last);
+    }
+
+    void listview::remove_all_groups(HWND listview_handle) {
+        ListView_RemoveAllGroups(listview_handle);
+    }
+
+    int32_t listview::remove_group(HWND listview_handle, int32_t index) {
+        return ListView_RemoveGroup(listview_handle, index);
+    }
+
+    bool listview::scroll(HWND listview_handle, int32_t horiz, int32_t vert) {
+        return ListView_Scroll(listview_handle, horiz, vert);
+    }
+
+    uint32_t listview::set_icon_spacing(HWND listview_handle,
+                                        int32_t width,
+                                        int32_t height) {
+        return ListView_SetIconSpacing(listview_handle, width, height);
+    }
+
+    bool listview::set_info_tip(HWND listview_handle,
+                                LVSETINFOTIP *set_info_tip) {
+        return ListView_SetInfoTip(listview_handle, set_info_tip);
+    }
+
+    bool listview::set_item_index_state(HWND listview_handle,
+                                        LVITEMINDEX *item_index,
+                                        LVItemState state,
+                                        LVItemState mask) {
+        LVITEMW item;
+        item.stateMask = static_cast<uint32_t>(mask);
+        item.state = static_cast<uint32_t>(state);
+        return SendMessageW(listview_handle, LVM_SETITEMINDEXSTATE,
+                            reinterpret_cast<WPARAM>(item_index),
+                            reinterpret_cast<LPARAM>(&item)) == S_OK;
+    }
+
+    bool listview::sort_groups(HWND listview_handle,
+                               PFNLVGROUPCOMPARE fn,
+                               void *param3) {
+        return ListView_SortGroups(listview_handle, fn, param3);
+    }
+
+    bool
+    listview::sort_items(HWND listview_handle, PFNLVCOMPARE fn, void *param3) {
+        return ListView_SortItems(listview_handle, fn, param3);
+    }
+
+    bool
+    listview::sort_items2(HWND listview_handle, PFNLVCOMPARE fn, void *param3) {
+        return ListView_SortItemsEx(listview_handle, fn, param3);
+    }
+
+    int32_t listview::sub_item_hit_test(HWND listview_handle,
+                                        LVHITTESTINFO *hit_test_info) {
+        return ListView_SubItemHitTest(listview_handle, hit_test_info);
+    }
+
+    int32_t listview::sub_item_hit_test2(HWND listview_handle,
+                                         LVHITTESTINFO *hit_test_info) {
+        return ListView_SubItemHitTestEx(listview_handle, hit_test_info);
+    }
+
+    bool listview::update(HWND listview_handle, int32_t index) {
+        return ListView_Update(listview_handle, index);
+    }
+
     uint32_t listview::err_code() const {
         return error_code;
     }

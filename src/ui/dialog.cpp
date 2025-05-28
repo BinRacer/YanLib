@@ -225,55 +225,41 @@ namespace YanLib::ui {
         return DefDlgProcW(dialog_handle, msg, wparam, lparam);
     }
 
-    int32_t dialog::fill_listbox(HWND dialog_handle,
-                                 char *path_spec,
-                                 int32_t listbox_id,
-                                 int32_t static_id,
-                                 FileType file_type) {
-        int32_t result =
-                DlgDirListA(dialog_handle, path_spec, listbox_id, static_id,
-                            static_cast<uint32_t>(file_type));
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
-    int32_t dialog::fill_listbox(HWND dialog_handle,
-                                 wchar_t *path_spec,
-                                 int32_t listbox_id,
-                                 int32_t static_id,
-                                 FileType file_type) {
-        int32_t result =
-                DlgDirListW(dialog_handle, path_spec, listbox_id, static_id,
-                            static_cast<uint32_t>(file_type));
-        if (!result) {
-            error_code = GetLastError();
-        }
-        return result;
-    }
-
-    int32_t dialog::fill_combobox(HWND dialog_handle,
+    int32_t dialog::fill_list_box(HWND dialog_handle,
                                   char *path_spec,
-                                  int32_t combobox_id,
+                                  int32_t list_box_id,
                                   int32_t static_id,
                                   FileType file_type) {
-        int32_t result = DlgDirListComboBoxA(dialog_handle, path_spec,
-                                             combobox_id, static_id,
-                                             static_cast<uint32_t>(file_type));
+        int32_t result =
+                DlgDirListA(dialog_handle, path_spec, list_box_id, static_id,
+                            static_cast<uint32_t>(file_type));
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int32_t dialog::fill_combobox(HWND dialog_handle,
+    int32_t dialog::fill_list_box(HWND dialog_handle,
                                   wchar_t *path_spec,
-                                  int32_t combobox_id,
+                                  int32_t list_box_id,
                                   int32_t static_id,
                                   FileType file_type) {
-        int32_t result = DlgDirListComboBoxW(dialog_handle, path_spec,
-                                             combobox_id, static_id,
+        int32_t result =
+                DlgDirListW(dialog_handle, path_spec, list_box_id, static_id,
+                            static_cast<uint32_t>(file_type));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    int32_t dialog::fill_combo_box(HWND dialog_handle,
+                                   char *path_spec,
+                                   int32_t combo_box_id,
+                                   int32_t static_id,
+                                   FileType file_type) {
+        int32_t result = DlgDirListComboBoxA(dialog_handle, path_spec,
+                                             combo_box_id, static_id,
                                              static_cast<uint32_t>(file_type));
         if (!result) {
             error_code = GetLastError();
@@ -281,46 +267,60 @@ namespace YanLib::ui {
         return result;
     }
 
-    bool dialog::get_select_combobox(HWND dialog_handle,
-                                     std::string &path,
-                                     int32_t combobox_id) {
+    int32_t dialog::fill_combo_box(HWND dialog_handle,
+                                   wchar_t *path_spec,
+                                   int32_t combo_box_id,
+                                   int32_t static_id,
+                                   FileType file_type) {
+        int32_t result = DlgDirListComboBoxW(dialog_handle, path_spec,
+                                             combo_box_id, static_id,
+                                             static_cast<uint32_t>(file_type));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    bool dialog::get_select_combo_box(HWND dialog_handle,
+                                      std::string &path,
+                                      int32_t combo_box_id) {
         if (!DlgDirSelectComboBoxExA(dialog_handle, path.data(),
                                      static_cast<int32_t>(path.size()),
-                                     combobox_id)) {
+                                     combo_box_id)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool dialog::get_select_combobox(HWND dialog_handle,
-                                     std::wstring &path,
-                                     int32_t combobox_id) {
+    bool dialog::get_select_combo_box(HWND dialog_handle,
+                                      std::wstring &path,
+                                      int32_t combo_box_id) {
         if (!DlgDirSelectComboBoxExW(dialog_handle, path.data(),
                                      static_cast<int32_t>(path.size()),
-                                     combobox_id)) {
+                                     combo_box_id)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool dialog::get_select_listbox(HWND dialog_handle,
-                                    std::string &path,
-                                    int32_t listbox_id) {
+    bool dialog::get_select_list_box(HWND dialog_handle,
+                                     std::string &path,
+                                     int32_t list_box_id) {
         if (!DlgDirSelectExA(dialog_handle, path.data(),
-                             static_cast<int32_t>(path.size()), listbox_id)) {
+                             static_cast<int32_t>(path.size()), list_box_id)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    bool dialog::get_select_listbox(HWND dialog_handle,
-                                    std::wstring &path,
-                                    int32_t listbox_id) {
+    bool dialog::get_select_list_box(HWND dialog_handle,
+                                     std::wstring &path,
+                                     int32_t list_box_id) {
         if (!DlgDirSelectExW(dialog_handle, path.data(),
-                             static_cast<int32_t>(path.size()), listbox_id)) {
+                             static_cast<int32_t>(path.size()), list_box_id)) {
             error_code = GetLastError();
             return false;
         }

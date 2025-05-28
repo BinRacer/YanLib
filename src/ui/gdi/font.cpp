@@ -72,7 +72,7 @@ namespace YanLib::ui::gdi {
     }
 
     LOGFONTA font::make(const char *face_name,
-                        Charset char_set,
+                        Charset charset,
                         int32_t height,
                         int32_t width,
                         int32_t escapement,
@@ -95,8 +95,8 @@ namespace YanLib::ui::gdi {
         log_font.lfItalic = is_italic ? TRUE : FALSE;
         log_font.lfUnderline = is_underline ? TRUE : FALSE;
         log_font.lfStrikeOut = is_strike_out ? TRUE : FALSE;
-        log_font.lfCharSet = static_cast<uint32_t>(char_set) < UINT8_MAX
-                ? static_cast<uint8_t>(char_set)
+        log_font.lfCharSet = static_cast<uint32_t>(charset) < UINT8_MAX
+                ? static_cast<uint8_t>(charset)
                 : static_cast<uint8_t>(Charset::DEFAULT);
         log_font.lfOutPrecision = static_cast<uint32_t>(output) < UINT8_MAX
                 ? static_cast<uint8_t>(output)
@@ -119,7 +119,7 @@ namespace YanLib::ui::gdi {
     }
 
     LOGFONTW font::make(const wchar_t *face_name,
-                        Charset char_set,
+                        Charset charset,
                         int32_t height,
                         int32_t width,
                         int32_t escapement,
@@ -142,8 +142,8 @@ namespace YanLib::ui::gdi {
         log_font.lfItalic = is_italic ? TRUE : FALSE;
         log_font.lfUnderline = is_underline ? TRUE : FALSE;
         log_font.lfStrikeOut = is_strike_out ? TRUE : FALSE;
-        log_font.lfCharSet = static_cast<uint32_t>(char_set) < UINT8_MAX
-                ? static_cast<uint8_t>(char_set)
+        log_font.lfCharSet = static_cast<uint32_t>(charset) < UINT8_MAX
+                ? static_cast<uint8_t>(charset)
                 : static_cast<uint8_t>(Charset::DEFAULT);
         log_font.lfOutPrecision = static_cast<uint32_t>(output) < UINT8_MAX
                 ? static_cast<uint8_t>(output)

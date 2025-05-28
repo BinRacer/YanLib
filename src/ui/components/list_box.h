@@ -2,8 +2,8 @@
 // Created by forkernel on 2025/5/26.
 //
 
-#ifndef LISTBOX_H
-#define LISTBOX_H
+#ifndef LIST_BOX_H
+#define LIST_BOX_H
 #ifndef UNICODE
 #define UNICODE
 #endif
@@ -170,20 +170,20 @@ namespace YanLib::components {
         VKeyToItem = WM_VKEYTOITEM
     };
 #endif
-    class listbox {
+    class list_box {
     private:
         uint32_t error_code = 0;
 
     public:
-        listbox(const listbox &other) = delete;
+        list_box(const list_box &other) = delete;
 
-        listbox(listbox &&other) = delete;
+        list_box(list_box &&other) = delete;
 
-        listbox &operator=(const listbox &other) = delete;
+        list_box &operator=(const list_box &other) = delete;
 
-        listbox &operator=(listbox &&other) = delete;
+        list_box &operator=(list_box &&other) = delete;
 
-        HWND create(uintptr_t listbox_id,
+        HWND create(uintptr_t list_box_id,
                     HWND parent_window_handle,
                     LPARAM lparam,
                     int32_t x,
@@ -199,149 +199,150 @@ namespace YanLib::components {
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible | WindowStyle::VScroll);
 
-        bool enable(HWND listbox_handle);
+        bool enable(HWND list_box_handle);
 
-        bool disable(HWND listbox_handle);
+        bool disable(HWND list_box_handle);
 
-        int32_t fill(HWND listbox_handle,
+        int32_t fill(HWND list_box_handle,
                      const char *path_spec,
                      FileType type = FileType::Drives | FileType::Directory |
                              FileType::ReadWrite,
                      helper::CodePage code_page = helper::CodePage::GB2312);
 
-        int32_t fill(HWND listbox_handle,
+        int32_t fill(HWND list_box_handle,
                      const wchar_t *path_spec,
                      FileType type = FileType::Drives | FileType::Directory |
                              FileType::ReadWrite);
 
-        int32_t add_text(HWND listbox_handle,
+        int32_t add_text(HWND list_box_handle,
                          std::string &text,
                          helper::CodePage code_page = helper::CodePage::GB2312);
 
-        int32_t add_text(HWND listbox_handle, std::wstring &text);
+        int32_t add_text(HWND list_box_handle, std::wstring &text);
 
         int32_t
-        find_text(HWND listbox_handle,
+        find_text(HWND list_box_handle,
                   std::string &text,
                   int32_t index = -1,
                   helper::CodePage code_page = helper::CodePage::GB2312);
 
         int32_t
-        find_text(HWND listbox_handle, std::wstring &text, int32_t index = -1);
+        find_text(HWND list_box_handle, std::wstring &text, int32_t index = -1);
 
         int32_t
-        find_text_exact(HWND listbox_handle,
+        find_text_exact(HWND list_box_handle,
                         std::string &text,
                         int32_t index = -1,
                         helper::CodePage code_page = helper::CodePage::GB2312);
 
-        int32_t find_text_exact(HWND listbox_handle,
+        int32_t find_text_exact(HWND list_box_handle,
                                 std::wstring &text,
                                 int32_t index = -1);
 
         int32_t
-        insert_text(HWND listbox_handle,
+        insert_text(HWND list_box_handle,
                     std::string &text,
                     int32_t index = -1,
                     helper::CodePage code_page = helper::CodePage::GB2312);
 
-        int32_t insert_text(HWND listbox_handle,
+        int32_t insert_text(HWND list_box_handle,
                             std::wstring &text,
                             int32_t index = -1);
 
         int32_t
-        select_text(HWND listbox_handle,
+        select_text(HWND list_box_handle,
                     std::string &text,
                     int32_t index = -1,
                     helper::CodePage code_page = helper::CodePage::GB2312);
 
-        int32_t select_text(HWND listbox_handle,
+        int32_t select_text(HWND list_box_handle,
                             std::wstring &text,
                             int32_t index = -1);
 
-        int32_t delete_item(HWND listbox_handle, int32_t index);
+        int32_t delete_item(HWND list_box_handle, int32_t index);
 
-        int32_t get_item_text_len(HWND listbox_handle, int32_t index);
+        int32_t get_item_text_len(HWND list_box_handle, int32_t index);
 
         int32_t
-        get_item_text(HWND listbox_handle,
+        get_item_text(HWND list_box_handle,
                       std::string &text,
                       int32_t index,
                       helper::CodePage code_page = helper::CodePage::GB2312);
 
         int32_t
-        get_item_text(HWND listbox_handle, std::wstring &text, int32_t index);
+        get_item_text(HWND list_box_handle, std::wstring &text, int32_t index);
 
-        int32_t add_data(HWND listbox_handle, LPARAM data);
-
-        int32_t find_data(HWND listbox_handle, LPARAM data, int32_t index = -1);
-
-        LPARAM get_data(HWND listbox_handle, int32_t index);
-
-        int32_t set_data(HWND listbox_handle, LPARAM data, int32_t index);
+        int32_t add_data(HWND list_box_handle, LPARAM data);
 
         int32_t
-        insert_data(HWND listbox_handle, LPARAM data, int32_t index = -1);
+        find_data(HWND list_box_handle, LPARAM data, int32_t index = -1);
+
+        LPARAM get_data(HWND list_box_handle, int32_t index);
+
+        int32_t set_data(HWND list_box_handle, LPARAM data, int32_t index);
 
         int32_t
-        select_data(HWND listbox_handle, LPARAM data, int32_t index = -1);
-
-        int32_t get_item_height(HWND listbox_handle, int32_t index);
+        insert_data(HWND list_box_handle, LPARAM data, int32_t index = -1);
 
         int32_t
-        set_item_height(HWND listbox_handle, int32_t width, int32_t index);
+        select_data(HWND list_box_handle, LPARAM data, int32_t index = -1);
 
-        bool get_item_rect(HWND listbox_handle, RECT *rect, int32_t index);
+        int32_t get_item_height(HWND list_box_handle, int32_t index);
 
-        int32_t get_select_items(HWND listbox_handle,
+        int32_t
+        set_item_height(HWND list_box_handle, int32_t width, int32_t index);
+
+        bool get_item_rect(HWND list_box_handle, RECT *rect, int32_t index);
+
+        int32_t get_select_items(HWND list_box_handle,
                                  std::vector<int32_t> &select_index);
 
-        bool set_item_range(HWND listbox_handle, int32_t start, int32_t end);
+        bool set_item_range(HWND list_box_handle, int32_t start, int32_t end);
 
-        bool unset_item_range(HWND listbox_handle, int32_t start, int32_t end);
+        bool unset_item_range(HWND list_box_handle, int32_t start, int32_t end);
 
-        int32_t get_curr_select(HWND listbox_handle);
+        int32_t get_curr_select(HWND list_box_handle);
 
-        int32_t set_curr_select(HWND listbox_handle, int32_t index);
+        int32_t set_curr_select(HWND list_box_handle, int32_t index);
 
-        bool is_select(HWND listbox_handle, int32_t index);
+        bool is_select(HWND list_box_handle, int32_t index);
 
-        bool set_select(HWND listbox_handle, int32_t index);
+        bool set_select(HWND list_box_handle, int32_t index);
 
-        bool unset_select(HWND listbox_handle, int32_t index);
+        bool unset_select(HWND list_box_handle, int32_t index);
 
-        int32_t get_select_count(HWND listbox_handle);
+        int32_t get_select_count(HWND list_box_handle);
 
-        int32_t get_caret_index(HWND listbox_handle);
+        int32_t get_caret_index(HWND list_box_handle);
 
-        bool set_caret_index(HWND listbox_handle, int32_t index);
+        bool set_caret_index(HWND list_box_handle, int32_t index);
 
-        int32_t get_top_index(HWND listbox_handle);
+        int32_t get_top_index(HWND list_box_handle);
 
-        bool set_top_index(HWND listbox_handle, int32_t index);
+        bool set_top_index(HWND list_box_handle, int32_t index);
 
-        void reset_content(HWND listbox_handle);
+        void reset_content(HWND list_box_handle);
 
-        int32_t get_horiz_extent(HWND listbox_handle);
+        int32_t get_horiz_extent(HWND list_box_handle);
 
-        void set_horiz_extent(HWND listbox_handle, int32_t extent);
+        void set_horiz_extent(HWND list_box_handle, int32_t extent);
 
-        void set_all_colum_width(HWND listbox_handle, int32_t width);
+        void set_all_colum_width(HWND list_box_handle, int32_t width);
 
-        int32_t get_item_count(HWND listbox_handle);
+        int32_t get_item_count(HWND list_box_handle);
 
-        bool set_tab_stops(HWND listbox_handle,
+        bool set_tab_stops(HWND list_box_handle,
                            std::vector<int32_t> &tab_stops);
 
         void draw_insert(HWND parent_window_handle,
-                         HWND listbox_handle,
+                         HWND list_box_handle,
                          int32_t icon_id);
 
-        int32_t item_id_from_point(HWND listbox_handle,
+        int32_t item_id_from_point(HWND list_box_handle,
                                    POINT point,
                                    bool auto_scroll = true);
 
-        bool modify_to_drag_list(HWND listbox_handle);
+        bool modify_to_drag_list(HWND list_box_handle);
 
         [[nodiscard]] uint32_t err_code() const;
 
@@ -350,4 +351,4 @@ namespace YanLib::components {
         [[nodiscard]] std::wstring err_wstring() const;
     };
 } // namespace YanLib::components
-#endif // LISTBOX_H
+#endif // LIST_BOX_H

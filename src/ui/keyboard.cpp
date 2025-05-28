@@ -17,7 +17,7 @@ namespace YanLib::ui {
 
     bool keyboard::register_hot_key(HWND window_handle,
                                     int32_t id,
-                                    ModKey mod_key,
+                                    ModifiersKey mod_key,
                                     VirtualKey vk) {
         if (!RegisterHotKey(window_handle, id, static_cast<uint32_t>(mod_key),
                             static_cast<uint32_t>(vk))) {

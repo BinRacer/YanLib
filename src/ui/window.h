@@ -1357,9 +1357,10 @@ namespace YanLib::ui {
 
         helper::CodePage get_code_page();
 
-        bool get_combobox_info(HWND combo_handle, COMBOBOXINFO *combobox_info);
+        bool get_combo_box_info(HWND combo_handle,
+                                COMBOBOXINFO *combo_box_info);
 
-        uint32_t get_listbox_info(HWND window_handle);
+        uint32_t get_list_box_info(HWND window_handle);
 
         bool enable_non_client_dpi_scaling(HWND window_handle);
 

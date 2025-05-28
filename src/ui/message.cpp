@@ -350,8 +350,8 @@ namespace YanLib::ui {
 
     std::pair<QueueType, QueueType> message::get_queue_status(QueueType type) {
         uint32_t status = GetQueueStatus(static_cast<uint32_t>(type));
-        QueueType current = static_cast<QueueType>(HIWORD(status));
-        QueueType still = static_cast<QueueType>(LOWORD(status));
+        auto current = static_cast<QueueType>(HIWORD(status));
+        auto still = static_cast<QueueType>(LOWORD(status));
         return std::make_pair(current, still);
     }
 

@@ -155,51 +155,53 @@ namespace YanLib::ui {
                              WPARAM wparam,
                              LPARAM lparam);
 
-        int32_t fill_listbox(HWND dialog_handle,
-                             char *path_spec,
-                             int32_t listbox_id,
-                             int32_t static_id,
-                             FileType file_type = FileType::Drives |
-                                     FileType::Directory | FileType::ReadWrite);
-
-        int32_t fill_listbox(HWND dialog_handle,
-                             wchar_t *path_spec,
-                             int32_t listbox_id,
-                             int32_t static_id,
-                             FileType file_type = FileType::Drives |
-                                     FileType::Directory | FileType::ReadWrite);
-
-        int32_t fill_combobox(HWND dialog_handle,
+        int32_t fill_list_box(HWND dialog_handle,
                               char *path_spec,
-                              int32_t combobox_id,
+                              int32_t list_box_id,
                               int32_t static_id,
                               FileType file_type = FileType::Drives |
                                       FileType::Directory |
                                       FileType::ReadWrite);
 
-        int32_t fill_combobox(HWND dialog_handle,
+        int32_t fill_list_box(HWND dialog_handle,
                               wchar_t *path_spec,
-                              int32_t combobox_id,
+                              int32_t list_box_id,
                               int32_t static_id,
                               FileType file_type = FileType::Drives |
                                       FileType::Directory |
                                       FileType::ReadWrite);
 
-        bool get_select_combobox(HWND dialog_handle,
+        int32_t fill_combo_box(HWND dialog_handle,
+                               char *path_spec,
+                               int32_t combo_box_id,
+                               int32_t static_id,
+                               FileType file_type = FileType::Drives |
+                                       FileType::Directory |
+                                       FileType::ReadWrite);
+
+        int32_t fill_combo_box(HWND dialog_handle,
+                               wchar_t *path_spec,
+                               int32_t combo_box_id,
+                               int32_t static_id,
+                               FileType file_type = FileType::Drives |
+                                       FileType::Directory |
+                                       FileType::ReadWrite);
+
+        bool get_select_combo_box(HWND dialog_handle,
+                                  std::string &path,
+                                  int32_t combo_box_id);
+
+        bool get_select_combo_box(HWND dialog_handle,
+                                  std::wstring &path,
+                                  int32_t combo_box_id);
+
+        bool get_select_list_box(HWND dialog_handle,
                                  std::string &path,
-                                 int32_t combobox_id);
+                                 int32_t list_box_id);
 
-        bool get_select_combobox(HWND dialog_handle,
+        bool get_select_list_box(HWND dialog_handle,
                                  std::wstring &path,
-                                 int32_t combobox_id);
-
-        bool get_select_listbox(HWND dialog_handle,
-                                std::string &path,
-                                int32_t listbox_id);
-
-        bool get_select_listbox(HWND dialog_handle,
-                                std::wstring &path,
-                                int32_t listbox_id);
+                                 int32_t list_box_id);
 
         int32_t get_item_id(HWND item_handle);
 

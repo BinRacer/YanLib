@@ -200,26 +200,28 @@ add_library(YanLib STATIC
         src/ui/components/button.h
         src/ui/components/animate.cpp
         src/ui/components/animate.h
-        src/ui/components/combobox.cpp
-        src/ui/components/combobox.h
+        src/ui/components/combo_box.cpp
+        src/ui/components/combo_box.h
         src/ui/components/datetime.cpp
         src/ui/components/datetime.h
         src/ui/components/edit.cpp
         src/ui/components/edit.h
         src/ui/components/header.cpp
         src/ui/components/header.h
-        src/ui/components/hotkey.cpp
-        src/ui/components/hotkey.h
+        src/ui/components/hot_key.cpp
+        src/ui/components/hot_key.h
         src/ui/components/image_list.cpp
         src/ui/components/image_list.h
         src/ui/components/ip_addr.cpp
         src/ui/components/ip_addr.h
-        src/ui/components/listbox.cpp
-        src/ui/components/listbox.h
-        src/ui/components/listview.cpp
-        src/ui/components/listview.h
+        src/ui/components/list_box.cpp
+        src/ui/components/list_box.h
+        src/ui/components/list_view.cpp
+        src/ui/components/list_view.h
         src/ui/components/calendar.cpp
         src/ui/components/calendar.h
+        src/ui/components/page.cpp
+        src/ui/components/page.h
 )
 
 target_include_directories(YanLib

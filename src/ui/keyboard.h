@@ -173,7 +173,7 @@ namespace YanLib::ui {
 #ifndef MODIFIERSKEY
 #define MODIFIERSKEY
 
-    enum class ModKey : uint32_t {
+    enum class ModifiersKey : uint32_t {
         Alt = MOD_ALT,
         Control = MOD_CONTROL,
         Shift = MOD_SHIFT,
@@ -181,9 +181,9 @@ namespace YanLib::ui {
         NoRepeat = MOD_NOREPEAT,
     };
 
-    inline ModKey operator|(ModKey a, ModKey b) {
-        return static_cast<ModKey>(static_cast<uint32_t>(a) |
-                                   static_cast<uint32_t>(b));
+    inline ModifiersKey operator|(ModifiersKey a, ModifiersKey b) {
+        return static_cast<ModifiersKey>(static_cast<uint32_t>(a) |
+                                         static_cast<uint32_t>(b));
     }
 
     enum class ModKey6 : uint32_t {
@@ -435,7 +435,7 @@ namespace YanLib::ui {
 
         bool register_hot_key(HWND window_handle,
                               int32_t id,
-                              ModKey mod_key,
+                              ModifiersKey mod_key,
                               VirtualKey vk);
 
         bool unregister_hot_key(HWND window_handle, int32_t id);

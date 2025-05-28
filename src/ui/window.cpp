@@ -19,9 +19,9 @@ namespace YanLib::ui {
                         int32_t width,
                         int32_t height,
                         WindowStyle style,
-                        WindowExtendStyle ext_style) {
+                        WindowExtendStyle extend_style) {
         HWND result =
-                CreateWindowExA(static_cast<uint32_t>(ext_style), class_name,
+                CreateWindowExA(static_cast<uint32_t>(extend_style), class_name,
                                 window_name, static_cast<uint32_t>(style), x, y,
                                 width, height, parent_window_handle,
                                 menu_handle, instance_handle, param);
@@ -42,9 +42,9 @@ namespace YanLib::ui {
                         int32_t width,
                         int32_t height,
                         WindowStyle style,
-                        WindowExtendStyle ext_style) {
+                        WindowExtendStyle extend_style) {
         HWND result =
-                CreateWindowExW(static_cast<uint32_t>(ext_style), class_name,
+                CreateWindowExW(static_cast<uint32_t>(extend_style), class_name,
                                 window_name, static_cast<uint32_t>(style), x, y,
                                 width, height, parent_window_handle,
                                 menu_handle, instance_handle, param);
@@ -1344,16 +1344,16 @@ namespace YanLib::ui {
         return static_cast<helper::CodePage>(GetKBCodePage());
     }
 
-    bool window::get_combobox_info(HWND combo_handle,
-                                   COMBOBOXINFO *combobox_info) {
-        if (!GetComboBoxInfo(combo_handle, combobox_info)) {
+    bool window::get_combo_box_info(HWND combo_handle,
+                                    COMBOBOXINFO *combo_box_info) {
+        if (!GetComboBoxInfo(combo_handle, combo_box_info)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    uint32_t window::get_listbox_info(HWND window_handle) {
+    uint32_t window::get_list_box_info(HWND window_handle) {
         return GetListBoxInfo(window_handle);
     }
 

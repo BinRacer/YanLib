@@ -27,7 +27,8 @@ namespace YanLib::ui::gdi {
     };
 
     inline DCFlag operator|(DCFlag a, DCFlag b) {
-        return DCFlag(static_cast<uint32_t>(a) | static_cast<uint32_t>(b));
+        return static_cast<DCFlag>(static_cast<uint32_t>(a) |
+                                   static_cast<uint32_t>(b));
     }
 #endif
 #ifndef LAYOUT

@@ -147,7 +147,7 @@ namespace YanLib::components {
         }
         if (parts.size() != 4)
             return false;
-        uint8_t octets[4] = {0};
+        uint8_t octets[4] = {};
         for (int32_t i = 0; i < 4; ++i) {
             const auto &s = parts[i];
             if (s.empty() || s.length() > 3)

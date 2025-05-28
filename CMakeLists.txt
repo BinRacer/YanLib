@@ -218,6 +218,8 @@ add_library(YanLib STATIC
         src/ui/components/listbox.h
         src/ui/components/listview.cpp
         src/ui/components/listview.h
+        src/ui/components/calendar.cpp
+        src/ui/components/calendar.h
 )
 
 target_include_directories(YanLib

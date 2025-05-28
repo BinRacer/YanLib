@@ -137,6 +137,10 @@ namespace YanLib::components {
         return Header_GetOverflowRect(header_handle, rect);
     }
 
+    bool header::is_ansi_format(HWND header_handle) {
+        return !(Header_GetUnicodeFormat(header_handle));
+    }
+
     bool header::is_unicode_format(HWND header_handle) {
         return Header_GetUnicodeFormat(header_handle);
     }

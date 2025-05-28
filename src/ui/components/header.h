@@ -217,6 +217,8 @@ namespace YanLib::components {
 
         bool get_overflow_rect(HWND header_handle, RECT *rect);
 
+        bool is_ansi_format(HWND header_handle);
+
         bool is_unicode_format(HWND header_handle);
 
         void set_unicode_format(HWND header_handle);

@@ -224,6 +224,8 @@ add_library(YanLib STATIC
         src/ui/components/page.h
         src/ui/components/progress.cpp
         src/ui/components/progress.h
+        src/ui/components/property.cpp
+        src/ui/components/property.h
 )
 
 target_include_directories(YanLib

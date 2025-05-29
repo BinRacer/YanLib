@@ -100,6 +100,10 @@ namespace YanLib::components {
 
         image_list &operator=(image_list &&other) = delete;
 
+        image_list() = default;
+
+        ~image_list() = default;
+
         static HIMAGELIST create(int32_t width,
                                  int32_t height,
                                  int32_t init,

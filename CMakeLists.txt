@@ -222,6 +222,8 @@ add_library(YanLib STATIC
         src/ui/components/calendar.h
         src/ui/components/page.cpp
         src/ui/components/page.h
+        src/ui/components/progress.cpp
+        src/ui/components/progress.h
 )
 
 target_include_directories(YanLib

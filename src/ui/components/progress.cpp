@@ -1,0 +1,130 @@
+//
+// Created by forkernel on 2025/5/29.
+//
+
+#include "progress.h"
+#include <windowsx.h>
+
+namespace YanLib::components {
+    HWND progress::create(uintptr_t progress_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          ProgressStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icex = {};
+        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icex.dwICC = ICC_PROGRESS_CLASS;
+        InitCommonControlsEx(&icex);
+        HWND result = CreateWindowExW(0L, L"msctls_progress32", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(progress_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    COLORREF progress::get_bar_color(HWND progress_handle) {
+        return SendMessageW(progress_handle, PBM_GETBARCOLOR, 0, 0);
+    }
+
+    COLORREF progress::set_bar_color(HWND progress_handle, COLORREF color) {
+        return SendMessageW(progress_handle, PBM_SETBARCOLOR, 0, color);
+    }
+
+    COLORREF progress::get_background_color(HWND progress_handle) {
+        return SendMessageW(progress_handle, PBM_GETBKCOLOR, 0, 0);
+    }
+
+    COLORREF progress::set_background_color(HWND progress_handle,
+                                            COLORREF color) {
+        return SendMessageW(progress_handle, PBM_SETBARCOLOR, 0, color);
+    }
+
+    uint32_t progress::get_pos(HWND progress_handle) {
+        return SendMessageW(progress_handle, PBM_GETPOS, 0, 0);
+    }
+
+    uint32_t progress::set_pos(HWND progress_handle, uint32_t pos) {
+        return SendMessageW(progress_handle, PBM_SETPOS, pos, 0);
+    }
+
+    void progress::get_range(HWND progress_handle, PBRANGE *range) {
+        SendMessageW(progress_handle, PBM_GETRANGE, TRUE,
+                     reinterpret_cast<LPARAM>(range));
+    }
+
+    bool progress::set_range(HWND progress_handle, PBRANGE range) {
+        return SendMessageW(progress_handle, PBM_SETRANGE, 0,
+                            MAKELPARAM(range.iLow, range.iHigh));
+    }
+
+    bool progress::set_range(HWND progress_handle, int32_t low, int32_t high) {
+        return SendMessageW(progress_handle, PBM_SETRANGE, 0,
+                            MAKELPARAM(low, high));
+    }
+
+    bool
+    progress::set_range32(HWND progress_handle, int32_t low, int32_t high) {
+        return SendMessageW(progress_handle, PBM_SETRANGE32, low, high);
+    }
+
+    ProgressState progress::get_state(HWND progress_handle) {
+        return static_cast<ProgressState>(
+                SendMessageW(progress_handle, PBM_GETSTATE, 0, 0));
+    }
+
+    ProgressState progress::set_state(HWND progress_handle,
+                                      ProgressState state) {
+        return static_cast<ProgressState>(
+                SendMessageW(progress_handle, PBM_SETSTATE,
+                             static_cast<uint32_t>(state), 0));
+    }
+
+    uint32_t progress::get_step(HWND progress_handle) {
+        return SendMessageW(progress_handle, PBM_GETSTEP, 0, 0);
+    }
+
+    uint32_t progress::set_step(HWND progress_handle, uint32_t step) {
+        return SendMessageW(progress_handle, PBM_SETSTEP, step, 0);
+    }
+
+    uint32_t progress::set_delta_pos(HWND progress_handle, uint32_t increment) {
+        return SendMessageW(progress_handle, PBM_DELTAPOS, increment, 0);
+    }
+
+    void progress::enable_marquee(HWND progress_handle, int32_t milli_second) {
+        SendMessageW(progress_handle, PBM_SETMARQUEE, TRUE, milli_second);
+    }
+
+    void progress::disable_marquee(HWND progress_handle, int32_t milli_second) {
+        SendMessageW(progress_handle, PBM_SETMARQUEE, FALSE, milli_second);
+    }
+
+    uint32_t progress::forward_step(HWND progress_handle) {
+        return SendMessageW(progress_handle, PBM_STEPIT, 0, 0);
+    }
+
+    uint32_t progress::err_code() const {
+        return error_code;
+    }
+
+    std::string progress::err_string() const {
+        std::string result = helper::convert::err_string(error_code);
+        return result;
+    }
+
+    std::wstring progress::err_wstring() const {
+        std::wstring result = helper::convert::err_wstring(error_code);
+        return result;
+    }
+} // namespace YanLib::components

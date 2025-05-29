@@ -226,6 +226,8 @@ add_library(YanLib STATIC
         src/ui/components/progress.h
         src/ui/components/property.cpp
         src/ui/components/property.h
+        src/ui/components/rebar.cpp
+        src/ui/components/rebar.h
 )
 
 target_include_directories(YanLib

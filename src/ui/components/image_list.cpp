@@ -11,10 +11,10 @@ namespace YanLib::components {
                                   int32_t init,
                                   int32_t grow,
                                   ILCreateFlag flag) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_WIN95_CLASSES;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_WIN95_CLASSES;
+        InitCommonControlsEx(&icc);
         return ImageList_Create(width, height, static_cast<uint32_t>(flag),
                                 init, grow);
     }

@@ -15,10 +15,10 @@ namespace YanLib::components {
                           int32_t height,
                           ProgressStyle style,
                           WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_PROGRESS_CLASS;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_PROGRESS_CLASS;
+        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"msctls_progress32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -73,9 +73,9 @@ namespace YanLib::components {
                             MAKELPARAM(low, high));
     }
 
-    bool
+    void
     progress::set_range32(HWND progress_handle, int32_t low, int32_t high) {
-        return SendMessageW(progress_handle, PBM_SETRANGE32, low, high);
+        SendMessageW(progress_handle, PBM_SETRANGE32, low, high);
     }
 
     ProgressState progress::get_state(HWND progress_handle) {

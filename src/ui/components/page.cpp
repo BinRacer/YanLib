@@ -15,10 +15,10 @@ namespace YanLib::components {
                       int32_t height,
                       PageStyle style,
                       WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_PAGESCROLLER_CLASS;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_PAGESCROLLER_CLASS;
+        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysPager", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

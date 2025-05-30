@@ -14,10 +14,10 @@ namespace YanLib::components {
                          int32_t width,
                          int32_t height,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_INTERNET_CLASSES;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_INTERNET_CLASSES;
+        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"SysIPAddress32", nullptr,
                 static_cast<uint32_t>(window_style), x, y, width, height,

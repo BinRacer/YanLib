@@ -14,10 +14,10 @@ namespace YanLib::components {
                        int32_t height,
                        RebarStyle style,
                        WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
+        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 WS_EX_TOOLWINDOW, L"ReBarWindow32", nullptr,
                 static_cast<uint32_t>(window_style) |

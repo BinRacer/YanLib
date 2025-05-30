@@ -228,6 +228,8 @@ add_library(YanLib STATIC
         src/ui/components/property.h
         src/ui/components/rebar.cpp
         src/ui/components/rebar.h
+        src/ui/components/rich_edit.cpp
+        src/ui/components/rich_edit.h
 )
 
 target_include_directories(YanLib

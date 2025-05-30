@@ -15,10 +15,10 @@ namespace YanLib::components {
                         int32_t height,
                         HeaderStyle style,
                         WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_LISTVIEW_CLASSES | ICC_WIN95_CLASSES;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_LISTVIEW_CLASSES | ICC_WIN95_CLASSES;
+        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysHeader32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

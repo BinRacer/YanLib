@@ -10,10 +10,10 @@ namespace YanLib::components {
                          LPARAM lparam,
                          AnimateStyle style,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icex = {};
-        icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icex.dwICC = ICC_ANIMATE_CLASS;
-        InitCommonControlsEx(&icex);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_ANIMATE_CLASS;
+        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysAnimate32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

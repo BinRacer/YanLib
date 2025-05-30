@@ -20,6 +20,7 @@
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#pragma comment(lib, "user32.lib")
 namespace YanLib::components {
 #ifndef WINDOWSTYLE
 #define WINDOWSTYLE
@@ -147,7 +148,7 @@ namespace YanLib::components {
 
         bool set_range(HWND progress_handle, int32_t low, int32_t high);
 
-        bool set_range32(HWND progress_handle, int32_t low, int32_t high);
+        void set_range32(HWND progress_handle, int32_t low, int32_t high);
 
         ProgressState get_state(HWND progress_handle);
 

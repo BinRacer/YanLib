@@ -234,6 +234,8 @@ add_library(YanLib STATIC
         src/ui/components/label.h
         src/ui/components/status.cpp
         src/ui/components/status.h
+        src/ui/components/link.cpp
+        src/ui/components/link.h
 )
 
 target_include_directories(YanLib

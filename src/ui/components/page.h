@@ -15,7 +15,6 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -140,6 +139,32 @@ namespace YanLib::components {
         ~page() = default;
 
         HWND create(uintptr_t page_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    PageStyle style = PageStyle::Horizontal |
+                            PageStyle::AutoScroll,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const char *page_name,
+                    uintptr_t page_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    PageStyle style = PageStyle::Horizontal |
+                            PageStyle::AutoScroll,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const wchar_t *page_name,
+                    uintptr_t page_id,
                     HWND parent_window_handle,
                     LPARAM lparam,
                     int32_t x,

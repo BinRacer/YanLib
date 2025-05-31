@@ -200,6 +200,40 @@ namespace YanLib::components {
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible | WindowStyle::VScroll);
 
+        HWND create(const char *list_box_name,
+                    uintptr_t list_box_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ListBoxStyle style = ListBoxStyle::HasStrings |
+                            ListBoxStyle::ExtendedSelect |
+                            ListBoxStyle::MultiColumn |
+                            ListBoxStyle::MultipleSelect |
+                            ListBoxStyle::Notify | ListBoxStyle::UseTabStops |
+                            ListBoxStyle::WantKeyboardInput,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::VScroll);
+
+        HWND create(const wchar_t *list_box_name,
+                    uintptr_t list_box_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ListBoxStyle style = ListBoxStyle::HasStrings |
+                            ListBoxStyle::ExtendedSelect |
+                            ListBoxStyle::MultiColumn |
+                            ListBoxStyle::MultipleSelect |
+                            ListBoxStyle::Notify | ListBoxStyle::UseTabStops |
+                            ListBoxStyle::WantKeyboardInput,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::VScroll);
+
         bool enable(HWND list_box_handle);
 
         bool disable(HWND list_box_handle);

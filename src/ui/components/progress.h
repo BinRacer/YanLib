@@ -15,7 +15,6 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -120,6 +119,30 @@ namespace YanLib::components {
         ~progress() = default;
 
         HWND create(uintptr_t progress_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ProgressStyle style = ProgressStyle::Smooth,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const char *progress_name,
+                    uintptr_t progress_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ProgressStyle style = ProgressStyle::Smooth,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const wchar_t *progress_name,
+                    uintptr_t progress_id,
                     HWND parent_window_handle,
                     LPARAM lparam,
                     int32_t x,

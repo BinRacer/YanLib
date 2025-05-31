@@ -33,6 +33,62 @@ namespace YanLib::components {
         return result;
     }
 
+    HWND datetime::create(const char *datatime_name,
+                          uintptr_t datatime_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          DateTimeStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_DATE_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(0L, "SysDateTimePick32", datatime_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(datatime_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND datetime::create(const wchar_t *datatime_name,
+                          uintptr_t datatime_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          DateTimeStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_DATE_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(0L, L"SysDateTimePick32", datatime_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(datatime_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     void datetime::get_datetime_picker_info(
             HWND datetime_handle,
             DATETIMEPICKERINFO *datetime_picker_info) {

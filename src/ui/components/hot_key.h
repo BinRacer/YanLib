@@ -15,7 +15,6 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -295,6 +294,28 @@ namespace YanLib::components {
         ~hot_key() = default;
 
         HWND create(uintptr_t hot_key_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::Border);
+
+        HWND create(const char *hot_key_name,
+                    uintptr_t hot_key_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::Border);
+
+        HWND create(const wchar_t *hot_key_name,
+                    uintptr_t hot_key_id,
                     HWND parent_window_handle,
                     LPARAM lparam,
                     int32_t x,

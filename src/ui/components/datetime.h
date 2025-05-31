@@ -173,6 +173,34 @@ namespace YanLib::components {
                WindowStyle window_style = WindowStyle::Child |
                        WindowStyle::Visible | WindowStyle::Border);
 
+        HWND
+        create(const char *datatime_name,
+               uintptr_t datatime_id,
+               HWND parent_window_handle,
+               LPARAM lparam,
+               int32_t x,
+               int32_t y,
+               int32_t width,
+               int32_t height,
+               DateTimeStyle style = DateTimeStyle::ShortDateCenturyFormat |
+                       DateTimeStyle::TimeFormat | DateTimeStyle::UpDown,
+               WindowStyle window_style = WindowStyle::Child |
+                       WindowStyle::Visible | WindowStyle::Border);
+
+        HWND
+        create(const wchar_t *datatime_name,
+               uintptr_t datatime_id,
+               HWND parent_window_handle,
+               LPARAM lparam,
+               int32_t x,
+               int32_t y,
+               int32_t width,
+               int32_t height,
+               DateTimeStyle style = DateTimeStyle::ShortDateCenturyFormat |
+                       DateTimeStyle::TimeFormat | DateTimeStyle::UpDown,
+               WindowStyle window_style = WindowStyle::Child |
+                       WindowStyle::Visible | WindowStyle::Border);
+
         void get_datetime_picker_info(HWND datetime_handle,
                                       DATETIMEPICKERINFO *datetime_picker_info);
 

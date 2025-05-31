@@ -4,7 +4,7 @@
 
 #include "hot_key.h"
 #include <windowsx.h>
-
+#include "helper/convert.h"
 namespace YanLib::components {
     HWND hot_key::create(uintptr_t hot_key_id,
                          HWND parent_window_handle,
@@ -20,6 +20,54 @@ namespace YanLib::components {
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"msctls_hotkey32", nullptr,
+                static_cast<uint32_t>(window_style), x, y, width, height,
+                parent_window_handle, reinterpret_cast<HMENU>(hot_key_id),
+                reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND hot_key::create(const char *hot_key_name,
+                         uintptr_t hot_key_id,
+                         HWND parent_window_handle,
+                         LPARAM lparam,
+                         int32_t x,
+                         int32_t y,
+                         int32_t width,
+                         int32_t height,
+                         WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_HOTKEY_CLASS;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(
+                0L, "msctls_hotkey32", hot_key_name,
+                static_cast<uint32_t>(window_style), x, y, width, height,
+                parent_window_handle, reinterpret_cast<HMENU>(hot_key_id),
+                reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND hot_key::create(const wchar_t *hot_key_name,
+                         uintptr_t hot_key_id,
+                         HWND parent_window_handle,
+                         LPARAM lparam,
+                         int32_t x,
+                         int32_t y,
+                         int32_t width,
+                         int32_t height,
+                         WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_HOTKEY_CLASS;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(
+                0L, L"msctls_hotkey32", hot_key_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,
                 parent_window_handle, reinterpret_cast<HMENU>(hot_key_id),
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);

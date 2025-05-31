@@ -6,8 +6,7 @@
 #include <windowsx.h>
 
 namespace YanLib::components {
-    HWND rich_edit::create(const char *window_name,
-                           uintptr_t rich_edit_id,
+    HWND rich_edit::create(uintptr_t rich_edit_id,
                            HWND parent_window_handle,
                            LPARAM lparam,
                            int32_t x,
@@ -16,7 +15,7 @@ namespace YanLib::components {
                            int32_t height,
                            RichEditStyle style,
                            WindowStyle window_style) {
-        HWND result = CreateWindowExA(0L, "RICHEDIT50W", window_name,
+        HWND result = CreateWindowExW(0L, L"RICHEDIT50W", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,
@@ -30,7 +29,7 @@ namespace YanLib::components {
         return result;
     }
 
-    HWND rich_edit::create(const wchar_t *window_name,
+    HWND rich_edit::create(const char *rich_edit_name,
                            uintptr_t rich_edit_id,
                            HWND parent_window_handle,
                            LPARAM lparam,
@@ -40,7 +39,31 @@ namespace YanLib::components {
                            int32_t height,
                            RichEditStyle style,
                            WindowStyle window_style) {
-        HWND result = CreateWindowExW(0L, L"RICHEDIT50W", window_name,
+        HWND result = CreateWindowExA(0L, "RICHEDIT50W", rich_edit_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(rich_edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND rich_edit::create(const wchar_t *rich_edit_name,
+                           uintptr_t rich_edit_id,
+                           HWND parent_window_handle,
+                           LPARAM lparam,
+                           int32_t x,
+                           int32_t y,
+                           int32_t width,
+                           int32_t height,
+                           RichEditStyle style,
+                           WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"RICHEDIT50W", rich_edit_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

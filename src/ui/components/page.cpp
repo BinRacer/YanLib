@@ -4,7 +4,7 @@
 
 #include "page.h"
 #include <windowsx.h>
-
+#include "helper/convert.h"
 namespace YanLib::components {
     HWND page::create(uintptr_t page_id,
                       HWND parent_window_handle,
@@ -20,6 +20,62 @@ namespace YanLib::components {
         icc.dwICC = ICC_PAGESCROLLER_CLASS;
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysPager", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(page_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND page::create(const char *page_name,
+                      uintptr_t page_id,
+                      HWND parent_window_handle,
+                      LPARAM lparam,
+                      int32_t x,
+                      int32_t y,
+                      int32_t width,
+                      int32_t height,
+                      PageStyle style,
+                      WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_PAGESCROLLER_CLASS;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(0L, "SysPager", page_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(page_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND page::create(const wchar_t *page_name,
+                      uintptr_t page_id,
+                      HWND parent_window_handle,
+                      LPARAM lparam,
+                      int32_t x,
+                      int32_t y,
+                      int32_t width,
+                      int32_t height,
+                      PageStyle style,
+                      WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_PAGESCROLLER_CLASS;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(0L, L"SysPager", page_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

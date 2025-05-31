@@ -29,6 +29,54 @@ namespace YanLib::components {
         return result;
     }
 
+    HWND combo_box::create(const char *combo_box_name,
+                           uintptr_t combo_box_id,
+                           HWND parent_window_handle,
+                           LPARAM lparam,
+                           int32_t x,
+                           int32_t y,
+                           int32_t width,
+                           int32_t height,
+                           ComboBoxStyle style,
+                           WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "ComboBox", combo_box_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(combo_box_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND combo_box::create(const wchar_t *combo_box_name,
+                           uintptr_t combo_box_id,
+                           HWND parent_window_handle,
+                           LPARAM lparam,
+                           int32_t x,
+                           int32_t y,
+                           int32_t width,
+                           int32_t height,
+                           ComboBoxStyle style,
+                           WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"ComboBox", combo_box_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(combo_box_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     bool combo_box::enable(HWND combo_box_handle) {
         return ComboBox_Enable(combo_box_handle, TRUE);
     }

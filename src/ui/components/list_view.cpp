@@ -33,6 +33,62 @@ namespace YanLib::components {
         return result;
     }
 
+    HWND list_view::create(const char *list_view_name,
+                           uintptr_t list_view_id,
+                           HWND parent_window_handle,
+                           LPARAM lparam,
+                           int32_t x,
+                           int32_t y,
+                           int32_t width,
+                           int32_t height,
+                           ListViewStyle style,
+                           WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_LISTVIEW_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(0L, "SysListView32", list_view_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(list_view_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND list_view::create(const wchar_t *list_view_name,
+                           uintptr_t list_view_id,
+                           HWND parent_window_handle,
+                           LPARAM lparam,
+                           int32_t x,
+                           int32_t y,
+                           int32_t width,
+                           int32_t height,
+                           ListViewStyle style,
+                           WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_LISTVIEW_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(0L, L"SysListView32", list_view_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(list_view_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     HWND list_view::edit_label(HWND list_view_handle, int32_t index) {
         return ListView_EditLabel(list_view_handle, index);
     }

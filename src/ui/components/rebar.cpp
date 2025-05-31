@@ -30,6 +30,56 @@ namespace YanLib::components {
         return result;
     }
 
+    HWND rebar::create(const char *rebar_name,
+                       HWND parent_window_handle,
+                       LPARAM lparam,
+                       int32_t x,
+                       int32_t y,
+                       int32_t width,
+                       int32_t height,
+                       RebarStyle style,
+                       WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(
+                WS_EX_TOOLWINDOW, "ReBarWindow32", rebar_name,
+                static_cast<uint32_t>(window_style) |
+                        static_cast<uint32_t>(style),
+                x, y, width, height, parent_window_handle, nullptr,
+                reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND rebar::create(const wchar_t *rebar_name,
+                       HWND parent_window_handle,
+                       LPARAM lparam,
+                       int32_t x,
+                       int32_t y,
+                       int32_t width,
+                       int32_t height,
+                       RebarStyle style,
+                       WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(
+                WS_EX_TOOLWINDOW, L"ReBarWindow32", rebar_name,
+                static_cast<uint32_t>(window_style) |
+                        static_cast<uint32_t>(style),
+                x, y, width, height, parent_window_handle, nullptr,
+                reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     void rebar::begin_drag(HWND rebar_handle, int32_t index, POINT point) {
         SendMessageW(rebar_handle, RB_BEGINDRAG, index,
                      MAKELPARAM(point.x, point.y));

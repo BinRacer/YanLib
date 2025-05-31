@@ -5,7 +5,29 @@
 #include "button.h"
 #include <windowsx.h>
 namespace YanLib::components {
-    HWND button::create(const char *button_text,
+    HWND button::create(uintptr_t button_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        ButtonStyle style,
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"Button", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(button_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+    HWND button::create(const char *button_name,
                         uintptr_t button_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -15,7 +37,7 @@ namespace YanLib::components {
                         int32_t height,
                         ButtonStyle style,
                         WindowStyle window_style) {
-        HWND result = CreateWindowExA(0L, "Button", button_text,
+        HWND result = CreateWindowExA(0L, "Button", button_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,
@@ -29,7 +51,7 @@ namespace YanLib::components {
         return result;
     }
 
-    HWND button::create(const wchar_t *button_text,
+    HWND button::create(const wchar_t *button_name,
                         uintptr_t button_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -39,7 +61,7 @@ namespace YanLib::components {
                         int32_t height,
                         ButtonStyle style,
                         WindowStyle window_style) {
-        HWND result = CreateWindowExW(0L, L"Button", button_text,
+        HWND result = CreateWindowExW(0L, L"Button", button_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

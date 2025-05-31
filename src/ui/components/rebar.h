@@ -204,6 +204,34 @@ namespace YanLib::components {
                             WindowStyle::Visible | WindowStyle::ClipSiblings |
                             WindowStyle::ClipChildren);
 
+        HWND create(const char *rebar_name,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    RebarStyle style = RebarStyle::VarHeight |
+                            RebarStyle::BandBorders | RebarStyle::AutoSize |
+                            CommonStyle::Adjustable,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::ClipSiblings |
+                            WindowStyle::ClipChildren);
+
+        HWND create(const wchar_t *rebar_name,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    RebarStyle style = RebarStyle::VarHeight |
+                            RebarStyle::BandBorders | RebarStyle::AutoSize |
+                            CommonStyle::Adjustable,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::ClipSiblings |
+                            WindowStyle::ClipChildren);
+
         void begin_drag(HWND rebar_handle, int32_t index, POINT point);
 
         void move_drag(HWND rebar_handle, POINT point);

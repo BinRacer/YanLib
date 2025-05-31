@@ -193,7 +193,18 @@ namespace YanLib::components {
 
         ~button() = default;
 
-        HWND create(const char *button_text,
+        HWND create(uintptr_t button_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width = 100,
+                    int32_t height = 30,
+                    ButtonStyle style = ButtonStyle::PushButton,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const char *button_name,
                     uintptr_t button_id,
                     HWND parent_window_handle,
                     LPARAM lparam,
@@ -205,7 +216,7 @@ namespace YanLib::components {
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible);
 
-        HWND create(const wchar_t *button_text,
+        HWND create(const wchar_t *button_name,
                     uintptr_t button_id,
                     HWND parent_window_handle,
                     LPARAM lparam,

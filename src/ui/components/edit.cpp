@@ -28,6 +28,55 @@ namespace YanLib::components {
         }
         return result;
     }
+
+    HWND edit::line(const char *edit_name,
+                    uintptr_t edit_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    EditStyle style,
+                    WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "EDIT", edit_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND edit::line(const wchar_t *edit_name,
+                    uintptr_t edit_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    EditStyle style,
+                    WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"EDIT", edit_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     HWND edit::multi_line(uintptr_t edit_id,
                           HWND parent_window_handle,
                           LPARAM lparam,
@@ -50,6 +99,55 @@ namespace YanLib::components {
         }
         return result;
     }
+
+    HWND edit::multi_line(const char *edit_name,
+                          uintptr_t edit_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          EditStyle style,
+                          WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "EDIT", edit_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND edit::multi_line(const wchar_t *edit_name,
+                          uintptr_t edit_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          EditStyle style,
+                          WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"EDIT", edit_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     HWND edit::password(uintptr_t edit_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -60,6 +158,54 @@ namespace YanLib::components {
                         EditStyle style,
                         WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"EDIT", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND edit::password(const char *edit_name,
+                        uintptr_t edit_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        EditStyle style,
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "EDIT", edit_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(edit_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND edit::password(const wchar_t *edit_name,
+                        uintptr_t edit_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        EditStyle style,
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"EDIT", edit_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

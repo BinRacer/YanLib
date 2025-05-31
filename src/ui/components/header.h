@@ -15,7 +15,6 @@
 #include <cstdint>
 #include <vector>
 #include <string>
-#include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -151,6 +150,38 @@ namespace YanLib::components {
         header &operator=(header &&other) = delete;
 
         HWND create(uintptr_t header_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    HeaderStyle style = HeaderStyle::Buttons |
+                            HeaderStyle::DragDrop | HeaderStyle::FilterBar |
+                            HeaderStyle::HotTrack | HeaderStyle::CheckBoxes |
+                            HeaderStyle::Overflow | HeaderStyle::Flat |
+                            HeaderStyle::Horiz,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::Border);
+
+        HWND create(const char *header_name,
+                    uintptr_t header_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    HeaderStyle style = HeaderStyle::Buttons |
+                            HeaderStyle::DragDrop | HeaderStyle::FilterBar |
+                            HeaderStyle::HotTrack | HeaderStyle::CheckBoxes |
+                            HeaderStyle::Overflow | HeaderStyle::Flat |
+                            HeaderStyle::Horiz,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::Border);
+
+        HWND create(const wchar_t *header_name,
+                    uintptr_t header_id,
                     HWND parent_window_handle,
                     LPARAM lparam,
                     int32_t x,

@@ -29,6 +29,54 @@ namespace YanLib::components {
         return result;
     }
 
+    HWND list_box::create(const char *list_box_name,
+                          uintptr_t list_box_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          ListBoxStyle style,
+                          WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "ListBox", list_box_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(list_box_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND list_box::create(const wchar_t *list_box_name,
+                          uintptr_t list_box_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          ListBoxStyle style,
+                          WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"ListBox", list_box_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(list_box_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
     bool list_box::enable(HWND list_box_handle) {
         return ListBox_Enable(list_box_handle, TRUE);
     }

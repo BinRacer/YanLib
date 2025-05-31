@@ -439,6 +439,32 @@ namespace YanLib::components {
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible);
 
+        HWND create(const char *list_view_name,
+                    uintptr_t list_view_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ListViewStyle style = ListViewStyle::Report |
+                            ListViewStyle::EditLabels,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const wchar_t *list_view_name,
+                    uintptr_t list_view_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ListViewStyle style = ListViewStyle::Report |
+                            ListViewStyle::EditLabels,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
         HWND edit_label(HWND list_view_handle, int32_t index);
 
         void cancel_edit_label(HWND list_view_handle);

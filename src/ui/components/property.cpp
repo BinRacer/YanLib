@@ -4,7 +4,6 @@
 
 #include "property.h"
 #include <windowsx.h>
-
 namespace YanLib::components {
     PROPSHEETHEADERA
     property::make_header(const char *caption,
@@ -88,7 +87,7 @@ namespace YanLib::components {
         page.hInstance = hinstance_handle;
         page.pszTemplate = templates;
         page.hIcon = icon_handle;
-        page.pszTitle = header_title;
+        page.pszTitle = title;
         page.pfnDlgProc = dialog_func;
         page.lParam = dialog_param;
         page.pfnCallback = callback;
@@ -118,7 +117,7 @@ namespace YanLib::components {
         page.hInstance = hinstance_handle;
         page.pszTemplate = templates;
         page.hIcon = icon_handle;
-        page.pszTitle = header_title;
+        page.pszTitle = title;
         page.pfnDlgProc = dialog_func;
         page.lParam = dialog_param;
         page.pfnCallback = callback;

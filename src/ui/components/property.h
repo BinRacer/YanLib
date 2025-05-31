@@ -11,7 +11,6 @@
 #define _UNICODE
 #endif
 #include <Windows.h>
-#include <prsht.h>
 #include <CommCtrl.h>
 #include <commoncontrols.h>
 #include <cstdint>

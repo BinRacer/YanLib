@@ -116,6 +116,22 @@ namespace YanLib::components {
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible);
 
+        HWND create(const char *animate_name,
+                    uintptr_t animate_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    AnimateStyle style = AnimateStyle::AutoPlay,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
+        HWND create(const wchar_t *animate_name,
+                    uintptr_t animate_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    AnimateStyle style = AnimateStyle::AutoPlay,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible);
+
         bool open(HWND animate_handle,
                   char *file_name,
                   helper::CodePage code_page = helper::CodePage::GB2312);

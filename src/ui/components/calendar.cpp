@@ -4,7 +4,7 @@
 
 #include "calendar.h"
 #include <windowsx.h>
-
+#include "helper/convert.h"
 namespace YanLib::components {
     HWND calendar::create(uintptr_t calendar_id,
                           HWND parent_window_handle,
@@ -20,6 +20,62 @@ namespace YanLib::components {
         icc.dwICC = ICC_DATE_CLASSES;
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysMonthCal32", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(calendar_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND calendar::create(const char *calendar_name,
+                          uintptr_t calendar_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          CalendarStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_DATE_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(0L, "SysMonthCal32", calendar_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(calendar_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND calendar::create(const wchar_t *calendar_name,
+                          uintptr_t calendar_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          CalendarStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_DATE_CLASSES;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(0L, L"SysMonthCal32", calendar_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

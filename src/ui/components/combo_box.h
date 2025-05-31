@@ -196,6 +196,34 @@ namespace YanLib::components {
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible | WindowStyle::VScroll);
 
+        HWND create(const char *combo_box_name,
+                    uintptr_t combo_box_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ComboBoxStyle style = ComboBoxStyle::DropDownList |
+                            ComboBoxStyle::AutoHorizScroll |
+                            ComboBoxStyle::HasStrings,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::VScroll);
+
+        HWND create(const wchar_t *combo_box_name,
+                    uintptr_t combo_box_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    ComboBoxStyle style = ComboBoxStyle::DropDownList |
+                            ComboBoxStyle::AutoHorizScroll |
+                            ComboBoxStyle::HasStrings,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::VScroll);
+
         bool enable(HWND combo_box_handle);
 
         bool disable(HWND combo_box_handle);

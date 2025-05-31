@@ -230,6 +230,8 @@ add_library(YanLib STATIC
         src/ui/components/rich_edit.h
         src/ui/components/scroll.cpp
         src/ui/components/scroll.h
+        src/ui/components/label.cpp
+        src/ui/components/label.h
 )
 
 target_include_directories(YanLib

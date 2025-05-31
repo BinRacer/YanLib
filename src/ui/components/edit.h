@@ -180,6 +180,30 @@ namespace YanLib::components {
                   WindowStyle window_style = WindowStyle::Child |
                           WindowStyle::Visible | WindowStyle::Border);
 
+        HWND line(const char *edit_name,
+                  uintptr_t edit_id,
+                  HWND parent_window_handle,
+                  LPARAM lparam,
+                  int32_t x,
+                  int32_t y,
+                  int32_t width,
+                  int32_t height,
+                  EditStyle style = EditStyle::AutoHScroll | EditStyle::Left,
+                  WindowStyle window_style = WindowStyle::Child |
+                          WindowStyle::Visible | WindowStyle::Border);
+
+        HWND line(const wchar_t *edit_name,
+                  uintptr_t edit_id,
+                  HWND parent_window_handle,
+                  LPARAM lparam,
+                  int32_t x,
+                  int32_t y,
+                  int32_t width,
+                  int32_t height,
+                  EditStyle style = EditStyle::AutoHScroll | EditStyle::Left,
+                  WindowStyle window_style = WindowStyle::Child |
+                          WindowStyle::Visible | WindowStyle::Border);
+
         HWND multi_line(uintptr_t edit_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -195,7 +219,65 @@ namespace YanLib::components {
                                 WindowStyle::Visible | WindowStyle::Border |
                                 WindowStyle::HScroll | WindowStyle::VScroll);
 
+        HWND multi_line(const char *edit_name,
+                        uintptr_t edit_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        EditStyle style = EditStyle::Multiline |
+                                EditStyle::AutoHScroll |
+                                EditStyle::AutoVScroll | EditStyle::Left |
+                                EditStyle::WantReturn,
+                        WindowStyle window_style = WindowStyle::Child |
+                                WindowStyle::Visible | WindowStyle::Border |
+                                WindowStyle::HScroll | WindowStyle::VScroll);
+
+        HWND multi_line(const wchar_t *edit_name,
+                        uintptr_t edit_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        EditStyle style = EditStyle::Multiline |
+                                EditStyle::AutoHScroll |
+                                EditStyle::AutoVScroll | EditStyle::Left |
+                                EditStyle::WantReturn,
+                        WindowStyle window_style = WindowStyle::Child |
+                                WindowStyle::Visible | WindowStyle::Border |
+                                WindowStyle::HScroll | WindowStyle::VScroll);
+
         HWND password(uintptr_t edit_id,
+                      HWND parent_window_handle,
+                      LPARAM lparam,
+                      int32_t x,
+                      int32_t y,
+                      int32_t width,
+                      int32_t height,
+                      EditStyle style = EditStyle::Password |
+                              EditStyle::AutoHScroll | EditStyle::Left,
+                      WindowStyle window_style = WindowStyle::Child |
+                              WindowStyle::Visible | WindowStyle::Border);
+
+        HWND password(const char *edit_name,
+                      uintptr_t edit_id,
+                      HWND parent_window_handle,
+                      LPARAM lparam,
+                      int32_t x,
+                      int32_t y,
+                      int32_t width,
+                      int32_t height,
+                      EditStyle style = EditStyle::Password |
+                              EditStyle::AutoHScroll | EditStyle::Left,
+                      WindowStyle window_style = WindowStyle::Child |
+                              WindowStyle::Visible | WindowStyle::Border);
+
+        HWND password(const wchar_t *edit_name,
+                      uintptr_t edit_id,
                       HWND parent_window_handle,
                       LPARAM lparam,
                       int32_t x,

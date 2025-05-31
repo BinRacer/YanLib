@@ -4,7 +4,7 @@
 
 #include "scroll.h"
 #include <windowsx.h>
-
+#include "helper/convert.h"
 namespace YanLib::components {
     HWND scroll::create(uintptr_t scroll_id,
                         HWND parent_window_handle,
@@ -16,6 +16,54 @@ namespace YanLib::components {
                         ScrollStyle style,
                         WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"ScrollBar", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(scroll_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND scroll::create(const char *scroll_name,
+                        uintptr_t scroll_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        ScrollStyle style,
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExA(0L, "ScrollBar", scroll_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(scroll_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND scroll::create(const wchar_t *scroll_name,
+                        uintptr_t scroll_id,
+                        HWND parent_window_handle,
+                        LPARAM lparam,
+                        int32_t x,
+                        int32_t y,
+                        int32_t width,
+                        int32_t height,
+                        ScrollStyle style,
+                        WindowStyle window_style) {
+        HWND result = CreateWindowExW(0L, L"ScrollBar", scroll_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

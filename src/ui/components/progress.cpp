@@ -4,7 +4,7 @@
 
 #include "progress.h"
 #include <windowsx.h>
-
+#include "helper/convert.h"
 namespace YanLib::components {
     HWND progress::create(uintptr_t progress_id,
                           HWND parent_window_handle,
@@ -20,6 +20,62 @@ namespace YanLib::components {
         icc.dwICC = ICC_PROGRESS_CLASS;
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"msctls_progress32", nullptr,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(progress_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND progress::create(const char *progress_name,
+                          uintptr_t progress_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          ProgressStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_PROGRESS_CLASS;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExA(0L, "msctls_progress32", progress_name,
+                                      static_cast<uint32_t>(window_style) |
+                                              static_cast<uint32_t>(style),
+                                      x, y, width, height, parent_window_handle,
+                                      reinterpret_cast<HMENU>(progress_id),
+                                      reinterpret_cast<CREATESTRUCT *>(lparam)
+                                              ->hInstance,
+                                      nullptr);
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return result;
+    }
+
+    HWND progress::create(const wchar_t *progress_name,
+                          uintptr_t progress_id,
+                          HWND parent_window_handle,
+                          LPARAM lparam,
+                          int32_t x,
+                          int32_t y,
+                          int32_t width,
+                          int32_t height,
+                          ProgressStyle style,
+                          WindowStyle window_style) {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_PROGRESS_CLASS;
+        InitCommonControlsEx(&icc);
+        HWND result = CreateWindowExW(0L, L"msctls_progress32", progress_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
                                       x, y, width, height, parent_window_handle,

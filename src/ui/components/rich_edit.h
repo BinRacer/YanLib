@@ -772,6 +772,22 @@ namespace YanLib::components {
 
         ~rich_edit() = default;
 
+        HWND create(const char *window_name,
+                    uintptr_t rich_edit_id,
+                    HWND parent_window_handle,
+                    LPARAM lparam,
+                    int32_t x,
+                    int32_t y,
+                    int32_t width,
+                    int32_t height,
+                    RichEditStyle style = RichEditStyle::Multiline |
+                            RichEditStyle::AutoHScroll |
+                            RichEditStyle::AutoVScroll | RichEditStyle::Left |
+                            RichEditStyle::WantReturn,
+                    WindowStyle window_style = WindowStyle::Child |
+                            WindowStyle::Visible | WindowStyle::Border |
+                            WindowStyle::TabStop);
+
         HWND create(const wchar_t *window_name,
                     uintptr_t rich_edit_id,
                     HWND parent_window_handle,

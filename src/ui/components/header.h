@@ -132,7 +132,7 @@ namespace YanLib::components {
         OverflowClick = HDN_OVERFLOWCLICK,
         Track = HDN_TRACK,
         CustomDraw = NM_CUSTOMDRAW,
-        RClick = NM_RCLICK,
+        RightClick = NM_RCLICK,
         ReleasedCapture = NM_RELEASEDCAPTURE,
     };
 #endif

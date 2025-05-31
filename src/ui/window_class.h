@@ -14,7 +14,7 @@ namespace YanLib::ui {
     enum class ClassStyle : uint32_t {
         VRedraw = CS_VREDRAW,
         HRedraw = CS_HREDRAW,
-        DoubleClick = CS_DBLCLKS,
+        DoubleClicks = CS_DBLCLKS,
         OwnDC = CS_OWNDC,
         ClassDC = CS_CLASSDC,
         ParentDC = CS_PARENTDC,

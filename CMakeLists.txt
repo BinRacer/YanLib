@@ -232,6 +232,8 @@ add_library(YanLib STATIC
         src/ui/components/scroll.h
         src/ui/components/label.cpp
         src/ui/components/label.h
+        src/ui/components/status.cpp
+        src/ui/components/status.h
 )
 
 target_include_directories(YanLib

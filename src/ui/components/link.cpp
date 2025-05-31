@@ -15,8 +15,8 @@ namespace YanLib::components {
                       int32_t height,
                       LinkStyle style,
                       WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc;
-        icc.dwSize = sizeof(icc);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
         icc.dwICC = ICC_LINK_CLASS;
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysLink", nullptr,
@@ -44,8 +44,8 @@ namespace YanLib::components {
                       LinkStyle style,
                       WindowStyle window_style,
                       helper::CodePage code_page) {
-        INITCOMMONCONTROLSEX icc;
-        icc.dwSize = sizeof(icc);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
         icc.dwICC = ICC_LINK_CLASS;
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
@@ -72,8 +72,8 @@ namespace YanLib::components {
                       int32_t height,
                       LinkStyle style,
                       WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc;
-        icc.dwSize = sizeof(icc);
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
         icc.dwICC = ICC_LINK_CLASS;
         InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysLink", link_name,

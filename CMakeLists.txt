@@ -152,8 +152,6 @@ add_library(YanLib STATIC
         src/ui/touch.h
         src/ui/accelerator.cpp
         src/ui/accelerator.h
-        src/ui/scroll.cpp
-        src/ui/scroll.h
         src/ui/notify.cpp
         src/ui/notify.h
         src/ui/gdi/bitmap.cpp
@@ -230,6 +228,8 @@ add_library(YanLib STATIC
         src/ui/components/rebar.h
         src/ui/components/rich_edit.cpp
         src/ui/components/rich_edit.h
+        src/ui/components/scroll.cpp
+        src/ui/components/scroll.h
 )
 
 target_include_directories(YanLib

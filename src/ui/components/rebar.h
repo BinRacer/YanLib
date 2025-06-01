@@ -304,7 +304,7 @@ namespace YanLib::components {
 
         HWND get_tool_tips(HWND rebar_handle);
 
-        void set_tool_tips(HWND rebar_handle, HWND tool_tip_handle);
+        void set_tool_tips(HWND rebar_handle, HWND tool_tips_handle);
 
         bool is_ansi_format(HWND rebar_handle);
 

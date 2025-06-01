@@ -198,82 +198,85 @@ namespace YanLib::components {
                     const wchar_t *footer = nullptr,
                     uint32_t width = 0);
 
-        void click_button(HWND task_dialog_handle, int32_t button_id);
+        static void click_button(HWND task_dialog_handle, int32_t button_id);
 
-        void click_radio(HWND task_dialog_handle, int32_t radio_id);
+        static void click_radio(HWND task_dialog_handle, int32_t radio_id);
 
-        void click_verify(HWND task_dialog_handle,
-                          bool checked = true,
-                          bool focus = true);
+        static void click_verify(HWND task_dialog_handle,
+                                 bool checked = true,
+                                 bool focus = true);
 
-        void enable_button(HWND task_dialog_handle, int32_t button_id);
+        static void enable_button(HWND task_dialog_handle, int32_t button_id);
 
-        void disable_button(HWND task_dialog_handle, int32_t button_id);
+        static void disable_button(HWND task_dialog_handle, int32_t button_id);
 
-        void enable_radio(HWND task_dialog_handle, int32_t radio_id);
+        static void enable_radio(HWND task_dialog_handle, int32_t radio_id);
 
-        void disable_radio(HWND task_dialog_handle, int32_t radio_id);
+        static void disable_radio(HWND task_dialog_handle, int32_t radio_id);
 
-        void navigate_page(HWND task_dialog_handle, TASKDIALOGCONFIG *config);
+        static void navigate_page(HWND task_dialog_handle,
+                                  TASKDIALOGCONFIG *config);
 
-        void set_button_elevation_required_state(HWND task_dialog_handle,
-                                                 int32_t button_id,
-                                                 bool elevation = true);
+        static void set_button_elevation_required_state(HWND task_dialog_handle,
+                                                        int32_t button_id,
+                                                        bool elevation = true);
 
-        void set_link_elevation_required_state(HWND task_dialog_handle,
-                                               int32_t link_id,
-                                               bool elevation = true);
+        static void set_link_elevation_required_state(HWND task_dialog_handle,
+                                                      int32_t link_id,
+                                                      bool elevation = true);
 
-        void
+        static void
         set_element_text(HWND task_dialog_handle,
                          TaskDialogElement element,
                          std::string &text,
                          helper::CodePage code_page = helper::CodePage::GB2312);
 
-        void set_element_text(HWND task_dialog_handle,
-                              TaskDialogElement element,
-                              std::wstring &text);
+        static void set_element_text(HWND task_dialog_handle,
+                                     TaskDialogElement element,
+                                     std::wstring &text);
 
-        void update_element_text(
+        static void update_element_text(
                 HWND task_dialog_handle,
                 TaskDialogElement element,
                 std::string &text,
                 helper::CodePage code_page = helper::CodePage::GB2312);
 
-        void update_element_text(HWND task_dialog_handle,
-                                 TaskDialogElement element,
-                                 std::wstring &text);
+        static void update_element_text(HWND task_dialog_handle,
+                                        TaskDialogElement element,
+                                        std::wstring &text);
 
-        void update_icon(HWND task_dialog_handle,
-                         TaskDialogIconType type,
-                         HICON icon_handle);
+        static void update_icon(HWND task_dialog_handle,
+                                TaskDialogIconType type,
+                                HICON icon_handle);
 
-        void update_icon(HWND task_dialog_handle,
-                         TaskDialogIconType type,
-                         std::string &icon,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+        static void
+        update_icon(HWND task_dialog_handle,
+                    TaskDialogIconType type,
+                    std::string &icon,
+                    helper::CodePage code_page = helper::CodePage::GB2312);
 
-        void update_icon(HWND task_dialog_handle,
-                         TaskDialogIconType type,
-                         std::wstring &icon);
+        static void update_icon(HWND task_dialog_handle,
+                                TaskDialogIconType type,
+                                std::wstring &icon);
 
-        void show_marquee_progress(HWND task_dialog_handle);
+        static void show_marquee_progress(HWND task_dialog_handle);
 
-        void hide_marquee_progress(HWND task_dialog_handle);
+        static void hide_marquee_progress(HWND task_dialog_handle);
 
-        void start_marquee_progress(HWND task_dialog_handle,
-                                    int32_t milli_seconds = 0);
+        static void start_marquee_progress(HWND task_dialog_handle,
+                                           int32_t milli_seconds = 0);
 
-        void stop_marquee_progress(HWND task_dialog_handle,
-                                   int32_t milli_seconds = 0);
+        static void stop_marquee_progress(HWND task_dialog_handle,
+                                          int32_t milli_seconds = 0);
 
-        int64_t set_progress_pos(HWND task_dialog_handle, int64_t pos);
+        static int64_t set_progress_pos(HWND task_dialog_handle, int64_t pos);
 
         // std::pair<min, max>
-        std::pair<uint32_t, uint32_t>
+        static std::pair<uint32_t, uint32_t>
         set_progress_range(HWND task_dialog_handle, uint32_t min, uint32_t max);
 
-        bool set_progress_state(HWND task_dialog_handle, ProgressState state);
+        static bool set_progress_state(HWND task_dialog_handle,
+                                       ProgressState state);
     };
 } // namespace YanLib::components
 #endif // TASK_DIALOG_H

@@ -17,7 +17,7 @@ namespace YanLib::components {
         if (!button_result) {
             return false;
         }
-        int32_t temp = static_cast<int32_t>(*button_result);
+        auto temp = static_cast<int32_t>(*button_result);
         bool is_ok =
                 TaskDialog(parent_window_handle, instance_handle, title,
                            main_instruction, content,
@@ -34,8 +34,8 @@ namespace YanLib::components {
         if (!button_result || !radio_result || !verify_checked) {
             return false;
         }
-        int32_t button_temp = static_cast<int32_t>(*button_result);
-        int32_t radio_temp = static_cast<int32_t>(*radio_result);
+        auto button_temp = static_cast<int32_t>(*button_result);
+        auto radio_temp = static_cast<int32_t>(*radio_result);
         int32_t verify_temp = *verify_checked;
         bool is_ok = TaskDialogIndirect(config, &button_temp, &radio_temp,
                                         &verify_temp);

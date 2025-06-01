@@ -235,9 +235,9 @@ namespace YanLib::components {
                 SendMessageW(rebar_handle, RB_GETTOOLTIPS, 0, 0));
     }
 
-    void rebar::set_tool_tips(HWND rebar_handle, HWND tool_tip_handle) {
+    void rebar::set_tool_tips(HWND rebar_handle, HWND tool_tips_handle) {
         SendMessageW(rebar_handle, RB_SETTOOLTIPS,
-                     reinterpret_cast<WPARAM>(tool_tip_handle), 0);
+                     reinterpret_cast<WPARAM>(tool_tips_handle), 0);
     }
 
     bool rebar::is_ansi_format(HWND rebar_handle) {

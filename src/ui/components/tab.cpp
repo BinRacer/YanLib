@@ -4,7 +4,7 @@
 
 #include "tab.h"
 #include <windowsx.h>
-
+#include "helper/convert.h"
 namespace YanLib::components {
     HWND tab::create(uintptr_t tab_id,
                      HWND parent_window_handle,

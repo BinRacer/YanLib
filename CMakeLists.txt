@@ -238,6 +238,8 @@ add_library(YanLib STATIC
         src/ui/components/link.h
         src/ui/components/tab.cpp
         src/ui/components/tab.h
+        src/ui/components/task_dialog.cpp
+        src/ui/components/task_dialog.h
 )
 
 target_include_directories(YanLib

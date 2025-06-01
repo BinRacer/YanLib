@@ -15,7 +15,6 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \

@@ -97,6 +97,7 @@ namespace YanLib::components {
         return static_cast<CommonStyle>(static_cast<uint32_t>(a) |
                                         static_cast<uint32_t>(b));
     }
+#endif
     inline RebarStyle operator|(RebarStyle a, CommonStyle b) {
         return static_cast<RebarStyle>(static_cast<uint32_t>(a) |
                                        static_cast<uint32_t>(b));
@@ -105,7 +106,6 @@ namespace YanLib::components {
         return static_cast<RebarStyle>(static_cast<uint32_t>(a) |
                                        static_cast<uint32_t>(b));
     }
-#endif
 #ifndef REBARMESSAGE
 #define REBARMESSAGE
     enum class RebarMessage : uint32_t {
@@ -193,10 +193,10 @@ namespace YanLib::components {
 
         HWND create(HWND parent_window_handle,
                     LPARAM lparam,
-                    int32_t x,
-                    int32_t y,
-                    int32_t width,
-                    int32_t height,
+                    int32_t x = 0,
+                    int32_t y = 0,
+                    int32_t width = 0,
+                    int32_t height = 0,
                     RebarStyle style = RebarStyle::VarHeight |
                             RebarStyle::BandBorders | RebarStyle::AutoSize |
                             CommonStyle::Adjustable,
@@ -207,10 +207,10 @@ namespace YanLib::components {
         HWND create(const char *rebar_name,
                     HWND parent_window_handle,
                     LPARAM lparam,
-                    int32_t x,
-                    int32_t y,
-                    int32_t width,
-                    int32_t height,
+                    int32_t x = 0,
+                    int32_t y = 0,
+                    int32_t width = 0,
+                    int32_t height = 0,
                     RebarStyle style = RebarStyle::VarHeight |
                             RebarStyle::BandBorders | RebarStyle::AutoSize |
                             CommonStyle::Adjustable,
@@ -221,10 +221,10 @@ namespace YanLib::components {
         HWND create(const wchar_t *rebar_name,
                     HWND parent_window_handle,
                     LPARAM lparam,
-                    int32_t x,
-                    int32_t y,
-                    int32_t width,
-                    int32_t height,
+                    int32_t x = 0,
+                    int32_t y = 0,
+                    int32_t width = 0,
+                    int32_t height = 0,
                     RebarStyle style = RebarStyle::VarHeight |
                             RebarStyle::BandBorders | RebarStyle::AutoSize |
                             CommonStyle::Adjustable,

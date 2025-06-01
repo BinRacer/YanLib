@@ -240,6 +240,8 @@ add_library(YanLib STATIC
         src/ui/components/tab.h
         src/ui/components/task_dialog.cpp
         src/ui/components/task_dialog.h
+        src/ui/components/tool_bar.cpp
+        src/ui/components/tool_bar.h
 )
 
 target_include_directories(YanLib

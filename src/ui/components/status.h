@@ -71,6 +71,34 @@ namespace YanLib::components {
                                         static_cast<uint32_t>(b));
     }
 #endif
+#ifndef COMMONSTYLE
+#define COMMONSTYLE
+    enum class CommonStyle : uint32_t {
+        Top = CCS_TOP,
+        NoMoveY = CCS_NOMOVEY,
+        Bottom = CCS_BOTTOM,
+        NoResize = CCS_NORESIZE,
+        NoParentAlign = CCS_NOPARENTALIGN,
+        Adjustable = CCS_ADJUSTABLE,
+        NoDivider = CCS_NODIVIDER,
+        Vert = CCS_VERT,
+        Left = CCS_LEFT,
+        Right = CCS_RIGHT,
+        NoMoveX = CCS_NOMOVEX,
+    };
+    inline CommonStyle operator|(CommonStyle a, CommonStyle b) {
+        return static_cast<CommonStyle>(static_cast<uint32_t>(a) |
+                                        static_cast<uint32_t>(b));
+    }
+#endif
+    inline StatusStyle operator|(StatusStyle a, CommonStyle b) {
+        return static_cast<StatusStyle>(static_cast<uint32_t>(a) |
+                                        static_cast<uint32_t>(b));
+    }
+    inline StatusStyle operator|(CommonStyle a, StatusStyle b) {
+        return static_cast<StatusStyle>(static_cast<uint32_t>(a) |
+                                        static_cast<uint32_t>(b));
+    }
 #ifndef STATUSTEXTFLAG
 #define STATUSTEXTFLAG
     enum class StatusTextFlag : uint32_t {

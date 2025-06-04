@@ -244,6 +244,8 @@ add_library(YanLib STATIC
         src/ui/components/tool_bar.h
         src/ui/components/tool_tips.cpp
         src/ui/components/tool_tips.h
+        src/ui/components/track.cpp
+        src/ui/components/track.h
 )
 
 target_include_directories(YanLib

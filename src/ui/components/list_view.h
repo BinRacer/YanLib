@@ -549,7 +549,7 @@ namespace YanLib::components {
         bool
         get_empty_text(HWND list_view_handle,
                        std::string &text,
-                       helper::CodePage code_page = helper::CodePage::GB2312);
+                       helper::CodePage code_page = helper::curr_code_page());
 
         bool get_empty_text(HWND list_view_handle, std::wstring &text);
 
@@ -644,7 +644,7 @@ namespace YanLib::components {
         int32_t get_increment_search_string(
                 HWND list_view_handle,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         int32_t get_increment_search_string(HWND list_view_handle,
                                             std::wstring &text);
@@ -694,7 +694,7 @@ namespace YanLib::components {
                       std::string &text,
                       int32_t item_index,
                       int32_t sub_item_index,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         void get_item_text(HWND list_view_handle,
                            std::wstring &text,
@@ -706,7 +706,7 @@ namespace YanLib::components {
                       const std::string &text,
                       int32_t item_index,
                       int32_t sub_item_index,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         void set_item_text(HWND list_view_handle,
                            std::wstring &text,
@@ -743,7 +743,7 @@ namespace YanLib::components {
         int32_t
         get_string_width(HWND list_view_handle,
                          const std::string &text,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int32_t get_string_width(HWND list_view_handle,
                                  const std::wstring &text);

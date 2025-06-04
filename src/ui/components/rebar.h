@@ -325,7 +325,7 @@ namespace YanLib::components {
         void
         set_window_theme(HWND rebar_handle,
                          std::string &theme /* "Explorer" */,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         void set_window_theme(HWND rebar_handle,
                               std::wstring &theme /* L"Explorer" */);

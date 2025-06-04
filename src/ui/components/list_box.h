@@ -242,7 +242,7 @@ namespace YanLib::components {
                      const char *path_spec,
                      FileType type = FileType::Drives | FileType::Directory |
                              FileType::ReadWrite,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         int32_t fill(HWND list_box_handle,
                      const wchar_t *path_spec,
@@ -251,7 +251,7 @@ namespace YanLib::components {
 
         int32_t add_text(HWND list_box_handle,
                          std::string &text,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int32_t add_text(HWND list_box_handle, std::wstring &text);
 
@@ -259,7 +259,7 @@ namespace YanLib::components {
         find_text(HWND list_box_handle,
                   std::string &text,
                   int32_t index = -1,
-                  helper::CodePage code_page = helper::CodePage::GB2312);
+                  helper::CodePage code_page = helper::curr_code_page());
 
         int32_t
         find_text(HWND list_box_handle, std::wstring &text, int32_t index = -1);
@@ -268,7 +268,7 @@ namespace YanLib::components {
         find_text_exact(HWND list_box_handle,
                         std::string &text,
                         int32_t index = -1,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         int32_t find_text_exact(HWND list_box_handle,
                                 std::wstring &text,
@@ -278,7 +278,7 @@ namespace YanLib::components {
         insert_text(HWND list_box_handle,
                     std::string &text,
                     int32_t index = -1,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         int32_t insert_text(HWND list_box_handle,
                             std::wstring &text,
@@ -288,7 +288,7 @@ namespace YanLib::components {
         select_text(HWND list_box_handle,
                     std::string &text,
                     int32_t index = -1,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         int32_t select_text(HWND list_box_handle,
                             std::wstring &text,
@@ -302,7 +302,7 @@ namespace YanLib::components {
         get_item_text(HWND list_box_handle,
                       std::string &text,
                       int32_t index,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         int32_t
         get_item_text(HWND list_box_handle, std::wstring &text, int32_t index);

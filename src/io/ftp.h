@@ -43,7 +43,7 @@ namespace YanLib::io {
         ftp() = delete;
 
         explicit ftp(const std::string &input_url,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         explicit ftp(const std::wstring &input_url);
 
@@ -51,7 +51,7 @@ namespace YanLib::io {
                      const uint16_t &port,
                      const std::string &username = {},
                      const std::string &password = {},
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         explicit ftp(const std::wstring &ip,
                      const uint16_t &port,

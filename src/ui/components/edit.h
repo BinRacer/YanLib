@@ -302,7 +302,7 @@ namespace YanLib::components {
         int32_t get_line(HWND edit_handle,
                          std::string &line,
                          int32_t lineno = 0,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int32_t
         get_line(HWND edit_handle, std::wstring &line, int32_t lineno = 0);
@@ -334,21 +334,21 @@ namespace YanLib::components {
         bool get_prompt_banner(
                 HWND edit_handle,
                 std::string &banner,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool get_prompt_banner(HWND edit_handle, std::wstring &banner);
 
         bool set_prompt_banner(
                 HWND edit_handle,
                 std::string &banner,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool set_prompt_banner(HWND edit_handle, std::wstring &banner);
 
         bool set_prompt_banner_focused(
                 HWND edit_handle,
                 std::string &banner,
-                helper::CodePage code_page = helper::CodePage::GB2312,
+                helper::CodePage code_page = helper::curr_code_page(),
                 bool is_redraw = true);
 
         bool set_prompt_banner_focused(HWND edit_handle,
@@ -398,7 +398,7 @@ namespace YanLib::components {
         void
         replace_select(HWND edit_handle,
                        std::string &text,
-                       helper::CodePage code_page = helper::CodePage::GB2312);
+                       helper::CodePage code_page = helper::curr_code_page());
 
         void replace_select(HWND edit_handle, std::wstring &text);
 

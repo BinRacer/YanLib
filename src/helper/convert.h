@@ -120,6 +120,9 @@ namespace YanLib::helper {
         X_ISCII_GUJARATI = 57011, // ISCII Gujarati
         EUC_JP = 20932,           // Japanese EUC
     };
+    inline CodePage curr_code_page() {
+        return static_cast<CodePage>(GetKBCodePage());
+    }
 #endif
 
     class convert {
@@ -137,10 +140,10 @@ namespace YanLib::helper {
         ~convert() = delete;
 
         static std::wstring str_to_wstr(const std::string &str,
-                                        CodePage code_page = CodePage::GB2312);
+                                        CodePage code_page = curr_code_page());
 
         static std::string wstr_to_str(const std::wstring &wstr,
-                                       CodePage code_page = CodePage::GB2312);
+                                       CodePage code_page = curr_code_page());
 
         static std::string err_string(uint32_t error_code);
 

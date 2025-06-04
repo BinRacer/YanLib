@@ -224,7 +224,7 @@ namespace YanLib::components {
 
         void set_format(HWND datetime_handle,
                         std::string &format,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         void set_format(HWND datetime_handle, std::wstring &format);
 

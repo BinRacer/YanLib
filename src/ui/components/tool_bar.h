@@ -533,7 +533,7 @@ namespace YanLib::components {
         get_button_text(HWND tool_bar_handle,
                         int64_t button_id,
                         std::string &button_text,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         int64_t get_button_text(HWND tool_bar_handle,
                                 int64_t button_id,
@@ -656,7 +656,7 @@ namespace YanLib::components {
         get_string(HWND tool_bar_handle,
                    int64_t index,
                    std::string &str,
-                   helper::CodePage code_page = helper::CodePage::GB2312);
+                   helper::CodePage code_page = helper::curr_code_page());
 
         // return value = return string len
         int64_t
@@ -696,7 +696,7 @@ namespace YanLib::components {
         void
         set_window_theme(HWND tool_bar_handle,
                          std::string window_theme,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         void set_window_theme(HWND tool_bar_handle, std::wstring window_theme);
 

@@ -218,7 +218,7 @@ namespace YanLib::components {
         get_text(HWND status_handle,
                  uint8_t index,
                  std::string &text,
-                 helper::CodePage code_page = helper::CodePage::GB2312);
+                 helper::CodePage code_page = helper::curr_code_page());
 
         std::pair<uint32_t, StatusTextFlag>
         get_text(HWND status_handle, uint8_t index, std::wstring &text);
@@ -227,7 +227,7 @@ namespace YanLib::components {
                       uint8_t index,
                       StatusTextFlag flag,
                       std::string &text,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         bool set_text(HWND status_handle,
                       uint8_t index,
@@ -241,7 +241,7 @@ namespace YanLib::components {
         get_tip_text(HWND status_handle,
                      uint8_t index,
                      std::string &text,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         void
         get_tip_text(HWND status_handle, uint8_t index, std::wstring &text);
@@ -250,7 +250,7 @@ namespace YanLib::components {
         set_tip_text(HWND status_handle,
                      uint8_t index,
                      std::string &text,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         void
         set_tip_text(HWND status_handle, uint8_t index, std::wstring &text);

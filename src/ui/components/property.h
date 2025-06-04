@@ -284,7 +284,7 @@ namespace YanLib::components {
         set_button_text(HWND property_handle,
                         PropertyButton button,
                         std::string &text,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         static void set_button_text(HWND property_handle,
                                     PropertyButton button,
@@ -293,7 +293,7 @@ namespace YanLib::components {
         static void set_finish_button_text(
                 HWND property_handle,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         static void set_finish_button_text(HWND property_handle,
                                            std::wstring &text);
@@ -301,7 +301,7 @@ namespace YanLib::components {
         static void set_next_button_text(
                 HWND property_handle,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         static void set_next_button_text(HWND property_handle,
                                          std::wstring &text);
@@ -310,7 +310,7 @@ namespace YanLib::components {
                 HWND property_handle,
                 int32_t index,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         static void set_header_sub_title(HWND property_handle,
                                          int32_t index,
@@ -320,7 +320,7 @@ namespace YanLib::components {
         set_header_title(HWND property_handle,
                          int32_t index,
                          std::string &text,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         static void set_header_title(HWND property_handle,
                                      int32_t index,
@@ -330,7 +330,7 @@ namespace YanLib::components {
         set_title(HWND property_handle,
                   PropertyHeaderFlag flag,
                   std::string &text,
-                  helper::CodePage code_page = helper::CodePage::GB2312);
+                  helper::CodePage code_page = helper::curr_code_page());
 
         static void set_title(HWND property_handle,
                               PropertyHeaderFlag flag,

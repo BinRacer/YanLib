@@ -229,7 +229,7 @@ namespace YanLib::components {
         set_element_text(HWND task_dialog_handle,
                          TaskDialogElement element,
                          std::string &text,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         static void set_element_text(HWND task_dialog_handle,
                                      TaskDialogElement element,
@@ -239,7 +239,7 @@ namespace YanLib::components {
                 HWND task_dialog_handle,
                 TaskDialogElement element,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         static void update_element_text(HWND task_dialog_handle,
                                         TaskDialogElement element,
@@ -253,7 +253,7 @@ namespace YanLib::components {
         update_icon(HWND task_dialog_handle,
                     TaskDialogIconType type,
                     std::string &icon,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         static void update_icon(HWND task_dialog_handle,
                                 TaskDialogIconType type,

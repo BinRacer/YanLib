@@ -332,14 +332,14 @@ namespace YanLib::io {
 
         bool
         get_volume_info(VolumeInfoA *volume_info,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         bool get_volume_info(VolumeInfoW *volume_info);
 
         bool get_final_path_name(
                 std::string &path_name,
                 PathNameType type = PathNameType::Normalized,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool get_final_path_name(std::wstring &path_name,
                                  PathNameType type = PathNameType::Normalized);
@@ -523,7 +523,7 @@ namespace YanLib::io {
 
         std::vector<WIN32_FIND_STREAM_DATA>
         ls_stream_data(const char *file_name,
-                       helper::CodePage code_page = helper::CodePage::GB2312);
+                       helper::CodePage code_page = helper::curr_code_page());
 
         std::vector<WIN32_FIND_STREAM_DATA>
         ls_stream_data(const wchar_t *file_name);

@@ -49,7 +49,7 @@ namespace YanLib::hash {
         explicit sha256(const std::string &data);
 
         explicit sha256(const char *filename,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         explicit sha256(const wchar_t *filename);
 
@@ -60,7 +60,7 @@ namespace YanLib::hash {
         std::string hash_string();
 
         std::wstring
-        hash_wstring(helper::CodePage code_page = helper::CodePage::GB2312);
+        hash_wstring(helper::CodePage code_page = helper::curr_code_page());
 
         [[nodiscard]] uint32_t err_code() const;
 

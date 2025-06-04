@@ -937,7 +937,7 @@ namespace YanLib::ui {
         bool create_shutdown_reason(
                 HWND window_handle,
                 std::string &reason,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool create_shutdown_reason(HWND window_handle,
                                     const std::wstring &reason);
@@ -948,7 +948,7 @@ namespace YanLib::ui {
                 HWND window_handle,
                 std::string &reason,
                 uint32_t *real_size,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool query_shutdown_reason(HWND window_handle,
                                    std::wstring &reason,
@@ -1253,7 +1253,7 @@ namespace YanLib::ui {
         int32_t
         get_direct_text(HWND window_handle,
                         std::string &text,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         int32_t get_direct_text(HWND window_handle, std::wstring &text);
 

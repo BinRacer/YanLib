@@ -134,7 +134,7 @@ namespace YanLib::components {
                             LinkStyle::UseCustomText,
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible | WindowStyle::TabStop,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         HWND create(const wchar_t *link_name,
                     uintptr_t link_id,

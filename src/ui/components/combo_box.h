@@ -232,7 +232,7 @@ namespace YanLib::components {
                      char *path_spec,
                      FileType type = FileType::Drives | FileType::Directory |
                              FileType::ReadWrite,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         int32_t fill(HWND combo_box_handle,
                      wchar_t *path_spec,
@@ -241,7 +241,7 @@ namespace YanLib::components {
 
         int32_t add_text(HWND combo_box_handle,
                          std::string &text,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int32_t add_text(HWND combo_box_handle, std::wstring &text);
 
@@ -249,7 +249,7 @@ namespace YanLib::components {
         insert_text(HWND combo_box_handle,
                     std::string &text,
                     int32_t index = -1,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         int32_t insert_text(HWND combo_box_handle,
                             std::wstring &text,
@@ -259,7 +259,7 @@ namespace YanLib::components {
         select_text(HWND combo_box_handle,
                     std::string &text,
                     int32_t index = -1,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         int32_t select_text(HWND combo_box_handle,
                             std::wstring &text,
@@ -269,7 +269,7 @@ namespace YanLib::components {
         find_text(HWND combo_box_handle,
                   std::string &text,
                   int32_t index = -1,
-                  helper::CodePage code_page = helper::CodePage::GB2312);
+                  helper::CodePage code_page = helper::curr_code_page());
 
         int32_t find_text(HWND combo_box_handle,
                           std::wstring &text,
@@ -279,7 +279,7 @@ namespace YanLib::components {
         find_exact_text(HWND combo_box_handle,
                         std::string &text,
                         int32_t index = -1,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         int32_t find_exact_text(HWND combo_box_handle,
                                 std::wstring &text,
@@ -305,7 +305,7 @@ namespace YanLib::components {
         get_item_text(HWND combo_box_handle,
                       std::string &text,
                       int32_t index,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         int32_t
         get_item_text(HWND combo_box_handle, std::wstring &text, int32_t index);
@@ -314,7 +314,7 @@ namespace YanLib::components {
                 HWND combo_box_handle,
                 std::string &text,
                 int32_t index,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         int32_t replace_item_text(HWND combo_box_handle,
                                   std::wstring &text,
@@ -348,14 +348,14 @@ namespace YanLib::components {
         bool get_prompt_banner(
                 HWND combo_box_handle,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool get_prompt_banner(HWND combo_box_handle, std::wstring &text);
 
         bool set_prompt_banner(
                 HWND combo_box_handle,
                 std::string &text,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         bool set_prompt_banner(HWND combo_box_handle, std::wstring &text);
 

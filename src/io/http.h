@@ -42,7 +42,7 @@ namespace YanLib::io {
         http() = delete;
 
         explicit http(const std::string &input_url,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         explicit http(const std::wstring &input_url);
 
@@ -72,13 +72,13 @@ namespace YanLib::io {
 
         bool
         get_headers(std::unordered_map<std::wstring, std::wstring> &headers,
-                    helper::CodePage code_page = helper::CodePage::GB2312);
+                    helper::CodePage code_page = helper::curr_code_page());
 
         bool get_headers_vec(std::vector<std::string> &headers);
 
         bool
         get_headers_vec(std::vector<std::wstring> &headers,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         bool
         query_option(uint32_t option, void *buffer, uint32_t *buffer_length);
@@ -111,7 +111,7 @@ namespace YanLib::io {
                              INTERNET_FLAG_NO_AUTH | INTERNET_FLAG_NO_COOKIES |
                              INTERNET_FLAG_NO_UI | INTERNET_FLAG_RELOAD,
                      uintptr_t context = 0,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         bool
         open_request(const wchar_t *verb /* L"GET" */,
@@ -157,7 +157,7 @@ namespace YanLib::io {
 
         static std::wstring read_wstring_to_end(
                 const std::wstring &input_url,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         static std::vector<uint8_t>
         read_bytes_to_end(const std::string &input_url);

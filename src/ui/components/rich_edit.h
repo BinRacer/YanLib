@@ -838,7 +838,7 @@ namespace YanLib::components {
         int64_t
         get_select_text(HWND rich_edit_handle,
                         std::string &text,
-                        helper::CodePage code_page = helper::CodePage::GB2312);
+                        helper::CodePage code_page = helper::curr_code_page());
 
         int64_t get_select_text(HWND rich_edit_handle, std::wstring &text);
 
@@ -920,7 +920,7 @@ namespace YanLib::components {
         int64_t get_ime_comp_text(
                 HWND rich_edit_handle,
                 std::string &buf,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         int64_t get_ime_comp_text(HWND rich_edit_handle, std::wstring &buf);
 
@@ -1045,7 +1045,7 @@ namespace YanLib::components {
         int64_t get_text(HWND rich_edit_handle,
                          GETTEXTEX *text,
                          std::string &buf,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         // text->cb = buf.size() * sizeof(wchar_t)
         int64_t
@@ -1056,19 +1056,19 @@ namespace YanLib::components {
                          REGetTextFlag flag = REGetTextFlag::Default,
                          const char *default_char = nullptr,
                          int32_t *used_default_char = nullptr,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int64_t get_text(HWND rich_edit_handle,
                          std::wstring &buf,
                          REGetTextFlag flag = REGetTextFlag::Default,
                          const char *default_char = nullptr,
                          int32_t *used_default_char = nullptr,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int64_t set_text(HWND rich_edit_handle,
                          SETTEXTEX *text,
                          std::string &buf,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int64_t
         set_text(HWND rich_edit_handle, SETTEXTEX *text, std::wstring &buf);
@@ -1076,12 +1076,12 @@ namespace YanLib::components {
         int64_t set_text(HWND rich_edit_handle,
                          std::string &buf,
                          RESetTextFlag flag = RESetTextFlag::Default,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         int64_t set_text(HWND rich_edit_handle,
                          std::wstring &buf,
                          RESetTextFlag flag = RESetTextFlag::Default,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
 
         int64_t get_text_len(HWND rich_edit_handle, GETTEXTLENGTHEX *text_len);
@@ -1089,7 +1089,7 @@ namespace YanLib::components {
         int64_t
         get_text_len(HWND rich_edit_handle,
                      REGetTextLenFlag flag = REGetTextLenFlag::Default,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         int64_t get_text_range(HWND rich_edit_handle, TEXTRANGEW *text_range);
 
@@ -1098,7 +1098,7 @@ namespace YanLib::components {
                        int32_t first,
                        int32_t last,
                        std::string &buf,
-                       helper::CodePage code_page = helper::CodePage::GB2312);
+                       helper::CodePage code_page = helper::curr_code_page());
 
         int64_t get_text_range(HWND rich_edit_handle,
                                int32_t first,
@@ -1146,7 +1146,7 @@ namespace YanLib::components {
         bool
         set_uia_name(HWND rich_edit_handle,
                      std::string &name,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         bool set_uia_name(HWND rich_edit_handle, std::wstring &name);
 

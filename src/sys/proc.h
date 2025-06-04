@@ -342,7 +342,7 @@ namespace YanLib::sys {
                         ProcCreateFlag::CreateNewConsole,
                 void *env = nullptr,
                 const char *curr_dir = nullptr,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         PROCESS_INFORMATION
         create_with_logon(const wchar_t *username,
@@ -369,7 +369,7 @@ namespace YanLib::sys {
                         ProcCreateFlag::CreateNewConsole,
                 void *env = nullptr,
                 const char *curr_dir = nullptr,
-                helper::CodePage code_page = helper::CodePage::GB2312);
+                helper::CodePage code_page = helper::curr_code_page());
 
         PROCESS_INFORMATION
         create_with_token(HANDLE token_handle,
@@ -409,7 +409,7 @@ namespace YanLib::sys {
         bool fake_proc(HANDLE proc_handle,
                        const char *app_name,
                        const char *cmdline,
-                       helper::CodePage code_page = helper::CodePage::GB2312);
+                       helper::CodePage code_page = helper::curr_code_page());
 
         bool fake_proc(HANDLE proc_handle,
                        const wchar_t *app_name,
@@ -502,17 +502,17 @@ namespace YanLib::sys {
         void flush_write_buffer();
 
         bool get_env(std::string &env,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         bool get_env(std::wstring &env);
 
         bool get_env(std::vector<std::string> &env,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         bool get_env(std::vector<std::wstring> &env);
 
         bool get_env(std::unordered_map<std::string, std::string> &env,
-                     helper::CodePage code_page = helper::CodePage::GB2312);
+                     helper::CodePage code_page = helper::curr_code_page());
 
         bool get_env(std::unordered_map<std::wstring, std::wstring> &env);
 
@@ -532,7 +532,7 @@ namespace YanLib::sys {
 
         bool get_cmdline(HANDLE proc_handle,
                          std::string &cmdline,
-                         helper::CodePage code_page = helper::CodePage::GB2312);
+                         helper::CodePage code_page = helper::curr_code_page());
 
         bool get_cmdline(HANDLE proc_handle, std::wstring &cmdline);
 
@@ -542,7 +542,7 @@ namespace YanLib::sys {
 
         bool get_owner(HANDLE proc_handle,
                        std::string &owner,
-                       helper::CodePage code_page = helper::CodePage::GB2312);
+                       helper::CodePage code_page = helper::curr_code_page());
 
         bool get_owner(HANDLE proc_handle, std::wstring &owner);
 

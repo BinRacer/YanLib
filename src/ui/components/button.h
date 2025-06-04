@@ -246,11 +246,11 @@ namespace YanLib::components {
 
         bool get_note(HWND button_handle,
                       std::string &note,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         bool set_note(HWND button_handle,
                       std::string &note,
-                      helper::CodePage code_page = helper::CodePage::GB2312);
+                      helper::CodePage code_page = helper::curr_code_page());
 
         bool get_note(HWND button_handle, std::wstring &note);
 

@@ -164,7 +164,7 @@ namespace YanLib::ui::gdi {
                         int32_t y,
                         const RECT *rect,
                         const std::string &text,
-                        const int32_t *dx,
+                        const int32_t dx[],
                         OutputOption options = OutputOption::Clipped |
                                 OutputOption::Opaque |
                                 OutputOption::GlyphIndex);
@@ -174,7 +174,7 @@ namespace YanLib::ui::gdi {
                         int32_t y,
                         const RECT *rect,
                         const std::wstring &text,
-                        const int32_t *dx,
+                        const int32_t dx[],
                         OutputOption options = OutputOption::Clipped |
                                 OutputOption::Opaque |
                                 OutputOption::GlyphIndex);

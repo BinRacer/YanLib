@@ -22,7 +22,7 @@ namespace YanLib::ui::gdi {
                    int32_t y,
                    const RECT *rect,
                    const std::string &text,
-                   const int32_t *dx,
+                   const int32_t dx[],
                    OutputOption options) {
         return ExtTextOutA(dc_handle, x, y, static_cast<uint32_t>(options),
                            rect, text.data(), text.size(), dx);
@@ -33,7 +33,7 @@ namespace YanLib::ui::gdi {
                    int32_t y,
                    const RECT *rect,
                    const std::wstring &text,
-                   const int32_t *dx,
+                   const int32_t dx[],
                    OutputOption options) {
         return ExtTextOutW(dc_handle, x, y, static_cast<uint32_t>(options),
                            rect, text.data(), text.size(), dx);

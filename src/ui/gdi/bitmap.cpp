@@ -50,13 +50,13 @@ namespace YanLib::ui::gdi {
         return std::make_pair(result, error_code);
     }
 
-    HBITMAP bitmap::load(HINSTANCE hinstance_handle, const char *bitmap_name) {
-        return LoadBitmapA(hinstance_handle, bitmap_name);
+    HBITMAP bitmap::load(HINSTANCE instance_handle, const char *bitmap_name) {
+        return LoadBitmapA(instance_handle, bitmap_name);
     }
 
-    HBITMAP bitmap::load(HINSTANCE hinstance_handle,
+    HBITMAP bitmap::load(HINSTANCE instance_handle,
                          const wchar_t *bitmap_name) {
-        return LoadBitmapW(hinstance_handle, bitmap_name);
+        return LoadBitmapW(instance_handle, bitmap_name);
     }
 
     std::pair<bool, uint32_t> bitmap::bit_blk(HDC dc_handle_dst,

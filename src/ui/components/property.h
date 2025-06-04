@@ -173,7 +173,7 @@ namespace YanLib::components {
         static PROPSHEETHEADERA make_header(
                 const char *caption /* L"系统设置" */,
                 HWND parent_window_handle,
-                HINSTANCE hinstance_handle,
+                HINSTANCE instance_handle,
                 std::vector<PROPSHEETPAGEA> &prop_sheet_page,
                 PFNPROPSHEETCALLBACK callback = nullptr,
                 PropertyHeaderFlag flag = PropertyHeaderFlag::PropSheetPage |
@@ -186,7 +186,7 @@ namespace YanLib::components {
         static PROPSHEETHEADERW make_header(
                 const wchar_t *caption /* L"系统设置" */,
                 HWND parent_window_handle,
-                HINSTANCE hinstance_handle,
+                HINSTANCE instance_handle,
                 std::vector<PROPSHEETPAGEW> &prop_sheet_page,
                 PFNPROPSHEETCALLBACK callback = nullptr,
                 PropertyHeaderFlag flag = PropertyHeaderFlag::PropSheetPage |
@@ -202,7 +202,7 @@ namespace YanLib::components {
 
         static PROPSHEETPAGEA
         make_page(const char *title,
-                  HINSTANCE hinstance_handle,
+                  HINSTANCE instance_handle,
                   const char *templates,
                   DLGPROC dialog_func,
                   LPARAM dialog_param = 0,
@@ -217,7 +217,7 @@ namespace YanLib::components {
 
         static PROPSHEETPAGEW
         make_page(const wchar_t *title,
-                  HINSTANCE hinstance_handle,
+                  HINSTANCE instance_handle,
                   const wchar_t *templates,
                   DLGPROC dialog_func,
                   LPARAM dialog_param = 0,

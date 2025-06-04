@@ -8,7 +8,7 @@ namespace YanLib::components {
     PROPSHEETHEADERA
     property::make_header(const char *caption,
                           HWND parent_window_handle,
-                          HINSTANCE hinstance_handle,
+                          HINSTANCE instance_handle,
                           std::vector<PROPSHEETPAGEA> &prop_sheet_page,
                           PFNPROPSHEETCALLBACK callback,
                           PropertyHeaderFlag flag,
@@ -20,7 +20,7 @@ namespace YanLib::components {
         header.dwSize = sizeof(PROPSHEETHEADERA);
         header.dwFlags = static_cast<uint32_t>(flag);
         header.hwndParent = parent_window_handle;
-        header.hInstance = hinstance_handle;
+        header.hInstance = instance_handle;
         header.hIcon = icon_handle;
         header.pszCaption = caption;
         header.nPages = prop_sheet_page.size();
@@ -35,7 +35,7 @@ namespace YanLib::components {
     PROPSHEETHEADERW
     property::make_header(const wchar_t *caption,
                           HWND parent_window_handle,
-                          HINSTANCE hinstance_handle,
+                          HINSTANCE instance_handle,
                           std::vector<PROPSHEETPAGEW> &prop_sheet_page,
                           PFNPROPSHEETCALLBACK callback,
                           PropertyHeaderFlag flag,
@@ -47,7 +47,7 @@ namespace YanLib::components {
         header.dwSize = sizeof(PROPSHEETHEADERW);
         header.dwFlags = static_cast<uint32_t>(flag);
         header.hwndParent = parent_window_handle;
-        header.hInstance = hinstance_handle;
+        header.hInstance = instance_handle;
         header.hIcon = icon_handle;
         header.pszCaption = caption;
         header.nPages = prop_sheet_page.size();
@@ -69,7 +69,7 @@ namespace YanLib::components {
     }
 
     PROPSHEETPAGEA property::make_page(const char *title,
-                                       HINSTANCE hinstance_handle,
+                                       HINSTANCE instance_handle,
                                        const char *templates,
                                        DLGPROC dialog_func,
                                        LPARAM dialog_param,
@@ -84,7 +84,7 @@ namespace YanLib::components {
         PROPSHEETPAGEA page = {};
         page.dwSize = sizeof(PROPSHEETPAGEA);
         page.dwFlags = static_cast<uint32_t>(flag);
-        page.hInstance = hinstance_handle;
+        page.hInstance = instance_handle;
         page.pszTemplate = templates;
         page.hIcon = icon_handle;
         page.pszTitle = title;
@@ -99,7 +99,7 @@ namespace YanLib::components {
         return page;
     }
     PROPSHEETPAGEW property::make_page(const wchar_t *title,
-                                       HINSTANCE hinstance_handle,
+                                       HINSTANCE instance_handle,
                                        const wchar_t *templates,
                                        DLGPROC dialog_func,
                                        LPARAM dialog_param,
@@ -114,7 +114,7 @@ namespace YanLib::components {
         PROPSHEETPAGEW page = {};
         page.dwSize = sizeof(PROPSHEETPAGEW);
         page.dwFlags = static_cast<uint32_t>(flag);
-        page.hInstance = hinstance_handle;
+        page.hInstance = instance_handle;
         page.pszTemplate = templates;
         page.hIcon = icon_handle;
         page.pszTitle = title;

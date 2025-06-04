@@ -250,6 +250,8 @@ add_library(YanLib STATIC
         src/ui/components/tree.h
         src/ui/components/up_down.cpp
         src/ui/components/up_down.h
+        src/ui/components/general.cpp
+        src/ui/components/general.h
 )
 
 target_include_directories(YanLib

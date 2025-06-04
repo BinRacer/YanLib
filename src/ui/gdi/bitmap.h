@@ -114,10 +114,9 @@ namespace YanLib::ui::gdi {
                            uint32_t offset,
                            bool use_rgb = true);
 
-        static HBITMAP load(HINSTANCE hinstance_handle,
-                            const char *bitmap_name);
+        static HBITMAP load(HINSTANCE instance_handle, const char *bitmap_name);
 
-        static HBITMAP load(HINSTANCE hinstance_handle,
+        static HBITMAP load(HINSTANCE instance_handle,
                             const wchar_t *bitmap_name);
 
         // std::pair<result, error_code>

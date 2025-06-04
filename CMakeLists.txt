@@ -248,6 +248,8 @@ add_library(YanLib STATIC
         src/ui/components/track.h
         src/ui/components/tree.cpp
         src/ui/components/tree.h
+        src/ui/components/up_down.cpp
+        src/ui/components/up_down.h
 )
 
 target_include_directories(YanLib

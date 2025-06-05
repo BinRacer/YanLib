@@ -524,6 +524,31 @@ namespace YanLib::ui::components {
                                          static_cast<uint32_t>(b));
     }
 #endif
+#ifndef DPASEARCHOPTION
+#define DPASEARCHOPTION
+    enum class DPASearchOption : uint32_t {
+        Sorted = DPAS_SORTED,
+        InsertBefore = DPAS_INSERTBEFORE,
+        InsertAfter = DPAS_INSERTAFTER,
+    };
+    inline DPASearchOption operator|(DPASearchOption a, DPASearchOption b) {
+        return static_cast<DPASearchOption>(static_cast<uint32_t>(a) |
+                                            static_cast<uint32_t>(b));
+    }
+#endif
+#ifndef DPAMERGEOPTION
+#define DPAMERGEOPTION
+    enum class DPAMergeOption : uint32_t {
+        Sorted = DPAM_SORTED,
+        Normal = DPAM_NORMAL,
+        Union = DPAM_UNION,
+        Intersect = DPAM_INTERSECT,
+    };
+    inline DPAMergeOption operator|(DPAMergeOption a, DPAMergeOption b) {
+        return static_cast<DPAMergeOption>(static_cast<uint32_t>(a) |
+                                           static_cast<uint32_t>(b));
+    }
+#endif
     class general {
     private:
         uint32_t error_code = 0;
@@ -681,6 +706,78 @@ namespace YanLib::ui::components {
         [[nodiscard]] std::string err_string() const;
 
         [[nodiscard]] std::wstring err_wstring() const;
+    };
+
+    class dpa {
+    public:
+        dpa(const dpa &other) = delete;
+
+        dpa(dpa &&other) = delete;
+
+        dpa &operator=(const dpa &other) = delete;
+
+        dpa &operator=(dpa &&other) = delete;
+
+        dpa() = default;
+
+        ~dpa() = default;
+
+        static HDPA create(int32_t grow);
+
+        static HDPA create(int32_t grow, HANDLE heap_handle);
+
+        static HDPA clone(HDPA dpa_handle, HDPA new_dpa_handle);
+
+        static int32_t insert_ptr(HDPA dpa_handle, int32_t index, void *ptr);
+
+        static void *get_ptr(HDPA dpa_handle, int32_t index);
+
+        static bool set_ptr(HDPA dpa_handle, int32_t index, void *ptr);
+
+        static void *delete_ptr(HDPA dpa_handle, int32_t index);
+
+        static bool delete_all_ptrs(HDPA dpa_handle);
+
+        static bool destroy(HDPA dpa_handle);
+
+        static int32_t get_ptr_index(HDPA dpa_handle, void *ptr);
+
+        static uint64_t get_size(HDPA dpa_handle);
+
+        static bool grow(HDPA dpa_handle, int32_t ptr_num);
+
+        static int32_t search(HDPA dpa_handle,
+                              void *search,
+                              int32_t start,
+                              PFNDACOMPARE compare,
+                              LPARAM lparam,
+                              DPASearchOption option);
+
+        static bool sort(HDPA dpa_handle, PFNDACOMPARE compare, LPARAM lparam);
+
+        static bool merge(HDPA dpa_handle_dst,
+                          HDPA dpa_handle_src,
+                          DPAMergeOption option,
+                          PFNDACOMPARE compare,
+                          PFNDPAMERGE merge,
+                          LPARAM lparam);
+
+        static void
+        enum_callback(HDPA dpa_handle, PFNDAENUMCALLBACK callback, void *data);
+
+        static void destroy_callback(HDPA dpa_handle,
+                                     PFNDAENUMCALLBACK callback,
+                                     void *data);
+
+        static bool load_stream(HDPA *dpa_handle,
+                                IStream *stream,
+                                PFNDPASTREAM callback,
+                                void *data);
+
+        static bool save_stream(HDPA dpa_handle,
+                                IStream *stream,
+                                PFNDPASTREAM callback,
+                                void *data);
     };
 } // namespace YanLib::ui::components
 #endif // GENERAL_H

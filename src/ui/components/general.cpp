@@ -361,3 +361,103 @@ namespace YanLib::ui::components {
         return result;
     }
 } // namespace YanLib::ui::components
+
+namespace YanLib::ui::components {
+    HDPA dpa::create(int32_t grow) {
+        return DPA_Create(grow);
+    }
+
+    HDPA dpa::create(int32_t grow, HANDLE heap_handle) {
+        return DPA_CreateEx(grow, heap_handle);
+    }
+
+    HDPA dpa::clone(HDPA dpa_handle, HDPA new_dpa_handle) {
+        return DPA_Clone(dpa_handle, new_dpa_handle);
+    }
+
+    int32_t dpa::insert_ptr(HDPA dpa_handle, int32_t index, void *ptr) {
+        return DPA_InsertPtr(dpa_handle, index, ptr);
+    }
+
+    void *dpa::get_ptr(HDPA dpa_handle, int32_t index) {
+        return DPA_GetPtr(dpa_handle, index);
+    }
+
+    bool dpa::set_ptr(HDPA dpa_handle, int32_t index, void *ptr) {
+        return DPA_SetPtr(dpa_handle, index, ptr);
+    }
+
+    void *dpa::delete_ptr(HDPA dpa_handle, int32_t index) {
+        return DPA_DeletePtr(dpa_handle, index);
+    }
+
+    bool dpa::delete_all_ptrs(HDPA dpa_handle) {
+        return DPA_DeleteAllPtrs(dpa_handle);
+    }
+
+    bool dpa::destroy(HDPA dpa_handle) {
+        return DPA_Destroy(dpa_handle);
+    }
+
+    int32_t dpa::get_ptr_index(HDPA dpa_handle, void *ptr) {
+        return DPA_GetPtrIndex(dpa_handle, ptr);
+    }
+
+    uint64_t dpa::get_size(HDPA dpa_handle) {
+        return DPA_GetSize(dpa_handle);
+    }
+
+    bool dpa::grow(HDPA dpa_handle, int32_t ptr_num) {
+        return DPA_Grow(dpa_handle, ptr_num);
+    }
+
+    int32_t dpa::search(HDPA dpa_handle,
+                        void *search,
+                        int32_t start,
+                        PFNDACOMPARE compare,
+                        LPARAM lparam,
+                        DPASearchOption option) {
+        return DPA_Search(dpa_handle, search, start, compare, lparam,
+                          static_cast<uint32_t>(option));
+    }
+
+    bool dpa::sort(HDPA dpa_handle, PFNDACOMPARE compare, LPARAM lparam) {
+        return DPA_Sort(dpa_handle, compare, lparam);
+    }
+
+    bool dpa::merge(HDPA dpa_handle_dst,
+                    HDPA dpa_handle_src,
+                    DPAMergeOption option,
+                    PFNDACOMPARE compare,
+                    PFNDPAMERGE merge,
+                    LPARAM lparam) {
+        return DPA_Merge(dpa_handle_dst, dpa_handle_src,
+                         static_cast<uint32_t>(option), compare, merge, lparam);
+    }
+
+    void dpa::enum_callback(HDPA dpa_handle,
+                            PFNDAENUMCALLBACK callback,
+                            void *data) {
+        DPA_EnumCallback(dpa_handle, callback, data);
+    }
+
+    void dpa::destroy_callback(HDPA dpa_handle,
+                               PFNDAENUMCALLBACK callback,
+                               void *data) {
+        DPA_DestroyCallback(dpa_handle, callback, data);
+    }
+
+    bool dpa::load_stream(HDPA *dpa_handle,
+                          IStream *stream,
+                          PFNDPASTREAM callback,
+                          void *data) {
+        return DPA_LoadStream(dpa_handle, callback, stream, data) == S_OK;
+    }
+
+    bool dpa::save_stream(HDPA dpa_handle,
+                          IStream *stream,
+                          PFNDPASTREAM callback,
+                          void *data) {
+        return DPA_SaveStream(dpa_handle, callback, stream, data) == S_OK;
+    }
+} // namespace YanLib::ui::components

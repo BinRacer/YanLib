@@ -590,7 +590,7 @@ namespace YanLib::ui::components {
                      reinterpret_cast<LPARAM>(temp.data()));
         buf.clear();
         buf = helper::convert::wstr_to_str(temp, code_page);
-        return buf.size();
+        return static_cast<int64_t>(buf.size());
     }
 
     int64_t rich_edit::get_text(HWND rich_edit_handle,
@@ -619,7 +619,7 @@ namespace YanLib::ui::components {
                      reinterpret_cast<LPARAM>(temp.data()));
         buf.clear();
         buf = helper::convert::wstr_to_str(temp, code_page);
-        return buf.size();
+        return static_cast<int64_t>(buf.size());
     }
 
     int64_t rich_edit::get_text(HWND rich_edit_handle,
@@ -649,7 +649,7 @@ namespace YanLib::ui::components {
                      reinterpret_cast<LPARAM>(temp.data()));
         buf.clear();
         buf = helper::convert::wstr_to_str(temp, code_page);
-        return buf.size();
+        return static_cast<int64_t>(buf.size());
     }
 
     int64_t rich_edit::set_text(HWND rich_edit_handle,
@@ -673,7 +673,7 @@ namespace YanLib::ui::components {
                      reinterpret_cast<LPARAM>(temp.data()));
         buf.clear();
         buf = helper::convert::wstr_to_str(temp, code_page);
-        return buf.size();
+        return static_cast<int64_t>(buf.size());
     }
 
     int64_t rich_edit::set_text(HWND rich_edit_handle,
@@ -724,7 +724,7 @@ namespace YanLib::ui::components {
                      reinterpret_cast<LPARAM>(&text_range));
         buf.clear();
         buf = helper::convert::wstr_to_str(temp, code_page);
-        return buf.size();
+        return static_cast<int64_t>(buf.size());
     }
 
     int64_t rich_edit::get_text_range(HWND rich_edit_handle,

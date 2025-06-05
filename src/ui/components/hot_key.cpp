@@ -79,7 +79,7 @@ namespace YanLib::ui::components {
 
     std::pair<ModifiersKey, VirtualKey>
     hot_key::get_hotkey(HWND hot_key_handle) {
-        uint16_t hot_key = static_cast<uint16_t>(
+        auto hot_key = static_cast<uint16_t>(
                 SendMessageW(hot_key_handle, HKM_GETHOTKEY, 0, 0));
         return std::make_pair(static_cast<ModifiersKey>(LOBYTE(hot_key)),
                               static_cast<VirtualKey>(HIBYTE(hot_key)));

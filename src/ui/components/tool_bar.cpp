@@ -84,9 +84,10 @@ namespace YanLib::ui::components {
                                            intptr_t bitmap_id,
                                            std::vector<COLORMAP> &color_map,
                                            bool use_mask) {
-        HBITMAP result = CreateMappedBitmap(instance_handle, bitmap_id,
-                                            use_mask ? CMB_MASKED : 0,
-                                            color_map.data(), color_map.size());
+        HBITMAP result =
+                CreateMappedBitmap(instance_handle, bitmap_id,
+                                   use_mask ? CMB_MASKED : 0, color_map.data(),
+                                   static_cast<int32_t>(color_map.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -456,6 +457,9 @@ namespace YanLib::ui::components {
     bool tool_bar::get_ideal_size(HWND tool_bar_handle, SIZE *size) {
         bool is_ok = SendMessageW(tool_bar_handle, TB_GETIDEALSIZE, TRUE,
                                   reinterpret_cast<LPARAM>(size));
+        if (!is_ok) {
+            return false;
+        }
         is_ok = SendMessageW(tool_bar_handle, TB_GETIDEALSIZE, FALSE,
                              reinterpret_cast<LPARAM>(size));
         return is_ok;
@@ -554,7 +558,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<uint32_t, uint32_t> tool_bar::get_padding(HWND tool_bar_handle) {
-        uint32_t result = static_cast<uint32_t>(
+        auto result = static_cast<uint32_t>(
                 SendMessageW(tool_bar_handle, TB_GETPADDING, 0, 0));
         return std::make_pair(LOWORD(result), HIWORD(result));
     }
@@ -608,7 +612,7 @@ namespace YanLib::ui::components {
                      reinterpret_cast<LPARAM>(temp.data()));
         str.clear();
         str = helper::convert::wstr_to_str(temp, code_page);
-        return temp.size();
+        return static_cast<int64_t>(temp.size());
     }
 
     int64_t tool_bar::get_string(HWND tool_bar_handle,
@@ -691,7 +695,7 @@ namespace YanLib::ui::components {
     }
 
     void tool_bar::set_window_theme(HWND tool_bar_handle,
-                                    std::string window_theme,
+                                    std::string &window_theme,
                                     helper::CodePage code_page) {
         auto temp = helper::convert::str_to_wstr(window_theme, code_page);
         SendMessageW(tool_bar_handle, TB_SETWINDOWTHEME, 0,
@@ -699,7 +703,7 @@ namespace YanLib::ui::components {
     }
 
     void tool_bar::set_window_theme(HWND tool_bar_handle,
-                                    std::wstring window_theme) {
+                                    std::wstring &window_theme) {
         SendMessageW(tool_bar_handle, TB_SETWINDOWTHEME, 0,
                      reinterpret_cast<LPARAM>(window_theme.data()));
     }

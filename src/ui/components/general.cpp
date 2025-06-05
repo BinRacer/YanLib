@@ -128,8 +128,9 @@ namespace YanLib::ui::components {
             return false;
         }
         auto temp = helper::convert::str_to_wstr(text, code_page);
-        int32_t result = fn(dc_handle, temp.data(), temp.size(), rect,
-                            static_cast<uint32_t>(format), param);
+        int32_t result =
+                fn(dc_handle, temp.data(), static_cast<int32_t>(temp.size()),
+                   rect, static_cast<uint32_t>(format), param);
         FreeLibrary(dll);
         if (!result) {
             error_code = GetLastError();
@@ -155,8 +156,9 @@ namespace YanLib::ui::components {
             FreeLibrary(dll);
             return false;
         }
-        int32_t result = fn(dc_handle, text.data(), text.size(), rect,
-                            static_cast<uint32_t>(format), param);
+        int32_t result =
+                fn(dc_handle, text.data(), static_cast<int32_t>(text.size()),
+                   rect, static_cast<uint32_t>(format), param);
         FreeLibrary(dll);
         if (!result) {
             error_code = GetLastError();
@@ -198,8 +200,9 @@ namespace YanLib::ui::components {
             return false;
         }
         auto temp = helper::convert::str_to_wstr(text, code_page);
-        int32_t result = fn(dc_handle, temp.data(), temp.size(), rect,
-                            static_cast<uint32_t>(format), param);
+        int32_t result =
+                fn(dc_handle, temp.data(), static_cast<int32_t>(temp.size()),
+                   rect, static_cast<uint32_t>(format), param);
         FreeLibrary(dll);
         if (!result) {
             error_code = GetLastError();
@@ -226,8 +229,9 @@ namespace YanLib::ui::components {
             FreeLibrary(dll);
             return false;
         }
-        int32_t result = fn(dc_handle, text.data(), text.size(), rect,
-                            static_cast<uint32_t>(format), param);
+        int32_t result =
+                fn(dc_handle, text.data(), static_cast<int32_t>(text.size()),
+                   rect, static_cast<uint32_t>(format), param);
         FreeLibrary(dll);
         if (!result) {
             error_code = GetLastError();
@@ -347,6 +351,143 @@ namespace YanLib::ui::components {
         return result;
     }
 
+    ReaderModeInfo
+    general::make_reader_mode_info(HWND window_handle,
+                                   ReaderModeFlag flag,
+                                   RECT *rect,
+                                   ReaderScroll scroll_callback,
+                                   LPARAM lparam,
+                                   TranslateDispatch dispatch_callback) {
+        ReaderModeInfo info = {};
+        info.size = sizeof(ReaderModeInfo);
+        info.window_handle = window_handle;
+        info.flag = static_cast<uint32_t>(flag);
+        info.rect = rect;
+        info.scroll_callback = scroll_callback;
+        info.dispatch_callback = dispatch_callback;
+        info.lparam = lparam;
+        return info;
+    }
+
+    void general::do_reader_mode(ReaderModeInfo *reader_mode_info) {
+        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
+        if (dll == nullptr)
+            return;
+        typedef void(WINAPI * DoReaderMode)(_In_ ReaderModeInfo *);
+        auto fn = reinterpret_cast<DoReaderMode>(
+                GetProcAddress(dll, reinterpret_cast<const char *>(383)));
+        if (fn == nullptr) {
+            FreeLibrary(dll);
+            return;
+        }
+        fn(reader_mode_info);
+        FreeLibrary(dll);
+    }
+
+    void general::get_effective_client_rect(HWND window_handle,
+                                            RECT *rect,
+                                            const int32_t info[]) {
+        GetEffectiveClientRect(window_handle, rect, info);
+    }
+
+    bool general::show_hide_menu_control(HWND window_handle,
+                                         uintptr_t menu_item_id,
+                                         int32_t info[]) {
+        return ShowHideMenuCtl(window_handle, menu_item_id, info);
+    }
+
+    LRESULT general::forward_notify(HWND window_handle,
+                                    int32_t send_item_id,
+                                    NMHDR *hdr) {
+        return FORWARD_WM_NOTIFY(window_handle, send_item_id, hdr,
+                                 SendMessageW);
+    }
+
+    bool general::forward_notify2(HWND window_handle,
+                                  int32_t send_item_id,
+                                  NMHDR *hdr) {
+        if (!(FORWARD_WM_NOTIFY(window_handle, send_item_id, hdr,
+                                PostMessageW))) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    void general::handle_notify(HWND window_handle,
+                                WPARAM wparam,
+                                LPARAM lparam,
+                                HandleNotify fn) {
+        HANDLE_WM_NOTIFY(window_handle, wparam, lparam, fn);
+    }
+
+    uint32_t general::index_to_state_image_mask(int32_t index) {
+        return INDEXTOSTATEIMAGEMASK(index);
+    }
+
+    void general::dpi_scale(HWND window_handle) {
+        SendMessageW(window_handle, CCM_DPISCALE, TRUE, 0);
+    }
+
+    void general::set_window_theme(HWND window_handle,
+                                   std::string &theme,
+                                   helper::CodePage code_page) {
+        auto temp = helper::convert::str_to_wstr(theme, code_page);
+        SendMessageW(window_handle, CCM_SETWINDOWTHEME, 0,
+                     reinterpret_cast<LPARAM>(temp.data()));
+    }
+
+    void general::set_window_theme(HWND window_handle, std::wstring &theme) {
+        SendMessageW(window_handle, CCM_SETWINDOWTHEME, 0,
+                     reinterpret_cast<LPARAM>(theme.data()));
+    }
+
+    void
+    general::notify(HWND parent_window_handle, int64_t control_id, NMHDR *hdr) {
+        SendMessageW(parent_window_handle, WM_NOTIFY, control_id,
+                     reinterpret_cast<LPARAM>(hdr));
+    }
+
+    NotifyFormatRet general::notify_format(HWND parent_window_handle,
+                                           HWND control_handle) {
+        return static_cast<NotifyFormatRet>(
+                SendMessageW(parent_window_handle, WM_NOTIFYFORMAT,
+                             reinterpret_cast<WPARAM>(control_handle),
+                             NF_QUERY));
+    }
+
+    NotifyFormatRet general::notify_format2(HWND control_handle,
+                                            HWND parent_window_handle) {
+        return static_cast<NotifyFormatRet>(
+                SendMessageW(control_handle, WM_NOTIFYFORMAT,
+                             reinterpret_cast<WPARAM>(parent_window_handle),
+                             NF_REQUERY));
+    }
+
+    int64_t general::get_version(HWND window_handle) {
+        return SendMessageW(window_handle, CCM_GETVERSION, 0, 0);
+    }
+
+    int64_t general::set_version(HWND window_handle, int64_t version) {
+        return SendMessageW(window_handle, CCM_SETVERSION, version, 0);
+    }
+
+    bool general::is_ansi_format(HWND window_handle) {
+        return !SendMessageW(window_handle, CCM_GETUNICODEFORMAT, 0, 0);
+    }
+
+    bool general::is_unicode_format(HWND window_handle) {
+        return SendMessageW(window_handle, CCM_GETUNICODEFORMAT, 0, 0);
+    }
+
+    void general::set_ansi_format(HWND window_handle) {
+        SendMessageW(window_handle, CCM_SETUNICODEFORMAT, FALSE, 0);
+    }
+
+    void general::set_unicode_format(HWND window_handle) {
+        SendMessageW(window_handle, CCM_SETUNICODEFORMAT, TRUE, 0);
+    }
+
     uint32_t general::err_code() const {
         return error_code;
     }
@@ -379,8 +520,24 @@ namespace YanLib::ui::components {
         return DPA_InsertPtr(dpa_handle, index, ptr);
     }
 
+    int32_t dpa::append_ptr(HDPA dpa_handle, void *ptr) {
+        return DPA_AppendPtr(dpa_handle, ptr);
+    }
+
     void *dpa::get_ptr(HDPA dpa_handle, int32_t index) {
         return DPA_GetPtr(dpa_handle, index);
+    }
+
+    void **dpa::get_ptr_ptr(HDPA dpa_handle) {
+        return DPA_GetPtrPtr(dpa_handle);
+    }
+
+    void *dpa::fast_get_ptr(HDPA dpa_handle, int32_t index) {
+        return DPA_FastGetPtr(dpa_handle, index);
+    }
+
+    void dpa::fast_delete_last_ptr(HDPA dpa_handle) {
+        DPA_FastDeleteLastPtr(dpa_handle);
     }
 
     bool dpa::set_ptr(HDPA dpa_handle, int32_t index, void *ptr) {
@@ -397,6 +554,14 @@ namespace YanLib::ui::components {
 
     bool dpa::destroy(HDPA dpa_handle) {
         return DPA_Destroy(dpa_handle);
+    }
+
+    int32_t dpa::get_ptr_count(HDPA dpa_handle) {
+        return DPA_GetPtrCount(dpa_handle);
+    }
+
+    int32_t dpa::set_ptr_count(HDPA dpa_handle, int32_t count) {
+        return DPA_SetPtrCount(dpa_handle, count);
     }
 
     int32_t dpa::get_ptr_index(HDPA dpa_handle, void *ptr) {
@@ -423,6 +588,17 @@ namespace YanLib::ui::components {
 
     bool dpa::sort(HDPA dpa_handle, PFNDACOMPARE compare, LPARAM lparam) {
         return DPA_Sort(dpa_handle, compare, lparam);
+    }
+
+    int32_t dpa::sorted_insert_ptr(HDPA dpa_handle,
+                                   void *search,
+                                   int32_t start,
+                                   PFNDACOMPARE compare,
+                                   LPARAM lparam,
+                                   DPASearchOption option,
+                                   void *ptr) {
+        return DPA_SortedInsertPtr(dpa_handle, search, start, compare, lparam,
+                                   static_cast<uint32_t>(option), ptr);
     }
 
     bool dpa::merge(HDPA dpa_handle_dst,
@@ -476,12 +652,20 @@ namespace YanLib::ui::components {
         return DSA_InsertItem(dsa_handle, index, item);
     }
 
+    int32_t dsa::append_item(HDSA dsa_handle, void *item) {
+        return DSA_AppendItem(dsa_handle, item);
+    }
+
     bool dsa::get_item(HDSA dsa_handle, int32_t index, void *item) {
         return DSA_GetItem(dsa_handle, index, item);
     }
 
     bool dsa::set_item(HDSA dsa_handle, int32_t index, void *item) {
         return DSA_SetItem(dsa_handle, index, item);
+    }
+
+    int32_t dsa::get_item_count(HDSA dsa_handle) {
+        return DSA_GetItemCount(dsa_handle);
     }
 
     void *dsa::get_item_ptr(HDSA dsa_handle, int32_t index) {

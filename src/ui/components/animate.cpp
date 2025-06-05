@@ -77,7 +77,7 @@ namespace YanLib::ui::components {
     }
 
     bool animate::open(HWND animate_handle,
-                       char *file_name,
+                       const char *file_name,
                        helper::CodePage code_page) {
         return Animate_Open(animate_handle,
                             helper::convert::str_to_wstr(file_name, code_page)
@@ -90,7 +90,7 @@ namespace YanLib::ui::components {
 
     bool animate::open(HWND animate_handle,
                        HINSTANCE dll_handle,
-                       char *file_name,
+                       const char *file_name,
                        helper::CodePage code_page) {
         return Animate_OpenEx(animate_handle, dll_handle,
                               helper::convert::str_to_wstr(file_name, code_page)

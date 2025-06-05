@@ -133,14 +133,14 @@ namespace YanLib::ui::components {
                             WindowStyle::Visible);
 
         bool open(HWND animate_handle,
-                  char *file_name,
+                  const char *file_name,
                   helper::CodePage code_page = helper::curr_code_page());
 
         bool open(HWND animate_handle, wchar_t *file_name);
 
         bool open(HWND animate_handle,
                   HINSTANCE dll_handle,
-                  char *file_name,
+                  const char *file_name,
                   helper::CodePage code_page = helper::curr_code_page());
 
         bool

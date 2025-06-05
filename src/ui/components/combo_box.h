@@ -229,7 +229,7 @@ namespace YanLib::ui::components {
         bool disable(HWND combo_box_handle);
 
         int32_t fill(HWND combo_box_handle,
-                     char *path_spec,
+                     const char *path_spec,
                      FileType type = FileType::Drives | FileType::Directory |
                              FileType::ReadWrite,
                      helper::CodePage code_page = helper::curr_code_page());

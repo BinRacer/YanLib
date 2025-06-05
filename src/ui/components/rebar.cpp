@@ -257,12 +257,14 @@ namespace YanLib::ui::components {
     }
 
     int32_t rebar::hit_test(HWND rebar_handle, RBHITTESTINFO *hit_test_info) {
-        return SendMessageW(rebar_handle, RB_HITTEST, 0,
-                            reinterpret_cast<LPARAM>(hit_test_info));
+        return static_cast<int32_t>(
+                SendMessageW(rebar_handle, RB_HITTEST, 0,
+                             reinterpret_cast<LPARAM>(hit_test_info)));
     }
 
     int32_t rebar::id_to_index(HWND rebar_handle, uint32_t id) {
-        return SendMessageW(rebar_handle, RB_IDTOINDEX, id, 0);
+        return static_cast<int32_t>(
+                SendMessageW(rebar_handle, RB_IDTOINDEX, id, 0));
     }
 
     void rebar::push_chevron(HWND rebar_handle, int32_t index, int32_t value) {

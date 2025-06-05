@@ -13,7 +13,6 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <cstdint>
-#include <vector>
 #include <string>
 #include "helper/convert.h"
 #pragma comment(lib, "Comctl32.lib")
@@ -549,6 +548,76 @@ namespace YanLib::ui::components {
                                            static_cast<uint32_t>(b));
     }
 #endif
+#ifndef READERMODEFLAG
+#define READERMODEFLAG
+    enum class ReaderModeFlag : uint32_t {
+        ZeroCursor = 1,
+        VerticalOnly = 2,
+        HorizontalOnly = 4,
+    };
+    inline ReaderModeFlag operator|(ReaderModeFlag a, ReaderModeFlag b) {
+        return static_cast<ReaderModeFlag>(static_cast<uint32_t>(a) |
+                                           static_cast<uint32_t>(b));
+    }
+#endif
+    struct ReaderModeInfo;
+    typedef int32_t(CALLBACK *ReaderScroll)(_In_ ReaderModeInfo *info,
+                                            _In_ int32_t horiz,
+                                            _In_ int32_t vert);
+    typedef int32_t(CALLBACK *TranslateDispatch)(_In_ const MSG *msg);
+    struct ReaderModeInfo {
+        uint32_t size;
+        HWND window_handle;
+        uint32_t flag;
+        RECT *rect;
+        ReaderScroll scroll_callback;
+        TranslateDispatch dispatch_callback;
+        LPARAM lparam;
+    };
+#ifndef NOTIFYFORMATRET
+#define NOTIFYFORMATRET
+    enum class NotifyFormatRet : int64_t {
+        Error = 0,
+        ANSI = NFR_ANSI,
+        Unicode = NFR_UNICODE,
+    };
+#endif
+#ifndef GENERALMESSAGE
+#define GENERALMESSAGE
+    enum class GeneralMessage : uint32_t {
+        DpiScale = CCM_DPISCALE,
+        GetUnicodeFormat = CCM_GETUNICODEFORMAT,
+        GetVersion = CCM_GETVERSION,
+        SetUnicodeFormat = CCM_SETUNICODEFORMAT,
+        SetVersion = CCM_SETVERSION,
+        SetWindowTheme = CCM_SETWINDOWTHEME,
+        Notify = WM_NOTIFY,
+        NotifyFormat = WM_NOTIFYFORMAT,
+    };
+#endif
+#ifndef GENERALNOTIFY
+#define GENERALNOTIFY
+    enum class GeneralNotify : uint32_t {
+        Char = NM_CHAR,
+        CustomText = NM_CUSTOMTEXT,
+        FontChanged = NM_FONTCHANGED,
+        GetCustomSplitRect = NM_GETCUSTOMSPLITRECT,
+        Hover = NM_HOVER,
+        KeyDown = NM_KEYDOWN,
+        KillFocus = NM_KILLFOCUS,
+        LeftDown = NM_LDOWN,
+        NcHitTest = NM_NCHITTEST,
+        OutOfMemory = NM_OUTOFMEMORY,
+        RightDown = NM_RDOWN,
+        ReleasedCapture = NM_RELEASEDCAPTURE,
+        Return = NM_RETURN,
+        SetCursor = NM_SETCURSOR,
+        SetFocus = NM_SETFOCUS,
+        ThemeChanged = NM_THEMECHANGED,
+        ToolTipsCreated = NM_TOOLTIPSCREATED,
+        TVStateImageChanging = NM_TVSTATEIMAGECHANGING,
+    };
+#endif
     class general {
     private:
         uint32_t error_code = 0;
@@ -701,6 +770,70 @@ namespace YanLib::ui::components {
                                           std::wstring &text,
                                           SIZE *size);
 
+        ReaderModeInfo
+        make_reader_mode_info(HWND window_handle,
+                              ReaderModeFlag flag,
+                              RECT *rect,
+                              ReaderScroll scroll_callback,
+                              LPARAM lparam,
+                              TranslateDispatch dispatch_callback);
+
+        void do_reader_mode(ReaderModeInfo *reader_mode_info);
+
+        void get_effective_client_rect(HWND window_handle,
+                                       RECT *rect,
+                                       const int32_t info[]);
+
+        bool show_hide_menu_control(HWND window_handle,
+                                    uintptr_t menu_item_id,
+                                    int32_t info[]);
+
+        // forward notify to SendMessageW
+        LRESULT
+        forward_notify(HWND window_handle, int32_t send_item_id, NMHDR *hdr);
+
+        // forward notify to PostMessageW
+        bool
+        forward_notify2(HWND window_handle, int32_t send_item_id, NMHDR *hdr);
+
+        typedef void(CALLBACK *HandleNotify)(HWND, int32_t, NMHDR *);
+
+        void handle_notify(HWND window_handle,
+                           WPARAM wparam,
+                           LPARAM lparam,
+                           HandleNotify fn);
+
+        uint32_t index_to_state_image_mask(int32_t index);
+
+        void dpi_scale(HWND window_handle);
+
+        void
+        set_window_theme(HWND window_handle,
+                         std::string &theme,
+                         helper::CodePage code_page = helper::curr_code_page());
+
+        void set_window_theme(HWND window_handle, std::wstring &theme);
+
+        void notify(HWND parent_window_handle, int64_t control_id, NMHDR *hdr);
+
+        NotifyFormatRet notify_format(HWND parent_window_handle,
+                                      HWND control_handle);
+
+        NotifyFormatRet notify_format2(HWND control_handle,
+                                       HWND parent_window_handle);
+
+        int64_t get_version(HWND window_handle);
+
+        int64_t set_version(HWND window_handle, int64_t version);
+
+        bool is_ansi_format(HWND window_handle);
+
+        bool is_unicode_format(HWND window_handle);
+
+        void set_ansi_format(HWND window_handle);
+
+        void set_unicode_format(HWND window_handle);
+
         [[nodiscard]] uint32_t err_code() const;
 
         [[nodiscard]] std::string err_string() const;
@@ -730,15 +863,27 @@ namespace YanLib::ui::components {
 
         static int32_t insert_ptr(HDPA dpa_handle, int32_t index, void *ptr);
 
+        static int32_t append_ptr(HDPA dpa_handle, void *ptr);
+
         static void *get_ptr(HDPA dpa_handle, int32_t index);
 
         static bool set_ptr(HDPA dpa_handle, int32_t index, void *ptr);
+
+        static void **get_ptr_ptr(HDPA dpa_handle);
+
+        static void *fast_get_ptr(HDPA dpa_handle, int32_t index);
+
+        static void fast_delete_last_ptr(HDPA dpa_handle);
 
         static void *delete_ptr(HDPA dpa_handle, int32_t index);
 
         static bool delete_all_ptrs(HDPA dpa_handle);
 
         static bool destroy(HDPA dpa_handle);
+
+        static int32_t get_ptr_count(HDPA dpa_handle);
+
+        static int32_t set_ptr_count(HDPA dpa_handle, int32_t count);
 
         static int32_t get_ptr_index(HDPA dpa_handle, void *ptr);
 
@@ -754,6 +899,14 @@ namespace YanLib::ui::components {
                               DPASearchOption option);
 
         static bool sort(HDPA dpa_handle, PFNDACOMPARE compare, LPARAM lparam);
+
+        static int32_t sorted_insert_ptr(HDPA dpa_handle,
+                                         void *search,
+                                         int32_t start,
+                                         PFNDACOMPARE compare,
+                                         LPARAM lparam,
+                                         DPASearchOption option,
+                                         void *ptr);
 
         static bool merge(HDPA dpa_handle_dst,
                           HDPA dpa_handle_src,
@@ -800,9 +953,13 @@ namespace YanLib::ui::components {
 
         static int32_t insert_item(HDSA dsa_handle, int32_t index, void *item);
 
+        static int32_t append_item(HDSA dsa_handle, void *item);
+
         static bool get_item(HDSA dsa_handle, int32_t index, void *item);
 
         static bool set_item(HDSA dsa_handle, int32_t index, void *item);
+
+        static int32_t get_item_count(HDSA dsa_handle);
 
         static void *get_item_ptr(HDSA dsa_handle, int32_t index);
 

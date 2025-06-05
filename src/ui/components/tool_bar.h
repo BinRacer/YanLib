@@ -695,10 +695,10 @@ namespace YanLib::ui::components {
 
         void
         set_window_theme(HWND tool_bar_handle,
-                         std::string window_theme,
+                         std::string &window_theme,
                          helper::CodePage code_page = helper::curr_code_page());
 
-        void set_window_theme(HWND tool_bar_handle, std::wstring window_theme);
+        void set_window_theme(HWND tool_bar_handle, std::wstring &window_theme);
 
         void auto_size(HWND tool_bar_handle);
 

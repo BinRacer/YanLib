@@ -86,7 +86,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::fill(HWND combo_box_handle,
-                            char *path_spec,
+                            const char *path_spec,
                             FileType type,
                             helper::CodePage code_page) {
         int32_t result =

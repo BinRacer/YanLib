@@ -281,7 +281,8 @@ namespace YanLib::ui::components {
     }
 
     int32_t edit::get_text(HWND edit_handle, std::string &text) {
-        int32_t result = GetWindowTextA(edit_handle, text.data(), text.size());
+        int32_t result = GetWindowTextA(edit_handle, text.data(),
+                                        static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -289,7 +290,8 @@ namespace YanLib::ui::components {
     }
 
     int32_t edit::get_text(HWND edit_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(edit_handle, text.data(), text.size());
+        int32_t result = GetWindowTextW(edit_handle, text.data(),
+                                        static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -327,7 +329,7 @@ namespace YanLib::ui::components {
                                  std::string &banner,
                                  helper::CodePage code_page) {
         std::wstring temp(banner.size(), L'\0');
-        int32_t result =
+        auto result =
                 Edit_GetCueBannerText(edit_handle, temp.data(), temp.size());
         banner.clear();
         banner = helper::convert::wstr_to_str(temp, code_page);

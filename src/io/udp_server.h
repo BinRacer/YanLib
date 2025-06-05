@@ -6,8 +6,7 @@
 #define UDP_SERVER_H
 #include <winsock2.h>
 #include <string>
-
-#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "WS2_32.Lib")
 namespace YanLib::io {
     class udp_server {
     private:

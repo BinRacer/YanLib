@@ -7,9 +7,20 @@
 #include <Windows.h>
 #include <Powrprof.h>
 #include <string>
+#include <vector>
+#include "sync/rwlock.h"
+#pragma comment(lib, "Powrprof.lib")
 namespace YanLib::ui::core {
     class notify {
     private:
+        std::vector<HDEVNOTIFY> device_handles = {};
+        std::vector<HPOWERNOTIFY> power_handles = {};
+        std::vector<HPOWERNOTIFY> power2_handles = {};
+        std::vector<HWND> tooltip_handles = {};
+        sync::rwlock device_rwlock = {};
+        sync::rwlock power_rwlock = {};
+        sync::rwlock power2_rwlock = {};
+        sync::rwlock tooltip_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -23,7 +34,7 @@ namespace YanLib::ui::core {
 
         notify() = default;
 
-        ~notify() = default;
+        ~notify();
 
         HDEVNOTIFY register_device(HWND window_handle,
                                    void *notify_filter,

@@ -4,11 +4,9 @@
 
 #ifndef UDP_CLIENT_H
 #define UDP_CLIENT_H
-
 #include <winsock2.h>
 #include <string>
-
-#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "WS2_32.Lib")
 namespace YanLib::io {
     class udp_client {
     private:

@@ -171,7 +171,28 @@ namespace YanLib::ui::core {
     }
 
     uint32_t cursor::set_thread_scaling(uint32_t cursor_dpi) {
-        return SetThreadCursorCreationScaling(cursor_dpi);
+        HMODULE user32 = nullptr;
+        uint32_t result = 0;
+        do {
+            user32 = LoadLibraryW(L"user32.dll");
+            if (!user32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef uint32_t(WINAPI * prototype)(uint32_t);
+            auto func = reinterpret_cast<prototype>(
+                    GetProcAddress(user32, "SetThreadCursorCreationScaling"));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            result = func(cursor_dpi);
+        }
+        while (false);
+        if (user32) {
+            FreeLibrary(user32);
+        }
+        return result;
     }
 
     int32_t cursor::show_cursor() {

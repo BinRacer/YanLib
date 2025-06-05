@@ -264,6 +264,21 @@ set_target_properties(YanLib PROPERTIES
         ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib/Release"
 )
 
+set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/dist")
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
+        COMMAND ${CMAKE_COMMAND} -E tar "cf"
+        "${OUTPUT_DIR}/${PROJECT_NAME}.zip"
+        --format=zip
+        --
+        ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/lib
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        COMMENT "build and create ZIP: ${OUTPUT_DIR}/${PROJECT_NAME}.zip"
+        VERBATIM
+)
+
 target_include_directories(YanLib
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

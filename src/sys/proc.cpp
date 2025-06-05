@@ -9,7 +9,7 @@
 #include <memory>
 #include <UserEnv.h>
 
-#pragma comment(lib, "UserEnv.lib")
+#pragma comment(lib, "UserEnv.Lib")
 
 namespace YanLib::sys {
     proc::~proc() {
@@ -37,31 +37,31 @@ namespace YanLib::sys {
                                       uint32_t proc_info_len,
                                       uint32_t *real_size) {
         typedef NTSTATUS(CALLBACK *
-                         pfn)(HANDLE ProcessHandle,
-                              PROCESSINFOCLASS ProcessInformationClass,
-                              void *ProcessInformation,
-                              uint32_t ProcessInformationLength,
-                              uint32_t *ReturnLength OPTIONAL);
+                         prototype)(HANDLE ProcessHandle,
+                                    PROCESSINFOCLASS ProcessInformationClass,
+                                    void *ProcessInformation,
+                                    uint32_t ProcessInformationLength,
+                                    uint32_t *ReturnLength OPTIONAL);
         NTSTATUS status = -1;
-        HMODULE ntdll_module = nullptr;
+        HMODULE ntdll = nullptr;
         do {
-            ntdll_module = LoadLibraryW(L"ntdll.dll");
-            if (!ntdll_module) {
+            ntdll = LoadLibraryW(L"ntdll.dll");
+            if (!ntdll) {
                 error_code = GetLastError();
                 break;
             }
-            auto query_info_proc = reinterpret_cast<pfn>(
-                    GetProcAddress(ntdll_module, "NtQueryInformationProcess"));
-            if (!query_info_proc) {
+            auto func = reinterpret_cast<prototype>(
+                    GetProcAddress(ntdll, "NtQueryInformationProcess"));
+            if (!func) {
                 error_code = GetLastError();
                 break;
             }
-            status = query_info_proc(proc_handle, proc_info_class, proc_info,
-                                     proc_info_len, real_size);
+            status = func(proc_handle, proc_info_class, proc_info,
+                          proc_info_len, real_size);
         }
         while (false);
-        if (ntdll_module) {
-            FreeLibrary(ntdll_module);
+        if (ntdll) {
+            FreeLibrary(ntdll);
         }
         return status;
     }

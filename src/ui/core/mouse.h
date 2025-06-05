@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-
+#include "sync/rwlock.h"
 namespace YanLib::ui::core {
 #ifndef MOUSEEVENT
 #define MOUSEEVENT
@@ -77,6 +77,8 @@ namespace YanLib::ui::core {
 
     class mouse {
     private:
+        std::vector<std::pair<HWND, PointerInputType>> pointers = {};
+        sync::rwlock rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -90,7 +92,7 @@ namespace YanLib::ui::core {
 
         mouse() = default;
 
-        ~mouse() = default;
+        ~mouse();
 
         bool enable_pointer();
 

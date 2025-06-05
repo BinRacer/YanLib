@@ -5,6 +5,36 @@
 #include "notify.h"
 #include "helper/convert.h"
 namespace YanLib::ui::core {
+    notify::~notify() {
+        for (auto &device : device_handles) {
+            if (device) {
+                UnregisterDeviceNotification(device);
+                device = nullptr;
+            }
+        }
+        device_handles.clear();
+        for (auto &power : power_handles) {
+            if (power) {
+                UnregisterPowerSettingNotification(power);
+                power = nullptr;
+            }
+        }
+        power_handles.clear();
+        for (auto &power2 : power2_handles) {
+            if (power2) {
+                UnregisterSuspendResumeNotification(power2);
+                power2 = nullptr;
+            }
+        }
+        power2_handles.clear();
+        for (auto &tooltip : tooltip_handles) {
+            if (tooltip) {
+                RegisterForTooltipDismissNotification(tooltip, TDF_UNREGISTER);
+                tooltip = nullptr;
+            }
+        }
+        tooltip_handles.clear();
+    }
     HDEVNOTIFY notify::register_device(HWND window_handle,
                                        void *notify_filter,
                                        bool notify_all) {
@@ -14,7 +44,11 @@ namespace YanLib::ui::core {
                         (notify_all ? DEVICE_NOTIFY_ALL_INTERFACE_CLASSES : 0));
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        device_rwlock.write_lock();
+        device_handles.push_back(result);
+        device_rwlock.write_unlock();
         return result;
     }
 
@@ -27,11 +61,25 @@ namespace YanLib::ui::core {
                         (notify_all ? DEVICE_NOTIFY_ALL_INTERFACE_CLASSES : 0));
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        device_rwlock.write_lock();
+        device_handles.push_back(result);
+        device_rwlock.write_unlock();
         return result;
     }
 
     bool notify::unregister_device(HDEVNOTIFY device_notify_handle) {
+        if (!device_notify_handle) {
+            return false;
+        }
+        device_rwlock.write_lock();
+        const auto it = std::find(device_handles.begin(), device_handles.end(),
+                                  device_notify_handle);
+        if (it != device_handles.end()) {
+            *it = nullptr;
+        }
+        device_rwlock.write_unlock();
         if (!UnregisterDeviceNotification(device_notify_handle)) {
             error_code = GetLastError();
             return false;
@@ -46,7 +94,11 @@ namespace YanLib::ui::core {
                                                  DEVICE_NOTIFY_WINDOW_HANDLE);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        power_rwlock.write_lock();
+        power_handles.push_back(result);
+        power_rwlock.write_unlock();
         return result;
     }
 
@@ -57,11 +109,25 @@ namespace YanLib::ui::core {
                                                  DEVICE_NOTIFY_SERVICE_HANDLE);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        power_rwlock.write_lock();
+        power_handles.push_back(result);
+        power_rwlock.write_unlock();
         return result;
     }
 
     bool notify::unregister_power_setting(HPOWERNOTIFY power_notify_handle) {
+        if (!power_notify_handle) {
+            return false;
+        }
+        power_rwlock.write_lock();
+        const auto it = std::find(power_handles.begin(), power_handles.end(),
+                                  power_notify_handle);
+        if (it != power_handles.end()) {
+            *it = nullptr;
+        }
+        power_rwlock.write_unlock();
         if (!UnregisterPowerSettingNotification(power_notify_handle)) {
             error_code = GetLastError();
             return false;
@@ -75,7 +141,11 @@ namespace YanLib::ui::core {
                                                   DEVICE_NOTIFY_WINDOW_HANDLE);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        power2_rwlock.write_lock();
+        power2_handles.push_back(result);
+        power2_rwlock.write_unlock();
         return result;
     }
 
@@ -86,11 +156,25 @@ namespace YanLib::ui::core {
                                                   DEVICE_NOTIFY_CALLBACK);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        power2_rwlock.write_lock();
+        power2_handles.push_back(result);
+        power2_rwlock.write_unlock();
         return result;
     }
 
     bool notify::unregister_suspend_resume(HPOWERNOTIFY power_notify_handle) {
+        if (!power_notify_handle) {
+            return false;
+        }
+        power2_rwlock.write_lock();
+        const auto it = std::find(power2_handles.begin(), power2_handles.end(),
+                                  power_notify_handle);
+        if (it != power2_handles.end()) {
+            *it = nullptr;
+        }
+        power2_rwlock.write_unlock();
         if (!UnregisterSuspendResumeNotification(power_notify_handle)) {
             error_code = GetLastError();
             return false;
@@ -99,11 +183,28 @@ namespace YanLib::ui::core {
     }
 
     bool notify::register_tooltip_dismiss(HWND window_handle) {
-        return RegisterForTooltipDismissNotification(window_handle,
-                                                     TDF_REGISTER);
+        bool is_ok = RegisterForTooltipDismissNotification(window_handle,
+                                                           TDF_REGISTER);
+        if (!is_ok) {
+            return false;
+        }
+        tooltip_rwlock.write_lock();
+        tooltip_handles.push_back(window_handle);
+        tooltip_rwlock.write_unlock();
+        return is_ok;
     }
 
     bool notify::unregister_tooltip_dismiss(HWND window_handle) {
+        if (!window_handle) {
+            return false;
+        }
+        tooltip_rwlock.write_lock();
+        const auto it = std::find(tooltip_handles.begin(),
+                                  tooltip_handles.end(), window_handle);
+        if (it != tooltip_handles.end()) {
+            *it = nullptr;
+        }
+        tooltip_rwlock.write_unlock();
         return RegisterForTooltipDismissNotification(window_handle,
                                                      TDF_UNREGISTER);
     }

@@ -7,7 +7,7 @@
 #include <utility>
 #include <Windows.h>
 #include <vector>
-
+#pragma comment(lib, "MSImg32.Lib")
 namespace YanLib::ui::gdi {
 #ifndef TERNARYRASTERCODE
 #define TERNARYRASTERCODE

@@ -6,7 +6,7 @@
 
 #include <complex>
 #include <Powrprof.h>
-
+#pragma comment(lib, "powrprof.lib")
 namespace YanLib::ui::core {
     HWND window::create(const char *class_name,
                         const char *window_name,
@@ -455,32 +455,31 @@ namespace YanLib::ui::core {
     }
 
     bool window::is_arranged(HWND window_handle) {
-        bool is_ok = false;
-        HMODULE hmodule = nullptr;
+        HMODULE user32 = nullptr;
+        bool result = false;
         do {
-            hmodule = LoadLibraryW(L"user32.dll");
-            if (!hmodule) {
+            user32 = LoadLibraryW(L"user32.dll");
+            if (!user32) {
                 error_code = GetLastError();
                 break;
             }
-            typedef int32_t(CALLBACK * fn)(HWND);
-            auto IsWindowArranged = reinterpret_cast<fn>(
-                    GetProcAddress(hmodule, "IsWindowArranged"));
-            if (!IsWindowArranged) {
+            typedef int32_t(CALLBACK * prototype)(HWND);
+            auto func = reinterpret_cast<prototype>(
+                    GetProcAddress(user32, "IsWindowArranged"));
+            if (!func) {
                 error_code = GetLastError();
                 break;
             }
-            if (!IsWindowArranged(window_handle)) {
+            result = func(window_handle);
+            if (!result) {
                 error_code = GetLastError();
-                is_ok = true;
-                break;
             }
         }
         while (false);
-        if (hmodule) {
-            FreeLibrary(hmodule);
+        if (user32) {
+            FreeLibrary(user32);
         }
-        return is_ok;
+        return result;
     }
 
     bool window::is_enabled(HWND window_handle) {

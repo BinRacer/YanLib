@@ -18,12 +18,11 @@
 #include <string>
 #include <vector>
 #include "helper/convert.h"
-#pragma comment(lib, "Comctl32.lib")
+#pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#pragma comment(lib, "user32.lib")
-#pragma comment(lib, "msftedit.lib")
+#pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
 #ifndef WINDOWSTYLE
 #define WINDOWSTYLE
@@ -757,6 +756,7 @@ namespace YanLib::ui::components {
 #endif
     class rich_edit {
     private:
+        HMODULE rich_edit_dll = nullptr;
         uint32_t error_code = 0;
 
     public:
@@ -768,9 +768,9 @@ namespace YanLib::ui::components {
 
         rich_edit &operator=(rich_edit &&other) = delete;
 
-        rich_edit() = default;
+        rich_edit();
 
-        ~rich_edit() = default;
+        ~rich_edit();
 
         HWND create(uintptr_t rich_edit_id,
                     HWND parent_window_handle,

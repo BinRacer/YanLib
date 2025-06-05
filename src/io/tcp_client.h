@@ -7,8 +7,7 @@
 #include <winsock2.h>
 #include <string>
 #include <vector>
-
-#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "WS2_32.Lib")
 namespace YanLib::io {
     class tcp_client {
     private:

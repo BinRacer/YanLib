@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <vector>
 #include <string>
-
+#include "sync/rwlock.h"
 namespace YanLib::ui::core {
 #ifndef KEYBOARDLAYOUT
 #define KEYBOARDLAYOUT
@@ -414,6 +414,10 @@ namespace YanLib::ui::core {
 #endif
     class keyboard {
     private:
+        std::vector<HKL> layout_handles = {};
+        std::vector<std::pair<HWND, int32_t>> hotkeys = {};
+        sync::rwlock layout_rwlock = {};
+        sync::rwlock hotkey_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -427,7 +431,7 @@ namespace YanLib::ui::core {
 
         keyboard() = default;
 
-        ~keyboard() = default;
+        ~keyboard();
 
         HKL load_layout(KeyboardID id = KeyboardID::ZH_CN,
                         KeyboardLayout layout = KeyboardLayout::Activate |

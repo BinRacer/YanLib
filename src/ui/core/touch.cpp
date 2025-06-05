@@ -6,6 +6,23 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui::core {
+    touch::~touch() {
+        for (auto &device : device_handles) {
+            if (device) {
+                DestroySyntheticPointerDevice(device);
+                device = nullptr;
+            }
+        }
+        device_handles.clear();
+        for (auto &touch : touch_handles) {
+            if (touch && IsWindow(touch)) {
+                UnregisterTouchWindow(touch);
+                touch = nullptr;
+            }
+        }
+        touch_handles.clear();
+    }
+
     HSYNTHETICPOINTERDEVICE
     touch::create_synthetic_pointer_device(PointerInputType pointer_type,
                                            uint32_t max_count,
@@ -15,12 +32,26 @@ namespace YanLib::ui::core {
                 static_cast<POINTER_FEEDBACK_MODE>(mode));
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        device_rwlock.write_lock();
+        device_handles.push_back(result);
+        device_rwlock.write_unlock();
         return result;
     }
 
     void touch::destroy_synthetic_pointer_device(
             HSYNTHETICPOINTERDEVICE device_handle) {
+        if (device_handle) {
+            return;
+        }
+        device_rwlock.write_lock();
+        const auto it = std::find(device_handles.begin(), device_handles.end(),
+                                  device_handle);
+        if (it != device_handles.end()) {
+            *it = nullptr;
+        }
+        device_rwlock.write_unlock();
         DestroySyntheticPointerDevice(device_handle);
     }
 
@@ -41,6 +72,9 @@ namespace YanLib::ui::core {
             error_code = GetLastError();
             return false;
         }
+        touch_rwlock.write_lock();
+        touch_handles.push_back(window_handle);
+        touch_rwlock.write_unlock();
         return true;
     }
 
@@ -49,10 +83,23 @@ namespace YanLib::ui::core {
             error_code = GetLastError();
             return false;
         }
+        touch_rwlock.write_lock();
+        touch_handles.push_back(window_handle);
+        touch_rwlock.write_unlock();
         return true;
     }
 
     bool touch::unregister_window(HWND window_handle) {
+        if (window_handle) {
+            return false;
+        }
+        touch_rwlock.write_lock();
+        const auto it = std::find(touch_handles.begin(), touch_handles.end(),
+                                  window_handle);
+        if (it != touch_handles.end()) {
+            *it = nullptr;
+        }
+        touch_rwlock.write_unlock();
         if (!UnregisterTouchWindow(window_handle)) {
             error_code = GetLastError();
             return false;

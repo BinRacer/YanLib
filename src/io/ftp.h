@@ -10,7 +10,7 @@
 #include <vector>
 #include "helper/convert.h"
 #include "sync/rwlock.h"
-#pragma comment(lib, "WinInet.lib")
+#pragma comment(lib, "wininet.Lib")
 
 namespace YanLib::io {
     class ftp {

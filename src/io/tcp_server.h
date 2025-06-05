@@ -8,8 +8,7 @@
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
-#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "WS2_32.Lib")
 namespace YanLib::io {
     class tcp_server {
     private:

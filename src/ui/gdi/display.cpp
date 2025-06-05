@@ -85,17 +85,34 @@ namespace YanLib::ui::gdi {
     bool display::get_auto_rotation_preferences_by_pid(
             uint32_t pid,
             OrientationPreference *orientation) {
-        if (!orientation) {
-            return false;
-        }
-        auto temp = static_cast<ORIENTATION_PREFERENCE>(*orientation);
-        int32_t is_ok = 0;
-        if (!GetDisplayAutoRotationPreferencesByProcessId(pid, &temp, &is_ok)) {
+        HMODULE kernel32 = nullptr;
+        bool result = false;
+        do {
+            if (!orientation) {
+                break;
+            }
+            kernel32 = LoadLibraryW(L"kernel32.dll");
+            if (!kernel32) {
+                break;
+            }
+            typedef int32_t(WINAPI * prototype)(_In_ uint32_t,
+                                                _Out_ ORIENTATION_PREFERENCE *,
+                                                _Out_ int32_t *);
+            auto func = reinterpret_cast<prototype>(GetProcAddress(
+                    kernel32, "GetDisplayAutoRotationPreferencesByProcessId"));
+            if (!func) {
+                break;
+            }
+            auto temp = static_cast<ORIENTATION_PREFERENCE>(*orientation);
+            int32_t is_ok = 0;
+            result = func(pid, &temp, &is_ok);
             *orientation = static_cast<OrientationPreference>(temp);
-            return false;
         }
-        *orientation = static_cast<OrientationPreference>(temp);
-        return is_ok;
+        while (false);
+        if (kernel32) {
+            FreeLibrary(kernel32);
+        }
+        return result;
     }
 
     int32_t display::get_config_buffer_size(uint32_t *path_info_num,

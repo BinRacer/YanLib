@@ -15,11 +15,11 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#pragma comment(lib, "Comctl32.lib")
+#pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
 #ifndef WINDOWSTYLE
 #define WINDOWSTYLE

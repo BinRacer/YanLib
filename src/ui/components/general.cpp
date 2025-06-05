@@ -78,18 +78,28 @@ namespace YanLib::ui::components {
 
     bool general::mirror_icon(HICON *icon_handle_small,
                               HICON *icon_handle_large) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI * MirrorIcon)(HICON *, HICON *);
-        auto fn = reinterpret_cast<MirrorIcon>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(414)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        bool result = false;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI * prototype)(HICON *, HICON *);
+            auto func = reinterpret_cast<prototype>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(414)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            result = func(icon_handle_small, icon_handle_large);
         }
-        bool result = fn(icon_handle_small, icon_handle_large);
-        FreeLibrary(dll);
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
+        }
         return result;
     }
 
@@ -114,26 +124,36 @@ namespace YanLib::ui::components {
                                     TextFormat format,
                                     DRAWTEXTPARAMS *param,
                                     helper::CodePage code_page) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI *
-                        DrawTextWrap)(_In_ HDC, _Inout_ const wchar_t *,
-                                      _In_ int32_t, _Inout_ RECT *,
-                                      _In_ uint32_t, _In_ DRAWTEXTPARAMS *);
-        auto fn = reinterpret_cast<DrawTextWrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(415)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI *
+                            DrawTextWrap)(_In_ HDC, _Inout_ const wchar_t *,
+                                          _In_ int32_t, _Inout_ RECT *,
+                                          _In_ uint32_t, _In_ DRAWTEXTPARAMS *);
+            auto func = reinterpret_cast<DrawTextWrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(415)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            auto temp = helper::convert::str_to_wstr(text, code_page);
+            result = func(dc_handle, temp.data(),
+                          static_cast<int32_t>(temp.size()), rect,
+                          static_cast<uint32_t>(format), param);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        auto temp = helper::convert::str_to_wstr(text, code_page);
-        int32_t result =
-                fn(dc_handle, temp.data(), static_cast<int32_t>(temp.size()),
-                   rect, static_cast<uint32_t>(format), param);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -143,25 +163,35 @@ namespace YanLib::ui::components {
                                     RECT *rect,
                                     TextFormat format,
                                     DRAWTEXTPARAMS *param) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI *
-                        DrawTextWrap)(_In_ HDC, _Inout_ const wchar_t *,
-                                      _In_ int32_t, _Inout_ RECT *,
-                                      _In_ uint32_t, _In_ DRAWTEXTPARAMS *);
-        auto fn = reinterpret_cast<DrawTextWrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(415)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI *
+                            DrawTextWrap)(_In_ HDC, _Inout_ const wchar_t *,
+                                          _In_ int32_t, _Inout_ RECT *,
+                                          _In_ uint32_t, _In_ DRAWTEXTPARAMS *);
+            auto func = reinterpret_cast<DrawTextWrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(415)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            result = func(dc_handle, text.data(),
+                          static_cast<int32_t>(text.size()), rect,
+                          static_cast<uint32_t>(format), param);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        int32_t result =
-                fn(dc_handle, text.data(), static_cast<int32_t>(text.size()),
-                   rect, static_cast<uint32_t>(format), param);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -185,27 +215,37 @@ namespace YanLib::ui::components {
                                          TextFormat format,
                                          DRAWTEXTPARAMS *param,
                                          helper::CodePage code_page) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI *
-                        DrawTextExPrivWrap)(_In_ HDC, _Inout_ wchar_t *,
-                                            _In_ int32_t, _Inout_ RECT *,
-                                            _In_ uint32_t,
-                                            _In_ DRAWTEXTPARAMS *);
-        auto fn = reinterpret_cast<DrawTextExPrivWrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(416)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI *
+                            DrawTextExPrivWrap)(_In_ HDC, _Inout_ wchar_t *,
+                                                _In_ int32_t, _Inout_ RECT *,
+                                                _In_ uint32_t,
+                                                _In_ DRAWTEXTPARAMS *);
+            auto func = reinterpret_cast<DrawTextExPrivWrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(416)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            auto temp = helper::convert::str_to_wstr(text, code_page);
+            result = func(dc_handle, temp.data(),
+                          static_cast<int32_t>(temp.size()), rect,
+                          static_cast<uint32_t>(format), param);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        auto temp = helper::convert::str_to_wstr(text, code_page);
-        int32_t result =
-                fn(dc_handle, temp.data(), static_cast<int32_t>(temp.size()),
-                   rect, static_cast<uint32_t>(format), param);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -215,26 +255,36 @@ namespace YanLib::ui::components {
                                          RECT *rect,
                                          TextFormat format,
                                          DRAWTEXTPARAMS *param) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI *
-                        DrawTextExPrivWrap)(_In_ HDC, _Inout_ wchar_t *,
-                                            _In_ int32_t, _Inout_ RECT *,
-                                            _In_ uint32_t,
-                                            _In_ DRAWTEXTPARAMS *);
-        auto fn = reinterpret_cast<DrawTextExPrivWrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(416)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI *
+                            DrawTextExPrivWrap)(_In_ HDC, _Inout_ wchar_t *,
+                                                _In_ int32_t, _Inout_ RECT *,
+                                                _In_ uint32_t,
+                                                _In_ DRAWTEXTPARAMS *);
+            auto func = reinterpret_cast<DrawTextExPrivWrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(416)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            result = func(dc_handle, text.data(),
+                          static_cast<int32_t>(text.size()), rect,
+                          static_cast<uint32_t>(format), param);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        int32_t result =
-                fn(dc_handle, text.data(), static_cast<int32_t>(text.size()),
-                   rect, static_cast<uint32_t>(format), param);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -247,26 +297,37 @@ namespace YanLib::ui::components {
                                 std::string &text,
                                 const int32_t dx[],
                                 helper::CodePage code_page) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI *
-                        ExtTextOutWrap)(_In_ HDC, _In_ int32_t, _In_ int32_t,
-                                        _In_ uint32_t, _In_ const RECT *,
-                                        _In_ const wchar_t *, _In_ uint32_t,
-                                        _In_ const int32_t *);
-        auto fn = reinterpret_cast<ExtTextOutWrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(417)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI *
+                            ExtTextOutWrap)(_In_ HDC, _In_ int32_t,
+                                            _In_ int32_t, _In_ uint32_t,
+                                            _In_ const RECT *,
+                                            _In_ const wchar_t *, _In_ uint32_t,
+                                            _In_ const int32_t *);
+            auto func = reinterpret_cast<ExtTextOutWrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(417)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            auto temp = helper::convert::str_to_wstr(text, code_page);
+            result = func(dc_handle, x, y, static_cast<uint32_t>(option), rect,
+                          temp.data(), temp.size(), dx);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        auto temp = helper::convert::str_to_wstr(text, code_page);
-        int32_t result = fn(dc_handle, x, y, static_cast<uint32_t>(option),
-                            rect, temp.data(), temp.size(), dx);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -278,25 +339,36 @@ namespace YanLib::ui::components {
                                 const RECT *rect,
                                 std::wstring &text,
                                 const int32_t dx[]) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI *
-                        ExtTextOutWrap)(_In_ HDC, _In_ int32_t, _In_ int32_t,
-                                        _In_ uint32_t, _In_ const RECT *,
-                                        _In_ const wchar_t *, _In_ uint32_t,
-                                        _In_ const int32_t *);
-        auto fn = reinterpret_cast<ExtTextOutWrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(417)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(WINAPI *
+                            ExtTextOutWrap)(_In_ HDC, _In_ int32_t,
+                                            _In_ int32_t, _In_ uint32_t,
+                                            _In_ const RECT *,
+                                            _In_ const wchar_t *, _In_ uint32_t,
+                                            _In_ const int32_t *);
+            auto func = reinterpret_cast<ExtTextOutWrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(417)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            result = func(dc_handle, x, y, static_cast<uint32_t>(option), rect,
+                          text.data(), text.size(), dx);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        int32_t result = fn(dc_handle, x, y, static_cast<uint32_t>(option),
-                            rect, text.data(), text.size(), dx);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -305,24 +377,34 @@ namespace YanLib::ui::components {
                                                std::string &text,
                                                SIZE *size,
                                                helper::CodePage code_page) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI * GetTextExtentPoint32Wrap)(_In_ HDC,
-                                                           _In_ const wchar_t *,
-                                                           _In_ uint32_t,
-                                                           _Out_ SIZE *);
-        auto fn = reinterpret_cast<GetTextExtentPoint32Wrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(420)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(
+                    WINAPI *
+                    GetTextExtentPoint32Wrap)(_In_ HDC, _In_ const wchar_t *,
+                                              _In_ uint32_t, _Out_ SIZE *);
+            auto func = reinterpret_cast<GetTextExtentPoint32Wrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(420)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            auto temp = helper::convert::str_to_wstr(text, code_page);
+            result = func(dc_handle, temp.data(), temp.size(), size);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        auto temp = helper::convert::str_to_wstr(text, code_page);
-        int32_t result = fn(dc_handle, temp.data(), temp.size(), size);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -330,23 +412,33 @@ namespace YanLib::ui::components {
     bool general::get_text_extent_point32_wrap(HDC dc_handle,
                                                std::wstring &text,
                                                SIZE *size) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return false;
-        typedef int32_t(WINAPI * GetTextExtentPoint32Wrap)(_In_ HDC,
-                                                           _In_ const wchar_t *,
-                                                           _In_ uint32_t,
-                                                           _Out_ SIZE *);
-        auto fn = reinterpret_cast<GetTextExtentPoint32Wrap>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(420)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return false;
+        HMODULE comctl32 = nullptr;
+        int32_t result = 0;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef int32_t(
+                    WINAPI *
+                    GetTextExtentPoint32Wrap)(_In_ HDC, _In_ const wchar_t *,
+                                              _In_ uint32_t, _Out_ SIZE *);
+            auto func = reinterpret_cast<GetTextExtentPoint32Wrap>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(420)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            result = func(dc_handle, text.data(), text.size(), size);
+            if (!result) {
+                error_code = GetLastError();
+            }
         }
-        int32_t result = fn(dc_handle, text.data(), text.size(), size);
-        FreeLibrary(dll);
-        if (!result) {
-            error_code = GetLastError();
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
         }
         return result;
     }
@@ -370,18 +462,27 @@ namespace YanLib::ui::components {
     }
 
     void general::do_reader_mode(ReaderModeInfo *reader_mode_info) {
-        HMODULE dll = LoadLibraryW(L"Comctl32.dll");
-        if (dll == nullptr)
-            return;
-        typedef void(WINAPI * DoReaderMode)(_In_ ReaderModeInfo *);
-        auto fn = reinterpret_cast<DoReaderMode>(
-                GetProcAddress(dll, reinterpret_cast<const char *>(383)));
-        if (fn == nullptr) {
-            FreeLibrary(dll);
-            return;
+        HMODULE comctl32 = nullptr;
+        do {
+            comctl32 = LoadLibraryW(L"Comctl32.dll");
+            if (!comctl32) {
+                error_code = GetLastError();
+                break;
+            }
+            typedef void(WINAPI * DoReaderMode)(_In_ ReaderModeInfo *);
+            auto func = reinterpret_cast<DoReaderMode>(
+                    GetProcAddress(comctl32,
+                                   reinterpret_cast<const char *>(383)));
+            if (!func) {
+                error_code = GetLastError();
+                break;
+            }
+            func(reader_mode_info);
         }
-        fn(reader_mode_info);
-        FreeLibrary(dll);
+        while (false);
+        if (comctl32) {
+            FreeLibrary(comctl32);
+        }
     }
 
     void general::get_effective_client_rect(HWND window_handle,

@@ -10,7 +10,7 @@
 #include <vector>
 #include <unordered_map>
 #include "helper/convert.h"
-#pragma comment(lib, "WinInet.lib")
+#pragma comment(lib, "wininet.Lib")
 
 namespace YanLib::io {
     class http {

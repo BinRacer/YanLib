@@ -6,6 +6,19 @@
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    rich_edit::rich_edit() {
+        rich_edit_dll = LoadLibraryW(L"msftedit.dll");
+        if (!rich_edit_dll) {
+            error_code = GetLastError();
+        }
+    }
+
+    rich_edit::~rich_edit() {
+        if (rich_edit_dll) {
+            FreeLibrary(rich_edit_dll);
+        }
+    }
+
     HWND rich_edit::create(uintptr_t rich_edit_id,
                            HWND parent_window_handle,
                            LPARAM lparam,

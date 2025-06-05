@@ -6,6 +6,16 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui::core {
+    mouse::~mouse() {
+        for (auto &[hwnd, type] : pointers) {
+            if (static_cast<uint32_t>(type) != UINT32_MAX) {
+                UnregisterPointerInputTarget(hwnd, static_cast<uint32_t>(type));
+                hwnd = nullptr;
+                type = static_cast<PointerInputType>(UINT32_MAX);
+            }
+        }
+        pointers.clear();
+    }
     bool mouse::enable_pointer() {
         if (!EnableMouseInPointer(TRUE)) {
             error_code = GetLastError();
@@ -93,10 +103,21 @@ namespace YanLib::ui::core {
             error_code = GetLastError();
             return false;
         }
+        rwlock.write_lock();
+        pointers.emplace_back(window_handle, type);
+        rwlock.write_unlock();
         return true;
     }
 
     bool mouse::unregister_pointer(HWND window_handle, PointerInputType type) {
+        rwlock.write_lock();
+        const auto it = std::find(pointers.begin(), pointers.end(),
+                                  std::make_pair(window_handle, type));
+        if (it != pointers.end()) {
+            *it = std::make_pair(nullptr,
+                                 static_cast<PointerInputType>(UINT32_MAX));
+        }
+        rwlock.write_unlock();
         if (!UnregisterPointerInputTarget(window_handle,
                                           static_cast<POINTER_INPUT_TYPE>(
                                                   type))) {

@@ -5,7 +5,7 @@
 #include "fs.h"
 #include <memory>
 #include <shlwapi.h>
-#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "ShLwApi.Lib")
 
 namespace YanLib::io {
     void fs::remove_tail_slash(std::string &path) {

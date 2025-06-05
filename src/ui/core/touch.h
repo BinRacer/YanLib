@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-
+#include "sync/rwlock.h"
 namespace YanLib::ui::core {
 #ifndef REGISTERFLAG
 #define REGISTERFLAG
@@ -54,6 +54,10 @@ namespace YanLib::ui::core {
 #endif
     class touch {
     private:
+        std::vector<HSYNTHETICPOINTERDEVICE> device_handles = {};
+        std::vector<HWND> touch_handles = {};
+        sync::rwlock device_rwlock = {};
+        sync::rwlock touch_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -67,7 +71,7 @@ namespace YanLib::ui::core {
 
         touch() = default;
 
-        ~touch() = default;
+        ~touch();
 
         HSYNTHETICPOINTERDEVICE
         create_synthetic_pointer_device(

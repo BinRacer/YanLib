@@ -11,8 +11,8 @@
 #include <vector>
 #include <WtsApi32.h>
 #include <UserEnv.h>
-#pragma comment(lib, "WtsApi32.lib")
-#pragma comment(lib, "UserEnv.lib")
+#pragma comment(lib, "WtsApi32.Lib")
+#pragma comment(lib, "UserEnv.Lib")
 
 namespace YanLib::sys {
     security::~security() {

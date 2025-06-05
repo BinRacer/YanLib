@@ -312,6 +312,170 @@ namespace YanLib::ui::core {
         return static_cast<MessageBoxResult>(result);
     }
 
+    MessageBoxResult message::ok_cancel(HWND window_handle,
+                                        const char *text,
+                                        const char *caption,
+                                        MessageBoxType type) {
+        int32_t result = MessageBoxA(window_handle, text, caption,
+                                     static_cast<uint32_t>(
+                                             type | MessageBoxType::OkCancel));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::ok_cancel(HWND window_handle,
+                                        const wchar_t *text,
+                                        const wchar_t *caption,
+                                        MessageBoxType type) {
+        int32_t result = MessageBoxW(window_handle, text, caption,
+                                     static_cast<uint32_t>(
+                                             type | MessageBoxType::OkCancel));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::abort_retry_ignore(HWND window_handle,
+                                                 const char *text,
+                                                 const char *caption,
+                                                 MessageBoxType type) {
+        int32_t result =
+                MessageBoxA(window_handle, text, caption,
+                            static_cast<uint32_t>(
+                                    type | MessageBoxType::AbortRetryIgnore));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::abort_retry_ignore(HWND window_handle,
+                                                 const wchar_t *text,
+                                                 const wchar_t *caption,
+                                                 MessageBoxType type) {
+        int32_t result =
+                MessageBoxW(window_handle, text, caption,
+                            static_cast<uint32_t>(
+                                    type | MessageBoxType::AbortRetryIgnore));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::yes_no(HWND window_handle,
+                                     const char *text,
+                                     const char *caption,
+                                     MessageBoxType type) {
+        int32_t result = MessageBoxA(window_handle, text, caption,
+                                     static_cast<uint32_t>(
+                                             type | MessageBoxType::YesNo));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::yes_no(HWND window_handle,
+                                     const wchar_t *text,
+                                     const wchar_t *caption,
+                                     MessageBoxType type) {
+        int32_t result = MessageBoxW(window_handle, text, caption,
+                                     static_cast<uint32_t>(
+                                             type | MessageBoxType::YesNo));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::yes_no_cancel(HWND window_handle,
+                                            const char *text,
+                                            const char *caption,
+                                            MessageBoxType type) {
+        int32_t result =
+                MessageBoxA(window_handle, text, caption,
+                            static_cast<uint32_t>(type |
+                                                  MessageBoxType::YesNoCancel));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::yes_no_cancel(HWND window_handle,
+                                            const wchar_t *text,
+                                            const wchar_t *caption,
+                                            MessageBoxType type) {
+        int32_t result =
+                MessageBoxW(window_handle, text, caption,
+                            static_cast<uint32_t>(type |
+                                                  MessageBoxType::YesNoCancel));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::retry_cancel(HWND window_handle,
+                                           const char *text,
+                                           const char *caption,
+                                           MessageBoxType type) {
+        int32_t result =
+                MessageBoxA(window_handle, text, caption,
+                            static_cast<uint32_t>(type |
+                                                  MessageBoxType::RetryCancel));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::retry_cancel(HWND window_handle,
+                                           const wchar_t *text,
+                                           const wchar_t *caption,
+                                           MessageBoxType type) {
+        int32_t result =
+                MessageBoxW(window_handle, text, caption,
+                            static_cast<uint32_t>(type |
+                                                  MessageBoxType::RetryCancel));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::cancel_try_continue(HWND window_handle,
+                                                  const char *text,
+                                                  const char *caption,
+                                                  MessageBoxType type) {
+        int32_t result =
+                MessageBoxA(window_handle, text, caption,
+                            static_cast<uint32_t>(
+                                    type | MessageBoxType::CancelTryContinue));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
+    MessageBoxResult message::cancel_try_continue(HWND window_handle,
+                                                  const wchar_t *text,
+                                                  const wchar_t *caption,
+                                                  MessageBoxType type) {
+        int32_t result =
+                MessageBoxW(window_handle, text, caption,
+                            static_cast<uint32_t>(
+                                    type | MessageBoxType::CancelTryContinue));
+        if (!result) {
+            error_code = GetLastError();
+        }
+        return static_cast<MessageBoxResult>(result);
+    }
+
     MessageBoxResult message::box(HWND window_handle,
                                   const char *text,
                                   const char *caption,

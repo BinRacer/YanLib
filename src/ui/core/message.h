@@ -636,6 +636,78 @@ namespace YanLib::ui::core {
                              MessageBoxType type = MessageBoxType::Ok |
                                      MessageBoxType::IconInformation);
 
+        MessageBoxResult
+        ok_cancel(HWND window_handle,
+                  const char *text,
+                  const char *caption,
+                  MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        ok_cancel(HWND window_handle,
+                  const wchar_t *text,
+                  const wchar_t *caption,
+                  MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult abort_retry_ignore(
+                HWND window_handle,
+                const char *text,
+                const char *caption,
+                MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult abort_retry_ignore(
+                HWND window_handle,
+                const wchar_t *text,
+                const wchar_t *caption,
+                MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        yes_no(HWND window_handle,
+               const char *text,
+               const char *caption,
+               MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        yes_no(HWND window_handle,
+               const wchar_t *text,
+               const wchar_t *caption,
+               MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        yes_no_cancel(HWND window_handle,
+                      const char *text,
+                      const char *caption,
+                      MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        yes_no_cancel(HWND window_handle,
+                      const wchar_t *text,
+                      const wchar_t *caption,
+                      MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        retry_cancel(HWND window_handle,
+                     const char *text,
+                     const char *caption,
+                     MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult
+        retry_cancel(HWND window_handle,
+                     const wchar_t *text,
+                     const wchar_t *caption,
+                     MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult cancel_try_continue(
+                HWND window_handle,
+                const char *text,
+                const char *caption,
+                MessageBoxType type = MessageBoxType::IconInformation);
+
+        MessageBoxResult cancel_try_continue(
+                HWND window_handle,
+                const wchar_t *text,
+                const wchar_t *caption,
+                MessageBoxType type = MessageBoxType::IconInformation);
+
         // language_id = MAKELANGID(LANG_CHINESE, SUBLANG_DEFAULT);
         MessageBoxResult box(HWND window_handle,
                              const char *text,

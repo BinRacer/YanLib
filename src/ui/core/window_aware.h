@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <shellscalingapi.h>
 #include <string>
-
+#pragma comment(lib, "shcore.lib")
 namespace YanLib::ui::core {
     class window_aware {
     private:

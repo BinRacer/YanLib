@@ -6,12 +6,33 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui::core {
+    keyboard::~keyboard() {
+        for (auto &layout : layout_handles) {
+            if (layout) {
+                UnloadKeyboardLayout(layout);
+                layout = nullptr;
+            }
+        }
+        layout_handles.clear();
+        for (auto &[hwnd, id] : hotkeys) {
+            if (id >= 0) {
+                UnregisterHotKey(hwnd, id);
+                hwnd = nullptr;
+                id = -1;
+            }
+        }
+        hotkeys.clear();
+    }
     HKL keyboard::load_layout(KeyboardID id, KeyboardLayout layout) {
         HKL result = LoadKeyboardLayoutW(KbdIDToWString(id).data(),
                                          static_cast<uint32_t>(layout));
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        layout_rwlock.write_lock();
+        layout_handles.push_back(result);
+        layout_rwlock.write_unlock();
         return result;
     }
 
@@ -24,10 +45,20 @@ namespace YanLib::ui::core {
             error_code = GetLastError();
             return false;
         }
+        hotkey_rwlock.write_lock();
+        hotkeys.emplace_back(window_handle, id);
+        hotkey_rwlock.write_unlock();
         return true;
     }
 
     bool keyboard::unregister_hot_key(HWND window_handle, int32_t id) {
+        hotkey_rwlock.write_lock();
+        const auto it = std::find(hotkeys.begin(), hotkeys.end(),
+                                  std::make_pair(window_handle, id));
+        if (it != hotkeys.end()) {
+            *it = std::make_pair(nullptr, -1);
+        }
+        hotkey_rwlock.write_unlock();
         if (!UnregisterHotKey(window_handle, id)) {
             error_code = GetLastError();
             return false;
@@ -45,6 +76,16 @@ namespace YanLib::ui::core {
     }
 
     bool keyboard::unload_layout(HKL layout_handle) {
+        if (!layout_handle) {
+            return false;
+        }
+        layout_rwlock.write_lock();
+        const auto it = std::find(layout_handles.begin(), layout_handles.end(),
+                                  layout_handle);
+        if (it != layout_handles.end()) {
+            *it = nullptr;
+        }
+        layout_rwlock.write_unlock();
         if (!UnloadKeyboardLayout(layout_handle)) {
             error_code = GetLastError();
             return false;

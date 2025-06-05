@@ -254,6 +254,16 @@ add_library(YanLib STATIC
         src/ui/components/general.h
 )
 
+set_target_properties(YanLib PROPERTIES
+        DEBUG_POSTFIX "d"
+        COMPILE_DEFINITIONS_DEBUG "_DEBUG"
+)
+
+set_target_properties(YanLib PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/lib/Debug"
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib/Release"
+)
+
 target_include_directories(YanLib
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -264,8 +274,6 @@ target_include_directories(YanLib
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 include(FetchContent)
 

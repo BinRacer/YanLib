@@ -21,7 +21,7 @@
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "user32.lib")
-namespace YanLib::components {
+namespace YanLib::ui::components {
 #ifndef TDBUTTONFLAG
 #define TDBUTTONFLAG
     enum class TDButtonFlag : uint32_t {
@@ -278,5 +278,5 @@ namespace YanLib::components {
         static bool set_progress_state(HWND task_dialog_handle,
                                        ProgressState state);
     };
-} // namespace YanLib::components
+} // namespace YanLib::ui::components
 #endif // TASK_DIALOG_H

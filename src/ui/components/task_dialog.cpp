@@ -5,7 +5,7 @@
 #include "task_dialog.h"
 #include <windowsx.h>
 
-namespace YanLib::components {
+namespace YanLib::ui::components {
     bool task_dialog::create(HWND parent_window_handle,
                              HINSTANCE instance_handle,
                              TDButtonResult *button_result,
@@ -258,4 +258,4 @@ namespace YanLib::components {
         return SendMessageW(task_dialog_handle, TDM_SET_PROGRESS_BAR_STATE,
                             static_cast<uint32_t>(state), 0);
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

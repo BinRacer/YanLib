@@ -4,7 +4,7 @@
 
 #include "general.h"
 #include <windowsx.h>
-namespace YanLib::components {
+namespace YanLib::ui::components {
     bool general::init_common_controls(const INITCOMMONCONTROLSEX *icc) {
         return InitCommonControlsEx(icc);
     }
@@ -360,4 +360,4 @@ namespace YanLib::components {
         std::wstring result = helper::convert::err_wstring(error_code);
         return result;
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

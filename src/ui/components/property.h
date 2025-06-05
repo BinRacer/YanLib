@@ -22,7 +22,7 @@
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "user32.lib")
-namespace YanLib::components {
+namespace YanLib::ui::components {
 #ifndef PROPERTYHEADERFLAG
 #define PROPERTYHEADERFLAG
     enum class PropertyHeaderFlag : uint32_t {
@@ -364,5 +364,5 @@ namespace YanLib::components {
 
         static bool recalc_page_sizes(HWND property_handle);
     };
-} // namespace YanLib::components
+} // namespace YanLib::ui::components
 #endif // PROPERTY_H

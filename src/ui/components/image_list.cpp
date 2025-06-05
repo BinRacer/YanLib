@@ -5,7 +5,7 @@
 #include "image_list.h"
 #include <windowsx.h>
 
-namespace YanLib::components {
+namespace YanLib::ui::components {
     HIMAGELIST image_list::create(int32_t width,
                                   int32_t height,
                                   int32_t init,
@@ -317,4 +317,4 @@ namespace YanLib::components {
                                               COLORREF background) {
         return ImageList_SetBkColor(image_list_handle, background);
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

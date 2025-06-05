@@ -4,7 +4,7 @@
 
 #include "property.h"
 #include <windowsx.h>
-namespace YanLib::components {
+namespace YanLib::ui::components {
     PROPSHEETHEADERA
     property::make_header(const char *caption,
                           HWND parent_window_handle,
@@ -358,4 +358,4 @@ namespace YanLib::components {
     bool property::recalc_page_sizes(HWND property_handle) {
         return PropSheet_RecalcPageSizes(property_handle);
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

@@ -21,7 +21,7 @@
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "user32.lib")
-namespace YanLib::components {
+namespace YanLib::ui::components {
 #ifndef WINDOWSTYLE
 #define WINDOWSTYLE
 
@@ -548,5 +548,5 @@ namespace YanLib::components {
 
         [[nodiscard]] std::wstring err_wstring() const;
     };
-} // namespace YanLib::components
+} // namespace YanLib::ui::components
 #endif // TREE_H

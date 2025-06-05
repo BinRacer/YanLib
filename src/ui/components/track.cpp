@@ -5,7 +5,7 @@
 #include "track.h"
 #include <windowsx.h>
 #include "helper/convert.h"
-namespace YanLib::components {
+namespace YanLib::ui::components {
     HWND track::create(uintptr_t track_id,
                        HWND parent_window_handle,
                        LPARAM lparam,
@@ -290,4 +290,4 @@ namespace YanLib::components {
         std::wstring result = helper::convert::err_wstring(error_code);
         return result;
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

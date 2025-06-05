@@ -6,7 +6,7 @@
 #include <windowsx.h>
 #include <vector>
 #include "helper/convert.h"
-namespace YanLib::components {
+namespace YanLib::ui::components {
     HWND ip_addr::create(uintptr_t ip_addr_id,
                          HWND parent_window_handle,
                          LPARAM lparam,
@@ -235,4 +235,4 @@ namespace YanLib::components {
         std::wstring result = helper::convert::err_wstring(error_code);
         return result;
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

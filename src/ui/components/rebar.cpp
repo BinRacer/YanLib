@@ -5,7 +5,7 @@
 #include "rebar.h"
 #include <windowsx.h>
 
-namespace YanLib::components {
+namespace YanLib::ui::components {
     HWND rebar::create(HWND parent_window_handle,
                        LPARAM lparam,
                        int32_t x,
@@ -308,4 +308,4 @@ namespace YanLib::components {
         std::wstring result = helper::convert::err_wstring(error_code);
         return result;
     }
-} // namespace YanLib::components
+} // namespace YanLib::ui::components

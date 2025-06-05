@@ -779,5 +779,49 @@ namespace YanLib::ui::components {
                                 PFNDPASTREAM callback,
                                 void *data);
     };
+
+    class dsa {
+    public:
+        dsa(const dsa &other) = delete;
+
+        dsa(dsa &&other) = delete;
+
+        dsa &operator=(const dsa &other) = delete;
+
+        dsa &operator=(dsa &&other) = delete;
+
+        dsa() = default;
+
+        ~dsa() = default;
+
+        static HDSA create(int32_t item_size, int32_t item_count);
+
+        static HDSA clone(HDSA dsa_handle);
+
+        static int32_t insert_item(HDSA dsa_handle, int32_t index, void *item);
+
+        static bool get_item(HDSA dsa_handle, int32_t index, void *item);
+
+        static bool set_item(HDSA dsa_handle, int32_t index, void *item);
+
+        static void *get_item_ptr(HDSA dsa_handle, int32_t index);
+
+        static uint64_t get_size(HDSA dsa_handle);
+
+        static bool sort(HDSA dsa_handle, PFNDACOMPARE compare, LPARAM lparam);
+
+        static bool delete_item(HDSA dsa_handle, int32_t index);
+
+        static bool delete_all_items(HDSA dsa_handle);
+
+        static bool destroy(HDSA dsa_handle);
+
+        static void
+        enum_callback(HDSA dsa_handle, PFNDAENUMCALLBACK callback, void *data);
+
+        static void destroy_callback(HDSA dsa_handle,
+                                     PFNDAENUMCALLBACK callback,
+                                     void *data);
+    };
 } // namespace YanLib::ui::components
 #endif // GENERAL_H

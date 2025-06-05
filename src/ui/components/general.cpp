@@ -461,3 +461,62 @@ namespace YanLib::ui::components {
         return DPA_SaveStream(dpa_handle, callback, stream, data) == S_OK;
     }
 } // namespace YanLib::ui::components
+
+
+namespace YanLib::ui::components {
+    HDSA dsa::create(int32_t item_size, int32_t item_count) {
+        return DSA_Create(item_size, item_count);
+    }
+
+    HDSA dsa::clone(HDSA dsa_handle) {
+        return DSA_Clone(dsa_handle);
+    }
+
+    int32_t dsa::insert_item(HDSA dsa_handle, int32_t index, void *item) {
+        return DSA_InsertItem(dsa_handle, index, item);
+    }
+
+    bool dsa::get_item(HDSA dsa_handle, int32_t index, void *item) {
+        return DSA_GetItem(dsa_handle, index, item);
+    }
+
+    bool dsa::set_item(HDSA dsa_handle, int32_t index, void *item) {
+        return DSA_SetItem(dsa_handle, index, item);
+    }
+
+    void *dsa::get_item_ptr(HDSA dsa_handle, int32_t index) {
+        return DSA_GetItemPtr(dsa_handle, index);
+    }
+
+    uint64_t dsa::get_size(HDSA dsa_handle) {
+        return DSA_GetSize(dsa_handle);
+    }
+
+    bool dsa::sort(HDSA dsa_handle, PFNDACOMPARE compare, LPARAM lparam) {
+        return DSA_Sort(dsa_handle, compare, lparam);
+    }
+
+    bool dsa::delete_item(HDSA dsa_handle, int32_t index) {
+        return DSA_DeleteItem(dsa_handle, index);
+    }
+
+    bool dsa::delete_all_items(HDSA dsa_handle) {
+        return DSA_DeleteAllItems(dsa_handle);
+    }
+
+    bool dsa::destroy(HDSA dsa_handle) {
+        return DSA_Destroy(dsa_handle);
+    }
+
+    void dsa::enum_callback(HDSA dsa_handle,
+                            PFNDAENUMCALLBACK callback,
+                            void *data) {
+        DSA_EnumCallback(dsa_handle, callback, data);
+    }
+
+    void dsa::destroy_callback(HDSA dsa_handle,
+                               PFNDAENUMCALLBACK callback,
+                               void *data) {
+        DSA_DestroyCallback(dsa_handle, callback, data);
+    }
+} // namespace YanLib::ui::components

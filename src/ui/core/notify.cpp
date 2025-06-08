@@ -28,13 +28,14 @@ namespace YanLib::ui::core {
         }
         power2_handles.clear();
         for (auto &tooltip : tooltip_handles) {
-            if (tooltip) {
+            if (tooltip && IsWindow(tooltip)) {
                 RegisterForTooltipDismissNotification(tooltip, TDF_UNREGISTER);
                 tooltip = nullptr;
             }
         }
         tooltip_handles.clear();
     }
+
     HDEVNOTIFY notify::register_device(HWND window_handle,
                                        void *notify_filter,
                                        bool notify_all) {

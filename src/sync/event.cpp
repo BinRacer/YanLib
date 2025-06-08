@@ -17,8 +17,8 @@ namespace YanLib::sync {
     }
 
     bool event::create(SECURITY_ATTRIBUTES *sa,
-                       bool is_manual_reset,
-                       bool is_initial_state,
+                       const bool is_manual_reset,
+                       const bool is_initial_state,
                        const wchar_t *name) {
         event_handle = CreateEventW(sa, is_manual_reset ? TRUE : FALSE,
                                     is_initial_state ? TRUE : FALSE, name);
@@ -26,7 +26,9 @@ namespace YanLib::sync {
         return event_handle != nullptr;
     }
 
-    bool event::open(const wchar_t *name, EventAccess access, bool is_inherit) {
+    bool event::open(const wchar_t *name,
+                     EventAccess access,
+                     const bool is_inherit) {
         event_handle = OpenEventW(static_cast<uint32_t>(access),
                                   is_inherit ? TRUE : FALSE, name);
         error_code = GetLastError();
@@ -49,13 +51,13 @@ namespace YanLib::sync {
         return false;
     }
 
-    bool event::wait(uint32_t milli_seconds) {
+    bool event::wait(const uint32_t milli_seconds) {
         if (event_handle) {
-            uint32_t ret = WaitForSingleObject(event_handle, milli_seconds);
-            if (ret == WAIT_FAILED) {
+            if (const uint32_t ret =
+                        WaitForSingleObject(event_handle, milli_seconds);
+                ret == WAIT_FAILED) {
                 error_code = GetLastError();
-            }
-            else {
+            } else {
                 error_code = ret;
             }
         }

@@ -53,6 +53,8 @@ namespace YanLib::ui::gdi {
 
         static HPALETTE create_halftone(HDC dc_handle);
 
+        static bool destroy(HPALETTE palette_handle);
+
         static bool get_color_adjustment(HDC dc_handle,
                                          COLORADJUSTMENT *color_adjustment);
 

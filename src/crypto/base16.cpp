@@ -46,14 +46,14 @@ namespace YanLib::crypto {
     }
 
     std::string base16::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base16::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

@@ -49,6 +49,10 @@ namespace YanLib::ui::gdi {
         return result;
     }
 
+    bool pen::destroy(HPEN pen_handle) {
+        return DeleteObject(pen_handle);
+    }
+
     COLORREF pen::set_dc_color(HDC dc_handle, COLORREF color) {
         return SetDCPenColor(dc_handle, color);
     }

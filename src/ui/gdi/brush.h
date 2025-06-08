@@ -106,6 +106,8 @@ namespace YanLib::ui::gdi {
         static HBRUSH create_dib_pattern(const void *packed_dib,
                                          bool use_rgb = true);
 
+        static bool destroy(HBRUSH hbrush);
+
         static bool get_origin(HDC dc_handle, POINT *point);
 
         static bool

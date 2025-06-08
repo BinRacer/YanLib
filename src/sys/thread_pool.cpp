@@ -47,6 +47,7 @@ namespace YanLib::sys {
         if (!pool) {
             cleanup();
         }
+        bool result = false;
         do {
             pool = CreateThreadpool(nullptr);
             if (!pool) {
@@ -60,10 +61,9 @@ namespace YanLib::sys {
             SetThreadpoolThreadMaximum(pool, max);
             InitializeThreadpoolEnvironment(&env);
             SetThreadpoolCallbackPool(&env, pool);
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     void thread_pool::set_cleanup_group(
@@ -78,8 +78,7 @@ namespace YanLib::sys {
                 break;
             }
             SetThreadpoolCallbackCleanupGroup(&env, group, cgc_callback);
-        }
-        while (false);
+        } while (false);
     }
 
     void thread_pool::run_early() {
@@ -146,7 +145,7 @@ namespace YanLib::sys {
         SubmitThreadpoolWork(work);
     }
 
-    void thread_pool::wait_task(TP_WORK *work, bool is_cancel_pending) {
+    void thread_pool::wait_task(TP_WORK *work, const bool is_cancel_pending) {
         WaitForThreadpoolWorkCallbacks(work, is_cancel_pending ? TRUE : FALSE);
     }
 
@@ -169,7 +168,7 @@ namespace YanLib::sys {
     bool thread_pool::submit_timer_task(TP_TIMER *timer,
                                         FILETIME *due_time,
                                         uint32_t ms_period,
-                                        uint32_t window_length) {
+                                        const uint32_t window_length) {
         return SetThreadpoolTimerEx(timer, due_time, ms_period, window_length);
     }
 
@@ -177,7 +176,8 @@ namespace YanLib::sys {
         return IsThreadpoolTimerSet(timer);
     }
 
-    void thread_pool::wait_timer_task(TP_TIMER *timer, bool is_cancel_pending) {
+    void thread_pool::wait_timer_task(TP_TIMER *timer,
+                                      const bool is_cancel_pending) {
         WaitForThreadpoolTimerCallbacks(timer,
                                         is_cancel_pending ? TRUE : FALSE);
     }
@@ -207,7 +207,7 @@ namespace YanLib::sys {
         CancelThreadpoolIo(io);
     }
 
-    void thread_pool::wait_io_task(TP_IO *io, bool is_cancel_pending) {
+    void thread_pool::wait_io_task(TP_IO *io, const bool is_cancel_pending) {
         WaitForThreadpoolIoCallbacks(io, is_cancel_pending ? TRUE : FALSE);
     }
 
@@ -233,11 +233,12 @@ namespace YanLib::sys {
         SetThreadpoolWait(wait, handle, timeout);
     }
 
-    void thread_pool::wait_wait_task(TP_WAIT *wait, bool is_cancel_pending) {
+    void thread_pool::wait_wait_task(TP_WAIT *wait,
+                                     const bool is_cancel_pending) {
         WaitForThreadpoolWaitCallbacks(wait, is_cancel_pending ? TRUE : FALSE);
     }
 
-    void thread_pool::wait_cleanup_member(bool is_cancel_pending,
+    void thread_pool::wait_cleanup_member(const bool is_cancel_pending,
                                           void *context) const {
         CloseThreadpoolCleanupGroupMembers(group,
                                            is_cancel_pending ? TRUE : FALSE,

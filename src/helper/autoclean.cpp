@@ -24,8 +24,7 @@ namespace YanLib::helper {
             if (is_file && _value && _value != INVALID_HANDLE_VALUE) {
                 CloseHandle(_value);
                 _value = INVALID_HANDLE_VALUE;
-            }
-            else if (_value) {
+            } else if (_value) {
                 CloseHandle(_value);
                 _value = nullptr;
             }

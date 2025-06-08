@@ -19,9 +19,9 @@ namespace YanLib::sys {
 
     void *fiber::create(LPFIBER_START_ROUTINE start_addr,
                         void *params,
-                        size_t commit,
-                        size_t reserve,
-                        bool switch_float) {
+                        const size_t commit,
+                        const size_t reserve,
+                        const bool switch_float) {
         void *addr = CreateFiberEx(commit, reserve,
                                    switch_float ? FIBER_FLAG_FLOAT_SWITCH : 0,
                                    start_addr, params);
@@ -36,7 +36,7 @@ namespace YanLib::sys {
     }
 
     uint32_t fiber::fls_alloc(PFLS_CALLBACK_FUNCTION callback) {
-        uint32_t index = FlsAlloc(callback);
+        const uint32_t index = FlsAlloc(callback);
         if (index == FLS_OUT_OF_INDEXES) {
             error_code = GetLastError();
         }
@@ -86,7 +86,7 @@ namespace YanLib::sys {
         fiber_lock.read_lock();
     }
 
-    void *fiber::thread_to_fiber(void *params, bool switch_float) {
+    void *fiber::thread_to_fiber(void *params, const bool switch_float) {
         void *addr =
                 ConvertThreadToFiberEx(params,
                                        switch_float ? FIBER_FLAG_FLOAT_SWITCH
@@ -102,14 +102,15 @@ namespace YanLib::sys {
     }
 
     bool fiber::fiber_to_thread() {
-        void *addr = GetCurrentFiber();
+        const void *addr = GetCurrentFiber();
         if (!addr) {
             error_code = GetLastError();
             return false;
         }
         fiber_lock.write_lock();
-        const auto it = std::find(fiber_addrs.begin(), fiber_addrs.end(), addr);
-        if (it != fiber_addrs.end()) {
+        if (const auto it =
+                    std::find(fiber_addrs.begin(), fiber_addrs.end(), addr);
+            it != fiber_addrs.end()) {
             *it = nullptr;
         }
         fiber_lock.write_unlock();

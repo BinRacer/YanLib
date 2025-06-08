@@ -187,8 +187,7 @@ namespace YanLib::ui::core {
                 break;
             }
             result = func(cursor_dpi);
-        }
-        while (false);
+        } while (false);
         if (user32) {
             FreeLibrary(user32);
         }

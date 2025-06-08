@@ -6,27 +6,82 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui::core {
+    window_hook::~window_hook() {
+        for (auto &window : shell_handles) {
+            if (window && IsWindow(window)) {
+                DeregisterShellHookWindow(window);
+                window = nullptr;
+            }
+        }
+        shell_handles.clear();
+        for (auto &hook : hook_handles) {
+            if (hook) {
+                UnhookWindowsHookEx(hook);
+                hook = nullptr;
+            }
+        }
+        hook_handles.clear();
+        for (auto &event : event_handles) {
+            if (event) {
+                UnhookWinEvent(event);
+                event = nullptr;
+            }
+        }
+        event_handles.clear();
+    }
+
     bool window_hook::register_shell(HWND window_handle) {
-        return RegisterShellHookWindow(window_handle);
+        bool is_ok = RegisterShellHookWindow(window_handle);
+        if (!is_ok) {
+            return false;
+        }
+        shell_rwlock.write_lock();
+        shell_handles.push_back(window_handle);
+        shell_rwlock.write_unlock();
+        return true;
     }
 
     bool window_hook::unregister_shell(HWND window_handle) {
+        if (!window_handle) {
+            return false;
+        }
+        shell_rwlock.write_lock();
+        const auto it = std::find(shell_handles.begin(), shell_handles.end(),
+                                  window_handle);
+        if (it != shell_handles.end()) {
+            *it = nullptr;
+        }
+        shell_rwlock.write_unlock();
         return DeregisterShellHookWindow(window_handle);
     }
 
-    HHOOK window_hook::set(HOOKPROC hook_proc,
-                           HINSTANCE dll_handle,
-                           uint32_t tid,
-                           HookType hook_type) {
+    HHOOK window_hook::set_hook(HOOKPROC hook_proc,
+                                HINSTANCE dll_handle,
+                                uint32_t tid,
+                                HookType hook_type) {
         HHOOK result = SetWindowsHookExW(static_cast<int32_t>(hook_type),
                                          hook_proc, dll_handle, tid);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        hook_rwlock.write_lock();
+        hook_handles.push_back(result);
+        hook_rwlock.write_unlock();
         return result;
     }
 
-    bool window_hook::unset(HHOOK hook_handle) {
+    bool window_hook::unset_hook(HHOOK hook_handle) {
+        if (!hook_handle) {
+            return false;
+        }
+        hook_rwlock.write_lock();
+        const auto it = std::find(hook_handles.begin(), hook_handles.end(),
+                                  hook_handle);
+        if (it != hook_handles.end()) {
+            *it = nullptr;
+        }
+        hook_rwlock.write_unlock();
         if (!UnhookWindowsHookEx(hook_handle)) {
             error_code = GetLastError();
             return false;
@@ -48,13 +103,30 @@ namespace YanLib::ui::core {
                                          WindowEvent min,
                                          WindowEvent max,
                                          EventFlag flag) {
-        return SetWinEventHook(static_cast<uint32_t>(min),
-                               static_cast<uint32_t>(max), dll_handle,
-                               event_proc, pid, tid,
-                               static_cast<uint32_t>(flag));
+        HWINEVENTHOOK result = SetWinEventHook(static_cast<uint32_t>(min),
+                                               static_cast<uint32_t>(max),
+                                               dll_handle, event_proc, pid, tid,
+                                               static_cast<uint32_t>(flag));
+        if (!result) {
+            return nullptr;
+        }
+        event_rwlock.write_lock();
+        event_handles.push_back(result);
+        event_rwlock.write_unlock();
+        return result;
     }
 
     bool window_hook::unset_event(HWINEVENTHOOK event_hook) {
+        if (!event_hook) {
+            return nullptr;
+        }
+        event_rwlock.write_lock();
+        const auto it = std::find(event_handles.begin(), event_handles.end(),
+                                  event_hook);
+        if (it != event_handles.end()) {
+            *it = nullptr;
+        }
+        event_rwlock.write_unlock();
         return UnhookWinEvent(event_hook);
     }
 

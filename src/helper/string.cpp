@@ -13,7 +13,8 @@ namespace YanLib::helper {
         if (text.empty())
             return false;
 
-        auto case_insensitive_compare = [](wchar_t a, wchar_t b) -> bool {
+        auto case_insensitive_compare = [](const wchar_t a,
+                                           const wchar_t b) -> bool {
             return std::towlower(a) == std::towlower(b);
         };
         const auto it = std::search(text.begin(), text.end(), substr.begin(),
@@ -25,7 +26,8 @@ namespace YanLib::helper {
         if (!text || !substr || wcslen(text) == 0 || wcslen(substr) == 0)
             return false;
 
-        auto case_insensitive_compare = [](wchar_t a, wchar_t b) -> bool {
+        auto case_insensitive_compare = [](const wchar_t a,
+                                           const wchar_t b) -> bool {
             return std::towlower(a) == std::towlower(b);
         };
 

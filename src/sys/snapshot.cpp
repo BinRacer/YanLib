@@ -18,7 +18,7 @@ namespace YanLib::sys {
         }
     }
 
-    std::vector<PROCESSENTRY32W> snapshot::ls_procs(uint32_t pid) {
+    std::vector<PROCESSENTRY32W> snapshot::ls_procs(const uint32_t pid) {
         if (!procs.empty()) {
             return procs;
         }
@@ -38,17 +38,16 @@ namespace YanLib::sys {
             while (Process32NextW(snapshot_handle, &pe)) {
                 procs.push_back(pe);
             }
-        }
-        while (false);
+        } while (false);
         return procs;
     }
 
-    std::unordered_set<uint32_t> snapshot::ls_pids(uint32_t pid) {
+    std::unordered_set<uint32_t> snapshot::ls_pids(const uint32_t pid) {
         if (!pids.empty()) {
             return pids;
         }
         if (!procs.empty()) {
-            for (auto process : procs) {
+            for (const auto process : procs) {
                 pids.insert(process.th32ProcessID);
             }
             return pids;
@@ -69,8 +68,7 @@ namespace YanLib::sys {
             while (Process32NextW(snapshot_handle, &pe)) {
                 pids.insert(pe.th32ProcessID);
             }
-        }
-        while (false);
+        } while (false);
         return pids;
     }
 
@@ -79,18 +77,18 @@ namespace YanLib::sys {
         pids.clear();
     }
 
-    bool snapshot::pid_exists(uint32_t pid) {
+    bool snapshot::pid_exists(const uint32_t pid) {
         if (pids.empty()) {
             ls_pids();
         }
         return pids.find(pid) != pids.end();
     }
 
-    uint32_t snapshot::get_ppid(uint32_t pid) {
+    uint32_t snapshot::get_ppid(const uint32_t pid) {
         if (procs.empty()) {
             ls_procs();
         }
-        for (auto process : procs) {
+        for (const auto process : procs) {
             if (process.th32ProcessID == pid) {
                 return process.th32ParentProcessID;
             }
@@ -98,11 +96,11 @@ namespace YanLib::sys {
         return 0;
     }
 
-    PROCESSENTRY32W snapshot::find_proc(uint32_t pid) {
+    PROCESSENTRY32W snapshot::find_proc(const uint32_t pid) {
         if (procs.empty()) {
             ls_procs();
         }
-        for (auto process : procs) {
+        for (const auto process : procs) {
             if (process.th32ProcessID == pid) {
                 return process;
             }
@@ -117,7 +115,7 @@ namespace YanLib::sys {
         if (procs.empty()) {
             ls_procs();
         }
-        for (auto process : procs) {
+        for (const auto process : procs) {
             if (helper::string::strstri(process.szExeFile, proc_name)) {
                 return process;
             }
@@ -125,7 +123,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<THREADENTRY32> snapshot::ls_threads(uint32_t pid) {
+    std::vector<THREADENTRY32> snapshot::ls_threads(const uint32_t pid) {
         if (!threads.empty()) {
             return threads;
         }
@@ -145,17 +143,16 @@ namespace YanLib::sys {
             while (Thread32Next(snapshot_handle, &te)) {
                 threads.push_back(te);
             }
-        }
-        while (false);
+        } while (false);
         return threads;
     }
 
-    std::unordered_set<uint32_t> snapshot::ls_thread_ids(uint32_t pid) {
+    std::unordered_set<uint32_t> snapshot::ls_thread_ids(const uint32_t pid) {
         if (!thread_ids.empty()) {
             return thread_ids;
         }
         if (!threads.empty()) {
-            for (auto thread : threads) {
+            for (const auto thread : threads) {
                 thread_ids.insert(thread.th32ThreadID);
             }
             return thread_ids;
@@ -176,8 +173,7 @@ namespace YanLib::sys {
             while (Thread32Next(snapshot_handle, &te)) {
                 thread_ids.insert(te.th32ThreadID);
             }
-        }
-        while (false);
+        } while (false);
         return thread_ids;
     }
 
@@ -197,7 +193,7 @@ namespace YanLib::sys {
         if (threads.empty()) {
             ls_threads();
         }
-        for (auto thread : threads) {
+        for (const auto thread : threads) {
             if (thread.th32ThreadID == tid) {
                 return thread.th32OwnerProcessID;
             }
@@ -209,7 +205,7 @@ namespace YanLib::sys {
         if (threads.empty()) {
             ls_threads();
         }
-        for (auto thread : threads) {
+        for (const auto thread : threads) {
             if (thread.th32ThreadID == tid) {
                 return thread;
             }
@@ -217,7 +213,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<THREADENTRY32> snapshot::find_threads(uint32_t pid) {
+    std::vector<THREADENTRY32> snapshot::find_threads(const uint32_t pid) {
         if (threads.empty()) {
             ls_threads();
         }
@@ -230,7 +226,7 @@ namespace YanLib::sys {
         return result;
     }
 
-    std::vector<MODULEENTRY32W> snapshot::ls_modules(uint32_t pid) {
+    std::vector<MODULEENTRY32W> snapshot::ls_modules(const uint32_t pid) {
         if (!modules.empty()) {
             return modules;
         }
@@ -250,12 +246,12 @@ namespace YanLib::sys {
             while (Module32NextW(snapshot_handle, &me)) {
                 modules.push_back(me);
             }
-        }
-        while (false);
+        } while (false);
         return modules;
     }
 
-    std::unordered_set<HMODULE> snapshot::ls_module_handles(uint32_t pid) {
+    std::unordered_set<HMODULE>
+    snapshot::ls_module_handles(const uint32_t pid) {
         if (!module_handles.empty()) {
             return module_handles;
         }
@@ -281,8 +277,7 @@ namespace YanLib::sys {
             while (Module32NextW(snapshot_handle, &me)) {
                 module_handles.insert(me.hModule);
             }
-        }
-        while (false);
+        } while (false);
         return module_handles;
     }
 
@@ -298,7 +293,7 @@ namespace YanLib::sys {
         if (modules.empty()) {
             ls_modules();
         }
-        for (auto module : modules) {
+        for (const auto module : modules) {
             if (helper::string::strstri(module.szModule, proc_name) ||
                 helper::string::strstri(module.szExePath, proc_name)) {
                 return module;
@@ -314,7 +309,7 @@ namespace YanLib::sys {
         if (modules.empty()) {
             ls_modules();
         }
-        for (auto module : modules) {
+        for (const auto module : modules) {
             if (module.modBaseAddr == address) {
                 return module;
             }
@@ -322,7 +317,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<HEAPLIST32> snapshot::ls_heaps(uint32_t pid) {
+    std::vector<HEAPLIST32> snapshot::ls_heaps(const uint32_t pid) {
         if (!heaps.empty()) {
             return heaps;
         }
@@ -343,12 +338,11 @@ namespace YanLib::sys {
             while (Heap32ListNext(snapshot_handle, &he)) {
                 heaps.push_back(he);
             }
-        }
-        while (false);
+        } while (false);
         return heaps;
     }
 
-    std::unordered_set<uintptr_t> snapshot::ls_heap_ids(uint32_t pid) {
+    std::unordered_set<uintptr_t> snapshot::ls_heap_ids(const uint32_t pid) {
         if (!heap_ids.empty()) {
             return heap_ids;
         }
@@ -375,8 +369,7 @@ namespace YanLib::sys {
             while (Heap32ListNext(snapshot_handle, &he)) {
                 heap_ids.insert(he.th32HeapID);
             }
-        }
-        while (false);
+        } while (false);
         return heap_ids;
     }
 
@@ -389,7 +382,7 @@ namespace YanLib::sys {
         if (heaps.empty()) {
             ls_heaps();
         }
-        for (auto heap : heaps) {
+        for (const auto heap : heaps) {
             if (heap.th32HeapID == heap_id) {
                 return heap;
             }
@@ -397,7 +390,7 @@ namespace YanLib::sys {
         return {};
     }
 
-    std::vector<HEAPLIST32> snapshot::find_heaps(uint32_t pid) {
+    std::vector<HEAPLIST32> snapshot::find_heaps(const uint32_t pid) {
         if (heaps.empty()) {
             ls_heaps();
         }
@@ -410,7 +403,8 @@ namespace YanLib::sys {
         return result;
     }
 
-    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(HEAPLIST32 &heap_list) {
+    std::vector<HEAPENTRY32>
+    snapshot::find_heap_blocks(const HEAPLIST32 &heap_list) {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
@@ -423,8 +417,7 @@ namespace YanLib::sys {
             while (Heap32Next(&he)) {
                 result.push_back(he);
             }
-        }
-        while (false);
+        } while (false);
         return result;
     }
 
@@ -432,8 +425,8 @@ namespace YanLib::sys {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
-            HEAPLIST32 heaplist32 = find_heap(heap_id);
-            if (!Heap32First(&he, heaplist32.th32ProcessID, heap_id)) {
+            if (const HEAPLIST32 heap32 = find_heap(heap_id);
+                !Heap32First(&he, heap32.th32ProcessID, heap_id)) {
                 error_code = GetLastError();
                 break;
             }
@@ -441,20 +434,19 @@ namespace YanLib::sys {
             while (Heap32Next(&he)) {
                 result.push_back(he);
             }
-        }
-        while (false);
+        } while (false);
         return result;
     }
 
-    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(uint32_t pid) {
+    std::vector<HEAPENTRY32> snapshot::find_heap_blocks(const uint32_t pid) {
         HEAPENTRY32 he = {sizeof(HEAPENTRY32)};
         std::vector<HEAPENTRY32> result;
         do {
-            auto heaplists = find_heaps(pid);
+            const auto heaplists = find_heaps(pid);
             if (heaplists.empty()) {
                 break;
             }
-            for (auto heaplist : heaplists) {
+            for (const auto heaplist : heaplists) {
                 if (!Heap32First(&he, heaplist.th32ProcessID,
                                  heaplist.th32HeapID)) {
                     error_code = GetLastError();
@@ -465,13 +457,14 @@ namespace YanLib::sys {
                     result.push_back(he);
                 }
             }
-        }
-        while (false);
+        } while (false);
         return result;
     }
 
     HANDLE
-    snapshot::pid_to_handle(uint32_t pid, ProcAccess access, bool is_inherit) {
+    snapshot::pid_to_handle(uint32_t pid,
+                            ProcAccess access,
+                            const bool is_inherit) {
         HANDLE proc_handle = OpenProcess(static_cast<uint32_t>(access),
                                          is_inherit ? TRUE : FALSE, pid);
         if (!proc_handle) {
@@ -481,14 +474,14 @@ namespace YanLib::sys {
     }
 
     uint32_t snapshot::handle_to_pid(HANDLE proc_handle) {
-        uint32_t pid = GetProcessId(proc_handle);
+        const uint32_t pid = GetProcessId(proc_handle);
         if (!pid) {
             error_code = GetLastError();
         }
         return pid;
     }
 
-    bool snapshot::is_heap(HANDLE proc_handle, void *address) {
+    bool snapshot::is_heap(HANDLE proc_handle, const void *address) {
         if (!proc_handle) {
             return false;
         }
@@ -496,11 +489,11 @@ namespace YanLib::sys {
         if (!pid) {
             return false;
         }
-        std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
+        const std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
         if (blocks.empty()) {
             return false;
         }
-        for (auto block : blocks) {
+        for (const auto block : blocks) {
             MEMORY_BASIC_INFORMATION mbi;
             if (!VirtualQueryEx(proc_handle,
                                 reinterpret_cast<void *>(block.dwAddress), &mbi,
@@ -517,22 +510,21 @@ namespace YanLib::sys {
         return false;
     }
 
-    bool snapshot::is_heap(uint32_t pid, void *address) {
+    bool snapshot::is_heap(uint32_t pid, const void *address) {
         HANDLE proc_handle = nullptr;
         if (GetCurrentProcessId() == pid) {
             proc_handle = GetCurrentProcess();
-        }
-        else {
+        } else {
             proc_handle = pid_to_handle(pid);
         }
         if (!proc_handle) {
             return false;
         }
-        std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
+        const std::vector<HEAPENTRY32> blocks = find_heap_blocks(pid);
         if (blocks.empty()) {
             return false;
         }
-        for (auto block : blocks) {
+        for (const auto block : blocks) {
             MEMORY_BASIC_INFORMATION mbi;
             if (!VirtualQueryEx(proc_handle,
                                 reinterpret_cast<void *>(block.dwAddress), &mbi,

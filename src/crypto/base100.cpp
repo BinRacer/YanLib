@@ -12,7 +12,7 @@ namespace YanLib::crypto {
         result.reserve(data.size() * 4);
 
         for (const auto ch : data) {
-            uint32_t temp = static_cast<uint32_t>(ch) + 55;
+            const uint32_t temp = static_cast<uint32_t>(ch) + 55;
             uint8_t byte3 = (temp >> 6) + 143;
             uint8_t byte4 = (temp & 0x3F) + 128;
 
@@ -35,8 +35,8 @@ namespace YanLib::crypto {
             if (data[i] != 0xF0 || data[i + 1] != 0x9F)
                 return {};
 
-            uint8_t byte3 = data[i + 2];
-            uint8_t byte4 = data[i + 3];
+            const uint8_t byte3 = data[i + 2];
+            const uint8_t byte4 = data[i + 3];
 
             int32_t decoded = ((byte3 - 143) << 6) | (byte4 - 128);
             decoded -= 55;
@@ -50,14 +50,14 @@ namespace YanLib::crypto {
     }
 
     std::string base100::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base100::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

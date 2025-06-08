@@ -7,7 +7,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::io {
-    tcp_client::tcp_client(bool active_ipv6) {
+    tcp_client::tcp_client(const bool active_ipv6) {
         do {
             is_ipv6 = active_ipv6;
             error_code = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -20,8 +20,7 @@ namespace YanLib::io {
             }
             if (active_ipv6) {
                 client_socket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
-            }
-            else {
+            } else {
                 client_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             }
             if (client_socket == INVALID_SOCKET) {
@@ -29,8 +28,7 @@ namespace YanLib::io {
                 break;
             }
             init_done = true;
-        }
-        while (false);
+        } while (false);
         init_done = false;
     }
 
@@ -44,7 +42,8 @@ namespace YanLib::io {
         return init_done;
     }
 
-    bool tcp_client::connect(const char *remote_ip, uint16_t remote_port) {
+    bool tcp_client::connect(const char *remote_ip,
+                             const uint16_t remote_port) {
         if (!init_done) {
             return false;
         }
@@ -62,8 +61,7 @@ namespace YanLib::io {
                 return false;
             }
             return true;
-        }
-        else {
+        } else {
             sockaddr_in addr{};
             addr.sin_family = AF_INET;
             addr.sin_port = htons(remote_port);
@@ -80,16 +78,17 @@ namespace YanLib::io {
         }
     }
 
-    int32_t tcp_client::read(char *buf, int32_t len, int32_t flags) {
-        int32_t number_of_bytes = recv(client_socket, buf, len, flags);
+    int32_t tcp_client::read(char *buf, int32_t len, const int32_t flags) {
+        const int32_t number_of_bytes = recv(client_socket, buf, len, flags);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
         return number_of_bytes;
     }
 
-    int32_t tcp_client::write(const char *buf, int32_t len, int32_t flags) {
-        int32_t number_of_bytes = send(client_socket, buf, len, flags);
+    int32_t
+    tcp_client::write(const char *buf, int32_t len, const int32_t flags) {
+        const int32_t number_of_bytes = send(client_socket, buf, len, flags);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
@@ -101,7 +100,7 @@ namespace YanLib::io {
             buffer_size = 1024;
         }
         std::string raw_data(buffer_size, '\0');
-        int32_t bytes_read = read(raw_data.data(), buffer_size);
+        const int32_t bytes_read = read(raw_data.data(), buffer_size);
         if (bytes_read == SOCKET_ERROR) {
             error_code = WSAGetLastError();
             return {};
@@ -125,13 +124,12 @@ namespace YanLib::io {
             }
             raw_data.insert(raw_data.end(), buf.data(),
                             buf.data() + bytes_read);
-        }
-        while (bytes_read > 0);
+        } while (bytes_read > 0);
         raw_data.shrink_to_fit();
         return raw_data;
     }
 
-    int32_t tcp_client::write_string(std::string &str) {
+    int32_t tcp_client::write_string(const std::string &str) {
         if (str.empty()) {
             return 0;
         }

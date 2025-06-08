@@ -58,12 +58,16 @@ namespace YanLib::ui::gdi {
 
         static HRGN create_rect(const RECT *rect);
 
+        static bool destroy_rect(HRGN region_handle);
+
         static HRGN create_round_rect(int32_t left,
                                       int32_t top,
                                       int32_t right,
                                       int32_t bottom,
                                       int32_t width,
                                       int32_t height);
+
+        static bool destroy_round_rect(HRGN region_handle);
 
         static HRGN create_elliptic(int32_t left,
                                     int32_t top,
@@ -72,18 +76,26 @@ namespace YanLib::ui::gdi {
 
         static HRGN create_elliptic(const RECT *rect);
 
+        static bool destroy_elliptic(HRGN region_handle);
+
         static HRGN create_polygon(const std::vector<POINT> &point,
                                    FillMode mode);
+
+        static bool destroy_polygon(HRGN region_handle);
 
         static HRGN create_poly_polygon(const std::vector<POINT> &point,
                                         const std::vector<int32_t> &poly_count,
                                         FillMode mode);
+
+        static bool destroy_poly_polygon(HRGN region_handle);
 
         static bool
         fill(HDC dc_handle, HRGN region_handle, HBRUSH brush_handle);
 
         static HRGN
         create(const XFORM *xfrom, const RGNDATA *buf, uint32_t size);
+
+        static bool destroy(HRGN region_handle);
 
         static bool frame(HDC dc_handle,
                           HRGN region_handle,

@@ -45,7 +45,7 @@ namespace YanLib::sync {
         bool enter(BarrierFlag flag = BarrierFlag::BlockOnly);
 
         bool wait(uint32_t count,
-                  const HANDLE *handles,
+                  HANDLE handles[],
                   bool wait_all = false,
                   uint32_t milli_seconds = INFINITE);
 

@@ -55,7 +55,7 @@ namespace YanLib::io {
         }
     }
 
-    bool http::url_crack(uint32_t flag) {
+    bool http::url_crack(const uint32_t flag) {
         if (!InternetCrackUrlW(url.data(), url.size(), flag, &uc)) {
             error_code = GetLastError();
             return false;
@@ -65,7 +65,7 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::add_header(const char *headers, uint32_t headers_length) {
+    bool http::add_header(const char *headers, const uint32_t headers_length) {
         if (!HttpAddRequestHeadersA(request_handle, headers, headers_length,
                                     HTTP_ADDREQ_FLAG_ADD)) {
             error_code = GetLastError();
@@ -74,7 +74,8 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::add_header(const wchar_t *headers, uint32_t headers_length) {
+    bool http::add_header(const wchar_t *headers,
+                          const uint32_t headers_length) {
         if (!HttpAddRequestHeadersW(request_handle, headers, headers_length,
                                     HTTP_ADDREQ_FLAG_ADD)) {
             error_code = GetLastError();
@@ -185,8 +186,8 @@ namespace YanLib::io {
         }
 
         // convert to utf-8
-        int32_t len = WideCharToMultiByte(CP_UTF8, 0, buffer.data(), -1,
-                                          nullptr, 0, nullptr, nullptr);
+        const int32_t len = WideCharToMultiByte(CP_UTF8, 0, buffer.data(), -1,
+                                                nullptr, 0, nullptr, nullptr);
         std::string utf8_str(len, 0);
         WideCharToMultiByte(CP_UTF8, 0, buffer.data(), -1, utf8_str.data(), len,
                             nullptr, nullptr);
@@ -195,15 +196,15 @@ namespace YanLib::io {
         // split lines by CRLF
         size_t pos = 0;
         while (pos < utf8_str.size()) {
-            size_t end = utf8_str.find("\r\n", pos);
+            const size_t end = utf8_str.find("\r\n", pos);
             if (end == std::string::npos)
                 break;
 
             std::string line = utf8_str.substr(pos, end - pos);
             pos = end + 2;
 
-            size_t colon = line.find(':');
-            if (colon != std::string::npos) {
+            if (const size_t colon = line.find(':');
+                colon != std::string::npos) {
                 std::string key = line.substr(0, colon);
                 std::string value = line.substr(colon + 1);
 
@@ -226,12 +227,9 @@ namespace YanLib::io {
         if (!get_headers(src_map))
             return false;
         headers.clear();
-        for (const auto &pair : src_map) {
-            std::wstring key =
-                    helper::convert::str_to_wstr(pair.first, code_page);
-            std::wstring value =
-                    helper::convert::str_to_wstr(pair.second, code_page);
-            headers.emplace(std::move(key), std::move(value));
+        for (const auto &[key, value] : src_map) {
+            headers.emplace(helper::convert::str_to_wstr(key, code_page),
+                            helper::convert::str_to_wstr(value, code_page));
         }
         return true;
     }
@@ -254,8 +252,8 @@ namespace YanLib::io {
         }
 
         // convert to utf-8
-        int32_t len = WideCharToMultiByte(CP_UTF8, 0, buffer.data(), -1,
-                                          nullptr, 0, nullptr, nullptr);
+        const int32_t len = WideCharToMultiByte(CP_UTF8, 0, buffer.data(), -1,
+                                                nullptr, 0, nullptr, nullptr);
         std::string utf8_str(len, 0);
         WideCharToMultiByte(CP_UTF8, 0, buffer.data(), -1, utf8_str.data(), len,
                             nullptr, nullptr);
@@ -264,7 +262,7 @@ namespace YanLib::io {
         // split lines by CRLF
         size_t pos = 0;
         while (pos < utf8_str.size()) {
-            size_t end = utf8_str.find("\r\n", pos);
+            const size_t end = utf8_str.find("\r\n", pos);
             if (end == std::string::npos)
                 break;
 
@@ -315,10 +313,10 @@ namespace YanLib::io {
     }
 
     bool http::open(const char *agent_name,
-                    uint32_t access_type,
+                    const uint32_t access_type,
                     const char *proxy,
                     const char *proxy_bypass,
-                    uint32_t flag) {
+                    const uint32_t flag) {
         internet_handle = InternetOpenA(agent_name, access_type, proxy,
                                         proxy_bypass, flag);
         if (!internet_handle) {
@@ -329,10 +327,10 @@ namespace YanLib::io {
     }
 
     bool http::open(const wchar_t *agent_name,
-                    uint32_t access_type,
+                    const uint32_t access_type,
                     const wchar_t *proxy,
                     const wchar_t *proxy_bypass,
-                    uint32_t flag) {
+                    const uint32_t flag) {
         internet_handle = InternetOpenW(agent_name, access_type, proxy,
                                         proxy_bypass, flag);
         if (!internet_handle) {
@@ -342,7 +340,9 @@ namespace YanLib::io {
         return true;
     }
 
-    bool http::connect(uint32_t service, uint32_t flag, uintptr_t context) {
+    bool http::connect(const uint32_t service,
+                       const uint32_t flag,
+                       const uintptr_t context) {
         connect_handle =
                 InternetConnectW(internet_handle, hostname, port,
                                  wcslen(username) == 0 ? nullptr : username,
@@ -360,12 +360,13 @@ namespace YanLib::io {
                             const char *referrer,
                             const char **accept_types,
                             uint32_t flag,
-                            uintptr_t context,
+                            const uintptr_t context,
                             helper::CodePage code_page) {
         if (wcslen(extra_info) > 0) {
             wcscat_s(urlpath, _countof(urlpath) - 1, extra_info);
         }
-        std::string url = helper::convert::wstr_to_str(urlpath, code_page);
+        const std::string url =
+                helper::convert::wstr_to_str(urlpath, code_page);
         if (is_https) {
             flag = flag | INTERNET_FLAG_SECURE |
                     INTERNET_FLAG_IGNORE_CERT_CN_INVALID;
@@ -385,7 +386,7 @@ namespace YanLib::io {
                             const wchar_t *referrer,
                             const wchar_t **accept_types,
                             uint32_t flag,
-                            uintptr_t context) {
+                            const uintptr_t context) {
         if (wcslen(extra_info) > 0) {
             wcscat_s(urlpath, _countof(urlpath) - 1, extra_info);
         }
@@ -408,9 +409,10 @@ namespace YanLib::io {
     uint32_t http::get_content_length() {
         uint32_t content_length = 0;
         unsigned long buffer_size = sizeof(content_length);
-        uint32_t flags = HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER;
 
-        if (!HttpQueryInfoW(request_handle, flags, &content_length,
+        if (constexpr uint32_t flags =
+                    HTTP_QUERY_CONTENT_LENGTH | HTTP_QUERY_FLAG_NUMBER;
+            !HttpQueryInfoW(request_handle, flags, &content_length,
                             &buffer_size, nullptr)) {
             error_code = GetLastError();
             return 0;
@@ -420,10 +422,11 @@ namespace YanLib::io {
 
     // support http and https
     bool http::send_request(const char *headers,
-                            uint32_t headers_length,
+                            const uint32_t headers_length,
                             void *optional,
-                            uint32_t optional_length) {
+                            const uint32_t optional_length) {
         if (is_https) {
+            bool result = false;
             do {
                 uint32_t flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
                         SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
@@ -436,12 +439,10 @@ namespace YanLib::io {
                     error_code = GetLastError();
                     break;
                 }
-                return true;
-            }
-            while (false);
-            return false;
-        }
-        else {
+                result = true;
+            } while (false);
+            return result;
+        } else {
             if (!HttpSendRequestA(request_handle, headers, headers_length,
                                   optional, optional_length)) {
                 error_code = GetLastError();
@@ -453,10 +454,11 @@ namespace YanLib::io {
 
     // support http and https
     bool http::send_request(const wchar_t *headers,
-                            uint32_t headers_length,
+                            const uint32_t headers_length,
                             void *optional,
-                            uint32_t optional_length) {
+                            const uint32_t optional_length) {
         if (is_https) {
+            bool result = false;
             do {
                 uint32_t flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
                         SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
@@ -469,12 +471,10 @@ namespace YanLib::io {
                     error_code = GetLastError();
                     break;
                 }
-                return true;
-            }
-            while (false);
-            return false;
-        }
-        else {
+                result = true;
+            } while (false);
+            return result;
+        } else {
             if (!HttpSendRequestW(request_handle, headers, headers_length,
                                   optional, optional_length)) {
                 error_code = GetLastError();
@@ -488,9 +488,10 @@ namespace YanLib::io {
     // call send_request_ex(), next must call end_request_ex()
     bool http::send_request_ex(INTERNET_BUFFERSW *buffers_in,
                                INTERNET_BUFFERSW *buffers_out,
-                               uint32_t flag,
-                               uintptr_t context) {
+                               const uint32_t flag,
+                               const uintptr_t context) {
         if (is_https) {
+            bool result = false;
             do {
                 uint32_t flags = SECURITY_FLAG_IGNORE_UNKNOWN_CA |
                         SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
@@ -503,12 +504,10 @@ namespace YanLib::io {
                     error_code = GetLastError();
                     break;
                 }
-                return true;
-            }
-            while (false);
-            return false;
-        }
-        else {
+                result = true;
+            } while (false);
+            return result;
+        } else {
             if (!HttpSendRequestExW(request_handle, buffers_in, buffers_out,
                                     flag, context)) {
                 error_code = GetLastError();
@@ -520,8 +519,8 @@ namespace YanLib::io {
 
     // call send_request_ex(), next must call end_request_ex()
     bool http::end_request_ex(INTERNET_BUFFERSW *buffers_out,
-                              uint32_t flag,
-                              uintptr_t context) {
+                              const uint32_t flag,
+                              const uintptr_t context) {
         if (!HttpEndRequestW(request_handle, buffers_out, flag, context)) {
             error_code = GetLastError();
             return false;
@@ -589,6 +588,7 @@ namespace YanLib::io {
 
     // avoid read too big file
     std::string http::read_string_to_end(const std::string &input_url) {
+        std::string body{};
         do {
             http client(input_url);
             uint32_t content_length = 0;
@@ -612,22 +612,20 @@ namespace YanLib::io {
             if (content_length <= 0 || content_length >= 5 * 1024 * 1024) {
                 break;
             }
-
-            std::string body(content_length, '\0');
+            body.resize(content_length);
             uint32_t bytes_read = 0;
             if (!client.read(body.data(), content_length, &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
-            return body;
-        }
-        while (false);
-        return {};
+        } while (false);
+        return body;
     }
 
     // avoid read too big file
     std::wstring http::read_wstring_to_end(const std::wstring &input_url,
                                            helper::CodePage code_page) {
+        std::wstring result{};
         do {
             http client(input_url);
             uint32_t content_length = 0;
@@ -658,13 +656,13 @@ namespace YanLib::io {
                 break;
             }
             body.shrink_to_fit();
-            return helper::convert::str_to_wstr(body, code_page);
-        }
-        while (false);
-        return {};
+            result = helper::convert::str_to_wstr(body, code_page);
+        } while (false);
+        return result;
     }
 
     std::vector<uint8_t> http::read_bytes_to_end(const std::string &input_url) {
+        std::vector<uint8_t> body{};
         do {
             http client(input_url);
             uint32_t content_length = 0;
@@ -687,21 +685,19 @@ namespace YanLib::io {
             if (content_length <= 0 || content_length >= 5 * 1024 * 1024) {
                 break;
             }
-
-            std::vector<uint8_t> body(content_length, '\0');
+            body.resize(content_length);
             uint32_t bytes_read = 0;
             if (!client.read(body.data(), content_length, &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
-            return body;
-        }
-        while (false);
-        return {};
+        } while (false);
+        return body;
     }
 
     std::vector<uint8_t>
     http::read_bytes_to_end(const std::wstring &input_url) {
+        std::vector<uint8_t> body{};
         do {
             http client(input_url);
             uint32_t content_length = 0;
@@ -724,17 +720,14 @@ namespace YanLib::io {
             if (content_length <= 0 || content_length >= 5 * 1024 * 1024) {
                 break;
             }
-
-            std::vector<uint8_t> body(content_length, '\0');
+            body.resize(content_length);
             uint32_t bytes_read = 0;
             if (!client.read(body.data(), content_length, &bytes_read)) {
                 break;
             }
             body.shrink_to_fit();
-            return body;
-        }
-        while (false);
-        return {};
+        } while (false);
+        return body;
     }
 
     // support http and https
@@ -751,26 +744,32 @@ namespace YanLib::io {
         }
         do {
             if (!client.url_crack()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open(L"MiniCurl/0.1")) {
+                error = client.err_code();
                 break;
             }
             if (!client.connect()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open_request(L"GET")) {
+                error = client.err_code();
                 break;
             }
             if (!client.send_request(static_cast<wchar_t *>(nullptr), 0)) {
+                error = client.err_code();
                 break;
             }
             content_length = client.get_content_length();
             if (content_length <= 0) {
+                error = client.err_code();
                 break;
             }
 
-            uint32_t buf_size = 4096;
+            constexpr uint32_t buf_size = 4096;
             std::vector<uint8_t> buf(buf_size, '\0');
             uint32_t bytes_read = 0;
             uint32_t bytes_written = 0;
@@ -785,12 +784,9 @@ namespace YanLib::io {
                     error = file.err_code();
                     break;
                 }
-            }
-            while (bytes_read > 0 && bytes_written > 0);
-            return error;
-        }
-        while (false);
-        return client.err_code();
+            } while (bytes_read > 0 && bytes_written > 0);
+        } while (false);
+        return error;
     }
 
     // support http and https
@@ -807,26 +803,32 @@ namespace YanLib::io {
         }
         do {
             if (!client.url_crack()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open(L"MiniCurl/0.1")) {
+                error = client.err_code();
                 break;
             }
             if (!client.connect()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open_request(L"GET")) {
+                error = client.err_code();
                 break;
             }
             if (!client.send_request(static_cast<wchar_t *>(nullptr), 0)) {
+                error = client.err_code();
                 break;
             }
             content_length = client.get_content_length();
             if (content_length <= 0) {
+                error = client.err_code();
                 break;
             }
 
-            uint32_t buf_size = 4096;
+            constexpr uint32_t buf_size = 4096;
             std::vector<uint8_t> buf(buf_size, '\0');
             uint32_t bytes_read = 0;
             uint32_t bytes_written = 0;
@@ -841,12 +843,9 @@ namespace YanLib::io {
                     error = file.err_code();
                     break;
                 }
-            }
-            while (bytes_read > 0 && bytes_written > 0);
-            return error;
-        }
-        while (false);
-        return client.err_code();
+            } while (bytes_read > 0 && bytes_written > 0);
+        } while (false);
+        return error;
     }
 
     // support http and https
@@ -859,19 +858,24 @@ namespace YanLib::io {
         }
         do {
             if (!client.url_crack()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open("MiniUpload/0.1")) {
+                error = client.err_code();
                 break;
             }
             if (!client.connect()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open_request("POST")) {
+                error = client.err_code();
                 break;
             }
             if (!client.add_header("Content-Type: application/octet-stream; "
                                    "charset=utf-8")) {
+                error = client.err_code();
                 break;
             }
 
@@ -879,10 +883,11 @@ namespace YanLib::io {
             buffers_in.dwStructSize = sizeof(INTERNET_BUFFERSW);
             buffers_in.dwBufferTotal = file.size();
             if (!client.send_request_ex(&buffers_in, nullptr, 0, 0)) {
+                error = client.err_code();
                 break;
             }
 
-            uint32_t buf_size = 4096;
+            constexpr uint32_t buf_size = 4096;
             std::vector<uint8_t> buf(buf_size, '\0');
             uint32_t bytes_read = 0;
             uint32_t bytes_written = 0;
@@ -897,15 +902,12 @@ namespace YanLib::io {
                     error = client.err_code();
                     break;
                 }
-            }
-            while (bytes_read > 0 && bytes_written > 0);
+            } while (bytes_read > 0 && bytes_written > 0);
             if (!client.end_request_ex()) {
-                break;
+                error = client.err_code();
             }
-            return error;
-        }
-        while (false);
-        return client.err_code();
+        } while (false);
+        return error;
     }
 
     // support http and https
@@ -919,19 +921,24 @@ namespace YanLib::io {
         }
         do {
             if (!client.url_crack()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open(L"MiniUpload/0.1")) {
+                error = client.err_code();
                 break;
             }
             if (!client.connect()) {
+                error = client.err_code();
                 break;
             }
             if (!client.open_request(L"POST")) {
+                error = client.err_code();
                 break;
             }
             if (!client.add_header(L"Content-Type: application/octet-stream; "
                                    L"charset=utf-8")) {
+                error = client.err_code();
                 break;
             }
 
@@ -939,10 +946,11 @@ namespace YanLib::io {
             buffers_in.dwStructSize = sizeof(INTERNET_BUFFERSW);
             buffers_in.dwBufferTotal = file.size();
             if (!client.send_request_ex(&buffers_in, nullptr, 0, 0)) {
+                error = client.err_code();
                 break;
             }
 
-            uint32_t buf_size = 4096;
+            constexpr uint32_t buf_size = 4096;
             std::vector<uint8_t> buf(buf_size, '\0');
             uint32_t bytes_read = 0;
             uint32_t bytes_written = 0;
@@ -957,15 +965,12 @@ namespace YanLib::io {
                     error = client.err_code();
                     break;
                 }
-            }
-            while (bytes_read > 0 && bytes_written > 0);
+            } while (bytes_read > 0 && bytes_written > 0);
             if (!client.end_request_ex()) {
-                break;
+                error = client.err_code();
             }
-            return error;
-        }
-        while (false);
-        return client.err_code();
+        } while (false);
+        return error;
     }
 
     uint32_t http::err_code() const {

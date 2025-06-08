@@ -244,6 +244,8 @@ namespace YanLib::ui::gdi {
 
         static HFONT create(const ENUMLOGFONTEXDVW *enum_log_font);
 
+        static bool destroy(HFONT font_handle);
+
         static HANDLE add_mem_resource(void *file_view,
                                        uint32_t file_view_size,
                                        uint32_t *num_fonts);

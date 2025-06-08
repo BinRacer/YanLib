@@ -55,7 +55,7 @@ namespace YanLib::ui::gdi {
 
         static HENHMETAFILE close_enhance_file(HDC dc_handle);
 
-        static bool delete_enhance_file(HENHMETAFILE enh_meta_file_handle);
+        static bool destroy_enhance_file(HENHMETAFILE enh_meta_file_handle);
 
         static bool enum_enhance_file(HDC dc_handle,
                                       HENHMETAFILE enh_meta_file_handle,

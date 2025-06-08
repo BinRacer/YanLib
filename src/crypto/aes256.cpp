@@ -38,7 +38,7 @@ namespace YanLib::crypto {
         static constexpr char hex_table[] = "0123456789abcdef";
         std::string hex_str;
         hex_str.reserve(data.size() * 2);
-        for (uint8_t byte : data) {
+        for (const uint8_t byte : data) {
             hex_str += hex_table[byte >> 4];
             hex_str += hex_table[byte & 0x0F];
         }
@@ -63,12 +63,13 @@ namespace YanLib::crypto {
     }
 
     bool aes256::remove_pkcs7_padding(std::vector<uint8_t> &data,
-                                      uint32_t real_size) {
+                                      const uint32_t real_size) {
+        bool result = false;
         do {
             if (data.empty() || real_size < 1 || real_size > data.size()) {
                 break;
             }
-            uint8_t pad_len = data[real_size - 1];
+            const uint8_t pad_len = data[real_size - 1];
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
@@ -78,10 +79,9 @@ namespace YanLib::crypto {
                 }
             }
             data.resize(real_size - pad_len);
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     void aes256::make_iso10126_padding(std::vector<uint8_t> &data) {
@@ -98,20 +98,20 @@ namespace YanLib::crypto {
     }
 
     bool aes256::remove_iso10126_padding(std::vector<uint8_t> &data,
-                                         uint32_t real_size) {
+                                         const uint32_t real_size) {
+        bool result = false;
         do {
             if (data.empty() || real_size < 1 || real_size > data.size()) {
                 break;
             }
-            uint8_t pad_len = data[real_size - 1];
+            const uint8_t pad_len = data[real_size - 1];
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
             data.resize(real_size - pad_len);
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     void aes256::make_ansix923_padding(std::vector<uint8_t> &data) {
@@ -125,12 +125,13 @@ namespace YanLib::crypto {
     }
 
     bool aes256::remove_ansix923_padding(std::vector<uint8_t> &data,
-                                         uint32_t real_size) {
+                                         const uint32_t real_size) {
+        bool result = false;
         do {
             if (data.empty() || real_size < 1 || real_size > data.size()) {
                 break;
             }
-            uint8_t pad_len = data[real_size - 1];
+            const uint8_t pad_len = data[real_size - 1];
             if (pad_len < 1 || pad_len > 16) {
                 break;
             }
@@ -140,17 +141,17 @@ namespace YanLib::crypto {
                 }
             }
             data.resize(real_size - pad_len);
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     bool aes256::pre_process(const std::vector<uint8_t> &key_bytes,
                              const std::vector<uint8_t> &iv,
                              AesMode mode) {
+        bool result = false;
         do {
-            wchar_t provider[] =
+            constexpr wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
             if (!CryptAcquireContextW(&crypt_prov_handle, nullptr, provider,
                                       PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
@@ -179,14 +180,14 @@ namespace YanLib::crypto {
                     break;
                 }
             }
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     bool aes256::encode_process(std::vector<uint8_t> &data_bytes,
-                                AesPadding padding) {
+                                const AesPadding padding) {
+        bool result = false;
         do {
             switch (padding) {
                 case AesPadding::PKCS7:
@@ -214,21 +215,19 @@ namespace YanLib::crypto {
                         error_code = GetLastError();
                         break;
                     }
-                }
-                else {
+                } else {
                     break;
                 }
             }
-            cleanup();
-            return true;
-        }
-        while (false);
+            result = true;
+        } while (false);
         cleanup();
-        return false;
+        return result;
     }
 
     bool aes256::decode_process(std::vector<uint8_t> &data_bytes,
-                                AesPadding padding) {
+                                const AesPadding padding) {
+        bool result = false;
         do {
             unsigned long data_size = data_bytes.size();
             if (!CryptDecrypt(crypt_key_handle, 0, FALSE, 0, data_bytes.data(),
@@ -261,185 +260,157 @@ namespace YanLib::crypto {
             if (is_false) {
                 break;
             }
-            cleanup();
-            return true;
-        }
-        while (false);
+            result = true;
+        } while (false);
         cleanup();
-        return false;
+        return result;
     }
 
     std::vector<uint8_t> aes256::encode_cbc(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AesPadding padding) {
+                                            const AesPadding padding) {
         if (data.empty() || key.empty() || iv.empty() || key.size() != 32 ||
             iv.size() != 16) {
             return {};
         }
-        do {
-            data_bytes.resize(data.size());
-            memcpy(data_bytes.data(), data.data(), data.size());
-            std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, AesMode::CBC)) {
-                break;
-            }
-            if (!encode_process(data_bytes, padding)) {
-                break;
-            }
-            is_done = true;
-            return data_bytes;
+        data_bytes.resize(data.size());
+        memcpy(data_bytes.data(), data.data(), data.size());
+        const std::vector key_bytes(key.begin(), key.end());
+        if (const std::vector local_iv(iv.begin(), iv.end());
+            !pre_process(key_bytes, local_iv, AesMode::CBC)) {
+            return {};
         }
-        while (false);
-        return {};
+        if (!encode_process(data_bytes, padding)) {
+            return {};
+        }
+        is_done = true;
+        return data_bytes;
     }
 
     std::vector<uint8_t> aes256::decode_cbc(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AesPadding padding) {
+                                            const AesPadding padding) {
         if (data.empty() || key.empty() || iv.empty() || key.size() != 32 ||
             iv.size() != 16) {
             return {};
         }
-        do {
-            data_bytes.resize(data.size());
-            memcpy(data_bytes.data(), data.data(), data.size());
-            std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, AesMode::CBC)) {
-                break;
-            }
-            if (!decode_process(data_bytes, padding)) {
-                break;
-            }
-            is_done = true;
-            return data_bytes;
+        data_bytes.resize(data.size());
+        memcpy(data_bytes.data(), data.data(), data.size());
+        const std::vector key_bytes(key.begin(), key.end());
+        if (const std::vector local_iv(iv.begin(), iv.end());
+            !pre_process(key_bytes, local_iv, AesMode::CBC)) {
+            return {};
         }
-        while (false);
-        return {};
+        if (!decode_process(data_bytes, padding)) {
+            return {};
+        }
+        is_done = true;
+        return data_bytes;
     }
 
     std::vector<uint8_t> aes256::encode_ecb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
-                                            AesPadding padding) {
+                                            const AesPadding padding) {
         if (data.empty() || key.empty() || key.size() != 32) {
             return {};
         }
-        do {
-            data_bytes.resize(data.size());
-            memcpy(data_bytes.data(), data.data(), data.size());
-            std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> iv;
-            if (!pre_process(key_bytes, iv, AesMode::ECB)) {
-                break;
-            }
-            if (!encode_process(data_bytes, padding)) {
-                break;
-            }
-            is_done = true;
-            return data_bytes;
+        data_bytes.resize(data.size());
+        memcpy(data_bytes.data(), data.data(), data.size());
+        const std::vector key_bytes(key.begin(), key.end());
+        if (const std::vector<uint8_t> iv(16, '\0');
+            !pre_process(key_bytes, iv, AesMode::ECB)) {
+            return {};
         }
-        while (false);
-        return {};
+        if (!encode_process(data_bytes, padding)) {
+            return {};
+        }
+        is_done = true;
+        return data_bytes;
     }
 
     std::vector<uint8_t> aes256::decode_ecb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
-                                            AesPadding padding) {
+                                            const AesPadding padding) {
         if (data.empty() || key.empty() || key.size() != 32) {
             return {};
         }
-        do {
-            data_bytes.resize(data.size());
-            memcpy(data_bytes.data(), data.data(), data.size());
-            std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> iv;
-            if (!pre_process(key_bytes, iv, AesMode::ECB)) {
-                break;
-            }
-            if (!decode_process(data_bytes, padding)) {
-                break;
-            }
-            is_done = true;
-            return data_bytes;
+        data_bytes.resize(data.size());
+        memcpy(data_bytes.data(), data.data(), data.size());
+        const std::vector key_bytes(key.begin(), key.end());
+        if (const std::vector<uint8_t> iv(16, '\0');
+            !pre_process(key_bytes, iv, AesMode::ECB)) {
+            return {};
         }
-        while (false);
-        return {};
+        if (!decode_process(data_bytes, padding)) {
+            return {};
+        }
+        is_done = true;
+        return data_bytes;
     }
 
     std::vector<uint8_t> aes256::encode_cfb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AesPadding padding) {
+                                            const AesPadding padding) {
         if (data.empty() || key.empty() || iv.empty() || key.size() != 32 ||
             iv.size() != 16) {
             return {};
         }
-        do {
-            data_bytes.resize(data.size());
-            memcpy(data_bytes.data(), data.data(), data.size());
-            std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, AesMode::CFB)) {
-                break;
-            }
-            if (!encode_process(data_bytes, padding)) {
-                break;
-            }
-            is_done = true;
-            return data_bytes;
+        data_bytes.resize(data.size());
+        memcpy(data_bytes.data(), data.data(), data.size());
+        const std::vector key_bytes(key.begin(), key.end());
+        if (const std::vector local_iv(iv.begin(), iv.end());
+            !pre_process(key_bytes, local_iv, AesMode::CFB)) {
+            return {};
         }
-        while (false);
-        return {};
+        if (!encode_process(data_bytes, padding)) {
+            return {};
+        }
+        is_done = true;
+        return data_bytes;
     }
 
     std::vector<uint8_t> aes256::decode_cfb(const std::vector<uint8_t> &data,
                                             const std::vector<uint8_t> &key,
                                             const std::vector<uint8_t> &iv,
-                                            AesPadding padding) {
+                                            const AesPadding padding) {
         if (data.empty() || key.empty() || iv.empty() || key.size() != 32 ||
             iv.size() != 16) {
             return {};
         }
-        do {
-            data_bytes.resize(data.size());
-            memcpy(data_bytes.data(), data.data(), data.size());
-            std::vector<uint8_t> key_bytes(key.begin(), key.end());
-            std::vector<uint8_t> local_iv(iv.begin(), iv.end());
-            if (!pre_process(key_bytes, local_iv, AesMode::CFB)) {
-                break;
-            }
-            if (!decode_process(data_bytes, padding)) {
-                break;
-            }
-            is_done = true;
-            return data_bytes;
+        data_bytes.resize(data.size());
+        memcpy(data_bytes.data(), data.data(), data.size());
+        const std::vector key_bytes(key.begin(), key.end());
+        if (const std::vector local_iv(iv.begin(), iv.end());
+            !pre_process(key_bytes, local_iv, AesMode::CFB)) {
+            return {};
         }
-        while (false);
-        return {};
+        if (!decode_process(data_bytes, padding)) {
+            return {};
+        }
+        is_done = true;
+        return data_bytes;
     }
 
     std::vector<uint8_t> aes256::generate_iv_bytes() {
+        std::vector<uint8_t> iv = {};
         do {
-            wchar_t provider[] =
+            constexpr wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
             if (!CryptAcquireContextW(&crypt_prov_handle, nullptr, provider,
                                       PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
                 error_code = GetLastError();
                 break;
             }
-            std::vector<uint8_t> iv(16, 0);
+            iv.resize(16);
             if (!CryptGenRandom(crypt_prov_handle, iv.size(), iv.data())) {
                 break;
             }
-            cleanup();
-            return iv;
-        }
-        while (false);
+        } while (false);
         cleanup();
-        return {};
+        return iv;
     }
 
     std::string aes256::generate_iv_string() {

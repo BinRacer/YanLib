@@ -17,7 +17,7 @@ namespace YanLib::sync {
     }
 
     bool timer::create(SECURITY_ATTRIBUTES *sa,
-                       bool is_manual_reset,
+                       const bool is_manual_reset,
                        const wchar_t *timer_name) {
         timer_handle = CreateWaitableTimerW(sa, is_manual_reset ? TRUE : FALSE,
                                             timer_name);
@@ -27,7 +27,7 @@ namespace YanLib::sync {
 
     bool timer::open(const wchar_t *timer_name,
                      TimerAccess access,
-                     bool is_inherit) {
+                     const bool is_inherit) {
         timer_handle =
                 OpenWaitableTimerW(static_cast<uint32_t>(access),
                                    is_inherit ? TRUE : FALSE, timer_name);
@@ -36,10 +36,10 @@ namespace YanLib::sync {
     }
 
     bool timer::set_timer(const LARGE_INTEGER *due_time,
-                          int32_t period,
+                          const int32_t period,
                           PTIMERAPCROUTINE completion_routine,
                           void *param,
-                          bool is_resume) {
+                          const bool is_resume) {
         // SYSTEMTIME st = {0};
         // FILETIME ftLocal, ftUTC;
         // LARGE_INTEGER li;
@@ -78,13 +78,13 @@ namespace YanLib::sync {
         return false;
     }
 
-    bool timer::wait(uint32_t milli_seconds) {
+    bool timer::wait(const uint32_t milli_seconds) {
         if (timer_handle) {
-            uint32_t ret = WaitForSingleObject(timer_handle, milli_seconds);
-            if (ret == WAIT_FAILED) {
+            if (const uint32_t ret =
+                        WaitForSingleObject(timer_handle, milli_seconds);
+                ret == WAIT_FAILED) {
                 error_code = GetLastError();
-            }
-            else {
+            } else {
                 error_code = ret;
             }
         }

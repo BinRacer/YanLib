@@ -7,7 +7,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::io {
-    tcp_server::tcp_server(bool active_ipv6) {
+    tcp_server::tcp_server(const bool active_ipv6) {
         do {
             is_ipv6 = active_ipv6;
             error_code = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -20,8 +20,7 @@ namespace YanLib::io {
             }
             if (active_ipv6) {
                 server_socket = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
-            }
-            else {
+            } else {
                 server_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             }
             if (server_socket == INVALID_SOCKET) {
@@ -29,8 +28,7 @@ namespace YanLib::io {
                 break;
             }
             init_done = true;
-        }
-        while (false);
+        } while (false);
         init_done = false;
     }
 
@@ -48,7 +46,7 @@ namespace YanLib::io {
         return init_done;
     }
 
-    bool tcp_server::bind(const char *local_ip, uint16_t local_port) {
+    bool tcp_server::bind(const char *local_ip, const uint16_t local_port) {
         if (!init_done) {
             return false;
         }
@@ -66,8 +64,7 @@ namespace YanLib::io {
                 return false;
             }
             return true;
-        }
-        else {
+        } else {
             sockaddr_in addr{};
             addr.sin_family = AF_INET;
             addr.sin_port = htons(local_port);
@@ -84,7 +81,7 @@ namespace YanLib::io {
         }
     }
 
-    bool tcp_server::listen(int32_t backlog) {
+    bool tcp_server::listen(const int32_t backlog) {
         if (!init_done) {
             return false;
         }
@@ -99,7 +96,7 @@ namespace YanLib::io {
         if (!init_done) {
             return INVALID_SOCKET;
         }
-        SOCKET client_socket = ::accept(server_socket, addr, addr_len);
+        const SOCKET client_socket = ::accept(server_socket, addr, addr_len);
         if (client_socket == INVALID_SOCKET) {
             error_code = WSAGetLastError();
             return INVALID_SOCKET;
@@ -113,8 +110,8 @@ namespace YanLib::io {
     int32_t tcp_server::read(SOCKET client_socket,
                              char *buf,
                              int32_t len,
-                             int32_t flags) {
-        int32_t number_of_bytes = recv(client_socket, buf, len, flags);
+                             const int32_t flags) {
+        const int32_t number_of_bytes = recv(client_socket, buf, len, flags);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
@@ -124,8 +121,8 @@ namespace YanLib::io {
     int32_t tcp_server::write(SOCKET client_socket,
                               const char *buf,
                               int32_t len,
-                              int32_t flags) {
-        int32_t number_of_bytes = send(client_socket, buf, len, flags);
+                              const int32_t flags) {
+        const int32_t number_of_bytes = send(client_socket, buf, len, flags);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
         }
@@ -138,7 +135,8 @@ namespace YanLib::io {
             buffer_size = 1024;
         }
         std::string raw_data(buffer_size, '\0');
-        int32_t bytes_read = read(client_socket, raw_data.data(), buffer_size);
+        const int32_t bytes_read =
+                read(client_socket, raw_data.data(), buffer_size);
         if (bytes_read == SOCKET_ERROR) {
             error_code = WSAGetLastError();
             return {};
@@ -162,13 +160,13 @@ namespace YanLib::io {
             }
             raw_data.insert(raw_data.end(), buf.data(),
                             buf.data() + bytes_read);
-        }
-        while (bytes_read > 0);
+        } while (bytes_read > 0);
         raw_data.shrink_to_fit();
         return raw_data;
     }
 
-    int32_t tcp_server::write_string(SOCKET client_socket, std::string &str) {
+    int32_t tcp_server::write_string(SOCKET client_socket,
+                                     const std::string &str) {
         if (str.empty()) {
             return 0;
         }

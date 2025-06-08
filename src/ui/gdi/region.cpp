@@ -16,6 +16,10 @@ namespace YanLib::ui::gdi {
         return CreateRectRgnIndirect(rect);
     }
 
+    bool region::destroy_rect(HRGN region_handle) {
+        return DeleteObject(region_handle);
+    }
+
     HRGN region::create_round_rect(int32_t left,
                                    int32_t top,
                                    int32_t right,
@@ -23,6 +27,10 @@ namespace YanLib::ui::gdi {
                                    int32_t width,
                                    int32_t height) {
         return CreateRoundRectRgn(left, top, right, bottom, width, height);
+    }
+
+    bool region::destroy_round_rect(HRGN region_handle) {
+        return DeleteObject(region_handle);
     }
 
     HRGN region::create_elliptic(int32_t left,
@@ -36,11 +44,19 @@ namespace YanLib::ui::gdi {
         return CreateEllipticRgnIndirect(rect);
     }
 
+    bool region::destroy_elliptic(HRGN region_handle) {
+        return DeleteObject(region_handle);
+    }
+
     HRGN region::create_polygon(const std::vector<POINT> &point,
                                 FillMode mode) {
         return CreatePolygonRgn(point.data(),
                                 static_cast<int32_t>(point.size()),
                                 static_cast<int32_t>(mode));
+    }
+
+    bool region::destroy_polygon(HRGN region_handle) {
+        return DeleteObject(region_handle);
     }
 
     HRGN region::create_poly_polygon(const std::vector<POINT> &point,
@@ -51,12 +67,20 @@ namespace YanLib::ui::gdi {
                                     static_cast<int32_t>(mode));
     }
 
+    bool region::destroy_poly_polygon(HRGN region_handle) {
+        return DeleteObject(region_handle);
+    }
+
     bool region::fill(HDC dc_handle, HRGN region_handle, HBRUSH brush_handle) {
         return FillRgn(dc_handle, region_handle, brush_handle);
     }
 
     HRGN region::create(const XFORM *xfrom, const RGNDATA *buf, uint32_t size) {
         return ExtCreateRegion(xfrom, size, buf);
+    }
+
+    bool region::destroy(HRGN region_handle) {
+        return DeleteObject(region_handle);
     }
 
     bool region::frame(HDC dc_handle,

@@ -16,8 +16,7 @@ namespace YanLib::ui::core {
         if (!OpenClipboard(window_handle)) {
             error_code = GetLastError();
             is_create = false;
-        }
-        else {
+        } else {
             is_create = true;
         }
     }
@@ -72,18 +71,18 @@ namespace YanLib::ui::core {
                 }
                 data.resize(size);
                 memcpy_s(data.data(), size, addr, size);
-            }
-            while (false);
+            } while (false);
             if (!GlobalUnlock(mem_handle)) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         return data;
     }
 
-    bool clipboard::set_data(std::vector<uint8_t> &data, uint32_t format) {
+    bool clipboard::set_data(const std::vector<uint8_t> &data,
+                             uint32_t format) {
         HGLOBAL mem_handle = nullptr;
+        bool result = false;
         do {
             mem_handle =
                     GlobalAlloc(GMEM_MOVEABLE | GMEM_ZEROINIT, data.size() + 2);
@@ -105,13 +104,12 @@ namespace YanLib::ui::core {
                 error_code = GetLastError();
                 break;
             }
-            return true;
-        }
-        while (false);
+            result = true;
+        } while (false);
         if (mem_handle && !GlobalFree(mem_handle)) {
             error_code = GetLastError();
         }
-        return false;
+        return result;
     }
 
     int32_t clipboard::get_format_name(uint32_t format,

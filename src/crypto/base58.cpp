@@ -36,7 +36,7 @@ namespace YanLib::crypto {
 
     std::vector<uint8_t> base58::decode(const std::vector<uint8_t> &data) {
         static const std::vector<int32_t> table = [] {
-            std::vector<int32_t> t(256, -1);
+            std::vector t(256, -1);
             constexpr uint8_t BASE58_CHARS[] = "123456789ABCDEFGHJKLMNPQRSTUVWX"
                                                "YZabcdefghijkmnopqrstuvwxyz";
             for (int32_t i = 0; i < 58; ++i) {
@@ -84,14 +84,14 @@ namespace YanLib::crypto {
     }
 
     std::string base58::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base58::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

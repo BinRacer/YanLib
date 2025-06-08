@@ -30,8 +30,8 @@ namespace YanLib::mem {
                         const char *mmap_name,
                         SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
-                        uint32_t max_high,
-                        uint32_t max_low) {
+                        const uint32_t max_high,
+                        const uint32_t max_low) {
         HANDLE file_handle =
                 CreateFileA(file_name, GENERIC_READ | GENERIC_WRITE,
                             FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
@@ -60,8 +60,8 @@ namespace YanLib::mem {
                         const wchar_t *mmap_name,
                         SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
-                        uint32_t max_high,
-                        uint32_t max_low) {
+                        const uint32_t max_high,
+                        const uint32_t max_low) {
         HANDLE file_handle =
                 CreateFileW(file_name, GENERIC_READ | GENERIC_WRITE,
                             FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
@@ -90,8 +90,8 @@ namespace YanLib::mem {
                         const char *mmap_name,
                         SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
-                        uint32_t max_high,
-                        uint32_t max_low) {
+                        const uint32_t max_high,
+                        const uint32_t max_low) {
         HANDLE mmap_handle = CreateFileMappingA(file_handle, sa,
                                                 static_cast<uint32_t>(protect),
                                                 max_high, max_low, mmap_name);
@@ -109,8 +109,8 @@ namespace YanLib::mem {
                         const wchar_t *mmap_name,
                         SECURITY_ATTRIBUTES *sa,
                         MemoryProtect protect,
-                        uint32_t max_high,
-                        uint32_t max_low) {
+                        const uint32_t max_high,
+                        const uint32_t max_low) {
         HANDLE mmap_handle = CreateFileMappingW(file_handle, sa,
                                                 static_cast<uint32_t>(protect),
                                                 max_high, max_low, mmap_name);
@@ -125,7 +125,9 @@ namespace YanLib::mem {
     }
 
     HANDLE
-    mmap::open(const char *mmap_name, MemoryAccess access, bool is_inherit) {
+    mmap::open(const char *mmap_name,
+               MemoryAccess access,
+               const bool is_inherit) {
         HANDLE mmap_handle =
                 OpenFileMappingA(static_cast<uint32_t>(access),
                                  is_inherit ? TRUE : FALSE, mmap_name);
@@ -140,7 +142,9 @@ namespace YanLib::mem {
     }
 
     HANDLE
-    mmap::open(const wchar_t *mmap_name, MemoryAccess access, bool is_inherit) {
+    mmap::open(const wchar_t *mmap_name,
+               MemoryAccess access,
+               const bool is_inherit) {
         HANDLE mmap_handle =
                 OpenFileMappingW(static_cast<uint32_t>(access),
                                  is_inherit ? TRUE : FALSE, mmap_name);
@@ -156,9 +160,9 @@ namespace YanLib::mem {
 
     void *mmap::mmap_file(HANDLE mmap_handle,
                           MemoryAccess access,
-                          uint32_t offset_high,
-                          uint32_t offset_low,
-                          SIZE_T size) {
+                          const uint32_t offset_high,
+                          const uint32_t offset_low,
+                          const SIZE_T size) {
         void *address =
                 MapViewOfFile(mmap_handle, static_cast<uint32_t>(access),
                               offset_high, offset_low, size);
@@ -177,8 +181,8 @@ namespace YanLib::mem {
             return false;
         }
         addr_rwlock.write_lock();
-        const auto it = std::find(addr_list.begin(), addr_list.end(), addr);
-        if (it != addr_list.end()) {
+        if (const auto it = std::find(addr_list.begin(), addr_list.end(), addr);
+            it != addr_list.end()) {
             *it = nullptr;
         }
         addr_rwlock.write_unlock();
@@ -189,8 +193,10 @@ namespace YanLib::mem {
         return true;
     }
 
-    bool
-    mmap::read(void *addr, uint8_t *buf, int64_t size, uint64_t offset) const {
+    bool mmap::read(void *addr,
+                    uint8_t *buf,
+                    const int64_t size,
+                    const uint64_t offset) const {
         if (!buf || !addr) {
             return false;
         }
@@ -200,8 +206,8 @@ namespace YanLib::mem {
 
     bool mmap::write(void *addr,
                      const uint8_t *buf,
-                     int64_t size,
-                     uint64_t offset) const {
+                     const int64_t size,
+                     const uint64_t offset) const {
         if (!buf || !addr) {
             return false;
         }

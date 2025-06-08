@@ -26,7 +26,7 @@ namespace YanLib::crypto {
         static constexpr char hex_table[] = "0123456789abcdef";
         std::string hex_str;
         hex_str.reserve(data.size() * 2);
-        for (uint8_t byte : data) {
+        for (const uint8_t byte : data) {
             hex_str += hex_table[byte >> 4];
             hex_str += hex_table[byte & 0x0F];
         }
@@ -34,8 +34,9 @@ namespace YanLib::crypto {
     }
 
     bool rsa::generate_key(RsaKeyBits key_bits) {
+        bool result = false;
         do {
-            wchar_t provider[] =
+            constexpr wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
             if (!CryptAcquireContextW(&crypt_prov_handle, nullptr, provider,
                                       PROV_RSA_AES, 0)) {
@@ -72,18 +73,17 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            cleanup();
-            return true;
-        }
-        while (false);
+            result = true;
+        } while (false);
         cleanup();
-        return false;
+        return result;
     }
 
     std::vector<uint8_t> rsa::encode(const std::vector<uint8_t> &data,
                                      const std::vector<uint8_t> &pub_blob) {
+        std::vector<uint8_t> encode_data = {};
         do {
-            wchar_t provider[] =
+            constexpr wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
             if (!CryptAcquireContextW(&crypt_prov_handle, nullptr, provider,
                                       PROV_RSA_AES, 0)) {
@@ -95,7 +95,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            std::vector<uint8_t> encode_data(data.begin(), data.end());
+            encode_data.insert(encode_data.begin(), data.begin(), data.end());
             unsigned long data_size = data.size();
             unsigned long raw_size = data.size();
             if (!CryptEncrypt(crypt_key_handle, 0, TRUE, 0, encode_data.data(),
@@ -109,23 +109,20 @@ namespace YanLib::crypto {
                         error_code = GetLastError();
                         break;
                     }
-                }
-                else {
+                } else {
                     break;
                 }
             }
-            cleanup();
-            return encode_data;
-        }
-        while (false);
+        } while (false);
         cleanup();
-        return {};
+        return encode_data;
     }
 
     std::vector<uint8_t> rsa::decode(const std::vector<uint8_t> &data,
                                      const std::vector<uint8_t> &priv_blob) {
+        std::vector<uint8_t> decode_data = {};
         do {
-            wchar_t provider[] =
+            constexpr wchar_t provider[] =
                     L"Microsoft Enhanced RSA and AES Cryptographic Provider";
             if (!CryptAcquireContextW(&crypt_prov_handle, nullptr, provider,
                                       PROV_RSA_AES, 0)) {
@@ -137,7 +134,7 @@ namespace YanLib::crypto {
                 error_code = GetLastError();
                 break;
             }
-            std::vector<uint8_t> decode_data(data.begin(), data.end());
+            decode_data.insert(decode_data.begin(), data.begin(), data.end());
             unsigned long data_size = data.size();
             if (!CryptDecrypt(crypt_key_handle, 0, TRUE, 0, decode_data.data(),
                               &data_size)) {
@@ -145,12 +142,9 @@ namespace YanLib::crypto {
                 break;
             }
             decode_data.resize(data_size);
-            cleanup();
-            return decode_data;
-        }
-        while (false);
+        } while (false);
         cleanup();
-        return {};
+        return decode_data;
     }
 
     std::vector<uint8_t>
@@ -203,7 +197,7 @@ namespace YanLib::crypto {
         pubkey.append("-----BEGIN PUBLIC KEY-----\n");
         size_t pos = 0;
         while (pos < base64_pubkey.size()) {
-            size_t chunk_size = ((base64_pubkey.size() - pos) > 64)
+            const size_t chunk_size = ((base64_pubkey.size() - pos) > 64)
                     ? 64
                     : base64_pubkey.size() - pos;
             pubkey.append(reinterpret_cast<char *>(&base64_pubkey[pos]),
@@ -228,7 +222,7 @@ namespace YanLib::crypto {
         privkey.append("-----BEGIN PRIVATE KEY-----\n");
         size_t pos = 0;
         while (pos < base64_privkey.size()) {
-            size_t chunk_size = ((base64_privkey.size() - pos) > 64)
+            const size_t chunk_size = ((base64_privkey.size() - pos) > 64)
                     ? 64
                     : base64_privkey.size() - pos;
             privkey.append(reinterpret_cast<char *>(&base64_privkey[pos]),

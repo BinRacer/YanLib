@@ -45,7 +45,7 @@ namespace YanLib::io {
 
         std::string read_string_to_end();
 
-        int32_t write_string(std::string &str);
+        int32_t write_string(const std::string &str);
 
         [[nodiscard]] int32_t err_code() const;
 

@@ -17,27 +17,29 @@ namespace YanLib::sync {
     }
 
     bool mutex::create(SECURITY_ATTRIBUTES *sa,
-                       bool is_initial_owner,
+                       const bool is_initial_owner,
                        const wchar_t *name) {
         mutex_handle = CreateMutexW(sa, is_initial_owner ? TRUE : FALSE, name);
         error_code = GetLastError();
         return mutex_handle != nullptr;
     }
 
-    bool mutex::open(const wchar_t *name, MutexAccess access, bool is_inherit) {
+    bool mutex::open(const wchar_t *name,
+                     MutexAccess access,
+                     const bool is_inherit) {
         mutex_handle = OpenMutexW(static_cast<uint32_t>(access),
                                   is_inherit ? TRUE : FALSE, name);
         error_code = GetLastError();
         return mutex_handle != nullptr;
     }
 
-    bool mutex::lock(uint32_t milli_seconds) {
+    bool mutex::lock(const uint32_t milli_seconds) {
         if (mutex_handle) {
-            uint32_t ret = WaitForSingleObject(mutex_handle, milli_seconds);
-            if (ret == WAIT_FAILED) {
+            if (const uint32_t ret =
+                        WaitForSingleObject(mutex_handle, milli_seconds);
+                ret == WAIT_FAILED) {
                 error_code = GetLastError();
-            }
-            else {
+            } else {
                 error_code = ret;
             }
         }

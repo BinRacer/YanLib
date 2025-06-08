@@ -16,7 +16,7 @@ namespace YanLib::ui::core {
         accel_handles.clear();
     }
 
-    HACCEL accelerator::create_table(std::vector<ACCEL> &accel) {
+    HACCEL accelerator::create(std::vector<ACCEL> &accel) {
         HACCEL result =
                 CreateAcceleratorTableW(accel.data(),
                                         static_cast<int32_t>(accel.size()));
@@ -48,7 +48,7 @@ namespace YanLib::ui::core {
         return result;
     }
 
-    bool accelerator::destroy_table(HACCEL accel_handle) {
+    bool accelerator::destroy(HACCEL accel_handle) {
         if (!accel_handle) {
             return false;
         }
@@ -76,8 +76,8 @@ namespace YanLib::ui::core {
         return TranslateMDISysAccel(client_window_handle, msg);
     }
 
-    int32_t accelerator::copy_table(HACCEL accel_handle_src,
-                                    std::vector<ACCEL> &accel_dst) {
+    int32_t accelerator::copy(HACCEL accel_handle_src,
+                              std::vector<ACCEL> &accel_dst) {
         return CopyAcceleratorTableW(accel_handle_src, accel_dst.data(),
                                      static_cast<int32_t>(accel_dst.size()));
     }

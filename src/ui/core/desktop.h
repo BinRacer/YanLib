@@ -91,7 +91,7 @@ namespace YanLib::ui::core {
                          DesktopAccess access = DesktopAccess::ReadObjects |
                                  DesktopAccess::WriteObjects);
 
-        bool close(HDESK desktop_handle);
+        bool destroy(HDESK desktop_handle);
 
         bool enum_windows(HDESK desktop_handle, WNDENUMPROC fn, LPARAM lparam);
 
@@ -189,7 +189,7 @@ namespace YanLib::ui::core {
                      bool is_inherit = false,
                      StationAccess access = StationAccess::All);
 
-        bool close(HWINSTA window_station_handle);
+        bool destroy(HWINSTA window_station_handle);
 
         bool lock();
 

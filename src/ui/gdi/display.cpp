@@ -107,8 +107,7 @@ namespace YanLib::ui::gdi {
             int32_t is_ok = 0;
             result = func(pid, &temp, &is_ok);
             *orientation = static_cast<OrientationPreference>(temp);
-        }
-        while (false);
+        } while (false);
         if (kernel32) {
             FreeLibrary(kernel32);
         }

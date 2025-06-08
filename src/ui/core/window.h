@@ -7,8 +7,8 @@
 #include <Windows.h>
 #include <vector>
 #include <string>
+#include "sync/rwlock.h"
 #include "helper/convert.h"
-
 namespace YanLib::ui::core {
 #ifndef WINDOWSTYLE
 #define WINDOWSTYLE
@@ -258,7 +258,7 @@ namespace YanLib::ui::core {
     inline RedrawFlag operator|(RedrawFlag a, RedrawFlag b) {
         return static_cast<RedrawFlag>(static_cast<uint32_t>(a) |
                                        static_cast<uint32_t>(b));
-    };
+    }
 #endif
 #ifndef TILESTYLE
 #define TILESTYLE
@@ -825,6 +825,10 @@ namespace YanLib::ui::core {
 #endif
     class window {
     private:
+        std::vector<HWND> window_handles = {};
+        std::vector<HWND> shutdown_handles = {};
+        sync::rwlock window_rwlock = {};
+        sync::rwlock shutdown_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -838,7 +842,7 @@ namespace YanLib::ui::core {
 
         window() = default;
 
-        ~window() = default;
+        ~window();
 
         HWND create(const char *class_name,
                     const char *window_name,
@@ -936,7 +940,7 @@ namespace YanLib::ui::core {
 
         bool create_shutdown_reason(
                 HWND window_handle,
-                std::string &reason,
+                const std::string &reason,
                 helper::CodePage code_page = helper::curr_code_page());
 
         bool create_shutdown_reason(HWND window_handle,
@@ -946,7 +950,7 @@ namespace YanLib::ui::core {
 
         bool query_shutdown_reason(
                 HWND window_handle,
-                std::string &reason,
+                const std::string &reason,
                 uint32_t *real_size,
                 helper::CodePage code_page = helper::curr_code_page());
 
@@ -1115,7 +1119,7 @@ namespace YanLib::ui::core {
         uint16_t cascade(HWND parent_window_handle,
                          uint32_t how,
                          const RECT *rect,
-                         std::vector<HWND> &child);
+                         const std::vector<HWND> &child);
 
         void disable_proc_ghosting();
 
@@ -1236,9 +1240,9 @@ namespace YanLib::ui::core {
 
         int32_t get_text(HWND window_handle, std::wstring &text);
 
-        bool set_text(HWND window_handle, std::string &text);
+        bool set_text(HWND window_handle, const std::string &text);
 
-        bool set_text(HWND window_handle, std::wstring &text);
+        bool set_text(HWND window_handle, const std::wstring &text);
 
         int32_t get_text_length(HWND window_handle);
 
@@ -1330,12 +1334,12 @@ namespace YanLib::ui::core {
                                       PSECURITY_INFORMATION si,
                                       PSECURITY_DESCRIPTOR sd);
 
-        uint32_t wait_for_multiple_objects(std::vector<HANDLE> &handles,
+        uint32_t wait_for_multiple_objects(const std::vector<HANDLE> &handles,
                                            QueueType type,
                                            uint32_t milli_seconds,
                                            bool wait_all);
 
-        uint32_t wait_for_multiple_objects(std::vector<HANDLE> &handles,
+        uint32_t wait_for_multiple_objects(const std::vector<HANDLE> &handles,
                                            QueueType type,
                                            uint32_t milli_seconds,
                                            WaitFlag flag);

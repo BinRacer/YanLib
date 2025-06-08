@@ -95,8 +95,7 @@ namespace YanLib::ui::components {
                                      .data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -108,8 +107,7 @@ namespace YanLib::ui::components {
                                       static_cast<uint32_t>(type), path_spec);
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -124,8 +122,7 @@ namespace YanLib::ui::components {
                                            .data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -135,8 +132,7 @@ namespace YanLib::ui::components {
         int32_t result = ComboBox_AddString(combo_box_handle, text.data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -151,8 +147,7 @@ namespace YanLib::ui::components {
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -165,8 +160,7 @@ namespace YanLib::ui::components {
                 ComboBox_InsertString(combo_box_handle, index, text.data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -384,8 +378,7 @@ namespace YanLib::ui::components {
         int32_t result = ComboBox_AddItemData(combo_box_handle, data);
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -396,8 +389,7 @@ namespace YanLib::ui::components {
         int32_t result = ComboBox_InsertItemData(combo_box_handle, index, data);
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == CB_ERR) {
+        } else if (result == CB_ERR) {
             error_code = GetLastError();
         }
         return result;

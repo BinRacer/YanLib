@@ -35,6 +35,10 @@ namespace YanLib::ui::gdi {
                                                : DIB_PAL_COLORS);
     }
 
+    bool brush::destroy(HBRUSH hbrush) {
+        return DeleteObject(hbrush);
+    }
+
     bool brush::get_origin(HDC dc_handle, POINT *point) {
         return GetBrushOrgEx(dc_handle, point);
     }

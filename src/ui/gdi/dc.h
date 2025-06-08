@@ -224,7 +224,7 @@ namespace YanLib::ui::gdi {
 
         static int32_t release(HWND window_handle, HDC dc_handle);
 
-        static bool remove(HDC dc_handle);
+        static bool destroy(HDC dc_handle);
 
         // std::pair<result, error_code>
         static std::pair<bool, uint32_t>
@@ -275,7 +275,7 @@ namespace YanLib::ui::gdi {
 
         static HGDIOBJ select_object(HDC dc_handle, HGDIOBJ gdi_obj_handle);
 
-        static bool delete_object(HGDIOBJ gdi_obj_handle);
+        static bool destroy_object(HGDIOBJ gdi_obj_handle);
 
         static int32_t enum_objects(HDC dc_handle,
                                     GOBJENUMPROC func,

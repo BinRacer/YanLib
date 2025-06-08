@@ -6,8 +6,8 @@
 #include "helper/convert.h"
 
 namespace YanLib::sys {
-    uint32_t processor::active_count(uint16_t group_number) {
-        uint32_t count = GetActiveProcessorCount(group_number);
+    uint32_t processor::active_count(const uint16_t group_number) {
+        const uint32_t count = GetActiveProcessorCount(group_number);
         if (!count) {
             error_code = GetLastError();
             return 0;
@@ -61,8 +61,8 @@ namespace YanLib::sys {
         return true;
     }
 
-    uint32_t processor::max_count(uint16_t GroupNumber) {
-        uint32_t count = GetMaximumProcessorCount(GroupNumber);
+    uint32_t processor::max_count(const uint16_t GroupNumber) {
+        const uint32_t count = GetMaximumProcessorCount(GroupNumber);
         if (!count) {
             error_code = GetLastError();
             return 0;

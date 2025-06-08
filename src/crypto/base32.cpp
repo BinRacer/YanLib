@@ -39,7 +39,7 @@ namespace YanLib::crypto {
         constexpr uint8_t BASE32_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         if (data.empty())
             return {};
-        std::vector<int32_t> table(256, -1);
+        std::vector table(256, -1);
         for (int32_t i = 0; i < 32; ++i) {
             const auto c = BASE32_CHARS[i];
             table[c] = i;
@@ -69,14 +69,14 @@ namespace YanLib::crypto {
     }
 
     std::string base32::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base32::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

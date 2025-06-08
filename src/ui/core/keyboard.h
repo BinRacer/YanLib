@@ -165,8 +165,7 @@ namespace YanLib::ui::core {
 
     inline std::wstring KbdIDToWString(KeyboardID id) {
         wchar_t buffer[9] = {};
-        swprintf_s(buffer, sizeof(buffer) / sizeof(wchar_t), L"%08X",
-                   static_cast<uint32_t>(id));
+        swprintf_s(buffer, sizeof(buffer) / sizeof(wchar_t), L"%08X", id);
         return buffer;
     }
 #endif

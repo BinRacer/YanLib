@@ -27,8 +27,9 @@ namespace YanLib::io {
     }
 
     bool comp_port::associate_device(HANDLE file_handle, uintptr_t comp_key) {
-        bool is_ok = CreateIoCompletionPort(file_handle, iocp, comp_key,
-                                            max_concurrent_threads) == iocp;
+        const bool is_ok =
+                CreateIoCompletionPort(file_handle, iocp, comp_key,
+                                       max_concurrent_threads) == iocp;
         if (!is_ok) {
             error_code = GetLastError();
         }
@@ -223,7 +224,7 @@ namespace YanLib::io {
     }
 
     bool comp_port::close() {
-        bool is_ok = CloseHandle(iocp);
+        const bool is_ok = CloseHandle(iocp);
         iocp = nullptr;
         return is_ok;
     }

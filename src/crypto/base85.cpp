@@ -13,7 +13,7 @@ namespace YanLib::crypto {
             return {};
         std::vector<uint8_t> encoded;
         const size_t padding = (4 - (data.size() % 4)) % 4;
-        std::vector<uint8_t> padded(data);
+        std::vector padded(data);
         padded.insert(padded.end(), padding, 0);
 
         for (size_t i = 0; i < padded.size(); i += 4) {
@@ -42,7 +42,7 @@ namespace YanLib::crypto {
                                            "abcdefghijklmnopqrstu";
         if (data.empty())
             return {};
-        std::vector<int32_t> table(256, -1);
+        std::vector table(256, -1);
         for (int32_t i = 0; i < 85; ++i) {
             table[BASE85_CHARS[i]] = i;
         }
@@ -63,7 +63,7 @@ namespace YanLib::crypto {
             if (buffer.size() == 5) {
                 uint32_t chunk = 0;
                 for (int32_t j = 0; j < 5; ++j) {
-                    auto pos = table[buffer[j]];
+                    const auto pos = table[buffer[j]];
                     if (pos == -1)
                         return {};
                     chunk = chunk * 85 + pos;
@@ -84,7 +84,7 @@ namespace YanLib::crypto {
 
             uint32_t chunk = 0;
             for (int32_t j = 0; j < 5; ++j) {
-                auto pos = table[buffer[j]];
+                const auto pos = table[buffer[j]];
                 if (pos == -1)
                     return {};
                 chunk = chunk * 85 + pos;
@@ -99,14 +99,14 @@ namespace YanLib::crypto {
     }
 
     std::string base85::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base85::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

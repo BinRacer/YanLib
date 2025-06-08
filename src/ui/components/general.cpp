@@ -95,8 +95,7 @@ namespace YanLib::ui::components {
                 break;
             }
             result = func(icon_handle_small, icon_handle_large);
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -150,8 +149,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -188,8 +186,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -242,8 +239,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -281,8 +277,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -324,8 +319,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -365,8 +359,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -401,8 +394,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -435,8 +427,7 @@ namespace YanLib::ui::components {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }
@@ -478,8 +469,7 @@ namespace YanLib::ui::components {
                 break;
             }
             func(reader_mode_info);
-        }
-        while (false);
+        } while (false);
         if (comctl32) {
             FreeLibrary(comctl32);
         }

@@ -38,7 +38,8 @@ namespace YanLib::sys {
         return job_handle;
     }
 
-    HANDLE job::open(const char *job_name, JobAccess access, bool is_inherit) {
+    HANDLE
+    job::open(const char *job_name, JobAccess access, const bool is_inherit) {
         HANDLE job_handle = OpenJobObjectA(static_cast<uint32_t>(access),
                                            is_inherit ? TRUE : FALSE, job_name);
         if (!job_handle) {
@@ -52,7 +53,9 @@ namespace YanLib::sys {
     }
 
     HANDLE
-    job::open(const wchar_t *job_name, JobAccess access, bool is_inherit) {
+    job::open(const wchar_t *job_name,
+              JobAccess access,
+              const bool is_inherit) {
         HANDLE job_handle = OpenJobObjectW(static_cast<uint32_t>(access),
                                            is_inherit ? TRUE : FALSE, job_name);
         if (!job_handle) {
@@ -129,7 +132,7 @@ namespace YanLib::sys {
     bool job::set_info(HANDLE job_handle,
                        JOBOBJECTINFOCLASS job_object_info_class,
                        void *job_object_info,
-                       uint32_t job_object_info_len) {
+                       const uint32_t job_object_info_len) {
         if (!SetInformationJobObject(job_handle, job_object_info_class,
                                      job_object_info, job_object_info_len)) {
             error_code = GetLastError();

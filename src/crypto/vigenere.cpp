@@ -26,8 +26,7 @@ namespace YanLib::crypto {
                 const int32_t shifted = (c - base + offset) % 26;
                 result.push_back(static_cast<uint8_t>(base + shifted));
                 key_index++;
-            }
-            else {
+            } else {
                 result.push_back(c);
             }
         }
@@ -56,8 +55,7 @@ namespace YanLib::crypto {
                 const int32_t shifted = (c - base - offset + 26) % 26;
                 result.push_back(static_cast<uint8_t>(base + shifted));
                 key_index++;
-            }
-            else {
+            } else {
                 result.push_back(c);
             }
         }
@@ -66,8 +64,8 @@ namespace YanLib::crypto {
 
     std::string vigenere::encode_string(const std::string &data,
                                         const std::string &key) {
-        std::vector<uint8_t> encode_data(data.begin(), data.end());
-        std::vector<uint8_t> encode_key(key.begin(), key.end());
+        const std::vector<uint8_t> encode_data(data.begin(), data.end());
+        const std::vector<uint8_t> encode_key(key.begin(), key.end());
         std::vector<uint8_t> encoded = encode(encode_data, encode_key);
         std::string result(encoded.begin(), encoded.end());
         return result;
@@ -75,8 +73,8 @@ namespace YanLib::crypto {
 
     std::string vigenere::decode_string(const std::string &data,
                                         const std::string &key) {
-        std::vector<uint8_t> decode_data(data.begin(), data.end());
-        std::vector<uint8_t> decode_key(key.begin(), key.end());
+        const std::vector<uint8_t> decode_data(data.begin(), data.end());
+        const std::vector<uint8_t> decode_key(key.begin(), key.end());
         std::vector<uint8_t> decoded = decode(decode_data, decode_key);
         std::string result(decoded.begin(), decoded.end());
         return result;

@@ -23,7 +23,7 @@ namespace YanLib::ui::gdi {
         return CloseEnhMetaFile(dc_handle);
     }
 
-    bool meta::delete_enhance_file(HENHMETAFILE enh_meta_file_handle) {
+    bool meta::destroy_enhance_file(HENHMETAFILE enh_meta_file_handle) {
         return DeleteEnhMetaFile(enh_meta_file_handle);
     }
 

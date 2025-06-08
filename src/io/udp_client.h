@@ -50,10 +50,10 @@ namespace YanLib::io {
                      std::string &remote_ip,
                      uint16_t &remote_port);
 
-        int32_t write(char *buf,
+        int32_t write(const char *buf,
                       int32_t len,
-                      std::string &remote_ip,
-                      uint16_t &remote_port);
+                      const std::string &remote_ip,
+                      const uint16_t &remote_port);
 
         std::string read_string(std::string &remote_ip,
                                 uint16_t &remote_port,
@@ -62,9 +62,9 @@ namespace YanLib::io {
         std::string read_string_to_end(std::string &remote_ip,
                                        uint16_t &remote_port);
 
-        int32_t write_string(std::string &str,
-                             std::string &remote_ip,
-                             uint16_t &remote_port);
+        int32_t write_string(const std::string &str,
+                             const std::string &remote_ip,
+                             const uint16_t &remote_port);
 
         [[nodiscard]] int32_t err_code() const;
 

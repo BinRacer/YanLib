@@ -119,6 +119,8 @@ namespace YanLib::ui::gdi {
         static HBITMAP load(HINSTANCE instance_handle,
                             const wchar_t *bitmap_name);
 
+        static bool destroy(HBITMAP bitmap_handle);
+
         // std::pair<result, error_code>
         static std::pair<bool, uint32_t> bit_blk(HDC dc_handle_dst,
                                                  int32_t x,

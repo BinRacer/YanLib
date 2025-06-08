@@ -8,6 +8,23 @@
 #include <Powrprof.h>
 #pragma comment(lib, "powrprof.lib")
 namespace YanLib::ui::core {
+    window::~window() {
+        for (auto &shutdown : shutdown_handles) {
+            if (shutdown && IsWindow(shutdown)) {
+                ShutdownBlockReasonDestroy(shutdown);
+                shutdown = nullptr;
+            }
+        }
+        shutdown_handles.clear();
+        for (auto &window : window_handles) {
+            if (window && IsWindow(window)) {
+                DestroyWindow(window);
+                window = nullptr;
+            }
+        }
+        window_handles.clear();
+    }
+
     HWND window::create(const char *class_name,
                         const char *window_name,
                         HINSTANCE instance_handle,
@@ -27,7 +44,11 @@ namespace YanLib::ui::core {
                                 menu_handle, instance_handle, param);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        window_rwlock.write_lock();
+        window_handles.push_back(result);
+        window_rwlock.write_unlock();
         return result;
     }
 
@@ -50,7 +71,11 @@ namespace YanLib::ui::core {
                                 menu_handle, instance_handle, param);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        window_rwlock.write_lock();
+        window_handles.push_back(result);
+        window_rwlock.write_unlock();
         return result;
     }
 
@@ -72,7 +97,11 @@ namespace YanLib::ui::core {
                                  instance_handle, lparam);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        window_rwlock.write_lock();
+        window_handles.push_back(result);
+        window_rwlock.write_unlock();
         return result;
     }
 
@@ -94,7 +123,11 @@ namespace YanLib::ui::core {
                                  instance_handle, lparam);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        window_rwlock.write_lock();
+        window_handles.push_back(result);
+        window_rwlock.write_unlock();
         return result;
     }
 
@@ -207,13 +240,16 @@ namespace YanLib::ui::core {
     }
 
     bool window::create_shutdown_reason(HWND window_handle,
-                                        std::string &reason,
+                                        const std::string &reason,
                                         helper::CodePage code_page) {
         std::wstring data = helper::convert::str_to_wstr(reason, code_page);
         if (!ShutdownBlockReasonCreate(window_handle, data.data())) {
             error_code = GetLastError();
             return false;
         }
+        shutdown_rwlock.write_lock();
+        shutdown_handles.push_back(window_handle);
+        shutdown_rwlock.write_unlock();
         return true;
     }
 
@@ -223,10 +259,23 @@ namespace YanLib::ui::core {
             error_code = GetLastError();
             return false;
         }
+        shutdown_rwlock.write_lock();
+        shutdown_handles.push_back(window_handle);
+        shutdown_rwlock.write_unlock();
         return true;
     }
 
     bool window::destroy_shutdown_reason(HWND window_handle) {
+        if (!window_handle) {
+            return false;
+        }
+        shutdown_rwlock.write_lock();
+        const auto it = std::find(shutdown_handles.begin(),
+                                  shutdown_handles.end(), window_handle);
+        if (it != shutdown_handles.end()) {
+            *it = nullptr;
+        }
+        shutdown_rwlock.write_unlock();
         if (!ShutdownBlockReasonDestroy(window_handle)) {
             error_code = GetLastError();
             return false;
@@ -235,7 +284,7 @@ namespace YanLib::ui::core {
     }
 
     bool window::query_shutdown_reason(HWND window_handle,
-                                       std::string &reason,
+                                       const std::string &reason,
                                        uint32_t *real_size,
                                        helper::CodePage code_page) {
         if (!real_size) {
@@ -271,6 +320,16 @@ namespace YanLib::ui::core {
     }
 
     bool window::destroy(HWND window_handle) {
+        if (!window_handle) {
+            return false;
+        }
+        window_rwlock.write_lock();
+        const auto it = std::find(window_handles.begin(), window_handles.end(),
+                                  window_handle);
+        if (it != window_handles.end()) {
+            *it = nullptr;
+        }
+        window_rwlock.write_unlock();
         if (!DestroyWindow(window_handle)) {
             error_code = GetLastError();
             return false;
@@ -474,8 +533,7 @@ namespace YanLib::ui::core {
             if (!result) {
                 error_code = GetLastError();
             }
-        }
-        while (false);
+        } while (false);
         if (user32) {
             FreeLibrary(user32);
         }
@@ -646,7 +704,7 @@ namespace YanLib::ui::core {
     uint16_t window::cascade(HWND parent_window_handle,
                              uint32_t how,
                              const RECT *rect,
-                             std::vector<HWND> &child) {
+                             const std::vector<HWND> &child) {
         uint16_t count = CascadeWindows(parent_window_handle, how, rect,
                                         child.size(), child.data());
         if (!count) {
@@ -991,7 +1049,7 @@ namespace YanLib::ui::core {
         return result;
     }
 
-    bool window::set_text(HWND window_handle, std::string &text) {
+    bool window::set_text(HWND window_handle, const std::string &text) {
         if (!SetWindowTextA(window_handle, text.data())) {
             error_code = GetLastError();
             return false;
@@ -999,7 +1057,7 @@ namespace YanLib::ui::core {
         return true;
     }
 
-    bool window::set_text(HWND window_handle, std::wstring &text) {
+    bool window::set_text(HWND window_handle, const std::wstring &text) {
         if (!SetWindowTextW(window_handle, text.data())) {
             error_code = GetLastError();
             return false;
@@ -1264,10 +1322,11 @@ namespace YanLib::ui::core {
         return true;
     }
 
-    uint32_t window::wait_for_multiple_objects(std::vector<HANDLE> &handles,
-                                               QueueType type,
-                                               uint32_t milli_seconds,
-                                               bool wait_all) {
+    uint32_t
+    window::wait_for_multiple_objects(const std::vector<HANDLE> &handles,
+                                      QueueType type,
+                                      uint32_t milli_seconds,
+                                      bool wait_all) {
         uint32_t result =
                 MsgWaitForMultipleObjects(handles.size(), handles.data(),
                                           wait_all ? TRUE : FALSE,
@@ -1279,10 +1338,11 @@ namespace YanLib::ui::core {
         return result;
     }
 
-    uint32_t window::wait_for_multiple_objects(std::vector<HANDLE> &handles,
-                                               QueueType type,
-                                               uint32_t milli_seconds,
-                                               WaitFlag flag) {
+    uint32_t
+    window::wait_for_multiple_objects(const std::vector<HANDLE> &handles,
+                                      QueueType type,
+                                      uint32_t milli_seconds,
+                                      WaitFlag flag) {
         uint32_t result =
                 MsgWaitForMultipleObjectsEx(handles.size(), handles.data(),
                                             milli_seconds,

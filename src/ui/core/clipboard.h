@@ -39,7 +39,7 @@ namespace YanLib::ui::core {
 
         std::vector<uint8_t> get_data(uint32_t format = CF_UNICODETEXT);
 
-        bool set_data(std::vector<uint8_t> &data,
+        bool set_data(const std::vector<uint8_t> &data,
                       uint32_t format = CF_UNICODETEXT);
 
         int32_t get_format_name(uint32_t format, std::string &format_name);

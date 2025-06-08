@@ -27,7 +27,9 @@ namespace YanLib::mem {
     }
 
     HANDLE
-    heap::create(uint32_t options, size_t initial_size, size_t maximum_size) {
+    heap::create(const uint32_t options,
+                 const size_t initial_size,
+                 const size_t maximum_size) {
         HANDLE heap_handle = HeapCreate(options, initial_size, maximum_size);
         if (!heap_handle) {
             error_code = GetLastError();
@@ -92,11 +94,11 @@ namespace YanLib::mem {
         return true;
     }
 
-    size_t heap::size(HANDLE heap_handle, void *addr) const {
+    size_t heap::size(HANDLE heap_handle, const void *addr) const {
         return HeapSize(heap_handle, 0, addr);
     }
 
-    bool heap::is_ok(HANDLE heap_handle, void *addr) const {
+    bool heap::is_ok(HANDLE heap_handle, const void *addr) const {
         return HeapValidate(heap_handle, 0, addr);
     }
 

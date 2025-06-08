@@ -3,6 +3,7 @@
 //
 
 #include "allocate.h"
+#include <Windows.h>
 #include "helper/convert.h"
 
 namespace YanLib::mem {
@@ -33,8 +34,8 @@ namespace YanLib::mem {
             return false;
         }
         rwlock.write_lock();
-        const auto it = std::find(mem_list.begin(), mem_list.end(), addr);
-        if (it != mem_list.end()) {
+        if (const auto it = std::find(mem_list.begin(), mem_list.end(), addr);
+            it != mem_list.end()) {
             *it = nullptr;
         }
         rwlock.write_unlock();
@@ -64,8 +65,8 @@ namespace YanLib::mem {
             return false;
         }
         rwlock.write_lock();
-        const auto it = std::find(mem_list.begin(), mem_list.end(), addr);
-        if (it != mem_list.end()) {
+        if (const auto it = std::find(mem_list.begin(), mem_list.end(), addr);
+            it != mem_list.end()) {
             *it = nullptr;
         }
         rwlock.write_unlock();

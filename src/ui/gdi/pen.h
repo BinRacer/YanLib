@@ -74,6 +74,8 @@ namespace YanLib::ui::gdi {
                                 std::vector<uint32_t> &len,
                                 PenStyle style = PenStyle::Solid);
 
+        static bool destroy(HPEN pen_handle);
+
         static COLORREF set_dc_color(HDC dc_handle, COLORREF color);
     };
 } // namespace YanLib::ui::gdi

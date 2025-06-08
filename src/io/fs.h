@@ -185,7 +185,8 @@ namespace YanLib::io {
         LuidBroadcastDrive = DDD_LUID_BROADCAST_DRIVE,
     };
 
-    inline DosControlCode operator|(DosControlCode a, DosControlCode b) {
+    inline DosControlCode operator|(const DosControlCode a,
+                                    const DosControlCode b) {
         return static_cast<DosControlCode>(static_cast<uint32_t>(a) |
                                            static_cast<uint32_t>(b));
     }

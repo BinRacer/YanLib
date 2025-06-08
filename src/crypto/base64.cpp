@@ -3,11 +3,11 @@
 //
 
 #include "base64.h"
-#include "io/fs.h"
 #include "helper/convert.h"
+#include <algorithm>
 
 namespace YanLib::crypto {
-    std::vector<uint8_t> base64::encode(const uint8_t *data, size_t len) {
+    std::vector<uint8_t> base64::encode(const uint8_t *data, const size_t len) {
         if (len <= 0)
             return {};
         constexpr uint8_t BASE64_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
@@ -28,13 +28,12 @@ namespace YanLib::crypto {
                 }
             }
 
-            int32_t sextets = (valid_bytes * 8 + 5) / 6;
+            const int32_t sextets = (valid_bytes * 8 + 5) / 6;
             for (int32_t j = 0; j < 4; ++j) {
-                uint8_t index = (triple >> (18 - j * 6)) & 0x3F;
+                const uint8_t index = (triple >> (18 - j * 6)) & 0x3F;
                 if (j < sextets) {
                     encoded.push_back(BASE64_CHARS[index]);
-                }
-                else {
+                } else {
                     encoded.push_back('=');
                 }
             }
@@ -42,14 +41,14 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<uint8_t> base64::decode(const uint8_t *data, size_t len) {
+    std::vector<uint8_t> base64::decode(const uint8_t *data, const size_t len) {
         if (len <= 0 || len % 4 != 0)
             return {};
 
         constexpr uint8_t BASE64_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
                                            "jklmnopqrstuvwxyz0123456789+/";
 
-        std::vector<int32_t> decode_table(256, -1);
+        std::vector decode_table(256, -1);
         for (int32_t i = 0; i < 64; ++i) {
             decode_table[BASE64_CHARS[i]] = i;
         }
@@ -82,7 +81,7 @@ namespace YanLib::crypto {
             }
         }
         if (padding > 0) {
-            size_t expected_size = (len - padding) * 3 / 4;
+            const size_t expected_size = (len - padding) * 3 / 4;
             if (decoded.size() < expected_size)
                 return {};
             decoded.resize(expected_size);
@@ -99,14 +98,14 @@ namespace YanLib::crypto {
     }
 
     std::string base64::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base64::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;
@@ -114,129 +113,202 @@ namespace YanLib::crypto {
 
     bool base64::encode_file(const std::string &input_file,
                              const std::string &output_file) {
-        io::fs input(input_file.data());
-        io::fs output(output_file.data(),
-                      io::DesiredAccess::Read | io::DesiredAccess::Write,
-                      io::ShareMode::Read | io::ShareMode::Write, nullptr,
-                      io::CreationDisposition::CreateAlways);
-        if (!input.is_ok() || !output.is_ok()) {
+        HANDLE input =
+                CreateFileA(input_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (input == INVALID_HANDLE_VALUE) {
             return false;
         }
-        const uint32_t buffer_size = input.size();
-        std::vector<uint8_t> buf(buffer_size, '\0');
-        uint32_t bytes_read = 0;
-        uint32_t bytes_written = 0;
+        HANDLE output =
+                CreateFileA(output_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (output == INVALID_HANDLE_VALUE) {
+            return false;
+        }
+        bool result = false;
         do {
-            if (!input.read(buf.data(), buffer_size, &bytes_read)) {
+            LARGE_INTEGER file_size{};
+            if (!GetFileSizeEx(input, &file_size)) {
+                break;
+            }
+            const uint32_t buffer_size = file_size.QuadPart;
+            std::vector<uint8_t> buf(buffer_size, '\0');
+            unsigned long bytes_read = 0;
+            unsigned long bytes_written = 0;
+            if (!ReadFile(input, buf.data(), buffer_size, &bytes_read,
+                          nullptr)) {
                 break;
             }
             if (bytes_read <= 0)
                 break;
-            std::vector<uint8_t> encode_data = encode(buf.data(), bytes_read);
-            if (!output.write(encode_data.data(), encode_data.size(),
-                              &bytes_written)) {
+            const std::vector<uint8_t> encode_data =
+                    encode(buf.data(), bytes_read);
+            if (!WriteFile(output, encode_data.data(), encode_data.size(),
+                           &bytes_written, nullptr)) {
                 break;
             }
-            return true;
+            result = true;
+        } while (false);
+        if (input != INVALID_HANDLE_VALUE) {
+            CloseHandle(input);
         }
-        while (false);
-        return false;
+        if (output != INVALID_HANDLE_VALUE) {
+            CloseHandle(output);
+        }
+        return result;
     }
 
     bool base64::encode_file(const std::wstring &input_file,
                              const std::wstring &output_file) {
-        io::fs input(input_file.data());
-        io::fs output(output_file.data(),
-                      io::DesiredAccess::Read | io::DesiredAccess::Write,
-                      io::ShareMode::Read | io::ShareMode::Write, nullptr,
-                      io::CreationDisposition::CreateAlways);
-        if (!input.is_ok() || !output.is_ok()) {
+        HANDLE input =
+                CreateFileW(input_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (input == INVALID_HANDLE_VALUE) {
             return false;
         }
-        const uint32_t buffer_size = input.size();
-        std::vector<uint8_t> buf(buffer_size, '\0');
-        uint32_t bytes_read = 0;
-        uint32_t bytes_written = 0;
+        HANDLE output =
+                CreateFileW(output_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (output == INVALID_HANDLE_VALUE) {
+            return false;
+        }
+        bool result = false;
         do {
-            if (!input.read(buf.data(), buffer_size, &bytes_read)) {
+            LARGE_INTEGER file_size{};
+            if (!GetFileSizeEx(input, &file_size)) {
+                break;
+            }
+            const uint32_t buffer_size = file_size.QuadPart;
+            std::vector<uint8_t> buf(buffer_size, '\0');
+            unsigned long bytes_read = 0;
+            unsigned long bytes_written = 0;
+            if (!ReadFile(input, buf.data(), buffer_size, &bytes_read,
+                          nullptr)) {
                 break;
             }
             if (bytes_read <= 0)
                 break;
-            std::vector<uint8_t> encode_data = encode(buf.data(), bytes_read);
-            if (!output.write(encode_data.data(), encode_data.size(),
-                              &bytes_written)) {
+            const std::vector<uint8_t> encode_data =
+                    encode(buf.data(), bytes_read);
+            if (!WriteFile(output, encode_data.data(), encode_data.size(),
+                           &bytes_written, nullptr)) {
                 break;
             }
-            return true;
+            result = true;
+        } while (false);
+        if (input != INVALID_HANDLE_VALUE) {
+            CloseHandle(input);
         }
-        while (false);
-        return false;
+        if (output != INVALID_HANDLE_VALUE) {
+            CloseHandle(output);
+        }
+        return result;
     }
 
     bool base64::decode_file(const std::string &input_file,
                              const std::string &output_file) {
-        io::fs input(input_file.data());
-        io::fs output(output_file.data(),
-                      io::DesiredAccess::Read | io::DesiredAccess::Write,
-                      io::ShareMode::Read | io::ShareMode::Write, nullptr,
-                      io::CreationDisposition::CreateAlways);
-        if (!input.is_ok() || !output.is_ok()) {
+        HANDLE input =
+                CreateFileA(input_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (input == INVALID_HANDLE_VALUE) {
             return false;
         }
-        const uint32_t buffer_size = input.size();
-        std::vector<uint8_t> buf(buffer_size, '\0');
-        uint32_t bytes_read = 0;
-        uint32_t bytes_written = 0;
+        HANDLE output =
+                CreateFileA(output_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (output == INVALID_HANDLE_VALUE) {
+            return false;
+        }
+        bool result = false;
         do {
-            if (!input.read(buf.data(), buffer_size, &bytes_read)) {
+            LARGE_INTEGER file_size{};
+            if (!GetFileSizeEx(input, &file_size)) {
+                break;
+            }
+            const uint32_t buffer_size = file_size.QuadPart;
+            std::vector<uint8_t> buf(buffer_size, '\0');
+            unsigned long bytes_read = 0;
+            unsigned long bytes_written = 0;
+            if (!ReadFile(input, buf.data(), buffer_size, &bytes_read,
+                          nullptr)) {
                 break;
             }
             if (bytes_read <= 0)
                 break;
-            std::vector<uint8_t> encode_data = decode(buf.data(), bytes_read);
-            if (!output.write(encode_data.data(), encode_data.size(),
-                              &bytes_written)) {
+            const std::vector<uint8_t> decode_data =
+                    decode(buf.data(), bytes_read);
+            if (!WriteFile(output, decode_data.data(), decode_data.size(),
+                           &bytes_written, nullptr)) {
                 break;
             }
-            return true;
+            result = true;
+        } while (false);
+        if (input != INVALID_HANDLE_VALUE) {
+            CloseHandle(input);
         }
-        while (false);
-        return false;
+        if (output != INVALID_HANDLE_VALUE) {
+            CloseHandle(output);
+        }
+        return result;
     }
 
     bool base64::decode_file(const std::wstring &input_file,
                              const std::wstring &output_file) {
-        io::fs input(input_file.data());
-        io::fs output(output_file.data(),
-                      io::DesiredAccess::Read | io::DesiredAccess::Write,
-                      io::ShareMode::Read | io::ShareMode::Write, nullptr,
-                      io::CreationDisposition::CreateAlways);
-        if (!input.is_ok() || !output.is_ok()) {
+        HANDLE input =
+                CreateFileW(input_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (input == INVALID_HANDLE_VALUE) {
             return false;
         }
-        const uint32_t buffer_size = input.size();
-        std::vector<uint8_t> buf(buffer_size, '\0');
-        uint32_t bytes_read = 0;
-        uint32_t bytes_written = 0;
+        HANDLE output =
+                CreateFileW(output_file.data(), GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                            CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+        if (output == INVALID_HANDLE_VALUE) {
+            return false;
+        }
+        bool result = false;
         do {
-            if (!input.read(buf.data(), buffer_size, &bytes_read)) {
+            LARGE_INTEGER file_size{};
+            if (!GetFileSizeEx(input, &file_size)) {
+                break;
+            }
+            const uint32_t buffer_size = file_size.QuadPart;
+            std::vector<uint8_t> buf(buffer_size, '\0');
+            unsigned long bytes_read = 0;
+            unsigned long bytes_written = 0;
+            if (!ReadFile(input, buf.data(), buffer_size, &bytes_read,
+                          nullptr)) {
                 break;
             }
             if (bytes_read <= 0)
                 break;
-            std::vector<uint8_t> encode_data = decode(buf.data(), bytes_read);
-            if (!output.write(encode_data.data(), encode_data.size(),
-                              &bytes_written)) {
+            const std::vector<uint8_t> decode_data =
+                    decode(buf.data(), bytes_read);
+            if (!WriteFile(output, decode_data.data(), decode_data.size(),
+                           &bytes_written, nullptr)) {
                 break;
             }
-            return true;
+            result = true;
+        } while (false);
+        if (input != INVALID_HANDLE_VALUE) {
+            CloseHandle(input);
         }
-        while (false);
-        return false;
+        if (output != INVALID_HANDLE_VALUE) {
+            CloseHandle(output);
+        }
+        return result;
     }
 
-    std::vector<uint8_t> base64::encode_url(const uint8_t *data, size_t len) {
+    std::vector<uint8_t> base64::encode_url(const uint8_t *data,
+                                            const size_t len) {
         if (len <= 0)
             return {};
         constexpr uint8_t BASE64_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
@@ -257,13 +329,12 @@ namespace YanLib::crypto {
                 }
             }
 
-            int32_t sextets = (valid_bytes * 8 + 5) / 6;
+            const int32_t sextets = (valid_bytes * 8 + 5) / 6;
             for (int32_t j = 0; j < 4; ++j) {
-                uint8_t index = (triple >> (18 - j * 6)) & 0x3F;
+                const uint8_t index = (triple >> (18 - j * 6)) & 0x3F;
                 if (j < sextets) {
                     encoded.push_back(BASE64_CHARS[index]);
-                }
-                else {
+                } else {
                     encoded.push_back('=');
                 }
             }
@@ -281,13 +352,14 @@ namespace YanLib::crypto {
         return encoded;
     }
 
-    std::vector<uint8_t> base64::decode_url(const uint8_t *data, size_t len) {
+    std::vector<uint8_t> base64::decode_url(const uint8_t *data,
+                                            const size_t len) {
         if (len <= 0)
             return {};
 
-        std::vector<uint8_t> modified_data(data, data + len);
+        std::vector modified_data(data, data + len);
         std::transform(modified_data.begin(), modified_data.end(),
-                       modified_data.begin(), [](uint8_t c) -> uint8_t {
+                       modified_data.begin(), [](const uint8_t c) -> uint8_t {
                            if (c == '-')
                                return '+';
                            if (c == '_')
@@ -295,12 +367,12 @@ namespace YanLib::crypto {
                            return c;
                        });
 
-        size_t padding = (4 - (modified_data.size() % 4)) % 4;
+        const size_t padding = (4 - (modified_data.size() % 4)) % 4;
         modified_data.insert(modified_data.end(), padding, '=');
 
         constexpr uint8_t BASE64_CHARS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi"
                                            "jklmnopqrstuvwxyz0123456789+/";
-        std::vector<int32_t> decode_table(256, -1);
+        std::vector decode_table(256, -1);
         for (int32_t i = 0; i < 64; ++i) {
             decode_table[BASE64_CHARS[i]] = i;
         }
@@ -337,7 +409,8 @@ namespace YanLib::crypto {
         }
 
         if (padding > 0) {
-            size_t expected_size = (modified_data.size() - padding) * 3 / 4;
+            const size_t expected_size =
+                    (modified_data.size() - padding) * 3 / 4;
             if (decoded.size() < expected_size)
                 return {};
             decoded.resize(expected_size);
@@ -355,14 +428,14 @@ namespace YanLib::crypto {
     }
 
     std::string base64::encode_url(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode_url(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base64::decode_url(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode_url(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

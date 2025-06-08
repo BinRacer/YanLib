@@ -216,7 +216,7 @@ namespace YanLib::ui::core {
         return cursor;
     }
 
-    bool image::close_bitmap(HBITMAP bitmap_handle) {
+    bool image::destroy_bitmap(HBITMAP bitmap_handle) {
         if (!bitmap_handle) {
             return false;
         }
@@ -230,7 +230,7 @@ namespace YanLib::ui::core {
         return DeleteObject(bitmap_handle);
     }
 
-    bool image::close_icon(HICON icon_handle) {
+    bool image::destroy_icon(HICON icon_handle) {
         if (!icon_handle) {
             return false;
         }
@@ -248,7 +248,7 @@ namespace YanLib::ui::core {
         return true;
     }
 
-    bool image::close_cursor(HCURSOR cursor_handle) {
+    bool image::destroy_cursor(HCURSOR cursor_handle) {
         if (!cursor_handle) {
             return false;
         }

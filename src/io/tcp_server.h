@@ -56,7 +56,7 @@ namespace YanLib::io {
 
         std::string read_string_to_end(SOCKET client_socket);
 
-        int32_t write_string(SOCKET client_socket, std::string &str);
+        int32_t write_string(SOCKET client_socket, const std::string &str);
 
         [[nodiscard]] int32_t err_code() const;
 

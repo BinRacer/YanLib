@@ -123,7 +123,7 @@ namespace YanLib::io {
         }
     }
 
-    bool ftp::url_crack(uint32_t flag) {
+    bool ftp::url_crack(const uint32_t flag) {
         if (!InternetCrackUrlW(url.data(), url.size(), flag, &uc)) {
             error_code = GetLastError();
             return false;
@@ -133,10 +133,10 @@ namespace YanLib::io {
     }
 
     bool ftp::open(const char *agent_name,
-                   uint32_t access_type,
+                   const uint32_t access_type,
                    const char *proxy,
                    const char *proxy_bypass,
-                   uint32_t flag) {
+                   const uint32_t flag) {
         internet_handle = InternetOpenA(agent_name, access_type, proxy,
                                         proxy_bypass, flag);
         if (!internet_handle) {
@@ -147,10 +147,10 @@ namespace YanLib::io {
     }
 
     bool ftp::open(const wchar_t *agent_name,
-                   uint32_t access_type,
+                   const uint32_t access_type,
                    const wchar_t *proxy,
                    const wchar_t *proxy_bypass,
-                   uint32_t flag) {
+                   const uint32_t flag) {
         internet_handle = InternetOpenW(agent_name, access_type, proxy,
                                         proxy_bypass, flag);
         if (!internet_handle) {
@@ -160,7 +160,9 @@ namespace YanLib::io {
         return true;
     }
 
-    bool ftp::connect(uint32_t service, uint32_t flag, uintptr_t context) {
+    bool ftp::connect(const uint32_t service,
+                      const uint32_t flag,
+                      const uintptr_t context) {
         session_read_handle =
                 InternetConnectW(internet_handle, _hostname, _port,
                                  wcslen(_username) == 0 ? nullptr : _username,
@@ -183,9 +185,9 @@ namespace YanLib::io {
     }
 
     HINTERNET ftp::open_file(const char *file_name,
-                             uint32_t access,
-                             uint32_t flag,
-                             uintptr_t context) {
+                             const uint32_t access,
+                             const uint32_t flag,
+                             const uintptr_t context) {
         HINTERNET file_handle = FtpOpenFileA(session_read_handle, file_name,
                                              access, flag, context);
         if (!file_handle) {
@@ -199,9 +201,9 @@ namespace YanLib::io {
     }
 
     HINTERNET ftp::open_file(const wchar_t *file_name,
-                             uint32_t access,
-                             uint32_t flag,
-                             uintptr_t context) {
+                             const uint32_t access,
+                             const uint32_t flag,
+                             const uintptr_t context) {
         HINTERNET file_handle = FtpOpenFileW(session_read_handle, file_name,
                                              access, flag, context);
         if (!file_handle) {
@@ -215,9 +217,9 @@ namespace YanLib::io {
     }
 
     HINTERNET ftp::create_file(const char *file_name,
-                               uint32_t access,
-                               uint32_t flag,
-                               uintptr_t context) {
+                               const uint32_t access,
+                               const uint32_t flag,
+                               const uintptr_t context) {
         HINTERNET file_handle = FtpOpenFileA(session_upload_handle, file_name,
                                              access, flag, context);
         if (!file_handle) {
@@ -231,9 +233,9 @@ namespace YanLib::io {
     }
 
     HINTERNET ftp::create_file(const wchar_t *file_name,
-                               uint32_t access,
-                               uint32_t flag,
-                               uintptr_t context) {
+                               const uint32_t access,
+                               const uint32_t flag,
+                               const uintptr_t context) {
         HINTERNET file_handle = FtpOpenFileW(session_upload_handle, file_name,
                                              access, flag, context);
         if (!file_handle) {
@@ -368,12 +370,10 @@ namespace YanLib::io {
         }
         if (current_dir.back() == '/' || current_dir.back() == '\\') {
             current_dir.append("*.*");
-        }
-        else {
+        } else {
             if (current_dir.find('\\') != std::wstring::npos) {
                 current_dir.append("\\*.*");
-            }
-            else {
+            } else {
                 current_dir.append("/*.*");
             }
         }
@@ -390,13 +390,11 @@ namespace YanLib::io {
                 strcmp(file_data.cFileName, "..") != 0) {
                 if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                     dirs.emplace_back(file_data.cFileName);
-                }
-                else {
+                } else {
                     files.emplace_back(file_data.cFileName);
                 }
             }
-        }
-        while (InternetFindNextFileA(find_handle, &file_data));
+        } while (InternetFindNextFileA(find_handle, &file_data));
         InternetCloseHandle(find_handle);
         return true;
     }
@@ -409,12 +407,10 @@ namespace YanLib::io {
         }
         if (current_dir.back() == L'/' || current_dir.back() == L'\\') {
             current_dir.append(L"*.*");
-        }
-        else {
+        } else {
             if (current_dir.find(L'\\') != std::wstring::npos) {
                 current_dir.append(L"\\*.*");
-            }
-            else {
+            } else {
                 current_dir.append(L"/*.*");
             }
         }
@@ -431,13 +427,11 @@ namespace YanLib::io {
                 wcscmp(file_data.cFileName, L"..") != 0) {
                 if (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                     dirs.emplace_back(file_data.cFileName);
-                }
-                else {
+                } else {
                     files.emplace_back(file_data.cFileName);
                 }
             }
-        }
-        while (InternetFindNextFileW(find_handle, &file_data));
+        } while (InternetFindNextFileW(find_handle, &file_data));
         InternetCloseHandle(find_handle);
         return true;
     }
@@ -448,22 +442,19 @@ namespace YanLib::io {
         if (!pwd(current_dir) || current_dir.empty()) {
             return false;
         }
-        std::string base_path = current_dir;
+        const std::string base_path = current_dir;
         std::string slash;
         if (current_dir.back() == '/') {
             current_dir.append("*.*");
             slash = "";
-        }
-        else if (current_dir.back() == '\\') {
+        } else if (current_dir.back() == '\\') {
             current_dir.append("*.*");
             slash = "";
-        }
-        else {
+        } else {
             if (current_dir.find('\\') != std::wstring::npos) {
                 current_dir.append("\\*.*");
                 slash = "\\";
-            }
-            else {
+            } else {
                 current_dir.append("/*.*");
                 slash = "/";
             }
@@ -483,14 +474,12 @@ namespace YanLib::io {
                     FILE_ATTRIBUTE_DIRECTORY) {
                     dirs.push_back(base_path + slash +
                                    find_file_data.cFileName);
-                }
-                else {
+                } else {
                     files.push_back(base_path + slash +
                                     find_file_data.cFileName);
                 }
             }
-        }
-        while (InternetFindNextFileA(find_handle, &find_file_data));
+        } while (InternetFindNextFileA(find_handle, &find_file_data));
         InternetCloseHandle(find_handle);
         return true;
     }
@@ -501,22 +490,19 @@ namespace YanLib::io {
         if (!pwd(current_dir) || current_dir.empty()) {
             return false;
         }
-        std::wstring base_path = current_dir;
+        const std::wstring base_path = current_dir;
         std::wstring slash;
         if (current_dir.back() == L'/') {
             current_dir.append(L"*.*");
             slash = L"";
-        }
-        else if (current_dir.back() == L'\\') {
+        } else if (current_dir.back() == L'\\') {
             current_dir.append(L"*.*");
             slash = L"";
-        }
-        else {
+        } else {
             if (current_dir.find(L'\\') != std::wstring::npos) {
                 current_dir.append(L"\\*.*");
                 slash = L"\\";
-            }
-            else {
+            } else {
                 current_dir.append(L"/*.*");
                 slash = L"/";
             }
@@ -536,14 +522,12 @@ namespace YanLib::io {
                     FILE_ATTRIBUTE_DIRECTORY) {
                     dirs.push_back(base_path + slash +
                                    find_file_data.cFileName);
-                }
-                else {
+                } else {
                     files.push_back(base_path + slash +
                                     find_file_data.cFileName);
                 }
             }
-        }
-        while (InternetFindNextFileW(find_handle, &find_file_data));
+        } while (InternetFindNextFileW(find_handle, &find_file_data));
         InternetCloseHandle(find_handle);
         return true;
     }
@@ -660,10 +644,10 @@ namespace YanLib::io {
 
     bool ftp::download(const char *remote_file,
                        const char *new_file,
-                       bool is_fail_if_exists,
-                       uint32_t flags_and_attrs,
-                       uint32_t flag,
-                       uintptr_t context) {
+                       const bool is_fail_if_exists,
+                       const uint32_t flags_and_attrs,
+                       const uint32_t flag,
+                       const uintptr_t context) {
         if (!FtpGetFileA(session_read_handle, remote_file, new_file,
                          is_fail_if_exists ? TRUE : FALSE, flags_and_attrs,
                          flag, context)) {
@@ -675,10 +659,10 @@ namespace YanLib::io {
 
     bool ftp::download(const wchar_t *remote_file,
                        const wchar_t *new_file,
-                       bool is_fail_if_exists,
-                       uint32_t flags_and_attrs,
-                       uint32_t flag,
-                       uintptr_t context) {
+                       const bool is_fail_if_exists,
+                       const uint32_t flags_and_attrs,
+                       const uint32_t flag,
+                       const uintptr_t context) {
         if (!FtpGetFileW(session_read_handle, remote_file, new_file,
                          is_fail_if_exists ? TRUE : FALSE, flags_and_attrs,
                          flag, context)) {
@@ -690,8 +674,8 @@ namespace YanLib::io {
 
     bool ftp::upload(const char *local_file,
                      const char *new_remote_file,
-                     uint32_t flag,
-                     uintptr_t context) {
+                     const uint32_t flag,
+                     const uintptr_t context) {
         if (!FtpPutFileA(session_upload_handle, local_file, new_remote_file,
                          flag, context)) {
             error_code = GetLastError();
@@ -702,8 +686,8 @@ namespace YanLib::io {
 
     bool ftp::upload(const wchar_t *local_file,
                      const wchar_t *new_remote_file,
-                     uint32_t flag,
-                     uintptr_t context) {
+                     const uint32_t flag,
+                     const uintptr_t context) {
         if (!FtpPutFileW(session_upload_handle, local_file, new_remote_file,
                          flag, context)) {
             error_code = GetLastError();
@@ -735,8 +719,7 @@ namespace YanLib::io {
                 error = file.err_code();
                 break;
             }
-        }
-        while (bytes_read > 0 && bytes_written > 0);
+        } while (bytes_read > 0 && bytes_written > 0);
         return error;
     }
 
@@ -763,8 +746,7 @@ namespace YanLib::io {
                 error = file.err_code();
                 break;
             }
-        }
-        while (bytes_read > 0 && bytes_written > 0);
+        } while (bytes_read > 0 && bytes_written > 0);
         return error;
     }
 
@@ -789,8 +771,7 @@ namespace YanLib::io {
                 error = err_code();
                 break;
             }
-        }
-        while (bytes_read > 0 && bytes_written > 0);
+        } while (bytes_read > 0 && bytes_written > 0);
         return error;
     }
 
@@ -815,8 +796,7 @@ namespace YanLib::io {
                 error = err_code();
                 break;
             }
-        }
-        while (bytes_read > 0 && bytes_written > 0);
+        } while (bytes_read > 0 && bytes_written > 0);
         return error;
     }
 

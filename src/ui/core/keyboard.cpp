@@ -313,8 +313,7 @@ namespace YanLib::ui::core {
                                  key_state, &ch, menu_active ? 1 : 0);
         if (result == 1) {
             *ch1 = static_cast<uint8_t>(ch & 0xFF);
-        }
-        else if (result == 2) {
+        } else if (result == 2) {
             *ch1 = static_cast<uint8_t>(ch & 0xFF);
             *ch2 = static_cast<uint8_t>((ch >> 8) & 0xFF);
         }
@@ -337,8 +336,7 @@ namespace YanLib::ui::core {
                           menu_active ? 1 : 0, layout_handle);
         if (result == 1) {
             *ch1 = static_cast<uint8_t>(ch & 0xFF);
-        }
-        else if (result == 2) {
+        } else if (result == 2) {
             *ch1 = static_cast<uint8_t>(ch & 0xFF);
             *ch2 = static_cast<uint8_t>((ch >> 8) & 0xFF);
         }

@@ -5,22 +5,22 @@
 #include "monitor.h"
 
 namespace YanLib::ui::gdi {
-    bool monitor::enum_display(HDC dc_handle,
+    bool monitor::enum_monitor(HDC dc_handle,
                                const RECT *rect,
                                MONITORENUMPROC monitor_enum_proc,
                                LPARAM data) {
         return EnumDisplayMonitors(dc_handle, rect, monitor_enum_proc, data);
     }
 
-    HMONITOR monitor::get(POINT point, MonitorFlag flag) {
+    HMONITOR monitor::get_monitor(POINT point, MonitorFlag flag) {
         return MonitorFromPoint(point, static_cast<uint32_t>(flag));
     }
 
-    HMONITOR monitor::get(const RECT *rect, MonitorFlag flag) {
+    HMONITOR monitor::get_monitor(const RECT *rect, MonitorFlag flag) {
         return MonitorFromRect(rect, static_cast<uint32_t>(flag));
     }
 
-    HMONITOR monitor::get(HWND window_handle, MonitorFlag flag) {
+    HMONITOR monitor::get_monitor(HWND window_handle, MonitorFlag flag) {
         return MonitorFromWindow(window_handle, static_cast<uint32_t>(flag));
     }
 

@@ -46,7 +46,7 @@ namespace YanLib::ui::gdi {
         return ReleaseDC(window_handle, dc_handle);
     }
 
-    bool dc::remove(HDC dc_handle) {
+    bool dc::destroy(HDC dc_handle) {
         return DeleteDC(dc_handle);
     }
 
@@ -148,7 +148,7 @@ namespace YanLib::ui::gdi {
         return SelectObject(dc_handle, gdi_obj_handle);
     }
 
-    bool dc::delete_object(HGDIOBJ gdi_obj_handle) {
+    bool dc::destroy_object(HGDIOBJ gdi_obj_handle) {
         return DeleteObject(gdi_obj_handle);
     }
 

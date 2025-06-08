@@ -53,10 +53,11 @@ namespace YanLib::sys {
         return thread_handle;
     }
 
-    HANDLE thread::create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                             void *params,
-                                             size_t stack_size,
-                                             SECURITY_ATTRIBUTES *sa) {
+    HANDLE
+    thread::create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
+                                      void *params,
+                                      size_t stack_size,
+                                      SECURITY_ATTRIBUTES *sa) {
         unsigned long tid = 0;
         HANDLE thread_handle =
                 CreateThread(sa, stack_size, start_addr, params,
@@ -151,7 +152,9 @@ namespace YanLib::sys {
     }
 
     HANDLE
-    thread::tid_to_handle(uint32_t tid, ThreadAccess access, bool is_inherit) {
+    thread::tid_to_handle(uint32_t tid,
+                          ThreadAccess access,
+                          const bool is_inherit) {
         HANDLE thread_handle = OpenThread(static_cast<uint32_t>(access),
                                           is_inherit ? TRUE : FALSE, tid);
         if (!thread_handle) {
@@ -165,7 +168,7 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::handle_to_tid(HANDLE thread_handle) {
-        uint32_t thread_id = GetThreadId(thread_handle);
+        const uint32_t thread_id = GetThreadId(thread_handle);
         if (!thread_handle) {
             error_code = GetLastError();
         }
@@ -173,7 +176,7 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::handle_to_pid(HANDLE thread_handle) {
-        uint32_t pid = GetProcessIdOfThread(thread_handle);
+        const uint32_t pid = GetProcessIdOfThread(thread_handle);
         if (!pid) {
             error_code = GetLastError();
         }
@@ -201,7 +204,7 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::tls_alloc() {
-        uint32_t tls_index = TlsAlloc();
+        const uint32_t tls_index = TlsAlloc();
         if (tls_index == TLS_OUT_OF_INDEXES) {
             error_code = GetLastError();
         }
@@ -280,7 +283,7 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::suspend(HANDLE thread_handle) {
-        uint32_t ret = SuspendThread(thread_handle);
+        const uint32_t ret = SuspendThread(thread_handle);
         if (ret == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
@@ -288,7 +291,7 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::resume(HANDLE thread_handle) {
-        uint32_t ret = ResumeThread(thread_handle);
+        const uint32_t ret = ResumeThread(thread_handle);
         if (ret == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
@@ -296,19 +299,20 @@ namespace YanLib::sys {
     }
 
     bool thread::wait(HANDLE thread_handle, uint32_t milli_seconds) {
-        uint32_t ret = WaitForSingleObject(thread_handle, milli_seconds);
-        if (ret == WAIT_OBJECT_0) {
+        if (const uint32_t ret =
+                    WaitForSingleObject(thread_handle, milli_seconds);
+            ret == WAIT_OBJECT_0) {
             return true;
         }
         return false;
     }
 
-    bool thread::wait_all(bool is_wait_all, uint32_t milli_seconds) {
-        std::vector<HANDLE> thread_handles = thread::thread_handles();
-        uint32_t ret = WaitForMultipleObjects(thread_handles.size(),
-                                              thread_handles.data(),
-                                              is_wait_all ? TRUE : FALSE,
-                                              milli_seconds);
+    bool thread::wait_all(const bool is_wait_all, uint32_t milli_seconds) {
+        const std::vector<HANDLE> thread_handles = thread::thread_handles();
+        const uint32_t ret = WaitForMultipleObjects(thread_handles.size(),
+                                                    thread_handles.data(),
+                                                    is_wait_all ? TRUE : FALSE,
+                                                    milli_seconds);
         if (ret >= WAIT_OBJECT_0 &&
             ret <= WAIT_OBJECT_0 + thread_handles.size() - 1) {
             return true;
@@ -376,7 +380,7 @@ namespace YanLib::sys {
     }
 
     int32_t thread::get_priority(HANDLE thread_handle) {
-        int32_t priority = GetThreadPriority(thread_handle);
+        const int32_t priority = GetThreadPriority(thread_handle);
         if (priority == THREAD_PRIORITY_ERROR_RETURN) {
             error_code = GetLastError();
         }
@@ -392,7 +396,7 @@ namespace YanLib::sys {
     }
 
     uint32_t thread::get_proc_priority(HANDLE proc_handle) {
-        uint32_t priority = GetPriorityClass(proc_handle);
+        const uint32_t priority = GetPriorityClass(proc_handle);
         if (!priority) {
             error_code = GetLastError();
         }
@@ -493,7 +497,7 @@ namespace YanLib::sys {
     bool thread::get_info(HANDLE thread_handle,
                           THREAD_INFORMATION_CLASS thread_info_class,
                           void *thread_info,
-                          uint32_t thread_information_size) {
+                          const uint32_t thread_information_size) {
         if (!GetThreadInformation(thread_handle, thread_info_class, thread_info,
                                   thread_information_size)) {
             error_code = GetLastError();
@@ -505,7 +509,7 @@ namespace YanLib::sys {
     bool thread::set_info(HANDLE thread_handle,
                           THREAD_INFORMATION_CLASS thread_info_class,
                           void *thread_info,
-                          uint32_t thread_information_size) {
+                          const uint32_t thread_information_size) {
         if (!SetThreadInformation(thread_handle, thread_info_class, thread_info,
                                   thread_information_size)) {
             error_code = GetLastError();
@@ -542,8 +546,8 @@ namespace YanLib::sys {
     }
 
     uintptr_t thread::set_affinity_mask(HANDLE thread_handle,
-                                        uintptr_t thread_affinity_mask) {
-        uintptr_t ret =
+                                        const uintptr_t thread_affinity_mask) {
+        const uintptr_t ret =
                 SetThreadAffinityMask(thread_handle, thread_affinity_mask);
         if (!ret) {
             error_code = GetLastError();

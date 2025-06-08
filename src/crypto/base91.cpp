@@ -16,7 +16,7 @@ namespace YanLib::crypto {
         encoded.reserve(data.size());
         uint32_t b = 0;
         int32_t n = 0;
-        for (auto byte : data) {
+        for (const auto byte : data) {
             b |= static_cast<uint32_t>(byte) << n;
             n += 8;
 
@@ -25,8 +25,7 @@ namespace YanLib::crypto {
                 if (v > 88) {
                     b >>= 13;
                     n -= 13;
-                }
-                else {
+                } else {
                     v = b & 0x3FFF;
                     b >>= 14;
                     n -= 14;
@@ -54,7 +53,7 @@ namespace YanLib::crypto {
         if (data.empty())
             return {};
 
-        std::vector<int32_t> reverse_table(256, -1);
+        std::vector reverse_table(256, -1);
         for (int32_t i = 0; i < 91; ++i) {
             reverse_table[BASE91_CHARS[i]] = i;
         }
@@ -66,15 +65,14 @@ namespace YanLib::crypto {
         int32_t bits_count = 0;
         int32_t value = -1;
 
-        for (auto c : data) {
+        for (const auto c : data) {
             const int32_t idx = reverse_table[c];
             if (idx == -1)
                 continue;
 
             if (value < 0) {
                 value = idx;
-            }
-            else {
+            } else {
                 value += idx * 91;
                 buffer |= value << bits_count;
                 bits_count += (value & 0x1FFF) > 88 ? 13 : 14;
@@ -96,14 +94,14 @@ namespace YanLib::crypto {
     }
 
     std::string base91::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string base91::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

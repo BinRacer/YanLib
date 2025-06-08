@@ -7,7 +7,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::io {
-    udp_client::udp_client(bool active_ipv6) {
+    udp_client::udp_client(const bool active_ipv6) {
         do {
             is_ipv6 = active_ipv6;
             error_code = WSAStartup(MAKEWORD(2, 2), &wsa_data);
@@ -20,8 +20,7 @@ namespace YanLib::io {
             }
             if (active_ipv6) {
                 client_socket = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
-            }
-            else {
+            } else {
                 client_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
             }
             if (client_socket == INVALID_SOCKET) {
@@ -29,8 +28,7 @@ namespace YanLib::io {
                 break;
             }
             init_done = true;
-        }
-        while (false);
+        } while (false);
         init_done = false;
     }
 
@@ -49,7 +47,7 @@ namespace YanLib::io {
                              int32_t flags,
                              sockaddr *from,
                              int32_t *from_len) {
-        int32_t number_of_bytes =
+        const int32_t number_of_bytes =
                 recvfrom(client_socket, buf, len, flags, from, from_len);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
@@ -62,7 +60,7 @@ namespace YanLib::io {
                               int32_t flags,
                               const sockaddr *to,
                               int32_t to_len) {
-        int32_t number_of_bytes =
+        const int32_t number_of_bytes =
                 sendto(client_socket, buf, len, flags, to, to_len);
         if (number_of_bytes == SOCKET_ERROR) {
             error_code = WSAGetLastError();
@@ -77,14 +75,13 @@ namespace YanLib::io {
         if (is_ipv6) {
             sockaddr_in6 client_addr{};
             int32_t client_size = sizeof(client_addr);
-            int32_t number_of_bytes =
+            const int32_t number_of_bytes =
                     recvfrom(client_socket, buf, len, 0,
                              reinterpret_cast<sockaddr *>(&client_addr),
                              &client_size);
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
-            }
-            else {
+            } else {
                 if (!inet_ntop(AF_INET6, &client_addr.sin6_addr,
                                remote_ip.data(), INET6_ADDRSTRLEN)) {
                     error_code = WSAGetLastError();
@@ -92,18 +89,16 @@ namespace YanLib::io {
                 remote_port = ntohs(client_addr.sin6_port);
             }
             return number_of_bytes;
-        }
-        else {
+        } else {
             sockaddr_in client_addr{};
             int32_t client_size = sizeof(client_addr);
-            int32_t number_of_bytes =
+            const int32_t number_of_bytes =
                     recvfrom(client_socket, buf, len, 0,
                              reinterpret_cast<sockaddr *>(&client_addr),
                              &client_size);
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
-            }
-            else {
+            } else {
                 if (!inet_ntop(AF_INET, &client_addr.sin_addr, remote_ip.data(),
                                INET_ADDRSTRLEN)) {
                     error_code = WSAGetLastError();
@@ -114,10 +109,10 @@ namespace YanLib::io {
         }
     }
 
-    int32_t udp_client::write(char *buf,
+    int32_t udp_client::write(const char *buf,
                               int32_t len,
-                              std::string &remote_ip,
-                              uint16_t &remote_port) {
+                              const std::string &remote_ip,
+                              const uint16_t &remote_port) {
         if (is_ipv6) {
             sockaddr_in6 addr{};
             addr.sin6_family = AF_INET6;
@@ -125,22 +120,21 @@ namespace YanLib::io {
             if (inet_pton(AF_INET6, remote_ip.data(), &addr.sin6_addr) != 1) {
                 error_code = WSAGetLastError();
             }
-            int32_t number_of_bytes =
+            const int32_t number_of_bytes =
                     sendto(client_socket, buf, len, 0,
                            reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
             if (number_of_bytes == SOCKET_ERROR) {
                 error_code = WSAGetLastError();
             }
             return number_of_bytes;
-        }
-        else {
+        } else {
             sockaddr_in addr{};
             addr.sin_family = AF_INET;
             addr.sin_port = htons(remote_port);
             if (inet_pton(AF_INET, remote_ip.data(), &addr.sin_addr) != 1) {
                 error_code = WSAGetLastError();
             }
-            int32_t number_of_bytes =
+            const int32_t number_of_bytes =
                     sendto(client_socket, buf, len, 0,
                            reinterpret_cast<sockaddr *>(&addr), sizeof(addr));
             if (number_of_bytes == SOCKET_ERROR) {
@@ -157,7 +151,7 @@ namespace YanLib::io {
             buffer_size = 1024;
         }
         std::string raw_data(buffer_size, '\0');
-        int32_t bytes_read =
+        const int32_t bytes_read =
                 read(raw_data.data(), buffer_size, remote_ip, remote_port);
         if (bytes_read == SOCKET_ERROR) {
             error_code = WSAGetLastError();
@@ -183,15 +177,14 @@ namespace YanLib::io {
             }
             raw_data.insert(raw_data.end(), buf.data(),
                             buf.data() + bytes_read);
-        }
-        while (bytes_read > 0);
+        } while (bytes_read > 0);
         raw_data.shrink_to_fit();
         return raw_data;
     }
 
-    int32_t udp_client::write_string(std::string &str,
-                                     std::string &remote_ip,
-                                     uint16_t &remote_port) {
+    int32_t udp_client::write_string(const std::string &str,
+                                     const std::string &remote_ip,
+                                     const uint16_t &remote_port) {
         if (str.empty()) {
             return 0;
         }

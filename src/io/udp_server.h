@@ -52,10 +52,10 @@ namespace YanLib::io {
                      std::string &client_ip,
                      uint16_t &client_port);
 
-        int32_t write(char *buf,
+        int32_t write(const char *buf,
                       int32_t len,
-                      std::string &client_ip,
-                      uint16_t &client_port);
+                      const std::string &client_ip,
+                      const uint16_t &client_port);
 
         std::string read_string(std::string &client_ip,
                                 uint16_t &client_port,
@@ -64,9 +64,9 @@ namespace YanLib::io {
         std::string read_string_to_end(std::string &client_ip,
                                        uint16_t &client_port);
 
-        int32_t write_string(std::string &str,
-                             std::string &client_ip,
-                             uint16_t &client_port);
+        int32_t write_string(const std::string &str,
+                             const std::string &client_ip,
+                             const uint16_t &client_port);
 
         [[nodiscard]] int32_t err_code() const;
 

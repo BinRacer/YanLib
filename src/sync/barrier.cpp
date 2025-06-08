@@ -6,7 +6,7 @@
 #include "helper/convert.h"
 
 namespace YanLib::sync {
-    barrier::barrier(int32_t total_threads, int32_t spin_count) {
+    barrier::barrier(int32_t total_threads, const int32_t spin_count) {
         if (InitializeSynchronizationBarrier(&synchronization_barrier,
                                              total_threads, spin_count)) {
             error_code = 0;
@@ -24,16 +24,15 @@ namespace YanLib::sync {
     }
 
     bool barrier::wait(uint32_t count,
-                       const HANDLE *handles,
-                       bool wait_all,
-                       uint32_t milli_seconds) {
-        uint32_t ret =
+                       HANDLE handles[],
+                       const bool wait_all,
+                       const uint32_t milli_seconds) {
+        const uint32_t ret =
                 WaitForMultipleObjects(count, handles, wait_all ? TRUE : FALSE,
                                        milli_seconds);
         if (ret == WAIT_FAILED) {
             error_code = GetLastError();
-        }
-        else {
+        } else {
             error_code = ret;
         }
 

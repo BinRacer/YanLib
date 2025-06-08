@@ -59,6 +59,10 @@ namespace YanLib::ui::gdi {
         return LoadBitmapW(instance_handle, bitmap_name);
     }
 
+    bool bitmap::destroy(HBITMAP bitmap_handle) {
+        return DeleteObject(bitmap_handle);
+    }
+
     std::pair<bool, uint32_t> bitmap::bit_blk(HDC dc_handle_dst,
                                               int32_t x,
                                               int32_t y,

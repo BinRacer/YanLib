@@ -17,8 +17,8 @@ namespace YanLib::sync {
     }
 
     bool semaphore::create(SECURITY_ATTRIBUTES *sa,
-                           int32_t initial_count,
-                           int32_t maximum_count,
+                           const int32_t initial_count,
+                           const int32_t maximum_count,
                            const wchar_t *name) {
         semaphore_handle =
                 CreateSemaphoreW(sa, initial_count, maximum_count, name);
@@ -28,27 +28,28 @@ namespace YanLib::sync {
 
     bool semaphore::open(const wchar_t *name,
                          SemaphoreAccess access,
-                         bool inherit_handle) {
+                         const bool inherit_handle) {
         semaphore_handle = OpenSemaphoreW(static_cast<uint32_t>(access),
                                           inherit_handle ? TRUE : FALSE, name);
         error_code = GetLastError();
         return semaphore_handle != nullptr;
     }
 
-    bool semaphore::wait(uint32_t milli_seconds) {
+    bool semaphore::wait(const uint32_t milli_seconds) {
         if (semaphore_handle) {
-            uint32_t ret = WaitForSingleObject(semaphore_handle, milli_seconds);
-            if (ret == WAIT_FAILED) {
+            if (const uint32_t ret =
+                        WaitForSingleObject(semaphore_handle, milli_seconds);
+                ret == WAIT_FAILED) {
                 error_code = GetLastError();
-            }
-            else {
+            } else {
                 error_code = ret;
             }
         }
         return error_code == WAIT_OBJECT_0;
     }
 
-    bool semaphore::signal(int32_t release_count, int32_t *previous_count) {
+    bool semaphore::signal(const int32_t release_count,
+                           int32_t *previous_count) {
         long prev = 0;
         if (semaphore_handle &&
             ReleaseSemaphore(semaphore_handle, release_count, &prev)) {

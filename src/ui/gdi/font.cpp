@@ -173,6 +173,10 @@ namespace YanLib::ui::gdi {
         return CreateFontIndirectExW(enum_log_font);
     }
 
+    bool font::destroy(HFONT font_handle) {
+        return DeleteObject(font_handle);
+    }
+
     HANDLE font::add_mem_resource(void *file_view,
                                   uint32_t file_view_size,
                                   uint32_t *num_fonts) {

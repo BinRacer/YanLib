@@ -109,7 +109,7 @@ namespace YanLib::ui::core {
         return result;
     }
 
-    bool desktop::close(HDESK desktop_handle) {
+    bool desktop::destroy(HDESK desktop_handle) {
         if (!desktop_handle) {
             return false;
         }
@@ -280,7 +280,7 @@ namespace YanLib::ui::core {
         return result;
     }
 
-    bool window_station::close(HWINSTA window_station_handle) {
+    bool window_station::destroy(HWINSTA window_station_handle) {
         if (!window_station_handle) {
             return false;
         }

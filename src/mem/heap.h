@@ -42,9 +42,9 @@ namespace YanLib::mem {
 
         bool free(HANDLE heap_handle, void *addr);
 
-        size_t size(HANDLE heap_handle, void *addr) const;
+        size_t size(HANDLE heap_handle, const void *addr) const;
 
-        bool is_ok(HANDLE heap_handle, void *addr) const;
+        bool is_ok(HANDLE heap_handle, const void *addr) const;
 
         bool lock(HANDLE heap_handle);
 

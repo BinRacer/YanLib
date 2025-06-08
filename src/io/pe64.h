@@ -105,24 +105,24 @@ namespace YanLib::io {
         bool set_export_table(IMAGE_EXPORT_DIRECTORY &export_table);
 
         std::vector<std::string>
-        get_export_func_name_string(IMAGE_EXPORT_DIRECTORY *export_table);
+        get_export_func_name_string(const IMAGE_EXPORT_DIRECTORY *export_table);
 
         std::vector<uint32_t>
-        get_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table);
+        get_export_func_name(const IMAGE_EXPORT_DIRECTORY *export_table);
 
-        bool set_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table,
+        bool set_export_func_name(const IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<uint32_t> &func_name_addrs);
 
         std::vector<uint32_t>
-        get_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table);
+        get_export_func_addr(const IMAGE_EXPORT_DIRECTORY *export_table);
 
-        bool set_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table,
+        bool set_export_func_addr(const IMAGE_EXPORT_DIRECTORY *export_table,
                                   std::vector<uint32_t> &func_addrs);
 
         std::vector<uint16_t>
-        get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table);
+        get_export_func_ordinal(const IMAGE_EXPORT_DIRECTORY *export_table);
 
-        bool set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
+        bool set_export_func_ordinal(const IMAGE_EXPORT_DIRECTORY *export_table,
                                      std::vector<uint16_t> &func_ordinals);
 
         std::vector<IMAGE_IMPORT_DESCRIPTOR> get_import_table();
@@ -131,31 +131,31 @@ namespace YanLib::io {
         set_import_table(std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
 
         std::vector<std::string> get_import_table_dll_name_strings(
-                std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+                const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
 
         std::vector<uint32_t> get_import_table_dll_name(
-                std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+                const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
 
         bool set_import_table_dll_name(
                 std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
-                std::vector<uint32_t> &dll_names);
+                const std::vector<uint32_t> &dll_names);
 
         std::vector<uint32_t> get_import_table_first_thunk(
-                std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+                const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
 
         bool set_import_table_first_thunk(
                 std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
-                std::vector<uint32_t> &first_thunks);
+                const std::vector<uint32_t> &first_thunks);
 
         std::vector<IMAGE_THUNK_DATA64>
-        get_import_table_thunk_data(uint32_t &first_thunk);
+        get_import_table_thunk_data(const uint32_t &first_thunk);
 
         bool set_import_table_thunk_data(
-                uint32_t &first_thunk,
+                const uint32_t &first_thunk,
                 std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
 
         std::vector<std::string> get_import_table_func_name_strings(
-                std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+                const std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
 
         struct ImportTableFuncName {
             uint16_t hint;
@@ -163,40 +163,45 @@ namespace YanLib::io {
         };
 
         std::vector<ImportTableFuncName> get_import_table_func_name(
-                std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+                const std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
 
-        bool
-        set_import_table_func_name(std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
-                                   std::vector<ImportTableFuncName> &func_name);
+        bool set_import_table_func_name(
+                const std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
+                const std::vector<ImportTableFuncName> &func_name);
 
         std::vector<std::pair<uint64_t, uint32_t>>
         get_import_table_func_ordinal(
-                std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
+                const std::vector<IMAGE_THUNK_DATA64> &thunk_datas);
 
         bool set_import_table_func_ordinal(
-                uint32_t &first_thunk,
+                const uint32_t &first_thunk,
                 std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
-                std::vector<std::pair<uint64_t, uint32_t>> &func_ordinals);
+                const std::vector<std::pair<uint64_t, uint32_t>>
+                        &func_ordinals);
 
         // std::pair<ForwarderChain,OriginalFirstThunk>
         std::vector<std::pair<uint32_t, uint32_t>>
         get_import_table_forwarder_chain(
-                std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
+                const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table);
 
         // std::pair<ForwarderChain,OriginalFirstThunk>
         bool set_import_table_forwarder_chain(
                 std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
-                std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain);
+                const std::vector<std::pair<uint32_t, uint32_t>>
+                        &forwarder_chain);
 
         std::vector<std::string> get_import_table_forwarder_string(
-                std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain);
+                const std::vector<std::pair<uint32_t, uint32_t>>
+                        &forwarder_chain);
 
         std::vector<uint64_t> get_import_table_forwarder_string_addr(
-                std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain);
+                const std::vector<std::pair<uint32_t, uint32_t>>
+                        &forwarder_chain);
 
         bool set_import_table_forwarder_string_addr(
-                std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain,
-                std::vector<uint64_t> &forwarder_string_addrs);
+                const std::vector<std::pair<uint32_t, uint32_t>>
+                        &forwarder_chain,
+                const std::vector<uint64_t> &forwarder_string_addrs);
 
         struct RelocationTable {
             uint32_t virtual_address;
@@ -206,23 +211,25 @@ namespace YanLib::io {
 
         std::vector<RelocationTable> get_relocation_table();
 
-        bool
-        set_relocation_table(std::vector<RelocationTable> &relocation_table);
+        bool set_relocation_table(
+                const std::vector<RelocationTable> &relocation_table);
 
         // std::tuple<raw item value, item type, real offset>
         std::vector<std::tuple<uint16_t, uint16_t, uint32_t>>
-        get_relocation_table_item(RelocationTable &relocation);
+        get_relocation_table_item(const RelocationTable &relocation);
 
         bool set_relocation_table_item(
                 RelocationTable &relocation,
-                std::vector<std::tuple<uint16_t, uint16_t, uint32_t>> &items);
+                const std::vector<std::tuple<uint16_t, uint16_t, uint32_t>>
+                        &items);
 
         IMAGE_SECTION_HEADER find_section_header(uint32_t rva);
 
         // relative virtual address to file offset address
         int64_t rva_to_foa(uint32_t rva);
 
-        uint32_t foa_to_rva(IMAGE_SECTION_HEADER &section_header, int64_t foa);
+        uint32_t foa_to_rva(const IMAGE_SECTION_HEADER &section_header,
+                            int64_t foa);
 
         std::string datetime(uint32_t timestamp);
 

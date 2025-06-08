@@ -45,7 +45,7 @@ def process_header(src_file: Path, include_dir: Path):
 if __name__ == "__main__":
     base_dir = Path(__file__).parent.parent
     src_dir = base_dir / "src"
-    include_dir = base_dir / "include"
+    include_dir = base_dir / "include/YanLib"
 
     # 清除并重建include目录（支持嵌套结构）
     if include_dir.exists():

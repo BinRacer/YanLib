@@ -70,10 +70,11 @@ namespace YanLib::sys {
                                    size_t stack_size = 0,
                                    SECURITY_ATTRIBUTES *sa = nullptr);
 
-        HANDLE create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
-                                         void *params,
-                                         size_t stack_size,
-                                         SECURITY_ATTRIBUTES *sa = nullptr);
+        HANDLE
+        create_with_stack_reserve(LPTHREAD_START_ROUTINE start_addr,
+                                  void *params,
+                                  size_t stack_size,
+                                  SECURITY_ATTRIBUTES *sa = nullptr);
 
         HANDLE create_remote(HANDLE proc_handle,
                              LPTHREAD_START_ROUTINE start_addr,

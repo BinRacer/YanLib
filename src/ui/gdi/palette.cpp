@@ -13,6 +13,10 @@ namespace YanLib::ui::gdi {
         return CreateHalftonePalette(dc_handle);
     }
 
+    bool palette::destroy(HPALETTE palette_handle) {
+        return DeleteObject(palette_handle);
+    }
+
     bool palette::get_color_adjustment(HDC dc_handle,
                                        COLORADJUSTMENT *color_adjustment) {
         return GetColorAdjustment(dc_handle, color_adjustment);

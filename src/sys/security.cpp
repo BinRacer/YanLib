@@ -35,8 +35,8 @@ namespace YanLib::sys {
         return WTSGetActiveConsoleSessionId();
     }
 
-    HANDLE security::curr_session_token(uint32_t session_id) {
-        uint32_t id = (session_id == 0) ? curr_session_id() : session_id;
+    HANDLE security::curr_session_token(const uint32_t session_id) {
+        const uint32_t id = (session_id == 0) ? curr_session_id() : session_id;
         HANDLE token;
         if (!WTSQueryUserToken(id, &token)) {
             error_code = GetLastError();
@@ -63,7 +63,7 @@ namespace YanLib::sys {
 
     HANDLE security::open_thread_token(HANDLE thread_handle,
                                        TokenAccess access,
-                                       bool open_as_self) {
+                                       const bool open_as_self) {
         HANDLE token = nullptr;
         if (!OpenThreadToken(thread_handle, static_cast<uint32_t>(access),
                              open_as_self ? TRUE : FALSE, &token)) {
@@ -78,8 +78,8 @@ namespace YanLib::sys {
 
     HANDLE security::copy_token(HANDLE existing_token_handle,
                                 SECURITY_ATTRIBUTES *sa,
-                                SECURITY_IMPERSONATION_LEVEL sil,
-                                TOKEN_TYPE token_type) {
+                                const SECURITY_IMPERSONATION_LEVEL sil,
+                                const TOKEN_TYPE token_type) {
         HANDLE token_handle = existing_token_handle ? existing_token_handle
                                                     : curr_session_token();
         if (!token_handle) {
@@ -97,7 +97,8 @@ namespace YanLib::sys {
         return ret_token;
     }
 
-    void *security::create_env_block(HANDLE token_handle, bool is_inherit) {
+    void *security::create_env_block(HANDLE token_handle,
+                                     const bool is_inherit) {
         if (env) {
             cleanup();
         }
@@ -110,7 +111,7 @@ namespace YanLib::sys {
     }
 
     SECURITY_ATTRIBUTES
-    security::create_attrs(bool is_inherit,
+    security::create_attrs(const bool is_inherit,
                            PSECURITY_DESCRIPTOR security_descriptor) {
         SECURITY_ATTRIBUTES attrs;
         attrs.nLength = sizeof(SECURITY_ATTRIBUTES);
@@ -119,10 +120,11 @@ namespace YanLib::sys {
         return attrs;
     }
 
-    SECURITY_DESCRIPTOR security::create_descriptor(bool is_dacl_present,
-                                                    ACL *acl,
-                                                    bool is_dacl_defaulted) {
-        SECURITY_DESCRIPTOR sd;
+    SECURITY_DESCRIPTOR
+    security::create_descriptor(const bool is_dacl_present,
+                                ACL *acl,
+                                const bool is_dacl_defaulted) {
+        SECURITY_DESCRIPTOR sd{};
         do {
             if (!InitializeSecurityDescriptor(&sd,
                                               SECURITY_DESCRIPTOR_REVISION)) {
@@ -135,8 +137,7 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-        }
-        while (false);
+        } while (false);
         return sd;
     }
 
@@ -148,6 +149,7 @@ namespace YanLib::sys {
     bool security::enable_privilege(HANDLE proc_handle,
                                     const wchar_t *privilege) {
         helper::autoclean<HANDLE> token_handle(nullptr);
+        bool result = false;
         do {
             if (!OpenProcessToken(proc_handle, TOKEN_ADJUST_PRIVILEGES,
                                   token_handle)) {
@@ -167,15 +169,15 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            return (GetLastError() == ERROR_SUCCESS);
-        }
-        while (false);
-        return false;
+            result = (GetLastError() == ERROR_SUCCESS);
+        } while (false);
+        return result;
     }
 
     bool security::disable_privilege(HANDLE proc_handle,
                                      const wchar_t *privilege) {
         helper::autoclean<HANDLE> token_handle(nullptr);
+        bool result = false;
         do {
             if (!OpenProcessToken(proc_handle, TOKEN_ADJUST_PRIVILEGES,
                                   token_handle)) {
@@ -195,13 +197,13 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            return (GetLastError() == ERROR_SUCCESS);
-        }
-        while (false);
-        return false;
+            result = (GetLastError() == ERROR_SUCCESS);
+        } while (false);
+        return result;
     }
 
     bool security::enable_privilege(uint32_t pid, const wchar_t *privilege) {
+        bool result = false;
         do {
             helper::autoclean<HANDLE> proc_handle(nullptr);
             proc_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
@@ -209,13 +211,13 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            return enable_privilege(proc_handle, privilege);
-        }
-        while (false);
-        return false;
+            result = enable_privilege(proc_handle, privilege);
+        } while (false);
+        return result;
     }
 
     bool security::disable_privilege(uint32_t pid, const wchar_t *privilege) {
+        bool result = false;
         do {
             helper::autoclean<HANDLE> proc_handle(nullptr);
             proc_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
@@ -223,10 +225,9 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-            return enable_privilege(proc_handle, privilege);
-        }
-        while (false);
-        return false;
+            result = enable_privilege(proc_handle, privilege);
+        } while (false);
+        return result;
     }
 
     bool security::enable_debug(HANDLE proc_handle) {
@@ -237,11 +238,11 @@ namespace YanLib::sys {
         return disable_privilege(proc_handle, L"SeDebugPrivilege");
     }
 
-    bool security::enable_debug(uint32_t pid) {
+    bool security::enable_debug(const uint32_t pid) {
         return enable_privilege(pid, L"SeDebugPrivilege");
     }
 
-    bool security::disable_debug(uint32_t pid) {
+    bool security::disable_debug(const uint32_t pid) {
         return disable_privilege(pid, L"SeDebugPrivilege");
     }
 
@@ -253,11 +254,11 @@ namespace YanLib::sys {
         return disable_privilege(proc_handle, L"SeSecurityPrivilege");
     }
 
-    bool security::enable_sacl(uint32_t pid) {
+    bool security::enable_sacl(const uint32_t pid) {
         return enable_privilege(pid, L"SeSecurityPrivilege");
     }
 
-    bool security::disable_sacl(uint32_t pid) {
+    bool security::disable_sacl(const uint32_t pid) {
         return disable_privilege(pid, L"SeSecurityPrivilege");
     }
 
@@ -302,8 +303,7 @@ namespace YanLib::sys {
                 error_code = GetLastError();
                 break;
             }
-        }
-        while (false);
+        } while (false);
         return std::make_pair(token_type, is_admin);
     }
 
@@ -328,19 +328,20 @@ namespace YanLib::sys {
                 }
             }
             std::vector<uint8_t> buf(size, '\0');
-            auto token_info =
+            const auto token_info =
                     reinterpret_cast<TOKEN_MANDATORY_LABEL *>(buf.data());
             if (!GetTokenInformation(token_handle, TokenIntegrityLevel,
                                      token_info, size, &size)) {
                 error_code = GetLastError();
                 break;
             }
-            auto auth_count = GetSidSubAuthorityCount(token_info->Label.Sid);
+            const auto auth_count =
+                    GetSidSubAuthorityCount(token_info->Label.Sid);
             error_code = GetLastError();
             if (error_code != ERROR_SUCCESS) {
                 break;
             }
-            auto integrity_level =
+            const auto integrity_level =
                     GetSidSubAuthority(token_info->Label.Sid, *auth_count - 1);
             error_code = GetLastError();
             if (error_code != ERROR_SUCCESS) {
@@ -381,14 +382,11 @@ namespace YanLib::sys {
             }
             if (policy == TOKEN_MANDATORY_POLICY_OFF) {
                 token_policy = TokenPolicy::Off;
-            }
-            else if ((policy & TOKEN_MANDATORY_POLICY_VALID_MASK) == 0) {
+            } else if ((policy & TOKEN_MANDATORY_POLICY_VALID_MASK) == 0) {
                 token_policy = TokenPolicy::Unknown;
-            }
-            else if (policy & TOKEN_MANDATORY_POLICY_NO_WRITE_UP) {
+            } else if (policy & TOKEN_MANDATORY_POLICY_NO_WRITE_UP) {
                 token_policy = TokenPolicy::NoWriteUp;
-            }
-            else if (policy & TOKEN_MANDATORY_POLICY_NEW_PROCESS_MIN) {
+            } else if (policy & TOKEN_MANDATORY_POLICY_NEW_PROCESS_MIN) {
                 token_policy = TokenPolicy::NewProcessMin;
             }
 
@@ -418,7 +416,7 @@ namespace YanLib::sys {
             if (!ace) {
                 break;
             }
-            auto sid_ptr = reinterpret_cast<SID *>(&ace->SidStart);
+            const auto sid_ptr = reinterpret_cast<SID *>(&ace->SidStart);
             resource = sid_ptr->SubAuthority[0];
             resource_policy = ace->Mask;
 
@@ -450,25 +448,21 @@ namespace YanLib::sys {
 
             if (resource_policy == 0) {
                 system_policy = SystemPolicy::Zero;
-            }
-            else if ((resource_policy & TOKEN_MANDATORY_POLICY_VALID_MASK) ==
-                     0) {
+            } else if ((resource_policy & TOKEN_MANDATORY_POLICY_VALID_MASK) ==
+                       0) {
                 system_policy = SystemPolicy::Unknown;
-            }
-            else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_READ_UP) ==
-                     SYSTEM_MANDATORY_LABEL_NO_READ_UP) {
+            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_READ_UP) ==
+                       SYSTEM_MANDATORY_LABEL_NO_READ_UP) {
                 system_policy = SystemPolicy::NoReadUp;
-            }
-            else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) ==
-                     SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) {
+            } else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) ==
+                       SYSTEM_MANDATORY_LABEL_NO_WRITE_UP) {
                 system_policy = SystemPolicy::NoWriteUp;
-            }
-            else if ((resource_policy & SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) ==
-                     SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) {
+            } else if ((resource_policy &
+                        SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) ==
+                       SYSTEM_MANDATORY_LABEL_NO_EXECUTE_UP) {
                 system_policy = SystemPolicy::NoExecuteUp;
             }
-        }
-        while (false);
+        } while (false);
         return std::make_tuple(security_level, token_policy, resource_level,
                                system_policy);
     }

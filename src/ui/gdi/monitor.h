@@ -31,19 +31,19 @@ namespace YanLib::ui::gdi {
 
         ~monitor() = default;
 
-        static bool enum_display(HDC dc_handle,
+        static bool enum_monitor(HDC dc_handle,
                                  const RECT *rect,
                                  MONITORENUMPROC monitor_enum_proc,
                                  LPARAM data);
 
-        static HMONITOR get(POINT point,
-                            MonitorFlag flag = MonitorFlag::Primary);
+        static HMONITOR get_monitor(POINT point,
+                                    MonitorFlag flag = MonitorFlag::Primary);
 
-        static HMONITOR get(const RECT *rect,
-                            MonitorFlag flag = MonitorFlag::Primary);
+        static HMONITOR get_monitor(const RECT *rect,
+                                    MonitorFlag flag = MonitorFlag::Primary);
 
-        static HMONITOR get(HWND window_handle,
-                            MonitorFlag flag = MonitorFlag::Primary);
+        static HMONITOR get_monitor(HWND window_handle,
+                                    MonitorFlag flag = MonitorFlag::Primary);
 
         static bool get_info(HMONITOR monitor_handle,
                              MONITORINFO *monitor_info);

@@ -3,7 +3,6 @@
 //
 
 #include "md5.h"
-#include "io/fs.h"
 
 namespace YanLib::hash {
     md5::md5(const std::vector<uint8_t> &data) {
@@ -62,7 +61,7 @@ namespace YanLib::hash {
         static constexpr char hex_table[] = "0123456789abcdef";
         std::string hex_str;
         hex_str.reserve(data.size() * 2);
-        for (uint8_t byte : data) {
+        for (const uint8_t byte : data) {
             hex_str += hex_table[byte >> 4];
             hex_str += hex_table[byte & 0x0F];
         }
@@ -70,6 +69,7 @@ namespace YanLib::hash {
     }
 
     bool md5::pre_process() {
+        bool result = false;
         do {
             if (!CryptAcquireContextW(&crypt_prov_handle, nullptr, nullptr,
                                       PROV_RSA_AES, CRYPT_VERIFYCONTEXT)) {
@@ -81,91 +81,86 @@ namespace YanLib::hash {
                 error_code = GetLastError();
                 break;
             }
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     bool md5::process_file() {
+        bool result = false;
+        auto file_handle = INVALID_HANDLE_VALUE;
         do {
-            io::fs file(file_name.data());
-            if (!file.is_ok()) {
-                error_code = file.err_code();
+            file_handle =
+                    CreateFileW(file_name.data(), GENERIC_READ | GENERIC_WRITE,
+                                FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr,
+                                OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+            if (file_handle == INVALID_HANDLE_VALUE) {
+                error_code = GetLastError();
                 break;
             }
-            if (file.size() <= 4096) {
-                std::vector<uint8_t> data = file.read_bytes_to_end();
-                if (!CryptHashData(crypt_hash_handle, data.data(), data.size(),
-                                   0)) {
+            LARGE_INTEGER file_size{};
+            if (!GetFileSizeEx(file_handle, &file_size)) {
+                error_code = GetLastError();
+                break;
+            }
+            bool is_error = false;
+            const size_t total_size = file_size.QuadPart;
+            size_t offset = 0;
+            while (offset < total_size) {
+                const size_t block_size = (total_size - offset) > 4096
+                        ? 4096
+                        : total_size - offset;
+                std::vector<uint8_t> data(block_size, '\0');
+                unsigned long bytes_read = 0;
+                if (!ReadFile(file_handle, data.data(), data.size(),
+                              &bytes_read, nullptr)) {
                     error_code = GetLastError();
                     break;
                 }
-            }
-            else {
-                bool is_error = false;
-                constexpr size_t BLOCKSIZE = 4096;
-                size_t total_size = file.size();
-                size_t offset = 0;
-                while (offset < total_size) {
-                    size_t block_size = (total_size - offset) > BLOCKSIZE
-                            ? BLOCKSIZE
-                            : total_size - offset;
-                    std::vector<uint8_t> data =
-                            file.read_bytes(static_cast<int32_t>(block_size));
-                    if (!CryptHashData(crypt_hash_handle, data.data(),
-                                       data.size(), 0)) {
-                        error_code = GetLastError();
-                        is_error = true;
-                        break;
-                    }
-                    offset += block_size;
-                }
-                if (is_error) {
+                if (!CryptHashData(crypt_hash_handle, data.data(), bytes_read,
+                                   0)) {
+                    error_code = GetLastError();
+                    is_error = true;
                     break;
                 }
+                offset += block_size;
             }
-            return true;
+            if (is_error) {
+                break;
+            }
+            result = true;
+        } while (false);
+        if (file_handle != INVALID_HANDLE_VALUE) {
+            CloseHandle(file_handle);
         }
-        while (false);
-        return false;
+        return result;
     }
 
     bool md5::process_data() {
+        bool result = false;
         do {
-            if (data_bytes.size() <= 4096) {
-                if (!CryptHashData(crypt_hash_handle, data_bytes.data(),
-                                   data_bytes.size(), 0)) {
+            bool is_error = false;
+            const size_t total_size = data_bytes.size();
+            size_t offset = 0;
+            while (offset < total_size) {
+                const size_t block_size = (total_size - offset) > 4096
+                        ? 4096
+                        : total_size - offset;
+                if (const uint8_t *block_ptr = data_bytes.data() + offset;
+                    !CryptHashData(crypt_hash_handle, block_ptr,
+                                   static_cast<uint32_t>(block_size), 0)) {
                     error_code = GetLastError();
+                    is_error = true;
                     break;
                 }
+                offset += block_size;
             }
-            else {
-                bool is_error = false;
-                constexpr size_t BLOCKSIZE = 4096;
-                size_t total_size = data_bytes.size();
-                size_t offset = 0;
-                while (offset < total_size) {
-                    size_t block_size = (total_size - offset) > BLOCKSIZE
-                            ? BLOCKSIZE
-                            : total_size - offset;
-                    uint8_t *block_ptr = data_bytes.data() + offset;
-                    if (!CryptHashData(crypt_hash_handle, block_ptr,
-                                       static_cast<uint32_t>(block_size), 0)) {
-                        error_code = GetLastError();
-                        is_error = true;
-                        break;
-                    }
-                    offset += block_size;
-                }
-                if (is_error) {
-                    break;
-                }
+            if (is_error) {
+                break;
             }
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     std::vector<uint8_t> md5::process() {
@@ -178,8 +173,7 @@ namespace YanLib::hash {
                 if (!process_file()) {
                     break;
                 }
-            }
-            else {
+            } else {
                 if (!process_data()) {
                     break;
                 }
@@ -189,13 +183,12 @@ namespace YanLib::hash {
                 break;
             }
             is_done = true;
-            return hash_bytes;
-        }
-        while (false);
-        return {};
+        } while (false);
+        return hash_bytes;
     }
 
     bool md5::post_process() {
+        bool result = false;
         do {
             unsigned long len = 0;
             unsigned long data_len = sizeof(uint32_t);
@@ -211,10 +204,9 @@ namespace YanLib::hash {
                 error_code = GetLastError();
                 break;
             }
-            return true;
-        }
-        while (false);
-        return false;
+            result = true;
+        } while (false);
+        return result;
     }
 
     std::vector<uint8_t> md5::hash() {

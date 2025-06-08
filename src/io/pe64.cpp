@@ -15,34 +15,31 @@ namespace YanLib::io {
                 break;
             }
             init();
-        }
-        while (false);
+        } while (false);
     }
 
     pe64::pe64(const wchar_t *file_name) {
         do {
-            mmap_handle =
-                    mmap.create(file_name, static_cast<wchar_t *>(nullptr));
+            const wchar_t *temp = nullptr;
+            mmap_handle = mmap.create(file_name, temp);
             if (!mmap_handle) {
                 error_code = mmap.err_code();
                 break;
             }
             init();
-        }
-        while (false);
+        } while (false);
     }
 
     pe64::pe64(HANDLE file_handle) {
         do {
-            mmap_handle =
-                    mmap.create(file_handle, static_cast<char *>(nullptr));
+            const char *temp = nullptr;
+            mmap_handle = mmap.create(file_handle, temp);
             if (!mmap_handle) {
                 error_code = mmap.err_code();
                 break;
             }
             init();
-        }
-        while (false);
+        } while (false);
     }
 
     void pe64::init() {
@@ -71,8 +68,7 @@ namespace YanLib::io {
                 _nt_headers->FileHeader.Machine == IMAGE_FILE_MACHINE_AXP64) {
                 is_64bit = true;
             }
-        }
-        while (false);
+        } while (false);
     }
 
     bool pe64::parse() const {
@@ -257,8 +253,9 @@ namespace YanLib::io {
         if (_data_table_list[DIRECTORY_ENTRY_EXPORT].Size == 0) {
             return false;
         }
-        auto rva = _data_table_list[DIRECTORY_ENTRY_EXPORT].VirtualAddress;
-        auto offset = rva_to_foa(rva);
+        const auto rva =
+                _data_table_list[DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+        const auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return false;
         }
@@ -277,8 +274,9 @@ namespace YanLib::io {
         if (_data_table_list[DIRECTORY_ENTRY_EXPORT].Size == 0) {
             return false;
         }
-        auto rva = _data_table_list[DIRECTORY_ENTRY_EXPORT].VirtualAddress;
-        auto offset = rva_to_foa(rva);
+        const auto rva =
+                _data_table_list[DIRECTORY_ENTRY_EXPORT].VirtualAddress;
+        const auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return false;
         }
@@ -290,12 +288,12 @@ namespace YanLib::io {
         return true;
     }
 
-    std::vector<std::string>
-    pe64::get_export_func_name_string(IMAGE_EXPORT_DIRECTORY *export_table) {
+    std::vector<std::string> pe64::get_export_func_name_string(
+            const IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
-        auto start_name_addr = reinterpret_cast<uint32_t *>(
+        const auto start_name_addr = reinterpret_cast<uint32_t *>(
                 reinterpret_cast<uint8_t *>(_dos_header) +
                 rva_to_foa(export_table->AddressOfNames));
         std::vector<std::string> result;
@@ -309,7 +307,7 @@ namespace YanLib::io {
     }
 
     std::vector<uint32_t>
-    pe64::get_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table) {
+    pe64::get_export_func_name(const IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -324,7 +322,7 @@ namespace YanLib::io {
         return result;
     }
 
-    bool pe64::set_export_func_name(IMAGE_EXPORT_DIRECTORY *export_table,
+    bool pe64::set_export_func_name(const IMAGE_EXPORT_DIRECTORY *export_table,
                                     std::vector<uint32_t> &func_name_addrs) {
         if (!export_table ||
             func_name_addrs.size() != export_table->NumberOfNames) {
@@ -342,7 +340,7 @@ namespace YanLib::io {
     }
 
     std::vector<uint32_t>
-    pe64::get_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table) {
+    pe64::get_export_func_addr(const IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -357,7 +355,7 @@ namespace YanLib::io {
         return result;
     }
 
-    bool pe64::set_export_func_addr(IMAGE_EXPORT_DIRECTORY *export_table,
+    bool pe64::set_export_func_addr(const IMAGE_EXPORT_DIRECTORY *export_table,
                                     std::vector<uint32_t> &func_addrs) {
         if (!export_table ||
             func_addrs.size() != export_table->NumberOfFunctions) {
@@ -375,7 +373,7 @@ namespace YanLib::io {
     }
 
     std::vector<uint16_t>
-    pe64::get_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table) {
+    pe64::get_export_func_ordinal(const IMAGE_EXPORT_DIRECTORY *export_table) {
         if (!export_table) {
             return {};
         }
@@ -390,8 +388,9 @@ namespace YanLib::io {
         return result;
     }
 
-    bool pe64::set_export_func_ordinal(IMAGE_EXPORT_DIRECTORY *export_table,
-                                       std::vector<uint16_t> &func_ordinals) {
+    bool
+    pe64::set_export_func_ordinal(const IMAGE_EXPORT_DIRECTORY *export_table,
+                                  std::vector<uint16_t> &func_ordinals) {
         if (!export_table ||
             func_ordinals.size() != export_table->NumberOfFunctions) {
             return false;
@@ -414,8 +413,9 @@ namespace YanLib::io {
         if (_data_table_list[DIRECTORY_ENTRY_IMPORT].Size == 0) {
             return {};
         }
-        auto rva = _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
-        auto offset = rva_to_foa(rva);
+        const auto rva =
+                _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        const auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return {};
         }
@@ -450,8 +450,9 @@ namespace YanLib::io {
         if (_data_table_list[DIRECTORY_ENTRY_IMPORT].Size == 0) {
             return false;
         }
-        auto rva = _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
-        auto offset = rva_to_foa(rva);
+        const auto rva =
+                _data_table_list[DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+        const auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return false;
         }
@@ -467,7 +468,7 @@ namespace YanLib::io {
     }
 
     std::vector<std::string> pe64::get_import_table_dll_name_strings(
-            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+            const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
         if (import_table.empty()) {
             return {};
         }
@@ -482,7 +483,7 @@ namespace YanLib::io {
     }
 
     std::vector<uint32_t> pe64::get_import_table_dll_name(
-            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+            const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
         if (import_table.empty()) {
             return {};
         }
@@ -495,7 +496,7 @@ namespace YanLib::io {
 
     bool pe64::set_import_table_dll_name(
             std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
-            std::vector<uint32_t> &dll_names) {
+            const std::vector<uint32_t> &dll_names) {
         if (import_table.empty() || dll_names.empty() ||
             import_table.size() != dll_names.size()) {
             return false;
@@ -507,7 +508,7 @@ namespace YanLib::io {
     }
 
     std::vector<uint32_t> pe64::get_import_table_first_thunk(
-            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+            const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
         if (import_table.empty()) {
             return {};
         }
@@ -520,7 +521,7 @@ namespace YanLib::io {
 
     bool pe64::set_import_table_first_thunk(
             std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
-            std::vector<uint32_t> &first_thunks) {
+            const std::vector<uint32_t> &first_thunks) {
         if (import_table.empty() || first_thunks.empty() ||
             import_table.size() != first_thunks.size()) {
             return false;
@@ -532,8 +533,8 @@ namespace YanLib::io {
     }
 
     std::vector<IMAGE_THUNK_DATA64>
-    pe64::get_import_table_thunk_data(uint32_t &first_thunk) {
-        int64_t offset = rva_to_foa(first_thunk);
+    pe64::get_import_table_thunk_data(const uint32_t &first_thunk) {
+        const int64_t offset = rva_to_foa(first_thunk);
         if (offset == 0) {
             return {};
         }
@@ -554,12 +555,12 @@ namespace YanLib::io {
     }
 
     bool pe64::set_import_table_thunk_data(
-            uint32_t &first_thunk,
+            const uint32_t &first_thunk,
             std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
         if (thunk_datas.empty()) {
             return false;
         }
-        int64_t offset = rva_to_foa(first_thunk);
+        const int64_t offset = rva_to_foa(first_thunk);
         if (offset == 0) {
             return false;
         }
@@ -574,19 +575,18 @@ namespace YanLib::io {
     }
 
     std::vector<std::string> pe64::get_import_table_func_name_strings(
-            std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+            const std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
         if (thunk_datas.empty()) {
             return {};
         }
         std::vector<std::string> result;
         for (const auto &entry : thunk_datas) {
             if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
-                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
+                const auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
                         reinterpret_cast<uint8_t *>(_dos_header) +
                         rva_to_foa(entry.u1.AddressOfData));
                 result.emplace_back(reinterpret_cast<char *>(&func_name->Name));
-            }
-            else {
+            } else {
                 result.emplace_back();
             }
         }
@@ -594,14 +594,14 @@ namespace YanLib::io {
     }
 
     std::vector<pe64::ImportTableFuncName> pe64::get_import_table_func_name(
-            std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+            const std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
         if (thunk_datas.empty()) {
             return {};
         }
         std::vector<ImportTableFuncName> result;
         for (const auto &entry : thunk_datas) {
             if (!(entry.u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
-                auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
+                const auto func_name = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
                         reinterpret_cast<uint8_t *>(_dos_header) +
                         rva_to_foa(entry.u1.AddressOfData));
                 ImportTableFuncName temp_func_name = {};
@@ -609,8 +609,7 @@ namespace YanLib::io {
                 temp_func_name.name.append(
                         reinterpret_cast<char *>(&func_name->Name));
                 result.push_back(temp_func_name);
-            }
-            else {
+            } else {
                 result.push_back({});
             }
         }
@@ -618,8 +617,8 @@ namespace YanLib::io {
     }
 
     bool pe64::set_import_table_func_name(
-            std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
-            std::vector<ImportTableFuncName> &func_name) {
+            const std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
+            const std::vector<ImportTableFuncName> &func_name) {
         if (thunk_datas.empty() || func_name.empty() ||
             thunk_datas.size() != func_name.size()) {
             return false;
@@ -627,17 +626,17 @@ namespace YanLib::io {
         int32_t is_all_ordinals = 0;
         for (int32_t i = 0; i < thunk_datas.size(); i++) {
             if (!(thunk_datas[i].u1.AddressOfData & IMAGE_ORDINAL_FLAG64)) {
-                auto func_name_addr = reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
-                        reinterpret_cast<uint8_t *>(_dos_header) +
-                        rva_to_foa(thunk_datas[i].u1.AddressOfData));
+                const auto func_name_addr =
+                        reinterpret_cast<IMAGE_IMPORT_BY_NAME *>(
+                                reinterpret_cast<uint8_t *>(_dos_header) +
+                                rva_to_foa(thunk_datas[i].u1.AddressOfData));
                 func_name_addr->Hint = func_name[i].hint;
-                auto len = strlen(
+                const auto len = strlen(
                         reinterpret_cast<char *>(&(func_name_addr->Name)));
                 memset(&(func_name_addr->Name), 0, len);
                 memcpy_s(&(func_name_addr->Name), func_name[i].name.size(),
                          func_name[i].name.data(), func_name[i].name.size());
-            }
-            else {
+            } else {
                 is_all_ordinals = is_all_ordinals + 1;
             }
         }
@@ -649,7 +648,7 @@ namespace YanLib::io {
 
     std::vector<std::pair<uint64_t, uint32_t>>
     pe64::get_import_table_func_ordinal(
-            std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
+            const std::vector<IMAGE_THUNK_DATA64> &thunk_datas) {
         if (thunk_datas.empty()) {
             return {};
         }
@@ -659,8 +658,7 @@ namespace YanLib::io {
                 result.emplace_back(entry.u1.Ordinal,
                                     static_cast<uint32_t>(entry.u1.Ordinal &
                                                           0xFFFF));
-            }
-            else {
+            } else {
                 result.emplace_back(0, 0);
             }
         }
@@ -668,9 +666,9 @@ namespace YanLib::io {
     }
 
     bool pe64::set_import_table_func_ordinal(
-            uint32_t &first_thunk,
+            const uint32_t &first_thunk,
             std::vector<IMAGE_THUNK_DATA64> &thunk_datas,
-            std::vector<std::pair<uint64_t, uint32_t>> &func_ordinals) {
+            const std::vector<std::pair<uint64_t, uint32_t>> &func_ordinals) {
         if (thunk_datas.empty() || func_ordinals.empty() ||
             thunk_datas.size() != func_ordinals.size()) {
             return false;
@@ -687,7 +685,7 @@ namespace YanLib::io {
 
     std::vector<std::pair<uint32_t, uint32_t>>
     pe64::get_import_table_forwarder_chain(
-            std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
+            const std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table) {
         if (import_table.empty()) {
             return {};
         }
@@ -700,7 +698,7 @@ namespace YanLib::io {
 
     bool pe64::set_import_table_forwarder_chain(
             std::vector<IMAGE_IMPORT_DESCRIPTOR> &import_table,
-            std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain) {
+            const std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain) {
         if (import_table.empty() || forwarder_chain.empty() ||
             import_table.size() != forwarder_chain.size()) {
             return false;
@@ -713,16 +711,17 @@ namespace YanLib::io {
     }
 
     std::vector<std::string> pe64::get_import_table_forwarder_string(
-            std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain) {
+            const std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain) {
         if (forwarder_chain.empty()) {
             return {};
         }
 
         std::vector<std::string> result;
         for (const auto &entry : forwarder_chain) {
-            size_t offset = rva_to_foa(entry.second);
-            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
-                    reinterpret_cast<uint8_t *>(_dos_header) + offset);
+            const size_t offset = rva_to_foa(entry.second);
+            const auto original_thunk_data =
+                    reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                            reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (entry.first != static_cast<uint32_t>(-1)) {
                 auto target_thunk_data = original_thunk_data[entry.first];
                 auto forwarder_string =
@@ -730,8 +729,7 @@ namespace YanLib::io {
                                 reinterpret_cast<uint8_t *>(_dos_header)) +
                         rva_to_foa(target_thunk_data.u1.ForwarderString);
                 result.emplace_back(forwarder_string);
-            }
-            else {
+            } else {
                 result.emplace_back();
             }
         }
@@ -739,21 +737,21 @@ namespace YanLib::io {
     }
 
     std::vector<uint64_t> pe64::get_import_table_forwarder_string_addr(
-            std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain) {
+            const std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain) {
         if (forwarder_chain.empty()) {
             return {};
         }
 
         std::vector<uint64_t> result;
         for (const auto &entry : forwarder_chain) {
-            size_t offset = rva_to_foa(entry.second);
-            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
-                    reinterpret_cast<uint8_t *>(_dos_header) + offset);
+            const size_t offset = rva_to_foa(entry.second);
+            const auto original_thunk_data =
+                    reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                            reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (entry.first != static_cast<uint32_t>(-1)) {
                 auto target_thunk_data = original_thunk_data[entry.first];
                 result.push_back(target_thunk_data.u1.ForwarderString);
-            }
-            else {
+            } else {
                 result.push_back(0);
             }
         }
@@ -761,8 +759,8 @@ namespace YanLib::io {
     }
 
     bool pe64::set_import_table_forwarder_string_addr(
-            std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain,
-            std::vector<uint64_t> &forwarder_string_addrs) {
+            const std::vector<std::pair<uint32_t, uint32_t>> &forwarder_chain,
+            const std::vector<uint64_t> &forwarder_string_addrs) {
         if (forwarder_chain.empty() || forwarder_string_addrs.empty() ||
             forwarder_chain.size() != forwarder_string_addrs.size()) {
             return false;
@@ -770,16 +768,16 @@ namespace YanLib::io {
 
         int32_t is_no_forward = 0;
         for (int32_t i = 0; i < forwarder_chain.size(); i++) {
-            size_t offset = rva_to_foa(forwarder_chain[i].second);
-            auto original_thunk_data = reinterpret_cast<IMAGE_THUNK_DATA64 *>(
-                    reinterpret_cast<uint8_t *>(_dos_header) + offset);
+            const size_t offset = rva_to_foa(forwarder_chain[i].second);
+            const auto original_thunk_data =
+                    reinterpret_cast<IMAGE_THUNK_DATA64 *>(
+                            reinterpret_cast<uint8_t *>(_dos_header) + offset);
             if (forwarder_chain[i].first != static_cast<uint32_t>(-1)) {
                 auto target_thunk_data =
                         original_thunk_data[forwarder_chain[i].first];
                 target_thunk_data.u1.ForwarderString =
                         forwarder_string_addrs[i];
-            }
-            else {
+            } else {
                 is_no_forward++;
             }
         }
@@ -796,8 +794,9 @@ namespace YanLib::io {
         if (_data_table_list[DIRECTORY_ENTRY_BASE_RELOC].Size == 0) {
             return {};
         }
-        auto rva = _data_table_list[DIRECTORY_ENTRY_BASE_RELOC].VirtualAddress;
-        auto offset = rva_to_foa(rva);
+        const auto rva =
+                _data_table_list[DIRECTORY_ENTRY_BASE_RELOC].VirtualAddress;
+        const auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return {};
         }
@@ -808,11 +807,11 @@ namespace YanLib::io {
             RelocationTable relocation = {};
             relocation.virtual_address = relocation_table->VirtualAddress;
             relocation.size_of_block = relocation_table->SizeOfBlock;
-            auto item_addr = reinterpret_cast<uint16_t *>(
+            const auto item_addr = reinterpret_cast<uint16_t *>(
                     reinterpret_cast<uint8_t *>(relocation_table) +
                     sizeof(IMAGE_BASE_RELOCATION));
-            auto item_count = (relocation_table->SizeOfBlock -
-                               sizeof(IMAGE_BASE_RELOCATION)) /
+            const auto item_count = (relocation_table->SizeOfBlock -
+                                     sizeof(IMAGE_BASE_RELOCATION)) /
                     sizeof(uint16_t);
 
             relocation.items.resize(item_count);
@@ -826,26 +825,27 @@ namespace YanLib::io {
         return result;
     }
 
-    bool
-    pe64::set_relocation_table(std::vector<RelocationTable> &relocation_table) {
+    bool pe64::set_relocation_table(
+            const std::vector<RelocationTable> &relocation_table) {
         if (_data_table_list.empty()) {
             get_data_table();
         }
         if (_data_table_list[DIRECTORY_ENTRY_BASE_RELOC].Size == 0) {
             return false;
         }
-        auto rva = _data_table_list[DIRECTORY_ENTRY_BASE_RELOC].VirtualAddress;
-        auto offset = rva_to_foa(rva);
+        const auto rva =
+                _data_table_list[DIRECTORY_ENTRY_BASE_RELOC].VirtualAddress;
+        const auto offset = rva_to_foa(rva);
         if (offset == 0) {
             return false;
         }
         auto table = reinterpret_cast<IMAGE_BASE_RELOCATION *>(
                 reinterpret_cast<uint8_t *>(_dos_header) + offset);
         for (const auto &entry : relocation_table) {
-            auto item_addr = reinterpret_cast<uint16_t *>(
+            const auto item_addr = reinterpret_cast<uint16_t *>(
                     reinterpret_cast<uint8_t *>(table) +
                     sizeof(IMAGE_BASE_RELOCATION));
-            auto item_count =
+            const auto item_count =
                     (table->SizeOfBlock - sizeof(IMAGE_BASE_RELOCATION)) /
                     sizeof(uint16_t);
             memcpy_s(item_addr, sizeof(uint16_t) * item_count,
@@ -859,7 +859,7 @@ namespace YanLib::io {
     }
 
     std::vector<std::tuple<uint16_t, uint16_t, uint32_t>>
-    pe64::get_relocation_table_item(RelocationTable &relocation) {
+    pe64::get_relocation_table_item(const RelocationTable &relocation) {
         if (!relocation.virtual_address || !relocation.size_of_block) {
             return {};
         }
@@ -876,7 +876,8 @@ namespace YanLib::io {
 
     bool pe64::set_relocation_table_item(
             RelocationTable &relocation,
-            std::vector<std::tuple<uint16_t, uint16_t, uint32_t>> &items) {
+            const std::vector<std::tuple<uint16_t, uint16_t, uint32_t>>
+                    &items) {
         if (!relocation.virtual_address || !relocation.size_of_block ||
             relocation.items.empty() || items.empty() ||
             relocation.items.size() != items.size()) {
@@ -922,13 +923,13 @@ namespace YanLib::io {
         return result;
     }
 
-    uint32_t pe64::foa_to_rva(IMAGE_SECTION_HEADER &section_header,
-                              int64_t foa) {
+    uint32_t pe64::foa_to_rva(const IMAGE_SECTION_HEADER &section_header,
+                              const int64_t foa) {
         return foa - section_header.PointerToRawData +
                 section_header.VirtualAddress;
     }
 
-    std::string pe64::datetime(uint32_t timestamp) {
+    std::string pe64::datetime(const uint32_t timestamp) {
         FILETIME ft, ftLocal;
         SYSTEMTIME st;
         ULARGE_INTEGER uli;
@@ -949,10 +950,11 @@ namespace YanLib::io {
         FileTimeToSystemTime(&ftLocal, &st);
 
         std::string result(64, '\0');
-        int32_t size = sprintf_s(result.data(), result.size(),
-                                 "%04d-%02d-%02d %02d:%02d:%02d.%03d", st.wYear,
-                                 st.wMonth, st.wDay, st.wHour, st.wMinute,
-                                 st.wSecond, st.wMilliseconds);
+        const int32_t size =
+                sprintf_s(result.data(), result.size(),
+                          "%04d-%02d-%02d %02d:%02d:%02d.%03d", st.wYear,
+                          st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond,
+                          st.wMilliseconds);
         result.resize(size);
         while (result.back() == '\0') {
             result.pop_back();

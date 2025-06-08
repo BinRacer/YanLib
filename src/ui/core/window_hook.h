@@ -6,7 +6,8 @@
 #define WINDOW_HOOK_H
 #include <Windows.h>
 #include <string>
-
+#include <vector>
+#include "sync/rwlock.h"
 namespace YanLib::ui::core {
 #ifndef HOOKTYPE
 #define HOOKTYPE
@@ -201,6 +202,12 @@ namespace YanLib::ui::core {
 #endif
     class window_hook {
     private:
+        std::vector<HWND> shell_handles = {};
+        std::vector<HHOOK> hook_handles = {};
+        std::vector<HWINEVENTHOOK> event_handles = {};
+        sync::rwlock shell_rwlock = {};
+        sync::rwlock hook_rwlock = {};
+        sync::rwlock event_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -214,18 +221,18 @@ namespace YanLib::ui::core {
 
         window_hook() = default;
 
-        ~window_hook() = default;
+        ~window_hook();
 
         bool register_shell(HWND window_handle);
 
         bool unregister_shell(HWND window_handle);
 
-        HHOOK set(HOOKPROC hook_proc,
-                  HINSTANCE dll_handle = nullptr,
-                  uint32_t tid = 0,
-                  HookType hook_type = HookType::GetMsg);
+        HHOOK set_hook(HOOKPROC hook_proc,
+                       HINSTANCE dll_handle = nullptr,
+                       uint32_t tid = 0,
+                       HookType hook_type = HookType::GetMsg);
 
-        bool unset(HHOOK hook_handle);
+        bool unset_hook(HHOOK hook_handle);
 
         LRESULT call_next(HHOOK hook_handle,
                           int32_t code,

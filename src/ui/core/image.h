@@ -108,11 +108,11 @@ namespace YanLib::ui::core {
                     int32_t cy,
                     ImageFlag flag);
 
-        bool close_bitmap(HBITMAP bitmap_handle);
+        bool destroy_bitmap(HBITMAP bitmap_handle);
 
-        bool close_icon(HICON icon_handle);
+        bool destroy_icon(HICON icon_handle);
 
-        bool close_cursor(HCURSOR cursor_handle);
+        bool destroy_cursor(HCURSOR cursor_handle);
 
         [[nodiscard]] uint32_t err_code() const;
 

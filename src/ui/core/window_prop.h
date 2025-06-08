@@ -25,27 +25,27 @@ namespace YanLib::ui::core {
 
         ~window_prop() = default;
 
-        int32_t enumerate(HWND window_handle, PROPENUMPROCA enum_func);
+        int32_t enum_prop(HWND window_handle, PROPENUMPROCA enum_func);
 
-        int32_t enumerate(HWND window_handle, PROPENUMPROCW enum_func);
-
-        int32_t
-        enumerate(HWND window_handle, PROPENUMPROCEXA enum_func, LPARAM lparam);
+        int32_t enum_prop(HWND window_handle, PROPENUMPROCW enum_func);
 
         int32_t
-        enumerate(HWND window_handle, PROPENUMPROCEXW enum_func, LPARAM lparam);
+        enum_prop(HWND window_handle, PROPENUMPROCEXA enum_func, LPARAM lparam);
 
-        void *get(HWND window_handle, const char *key);
+        int32_t
+        enum_prop(HWND window_handle, PROPENUMPROCEXW enum_func, LPARAM lparam);
 
-        void *get(HWND window_handle, const wchar_t *key);
+        void *get_prop(HWND window_handle, const char *key);
 
-        bool set(HWND window_handle, const char *key, void *value);
+        void *get_prop(HWND window_handle, const wchar_t *key);
 
-        bool set(HWND window_handle, const wchar_t *key, void *value);
+        bool set_prop(HWND window_handle, const char *key, void *value);
 
-        void *remove(HWND window_handle, const char *key);
+        bool set_prop(HWND window_handle, const wchar_t *key, void *value);
 
-        void *remove(HWND window_handle, const wchar_t *key);
+        void *remove_prop(HWND window_handle, const char *key);
+
+        void *remove_prop(HWND window_handle, const wchar_t *key);
 
         [[nodiscard]] uint32_t err_code() const;
 

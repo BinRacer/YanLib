@@ -7,8 +7,9 @@
 namespace YanLib::helper {
     std::wstring convert::str_to_wstr(const std::string &str,
                                       CodePage code_page) {
-        int32_t len = MultiByteToWideChar(static_cast<uint32_t>(code_page), 0,
-                                          str.data(), -1, nullptr, 0);
+        const int32_t len =
+                MultiByteToWideChar(static_cast<uint32_t>(code_page), 0,
+                                    str.data(), -1, nullptr, 0);
         if (len <= 0)
             return {};
         std::wstring wstr(len, 0);
@@ -21,9 +22,10 @@ namespace YanLib::helper {
 
     std::string convert::wstr_to_str(const std::wstring &wstr,
                                      CodePage code_page) {
-        int32_t len = WideCharToMultiByte(static_cast<uint32_t>(code_page), 0,
-                                          wstr.data(), -1, nullptr, 0, nullptr,
-                                          nullptr);
+        const int32_t len =
+                WideCharToMultiByte(static_cast<uint32_t>(code_page), 0,
+                                    wstr.data(), -1, nullptr, 0, nullptr,
+                                    nullptr);
         if (len <= 0)
             return {};
         std::string str(len, 0);
@@ -34,10 +36,11 @@ namespace YanLib::helper {
         return str;
     }
 
-    std::string convert::err_string(uint32_t error_code) {
+    std::string convert::err_string(const uint32_t error_code) {
         std::string result;
         HLOCAL hlocal = nullptr;
-        uint32_t system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
+        constexpr uint32_t system_locale =
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
         uint32_t is_ok =
                 FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM |
                                        FORMAT_MESSAGE_IGNORE_INSERTS |
@@ -68,10 +71,11 @@ namespace YanLib::helper {
         return result;
     }
 
-    std::wstring convert::err_wstring(uint32_t error_code) {
+    std::wstring convert::err_wstring(const uint32_t error_code) {
         std::wstring result;
         HLOCAL hlocal = nullptr;
-        uint32_t system_locale = MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
+        constexpr uint32_t system_locale =
+                MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL);
         uint32_t is_ok = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM |
                                                 FORMAT_MESSAGE_IGNORE_INSERTS |
                                                 FORMAT_MESSAGE_ALLOCATE_BUFFER,

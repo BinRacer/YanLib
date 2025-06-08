@@ -9,27 +9,30 @@ namespace YanLib::crypto {
         if (data.empty())
             return {};
         std::vector<uint8_t> output;
-        size_t buff_len = data.size();
+        const size_t buff_len = data.size();
         size_t bytes_processed = 0;
 
         while (bytes_processed < buff_len) {
             size_t bytes_left = buff_len - bytes_processed;
-            size_t n_actual = std::min(bytes_left, static_cast<size_t>(45));
-            size_t padded_len = ((n_actual + 2) / 3) * 3;
+            const size_t n_actual =
+                    std::min(bytes_left, static_cast<size_t>(45));
+            const size_t padded_len = ((n_actual + 2) / 3) * 3;
 
             output.push_back(static_cast<uint8_t>(n_actual + 32));
 
             for (int32_t i = 0; i < padded_len; i += 3) {
                 uint8_t trio[3] = {};
                 for (int32_t j = 0; j < 3; ++j) {
-                    size_t pos = bytes_processed + i + j;
+                    const size_t pos = bytes_processed + i + j;
                     trio[j] = (pos < buff_len) ? data[pos] : 0;
                 }
 
-                uint8_t c1 = (trio[0] >> 2) & 0x3F;
-                uint8_t c2 = ((trio[0] << 4) & 0x30) | ((trio[1] >> 4) & 0x0F);
-                uint8_t c3 = ((trio[1] << 2) & 0x3C) | ((trio[2] >> 6) & 0x03);
-                uint8_t c4 = trio[2] & 0x3F;
+                const uint8_t c1 = (trio[0] >> 2) & 0x3F;
+                const uint8_t c2 =
+                        ((trio[0] << 4) & 0x30) | ((trio[1] >> 4) & 0x0F);
+                const uint8_t c3 =
+                        ((trio[1] << 2) & 0x3C) | ((trio[2] >> 6) & 0x03);
+                const uint8_t c4 = trio[2] & 0x3F;
 
                 auto encode_char = [](const uint8_t c) {
                     return (c == 0) ? 96 : c + 32;
@@ -67,42 +70,41 @@ namespace YanLib::crypto {
                 continue;
             }
 
-            uint8_t n_char = data[in_index];
-            int32_t n_actual = (n_char - 32) & 0x3F;
+            const uint8_t n_char = data[in_index];
+            const int32_t n_actual = (n_char - 32) & 0x3F;
 
             if (n_actual == 0)
                 break;
             if (n_actual > 45)
                 return {};
 
-            int32_t expected_chars = ((n_actual + 2) / 3) * 4;
-            size_t data_start = in_index + 1;
-            size_t data_end = data_start + expected_chars;
-
-            if (data_end > line_end)
+            const int32_t expected_chars = ((n_actual + 2) / 3) * 4;
+            const size_t data_start = in_index + 1;
+            if (const size_t data_end = data_start + expected_chars;
+                data_end > line_end)
                 return {};
 
-            size_t output_before = output.size();
+            const size_t output_before = output.size();
             for (int32_t i = 0; i < expected_chars; i += 4) {
                 if (data_start + i + 3 >= data.size())
                     return {};
 
-                uint8_t c1 = data[data_start + i];
-                uint8_t c2 = data[data_start + i + 1];
-                uint8_t c3 = data[data_start + i + 2];
-                uint8_t c4 = data[data_start + i + 3];
+                const uint8_t c1 = data[data_start + i];
+                const uint8_t c2 = data[data_start + i + 1];
+                const uint8_t c3 = data[data_start + i + 2];
+                const uint8_t c4 = data[data_start + i + 3];
 
-                auto is_valid = [](uint8_t c) {
+                auto is_valid = [](const uint8_t c) {
                     return c >= 32 && c <= 95;
                 };
                 if (!is_valid(c1) || !is_valid(c2) || !is_valid(c3) ||
                     !is_valid(c4))
                     return {};
 
-                uint8_t v1 = (c1 - 32) & 0x3F;
-                uint8_t v2 = (c2 - 32) & 0x3F;
-                uint8_t v3 = (c3 - 32) & 0x3F;
-                uint8_t v4 = (c4 - 32) & 0x3F;
+                const uint8_t v1 = (c1 - 32) & 0x3F;
+                const uint8_t v2 = (c2 - 32) & 0x3F;
+                const uint8_t v3 = (c3 - 32) & 0x3F;
+                const uint8_t v4 = (c4 - 32) & 0x3F;
 
                 output.push_back((v1 << 2) | (v2 >> 4));
                 output.push_back(((v2 & 0x0F) << 4) | (v3 >> 2));
@@ -118,14 +120,14 @@ namespace YanLib::crypto {
     }
 
     std::string uuencode::encode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> encoded = encode(input);
         std::string result(encoded.begin(), encoded.end());
         return result;
     }
 
     std::string uuencode::decode_string(const std::string &data) {
-        std::vector<uint8_t> input(data.begin(), data.end());
+        const std::vector<uint8_t> input(data.begin(), data.end());
         std::vector<uint8_t> decoded = decode(input);
         std::string result(decoded.begin(), decoded.end());
         return result;

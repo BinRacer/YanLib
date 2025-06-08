@@ -119,7 +119,7 @@ namespace YanLib::sys {
 
         std::vector<HEAPLIST32> find_heaps(uint32_t pid);
 
-        std::vector<HEAPENTRY32> find_heap_blocks(HEAPLIST32 &heap_list);
+        std::vector<HEAPENTRY32> find_heap_blocks(const HEAPLIST32 &heap_list);
 
         std::vector<HEAPENTRY32> find_heap_blocks(uintptr_t heap_id);
 
@@ -131,9 +131,9 @@ namespace YanLib::sys {
 
         uint32_t handle_to_pid(HANDLE proc_handle);
 
-        bool is_heap(HANDLE proc_handle, void *address);
+        bool is_heap(HANDLE proc_handle, const void *address);
 
-        bool is_heap(uint32_t pid, void *address);
+        bool is_heap(uint32_t pid, const void *address);
 
         [[nodiscard]] uint32_t err_code() const;
 

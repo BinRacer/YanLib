@@ -4,7 +4,6 @@
 
 #ifndef ALLOCATE_H
 #define ALLOCATE_H
-#include <Windows.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"

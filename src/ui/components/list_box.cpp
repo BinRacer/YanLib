@@ -96,8 +96,7 @@ namespace YanLib::ui::components {
                                     .data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -110,8 +109,7 @@ namespace YanLib::ui::components {
                                      static_cast<uint32_t>(type), path_spec);
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -126,8 +124,7 @@ namespace YanLib::ui::components {
                                           .data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -137,8 +134,7 @@ namespace YanLib::ui::components {
         int32_t result = ListBox_AddString(list_box_handle, text.data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -202,8 +198,7 @@ namespace YanLib::ui::components {
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -216,8 +211,7 @@ namespace YanLib::ui::components {
                 ListBox_InsertString(list_box_handle, index, text.data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -287,8 +281,7 @@ namespace YanLib::ui::components {
         int32_t result = ListBox_AddItemData(list_box_handle, data);
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;
@@ -321,8 +314,7 @@ namespace YanLib::ui::components {
         int32_t result = ListBox_InsertItemData(list_box_handle, index, data);
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
-        }
-        else if (result == LB_ERR) {
+        } else if (result == LB_ERR) {
             error_code = GetLastError();
         }
         return result;

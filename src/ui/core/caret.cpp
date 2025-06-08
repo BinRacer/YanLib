@@ -20,8 +20,7 @@ namespace YanLib::ui::core {
         if (!CreateCaret(window_handle, bitmap_handle, width, height)) {
             error_code = GetLastError();
             is_create = false;
-        }
-        else {
+        } else {
             is_create = true;
         }
     }

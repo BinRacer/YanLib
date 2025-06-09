@@ -66,7 +66,8 @@ namespace YanLib::ui::core {
             size += (menu_template.text.size() * sizeof(wchar_t));
         }
         std::vector<uint8_t> buffer(size, '\0');
-        auto header = reinterpret_cast<MENUITEMTEMPLATEHEADER *>(buffer.data());
+        const auto header =
+                reinterpret_cast<MENUITEMTEMPLATEHEADER *>(buffer.data());
         header->versionNumber = 0;
         header->offset = 0;
         auto menu_item = reinterpret_cast<MENUITEMTEMPLATE *>(
@@ -119,7 +120,8 @@ namespace YanLib::ui::core {
             size += (menu_template.text.size() * sizeof(wchar_t));
         }
         std::vector<uint8_t> buffer(size, '\0');
-        auto header = reinterpret_cast<MenuTemplateHeader *>(buffer.data());
+        const auto header =
+                reinterpret_cast<MenuTemplateHeader *>(buffer.data());
         header->dwVersion = 1;
         header->dwOffset = 4;
         header->dwHelpId = help_id;
@@ -361,7 +363,7 @@ namespace YanLib::ui::core {
     }
 
     std::pair<int16_t, int16_t> menu::get_marker_bitmap_size() {
-        int32_t size = GetMenuCheckMarkDimensions();
+        const int32_t size = GetMenuCheckMarkDimensions();
         int16_t width = LOWORD(size);
         int16_t height = HIWORD(size);
         return std::make_pair(width, height);
@@ -453,8 +455,9 @@ namespace YanLib::ui::core {
 
     uint32_t
     menu::get_default_item(HMENU menu_handle, bool is_pos, MenuSearch search) {
-        uint32_t result = GetMenuDefaultItem(menu_handle, is_pos ? TRUE : FALSE,
-                                             static_cast<uint32_t>(search));
+        const uint32_t result =
+                GetMenuDefaultItem(menu_handle, is_pos ? TRUE : FALSE,
+                                   static_cast<uint32_t>(search));
         if (result == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
@@ -482,7 +485,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t menu::get_item_count(HMENU menu_handle) {
-        int32_t result = GetMenuItemCount(menu_handle);
+        const int32_t result = GetMenuItemCount(menu_handle);
         if (result == -1) {
             error_code = GetLastError();
         }

@@ -242,7 +242,8 @@ namespace YanLib::ui::core {
     bool window::create_shutdown_reason(HWND window_handle,
                                         const std::string &reason,
                                         helper::CodePage code_page) {
-        std::wstring data = helper::convert::str_to_wstr(reason, code_page);
+        const std::wstring data =
+                helper::convert::str_to_wstr(reason, code_page);
         if (!ShutdownBlockReasonCreate(window_handle, data.data())) {
             error_code = GetLastError();
             return false;
@@ -456,7 +457,7 @@ namespace YanLib::ui::core {
                           const RECT *rect,
                           const std::vector<HWND> &child,
                           TileStyle style) {
-        uint16_t result =
+        const uint16_t result =
                 TileWindows(parent_window_handle, static_cast<uint32_t>(style),
                             rect, child.size(), child.data());
         if (!result) {
@@ -523,7 +524,7 @@ namespace YanLib::ui::core {
                 break;
             }
             typedef int32_t(CALLBACK * prototype)(HWND);
-            auto func = reinterpret_cast<prototype>(
+            const auto func = reinterpret_cast<prototype>(
                     GetProcAddress(user32, "IsWindowArranged"));
             if (!func) {
                 error_code = GetLastError();
@@ -569,7 +570,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t window::arrange_minimize(HWND window_handle) {
-        uint32_t height = ArrangeIconicWindows(window_handle);
+        const uint32_t height = ArrangeIconicWindows(window_handle);
         if (!height) {
             error_code = GetLastError();
         }
@@ -654,7 +655,7 @@ namespace YanLib::ui::core {
     int32_t window::transform_coordinate(HWND from_window_handle,
                                          HWND to_window_handle,
                                          std::vector<POINT> &coordinates) {
-        int32_t result =
+        const int32_t result =
                 MapWindowPoints(from_window_handle, to_window_handle,
                                 coordinates.data(), coordinates.size());
         error_code = GetLastError();
@@ -705,8 +706,8 @@ namespace YanLib::ui::core {
                              uint32_t how,
                              const RECT *rect,
                              const std::vector<HWND> &child) {
-        uint16_t count = CascadeWindows(parent_window_handle, how, rect,
-                                        child.size(), child.data());
+        const uint16_t count = CascadeWindows(parent_window_handle, how, rect,
+                                              child.size(), child.data());
         if (!count) {
             error_code = GetLastError();
         }
@@ -872,7 +873,7 @@ namespace YanLib::ui::core {
                                       bool include_ancestor) {
         uint32_t size = sizeof(int32_t);
         int32_t real_config = 0;
-        int32_t is_ok =
+        const int32_t is_ok =
                 GetWindowFeedbackSetting(window_handle,
                                          static_cast<FEEDBACK_TYPE>(feedback),
                                          include_ancestor
@@ -901,7 +902,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t window::get_long(HWND window_handle, int32_t offset) {
-        int32_t result = GetWindowLongW(window_handle, offset);
+        const int32_t result = GetWindowLongW(window_handle, offset);
         if (!result) {
             error_code = GetLastError();
         }
@@ -910,7 +911,7 @@ namespace YanLib::ui::core {
 
     int32_t
     window::set_long(HWND window_handle, int32_t offset, int32_t value) {
-        int32_t result = SetWindowLongW(window_handle, offset, value);
+        const int32_t result = SetWindowLongW(window_handle, offset, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -918,7 +919,7 @@ namespace YanLib::ui::core {
     }
 
     intptr_t window::get_long_ptr(HWND window_handle, int32_t offset) {
-        intptr_t result = GetWindowLongPtrW(window_handle, offset);
+        const intptr_t result = GetWindowLongPtrW(window_handle, offset);
         if (!result) {
             error_code = GetLastError();
         }
@@ -927,7 +928,7 @@ namespace YanLib::ui::core {
 
     intptr_t
     window::set_long_ptr(HWND window_handle, int32_t offset, intptr_t value) {
-        intptr_t result = SetWindowLongPtrW(window_handle, offset, value);
+        const intptr_t result = SetWindowLongPtrW(window_handle, offset, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -935,7 +936,7 @@ namespace YanLib::ui::core {
     }
 
     uint16_t window::get_word(HWND window_handle, int32_t offset) {
-        uint16_t result = GetWindowWord(window_handle, offset);
+        const uint16_t result = GetWindowWord(window_handle, offset);
         if (!result) {
             error_code = GetLastError();
         }
@@ -1032,8 +1033,9 @@ namespace YanLib::ui::core {
     }
 
     int32_t window::get_text(HWND window_handle, std::string &text) {
-        int32_t result = GetWindowTextA(window_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextA(window_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -1041,8 +1043,9 @@ namespace YanLib::ui::core {
     }
 
     int32_t window::get_text(HWND window_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(window_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextW(window_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -1066,7 +1069,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t window::get_text_length(HWND window_handle) {
-        int32_t result = GetWindowTextLengthW(window_handle);
+        const int32_t result = GetWindowTextLengthW(window_handle);
         if (!result) {
             error_code = GetLastError();
         }
@@ -1075,7 +1078,7 @@ namespace YanLib::ui::core {
 
     uint32_t window::get_thread_id(HWND window_handle) {
         unsigned long pid = 0;
-        uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
+        const uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
         if (!tid) {
             error_code = GetLastError();
         }
@@ -1084,8 +1087,8 @@ namespace YanLib::ui::core {
 
     uint32_t window::get_proc_id(HWND window_handle) {
         unsigned long pid = 0;
-        uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
-        if (!tid) {
+        if (const uint32_t tid = GetWindowThreadProcessId(window_handle, &pid);
+            !tid) {
             error_code = GetLastError();
         }
         return pid;
@@ -1105,7 +1108,7 @@ namespace YanLib::ui::core {
                                     std::string &text,
                                     helper::CodePage code_page) {
         std::wstring data(text.size(), L'\0');
-        int32_t result =
+        const int32_t result =
                 InternalGetWindowText(window_handle, data.data(),
                                       static_cast<int32_t>(data.size()));
         text = helper::convert::wstr_to_str(data, code_page);
@@ -1116,7 +1119,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t window::get_direct_text(HWND window_handle, std::wstring &text) {
-        int32_t result =
+        const int32_t result =
                 InternalGetWindowText(window_handle, text.data(),
                                       static_cast<int32_t>(text.size()));
         if (!result) {
@@ -1127,8 +1130,9 @@ namespace YanLib::ui::core {
 
     uint32_t window::get_class_name(HWND window_handle,
                                     std::string &class_name) {
-        uint32_t result = RealGetWindowClassA(window_handle, class_name.data(),
-                                              class_name.size());
+        const uint32_t result =
+                RealGetWindowClassA(window_handle, class_name.data(),
+                                    class_name.size());
         if (!result) {
             error_code = GetLastError();
         }
@@ -1137,8 +1141,9 @@ namespace YanLib::ui::core {
 
     uint32_t window::get_class_name(HWND window_handle,
                                     std::wstring &class_name) {
-        uint32_t result = RealGetWindowClassW(window_handle, class_name.data(),
-                                              class_name.size());
+        const uint32_t result =
+                RealGetWindowClassW(window_handle, class_name.data(),
+                                    class_name.size());
         if (!result) {
             error_code = GetLastError();
         }
@@ -1172,7 +1177,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t window::get_gui_resources(HANDLE proc_handle, ResourceFlag flag) {
-        uint32_t result =
+        const uint32_t result =
                 GetGuiResources(proc_handle, static_cast<uint32_t>(flag));
         if (!result) {
             error_code = GetLastError();
@@ -1190,7 +1195,7 @@ namespace YanLib::ui::core {
     }
 
     bool window::convert_to_gui_thread() {
-        int32_t result = IsGUIThread(TRUE);
+        const int32_t result = IsGUIThread(TRUE);
         if (result == ERROR_NOT_ENOUGH_MEMORY) {
             return false;
         }
@@ -1229,7 +1234,7 @@ namespace YanLib::ui::core {
                                 uintptr_t event_id,
                                 TIMERPROC timer_func,
                                 uint32_t timeout_ms) {
-        uintptr_t result =
+        const uintptr_t result =
                 SetTimer(window_handle, event_id, timeout_ms, timer_func);
         if (!result) {
             error_code = GetLastError();
@@ -1242,7 +1247,7 @@ namespace YanLib::ui::core {
                                       TIMERPROC timer_func,
                                       uint32_t timeout_ms,
                                       uint32_t tolerance_delay_ms) {
-        uintptr_t result =
+        const uintptr_t result =
                 SetCoalescableTimer(window_handle, event_id, timeout_ms,
                                     timer_func, tolerance_delay_ms);
         if (!result) {
@@ -1327,7 +1332,7 @@ namespace YanLib::ui::core {
                                       QueueType type,
                                       uint32_t milli_seconds,
                                       bool wait_all) {
-        uint32_t result =
+        const uint32_t result =
                 MsgWaitForMultipleObjects(handles.size(), handles.data(),
                                           wait_all ? TRUE : FALSE,
                                           milli_seconds,
@@ -1343,7 +1348,7 @@ namespace YanLib::ui::core {
                                       QueueType type,
                                       uint32_t milli_seconds,
                                       WaitFlag flag) {
-        uint32_t result =
+        const uint32_t result =
                 MsgWaitForMultipleObjectsEx(handles.size(), handles.data(),
                                             milli_seconds,
                                             static_cast<uint32_t>(type),
@@ -1394,7 +1399,7 @@ namespace YanLib::ui::core {
             return false;
         }
         auto temp = static_cast<AR_STATE>(*state);
-        bool is_ok = GetAutoRotationState(&temp);
+        const bool is_ok = GetAutoRotationState(&temp);
         *state = static_cast<RotateState>(temp);
         return is_ok;
     }

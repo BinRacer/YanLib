@@ -241,8 +241,8 @@ namespace YanLib::ui::components {
                                    std::string &text,
                                    helper::CodePage code_page) {
         std::wstring temp(text.size(), L'\0');
-        bool is_ok = ListView_GetEmptyText(list_view_handle, temp.data(),
-                                           temp.size());
+        const bool is_ok = ListView_GetEmptyText(list_view_handle, temp.data(),
+                                                 temp.size());
         text.clear();
         text = helper::convert::wstr_to_str(temp, code_page);
         return is_ok;
@@ -365,8 +365,9 @@ namespace YanLib::ui::components {
         group.mask = LVGF_STATE;
         group.stateMask = static_cast<uint32_t>(mask);
         group.state = static_cast<uint32_t>(state);
-        LRESULT result = SendMessageW(list_view_handle, LVM_SETGROUPINFO, index,
-                                      reinterpret_cast<LPARAM>(&group));
+        const LRESULT result =
+                SendMessageW(list_view_handle, LVM_SETGROUPINFO, index,
+                             reinterpret_cast<LPARAM>(&group));
         return result != -1;
     }
 
@@ -440,7 +441,8 @@ namespace YanLib::ui::components {
                                                    std::string &text,
                                                    helper::CodePage code_page) {
         std::wstring temp(text.size(), L'\0');
-        auto result = ListView_GetISearchString(list_view_handle, temp.data());
+        const auto result =
+                ListView_GetISearchString(list_view_handle, temp.data());
         text.clear();
         text = helper::convert::wstr_to_str(temp, code_page);
         return result;
@@ -510,7 +512,8 @@ namespace YanLib::ui::components {
 
     std::pair<uint32_t, uint32_t>
     list_view::get_item_spacing(HWND list_view_handle, bool small_icon) {
-        uint32_t result = ListView_GetItemSpacing(list_view_handle, small_icon);
+        const uint32_t result =
+                ListView_GetItemSpacing(list_view_handle, small_icon);
         return std::make_pair(LOWORD(result), HIWORD(result));
     }
 

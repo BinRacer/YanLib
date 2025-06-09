@@ -129,8 +129,9 @@ namespace YanLib::ui::components {
     }
 
     int32_t label::get_text(HWND label_handle, std::string &text) {
-        int32_t result = GetWindowTextA(label_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextA(label_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -138,8 +139,9 @@ namespace YanLib::ui::components {
     }
 
     int32_t label::get_text(HWND label_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(label_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextW(label_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -147,7 +149,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t label::set_text(HWND label_handle, const std::string &text) {
-        int32_t result = SetWindowTextA(label_handle, text.data());
+        const int32_t result = SetWindowTextA(label_handle, text.data());
         if (!result) {
             error_code = GetLastError();
         }
@@ -155,7 +157,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t label::set_text(HWND label_handle, const std::wstring &text) {
-        int32_t result = SetWindowTextW(label_handle, text.data());
+        const int32_t result = SetWindowTextW(label_handle, text.data());
         if (!result) {
             error_code = GetLastError();
         }
@@ -163,7 +165,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t label::get_text_len(HWND label_handle) {
-        int32_t result = GetWindowTextLengthA(label_handle);
+        const int32_t result = GetWindowTextLengthA(label_handle);
         if (!result) {
             error_code = GetLastError();
         }

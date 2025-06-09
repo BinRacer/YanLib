@@ -26,7 +26,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t clipboard::register_format(const char *format) {
-        uint32_t result = RegisterClipboardFormatA(format);
+        const uint32_t result = RegisterClipboardFormatA(format);
         if (!result) {
             error_code = GetLastError();
         }
@@ -34,7 +34,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t clipboard::register_format(const wchar_t *format) {
-        uint32_t result = RegisterClipboardFormatW(format);
+        const uint32_t result = RegisterClipboardFormatW(format);
         if (!result) {
             error_code = GetLastError();
         }
@@ -58,13 +58,13 @@ namespace YanLib::ui::core {
                 error_code = GetLastError();
                 break;
             }
-            void *addr = GlobalLock(mem_handle);
+            const void *addr = GlobalLock(mem_handle);
             if (!addr) {
                 error_code = GetLastError();
                 break;
             }
             do {
-                size_t size = GlobalSize(mem_handle);
+                const size_t size = GlobalSize(mem_handle);
                 if (!size) {
                     error_code = GetLastError();
                     break;
@@ -114,9 +114,10 @@ namespace YanLib::ui::core {
 
     int32_t clipboard::get_format_name(uint32_t format,
                                        std::string &format_name) {
-        int32_t result = GetClipboardFormatNameA(format, format_name.data(),
-                                                 static_cast<int32_t>(
-                                                         format_name.size()));
+        const int32_t result =
+                GetClipboardFormatNameA(format, format_name.data(),
+                                        static_cast<int32_t>(
+                                                format_name.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -125,9 +126,10 @@ namespace YanLib::ui::core {
 
     int32_t clipboard::get_format_name(uint32_t format,
                                        std::wstring &format_name) {
-        int32_t result = GetClipboardFormatNameW(format, format_name.data(),
-                                                 static_cast<int32_t>(
-                                                         format_name.size()));
+        const int32_t result =
+                GetClipboardFormatNameW(format, format_name.data(),
+                                        static_cast<int32_t>(
+                                                format_name.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -164,7 +166,7 @@ namespace YanLib::ui::core {
 
     int32_t clipboard::get_priority_format(
             std::vector<uint32_t> &format_priority_list) {
-        int32_t result = GetPriorityClipboardFormat(
+        const int32_t result = GetPriorityClipboardFormat(
                 format_priority_list.data(),
                 static_cast<int32_t>(format_priority_list.size()));
         if (result == -1) {
@@ -213,7 +215,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t clipboard::enum_formats(uint32_t format) {
-        uint32_t result = EnumClipboardFormats(format);
+        const uint32_t result = EnumClipboardFormats(format);
         if (!result) {
             error_code = GetLastError();
         }
@@ -221,7 +223,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t clipboard::count_formats() {
-        int32_t result = CountClipboardFormats();
+        const int32_t result = CountClipboardFormats();
         if (!result) {
             error_code = GetLastError();
         }

@@ -113,7 +113,7 @@ namespace YanLib::ui::core {
             return false;
         }
         auto temp = static_cast<unsigned long>(*flag);
-        bool is_ok = IsTouchWindow(window_handle, &temp);
+        const bool is_ok = IsTouchWindow(window_handle, &temp);
         *flag = static_cast<RegisterFlag>(temp);
         return is_ok;
     }
@@ -202,7 +202,7 @@ namespace YanLib::ui::core {
     LRESULT touch::pack_hit_testing_proximity_evaluation(
             const TOUCH_HIT_TESTING_INPUT *hit_testing_input,
             const TOUCH_HIT_TESTING_PROXIMITY_EVALUATION *proximity_eval) {
-        LRESULT result =
+        const LRESULT result =
                 PackTouchHitTestingProximityEvaluation(hit_testing_input,
                                                        proximity_eval);
         error_code = GetLastError();

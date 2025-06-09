@@ -113,7 +113,8 @@ namespace YanLib::ui::components {
                           std::string &note,
                           helper::CodePage code_page) {
         std::wstring temp(note.size(), L'\0');
-        bool is_ok = Button_GetNote(button_handle, temp.data(), temp.size());
+        const bool is_ok =
+                Button_GetNote(button_handle, temp.data(), temp.size());
         note.clear();
         note = helper::convert::wstr_to_str(temp, code_page);
         return is_ok;
@@ -146,14 +147,15 @@ namespace YanLib::ui::components {
 
     int32_t button::get_text_len(HWND button_handle) {
         SetLastError(ERROR_SUCCESS);
-        int32_t result = GetWindowTextLengthW(button_handle);
+        const int32_t result = GetWindowTextLengthW(button_handle);
         error_code = GetLastError();
         return result;
     }
 
     int32_t button::get_text(HWND button_handle, std::string &text) {
-        int32_t result = GetWindowTextA(button_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextA(button_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -169,8 +171,9 @@ namespace YanLib::ui::components {
     }
 
     int32_t button::get_text(HWND button_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(button_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextW(button_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -186,7 +189,7 @@ namespace YanLib::ui::components {
     }
 
     TextAlign button::get_text_align(HWND button_handle) {
-        intptr_t style = GetWindowLongPtrW(button_handle, GWL_STYLE);
+        const intptr_t style = GetWindowLongPtrW(button_handle, GWL_STYLE);
         return static_cast<TextAlign>(style & BS_TYPEMASK);
     }
 
@@ -236,7 +239,7 @@ namespace YanLib::ui::components {
     }
 
     ButtonStyle button::get_style(HWND button_handle) {
-        intptr_t style = GetWindowLongPtrW(button_handle, GWL_STYLE);
+        const intptr_t style = GetWindowLongPtrW(button_handle, GWL_STYLE);
         return static_cast<ButtonStyle>(style & BS_TYPEMASK);
     }
 

@@ -120,7 +120,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<bool, uint16_t> up_down::get_pos(HWND up_down_handle) {
-        auto result = static_cast<uint32_t>(
+        const auto result = static_cast<uint32_t>(
                 SendMessageW(up_down_handle, UDM_GETPOS, 0, 0));
         return std::make_pair(!(HIWORD(result)), LOWORD(result));
     }
@@ -140,7 +140,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<uint16_t, uint16_t> up_down::get_range(HWND up_down_handle) {
-        auto result = static_cast<uint32_t>(
+        const auto result = static_cast<uint32_t>(
                 SendMessageW(up_down_handle, UDM_GETRANGE, 0, 0));
         return std::make_pair(HIWORD(result), LOWORD(result));
     }

@@ -367,14 +367,14 @@ namespace YanLib::ui::components {
 
     std::pair<uint16_t, uint16_t>
     tree::set_left_border(HWND tree_handle, uint16_t left, uint16_t top) {
-        uint32_t result =
+        const uint32_t result =
                 TreeView_SetBorder(tree_handle, TVSBF_XBORDER, left, top);
         return std::make_pair(LOWORD(result), HIWORD(result));
     }
 
     std::pair<uint16_t, uint16_t>
     tree::set_top_border(HWND tree_handle, uint16_t left, uint16_t top) {
-        uint32_t result =
+        const uint32_t result =
                 TreeView_SetBorder(tree_handle, TVSBF_YBORDER, left, top);
         return std::make_pair(LOWORD(result), HIWORD(result));
     }

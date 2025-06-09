@@ -312,7 +312,7 @@ namespace YanLib::ui::components {
 
     std::pair<uint32_t, uint32_t>
     tool_tips::get_bubble_size(HWND tool_tips_handle, TTTOOLINFOW *tool_info) {
-        auto result = static_cast<int32_t>(
+        const auto result = static_cast<int32_t>(
                 SendMessageW(tool_tips_handle, TTM_GETBUBBLESIZE, 0,
                              reinterpret_cast<LPARAM>(tool_info)));
         return std::make_pair(LOWORD(result), HIWORD(result));

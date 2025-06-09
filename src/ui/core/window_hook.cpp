@@ -31,8 +31,7 @@ namespace YanLib::ui::core {
     }
 
     bool window_hook::register_shell(HWND window_handle) {
-        bool is_ok = RegisterShellHookWindow(window_handle);
-        if (!is_ok) {
+        if (const bool is_ok = RegisterShellHookWindow(window_handle); !is_ok) {
             return false;
         }
         shell_rwlock.write_lock();

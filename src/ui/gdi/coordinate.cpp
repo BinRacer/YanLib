@@ -89,7 +89,7 @@ namespace YanLib::ui::gdi {
             return false;
         }
         auto temp = static_cast<ORIENTATION_PREFERENCE>(*orientation);
-        bool is_ok = GetDisplayAutoRotationPreferences(&temp);
+        const bool is_ok = GetDisplayAutoRotationPreferences(&temp);
         *orientation = static_cast<OrientationPreference>(temp);
         return is_ok;
     }

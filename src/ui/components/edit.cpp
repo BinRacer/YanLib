@@ -244,7 +244,7 @@ namespace YanLib::ui::components {
                            int32_t lineno,
                            helper::CodePage code_page) {
         std::wstring temp(line.size(), L'\0');
-        int32_t result =
+        const int32_t result =
                 Edit_GetLine(edit_handle, lineno, temp.data(), temp.size());
         line.clear();
         line = helper::convert::wstr_to_str(temp, code_page);
@@ -281,8 +281,9 @@ namespace YanLib::ui::components {
     }
 
     int32_t edit::get_text(HWND edit_handle, std::string &text) {
-        int32_t result = GetWindowTextA(edit_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextA(edit_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -290,8 +291,9 @@ namespace YanLib::ui::components {
     }
 
     int32_t edit::get_text(HWND edit_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(edit_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextW(edit_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -316,7 +318,7 @@ namespace YanLib::ui::components {
 
     int32_t edit::get_text_len(HWND edit_handle) {
         SetLastError(ERROR_SUCCESS);
-        int32_t result = Edit_GetTextLength(edit_handle);
+        const int32_t result = Edit_GetTextLength(edit_handle);
         error_code = GetLastError();
         return result;
     }
@@ -329,7 +331,7 @@ namespace YanLib::ui::components {
                                  std::string &banner,
                                  helper::CodePage code_page) {
         std::wstring temp(banner.size(), L'\0');
-        auto result =
+        const auto result =
                 Edit_GetCueBannerText(edit_handle, temp.data(), temp.size());
         banner.clear();
         banner = helper::convert::wstr_to_str(temp, code_page);
@@ -397,7 +399,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<int32_t, int32_t> edit::get_hilite(HWND edit_handle) {
-        uint32_t result = Edit_GetHilite(edit_handle);
+        const uint32_t result = Edit_GetHilite(edit_handle);
         return std::make_pair(LOWORD(result), HIWORD(result));
     }
 
@@ -438,7 +440,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<int32_t, int32_t> edit::get_select(HWND edit_handle) {
-        uint32_t result = Edit_GetSel(edit_handle);
+        const uint32_t result = Edit_GetSel(edit_handle);
         if (result == static_cast<uint32_t>(-1)) {
             return std::make_pair(0, 0);
         }

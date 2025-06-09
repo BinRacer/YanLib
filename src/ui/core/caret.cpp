@@ -30,7 +30,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t caret::get_blink_time() {
-        uint32_t result = GetCaretBlinkTime();
+        const uint32_t result = GetCaretBlinkTime();
         if (!result) {
             error_code = GetLastError();
         }

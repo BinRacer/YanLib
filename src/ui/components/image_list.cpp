@@ -86,7 +86,7 @@ namespace YanLib::ui::components {
         if (!error) {
             return false;
         }
-        HRESULT result =
+        const HRESULT result =
                 ImageList_WriteEx(image_list_handle, ILP_NORMAL, stream);
         *error = result;
         if (result != S_OK) {

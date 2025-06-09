@@ -90,7 +90,7 @@ namespace YanLib::ui::components {
                            const char *path_spec,
                            FileType type,
                            helper::CodePage code_page) {
-        int32_t result =
+        const int32_t result =
                 ListBox_Dir(list_box_handle, static_cast<uint32_t>(type),
                             helper::convert::str_to_wstr(path_spec, code_page)
                                     .data());
@@ -105,8 +105,9 @@ namespace YanLib::ui::components {
     int32_t list_box::fill(HWND list_box_handle,
                            const wchar_t *path_spec,
                            FileType type) {
-        int32_t result = ListBox_Dir(list_box_handle,
-                                     static_cast<uint32_t>(type), path_spec);
+        const int32_t result =
+                ListBox_Dir(list_box_handle, static_cast<uint32_t>(type),
+                            path_spec);
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == LB_ERR) {
@@ -118,7 +119,7 @@ namespace YanLib::ui::components {
     int32_t list_box::add_text(HWND list_box_handle,
                                std::string &text,
                                helper::CodePage code_page) {
-        int32_t result =
+        const int32_t result =
                 ListBox_AddString(list_box_handle,
                                   helper::convert::str_to_wstr(text, code_page)
                                           .data());
@@ -131,7 +132,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::add_text(HWND list_box_handle, std::wstring &text) {
-        int32_t result = ListBox_AddString(list_box_handle, text.data());
+        const int32_t result = ListBox_AddString(list_box_handle, text.data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == LB_ERR) {
@@ -144,7 +145,7 @@ namespace YanLib::ui::components {
                                 std::string &text,
                                 int32_t index,
                                 helper::CodePage code_page) {
-        int32_t result =
+        const int32_t result =
                 ListBox_FindString(list_box_handle, index,
                                    helper::convert::str_to_wstr(text, code_page)
                                            .data());
@@ -157,7 +158,7 @@ namespace YanLib::ui::components {
     int32_t list_box::find_text(HWND list_box_handle,
                                 std::wstring &text,
                                 int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ListBox_FindString(list_box_handle, index, text.data());
         if (result == LB_ERR) {
             error_code = GetLastError();
@@ -169,7 +170,7 @@ namespace YanLib::ui::components {
                                       std::string &text,
                                       int32_t index,
                                       helper::CodePage code_page) {
-        int32_t result = ListBox_FindStringExact(
+        const int32_t result = ListBox_FindStringExact(
                 list_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == LB_ERR) {
@@ -181,7 +182,7 @@ namespace YanLib::ui::components {
     int32_t list_box::find_text_exact(HWND list_box_handle,
                                       std::wstring &text,
                                       int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ListBox_FindStringExact(list_box_handle, index, text.data());
         if (result == LB_ERR) {
             error_code = GetLastError();
@@ -193,7 +194,7 @@ namespace YanLib::ui::components {
                                   std::string &text,
                                   int32_t index,
                                   helper::CodePage code_page) {
-        int32_t result = ListBox_InsertString(
+        const int32_t result = ListBox_InsertString(
                 list_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == LB_ERRSPACE) {
@@ -207,7 +208,7 @@ namespace YanLib::ui::components {
     int32_t list_box::insert_text(HWND list_box_handle,
                                   std::wstring &text,
                                   int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ListBox_InsertString(list_box_handle, index, text.data());
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
@@ -221,7 +222,7 @@ namespace YanLib::ui::components {
                                   std::string &text,
                                   int32_t index,
                                   helper::CodePage code_page) {
-        int32_t result = ListBox_SelectString(
+        const int32_t result = ListBox_SelectString(
                 list_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == LB_ERR) {
@@ -233,7 +234,7 @@ namespace YanLib::ui::components {
     int32_t list_box::select_text(HWND list_box_handle,
                                   std::wstring &text,
                                   int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ListBox_SelectString(list_box_handle, index, text.data());
         if (result == LB_ERR) {
             error_code = GetLastError();
@@ -242,7 +243,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::delete_item(HWND list_box_handle, int32_t index) {
-        int32_t result = ListBox_DeleteString(list_box_handle, index);
+        const int32_t result = ListBox_DeleteString(list_box_handle, index);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -258,7 +259,8 @@ namespace YanLib::ui::components {
                                     int32_t index,
                                     helper::CodePage code_page) {
         std::wstring temp(text.size(), L'\0');
-        int32_t result = ListBox_GetText(list_box_handle, index, temp.data());
+        const int32_t result =
+                ListBox_GetText(list_box_handle, index, temp.data());
         text.clear();
         text = helper::convert::wstr_to_str(temp, code_page);
         if (result == LB_ERR) {
@@ -270,7 +272,8 @@ namespace YanLib::ui::components {
     int32_t list_box::get_item_text(HWND list_box_handle,
                                     std::wstring &text,
                                     int32_t index) {
-        int32_t result = ListBox_GetText(list_box_handle, index, text.data());
+        const int32_t result =
+                ListBox_GetText(list_box_handle, index, text.data());
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -278,7 +281,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::add_data(HWND list_box_handle, LPARAM data) {
-        int32_t result = ListBox_AddItemData(list_box_handle, data);
+        const int32_t result = ListBox_AddItemData(list_box_handle, data);
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == LB_ERR) {
@@ -289,7 +292,8 @@ namespace YanLib::ui::components {
 
     int32_t
     list_box::find_data(HWND list_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ListBox_FindItemData(list_box_handle, index, data);
+        const int32_t result =
+                ListBox_FindItemData(list_box_handle, index, data);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -302,7 +306,8 @@ namespace YanLib::ui::components {
 
     int32_t
     list_box::set_data(HWND list_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ListBox_SetItemData(list_box_handle, index, data);
+        const int32_t result =
+                ListBox_SetItemData(list_box_handle, index, data);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -311,7 +316,8 @@ namespace YanLib::ui::components {
 
     int32_t
     list_box::insert_data(HWND list_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ListBox_InsertItemData(list_box_handle, index, data);
+        const int32_t result =
+                ListBox_InsertItemData(list_box_handle, index, data);
         if (result == LB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == LB_ERR) {
@@ -322,7 +328,8 @@ namespace YanLib::ui::components {
 
     int32_t
     list_box::select_data(HWND list_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ListBox_SelectItemData(list_box_handle, index, data);
+        const int32_t result =
+                ListBox_SelectItemData(list_box_handle, index, data);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -330,7 +337,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::get_item_height(HWND list_box_handle, int32_t index) {
-        int32_t result = ListBox_GetItemHeight(list_box_handle, index);
+        const int32_t result = ListBox_GetItemHeight(list_box_handle, index);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -340,7 +347,8 @@ namespace YanLib::ui::components {
     int32_t list_box::set_item_height(HWND list_box_handle,
                                       int32_t width,
                                       int32_t index) {
-        int32_t result = ListBox_SetItemHeight(list_box_handle, index, width);
+        const int32_t result =
+                ListBox_SetItemHeight(list_box_handle, index, width);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -354,7 +362,7 @@ namespace YanLib::ui::components {
 
     int32_t list_box::get_select_items(HWND list_box_handle,
                                        std::vector<int32_t> &select_index) {
-        int32_t result =
+        const int32_t result =
                 ListBox_GetSelItems(list_box_handle, select_index.size(),
                                     select_index.data());
         if (result == LB_ERR) {
@@ -377,7 +385,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::get_curr_select(HWND list_box_handle) {
-        int32_t result = ListBox_GetCurSel(list_box_handle);
+        const int32_t result = ListBox_GetCurSel(list_box_handle);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -385,7 +393,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::set_curr_select(HWND list_box_handle, int32_t index) {
-        int32_t result = ListBox_SetCurSel(list_box_handle, index);
+        const int32_t result = ListBox_SetCurSel(list_box_handle, index);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }
@@ -393,8 +401,8 @@ namespace YanLib::ui::components {
     }
 
     bool list_box::is_select(HWND list_box_handle, int32_t index) {
-        int32_t result = ListBox_GetSel(list_box_handle, index);
-        if (result == LB_ERR || result == 0) {
+        if (const int32_t result = ListBox_GetSel(list_box_handle, index);
+            result == LB_ERR || result == 0) {
             error_code = GetLastError();
             return false;
         }
@@ -410,7 +418,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t list_box::get_select_count(HWND list_box_handle) {
-        int32_t result = ListBox_GetSelCount(list_box_handle);
+        const int32_t result = ListBox_GetSelCount(list_box_handle);
         if (result == LB_ERR) {
             error_code = GetLastError();
         }

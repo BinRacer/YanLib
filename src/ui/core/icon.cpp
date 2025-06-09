@@ -176,7 +176,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t icon::lookup_icon_id(uint8_t *res_buf, bool is_icon) {
-        int32_t result = LookupIconIdFromDirectory(res_buf, is_icon);
+        const int32_t result = LookupIconIdFromDirectory(res_buf, is_icon);
         if (!result) {
             error_code = GetLastError();
         }
@@ -188,7 +188,7 @@ namespace YanLib::ui::core {
                                  int32_t desired_width,
                                  int32_t desired_height,
                                  IconFlag flag) {
-        int32_t result =
+        const int32_t result =
                 LookupIconIdFromDirectoryEx(res_buf, is_icon, desired_width,
                                             desired_height,
                                             static_cast<uint32_t>(flag));

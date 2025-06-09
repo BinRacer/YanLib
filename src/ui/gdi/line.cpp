@@ -48,8 +48,8 @@ namespace YanLib::ui::gdi {
         for (const auto &count : poly_count) {
             temp.push_back(count);
         }
-        bool is_ok = PolyPolyline(dc_handle, point.data(), temp.data(),
-                                  poly_count.size());
+        const bool is_ok = PolyPolyline(dc_handle, point.data(), temp.data(),
+                                        poly_count.size());
         poly_count.clear();
         for (const auto &count : temp) {
             poly_count.push_back(count);

@@ -79,7 +79,7 @@ namespace YanLib::ui::components {
 
     std::pair<ModifiersKey, VirtualKey>
     hot_key::get_hotkey(HWND hot_key_handle) {
-        auto hot_key = static_cast<uint16_t>(
+        const auto hot_key = static_cast<uint16_t>(
                 SendMessageW(hot_key_handle, HKM_GETHOTKEY, 0, 0));
         return std::make_pair(static_cast<ModifiersKey>(LOBYTE(hot_key)),
                               static_cast<VirtualKey>(HIBYTE(hot_key)));
@@ -87,7 +87,7 @@ namespace YanLib::ui::components {
 
     void
     hot_key::set_hotkey(HWND hot_key_handle, ModifiersKey mod, VirtualKey vk) {
-        uint16_t hot_key =
+        const uint16_t hot_key =
                 static_cast<uint8_t>(mod) | (static_cast<uint8_t>(vk) << 8);
         SendMessageW(hot_key_handle, HKM_SETHOTKEY, hot_key, 0);
     }

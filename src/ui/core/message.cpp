@@ -10,7 +10,7 @@ namespace YanLib::ui::core {
                       MSG *msg,
                       uint32_t filter_min,
                       uint32_t filter_max) {
-        int32_t result =
+        const int32_t result =
                 GetMessageW(msg, window_handle, filter_min, filter_max);
         if (result == -1) {
             error_code = GetLastError();
@@ -83,7 +83,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t message::register_window(const char *message) {
-        uint32_t result = RegisterWindowMessageA(message);
+        const uint32_t result = RegisterWindowMessageA(message);
         if (!result) {
             error_code = GetLastError();
         }
@@ -91,7 +91,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t message::register_window(const wchar_t *message) {
-        uint32_t result = RegisterWindowMessageW(message);
+        const uint32_t result = RegisterWindowMessageW(message);
         if (!result) {
             error_code = GetLastError();
         }
@@ -140,9 +140,10 @@ namespace YanLib::ui::core {
                                   uint32_t milli_second,
                                   SendTimeoutFlag flag) {
         SetLastError(ERROR_SUCCESS);
-        LRESULT ret = SendMessageTimeoutW(window_handle, msg, wparam, lparam,
-                                          static_cast<uint32_t>(flag),
-                                          milli_second, result);
+        const LRESULT ret =
+                SendMessageTimeoutW(window_handle, msg, wparam, lparam,
+                                    static_cast<uint32_t>(flag), milli_second,
+                                    result);
         error_code = GetLastError();
         return ret;
     }
@@ -229,8 +230,9 @@ namespace YanLib::ui::core {
             return false;
         }
         auto temp = static_cast<unsigned long>(*info);
-        int32_t result = BroadcastSystemMessageW(static_cast<uint32_t>(flag),
-                                                 &temp, msg, wparam, lparam);
+        const int32_t result =
+                BroadcastSystemMessageW(static_cast<uint32_t>(flag), &temp, msg,
+                                        wparam, lparam);
         *info = static_cast<BroadcastResult>(temp);
         if (!result) {
             error_code = GetLastError();
@@ -249,7 +251,7 @@ namespace YanLib::ui::core {
             return false;
         }
         auto temp = static_cast<unsigned long>(*info);
-        int32_t result =
+        const int32_t result =
                 BroadcastSystemMessageExW(static_cast<uint32_t>(flag), &temp,
                                           msg, wparam, lparam, bsm_info);
         *info = static_cast<BroadcastResult>(temp);
@@ -513,7 +515,7 @@ namespace YanLib::ui::core {
     }
 
     std::pair<QueueType, QueueType> message::get_queue_status(QueueType type) {
-        uint32_t status = GetQueueStatus(static_cast<uint32_t>(type));
+        const uint32_t status = GetQueueStatus(static_cast<uint32_t>(type));
         auto current = static_cast<QueueType>(HIWORD(status));
         auto still = static_cast<QueueType>(LOWORD(status));
         return std::make_pair(current, still);

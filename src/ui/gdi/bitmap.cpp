@@ -193,7 +193,7 @@ namespace YanLib::ui::gdi {
                                     int32_t y_src,
                                     int32_t width_src,
                                     int32_t height_src,
-                                    std::vector<uint8_t> &bits,
+                                    const std::vector<uint8_t> &bits,
                                     const BITMAPINFO *bitmap_info,
                                     TernaryRasterCode rop,
                                     bool use_rgb) {
@@ -259,7 +259,7 @@ namespace YanLib::ui::gdi {
                                 HBITMAP bitmap_handle,
                                 uint32_t start_line,
                                 uint32_t line_num,
-                                std::vector<uint8_t> &bits,
+                                const std::vector<uint8_t> &bits,
                                 const BITMAPINFO *bitmap_info,
                                 bool use_rgb) {
         return SetDIBits(dc_handle, bitmap_handle, start_line, line_num,
@@ -301,7 +301,7 @@ namespace YanLib::ui::gdi {
                                           int32_t y_src,
                                           uint32_t start_scan,
                                           uint32_t line_num,
-                                          std::vector<uint8_t> &bits,
+                                          const std::vector<uint8_t> &bits,
                                           const BITMAPINFO *bitmap_info,
                                           bool use_rgb) {
         return SetDIBitsToDevice(dc_handle, x_dst, y_dst, width, height, x_src,

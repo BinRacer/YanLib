@@ -184,8 +184,8 @@ namespace YanLib::ui::core {
     }
 
     bool notify::register_tooltip_dismiss(HWND window_handle) {
-        bool is_ok = RegisterForTooltipDismissNotification(window_handle,
-                                                           TDF_REGISTER);
+        const bool is_ok = RegisterForTooltipDismissNotification(window_handle,
+                                                                 TDF_REGISTER);
         if (!is_ok) {
             return false;
         }

@@ -98,9 +98,10 @@ namespace YanLib::ui::core {
     }
 
     int32_t keyboard::get_layout_list(std::vector<HKL> &layout_handle) {
-        int32_t result = GetKeyboardLayoutList(static_cast<int32_t>(
-                                                       layout_handle.size()),
-                                               layout_handle.data());
+        const int32_t result =
+                GetKeyboardLayoutList(static_cast<int32_t>(
+                                              layout_handle.size()),
+                                      layout_handle.data());
         if (!result) {
             error_code = GetLastError();
         }
@@ -140,7 +141,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t keyboard::get_type(int32_t type_flag) {
-        int32_t result = GetKeyboardType(type_flag);
+        const int32_t result = GetKeyboardType(type_flag);
         if (type_flag != 1 && !result) {
             error_code = GetLastError();
         }
@@ -148,8 +149,9 @@ namespace YanLib::ui::core {
     }
 
     int32_t keyboard::get_key_name(int32_t param, std::string &text) {
-        int32_t result = GetKeyNameTextA(param, text.data(),
-                                         static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetKeyNameTextA(param, text.data(),
+                                static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -157,8 +159,9 @@ namespace YanLib::ui::core {
     }
 
     int32_t keyboard::get_key_name(int32_t param, std::wstring &text) {
-        int32_t result = GetKeyNameTextW(param, text.data(),
-                                         static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetKeyNameTextW(param, text.data(),
+                                static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -190,7 +193,8 @@ namespace YanLib::ui::core {
     }
 
     uint32_t keyboard::send_input(std::vector<INPUT> &input) {
-        uint32_t result = SendInput(input.size(), input.data(), sizeof(INPUT));
+        const uint32_t result =
+                SendInput(input.size(), input.data(), sizeof(INPUT));
         if (!result) {
             error_code = GetLastError();
         }
@@ -209,8 +213,9 @@ namespace YanLib::ui::core {
 
     VirtualKey keyboard::scan_code_to_virtual_key(uint8_t scan_code,
                                                   bool is_extended_key) {
-        UINT full_scan_code = scan_code | (is_extended_key ? 0xE000 : 0x0000);
-        UINT vk = MapVirtualKeyW(full_scan_code, MAPVK_VSC_TO_VK_EX);
+        const uint32_t full_scan_code =
+                scan_code | (is_extended_key ? 0xE000 : 0x0000);
+        uint32_t vk = MapVirtualKeyW(full_scan_code, MAPVK_VSC_TO_VK_EX);
         return static_cast<VirtualKey>(vk);
     }
 
@@ -233,7 +238,7 @@ namespace YanLib::ui::core {
         if (!mod_key || !vk) {
             return false;
         }
-        int16_t result = VkKeyScanA(ch);
+        const int16_t result = VkKeyScanA(ch);
         if (result == -1) {
             return false;
         }
@@ -246,7 +251,7 @@ namespace YanLib::ui::core {
         if (!mod_key || !vk) {
             return false;
         }
-        int16_t result = VkKeyScanW(ch);
+        const int16_t result = VkKeyScanW(ch);
         if (result == -1) {
             return false;
         }
@@ -262,7 +267,7 @@ namespace YanLib::ui::core {
         if (!mod_key || !vk) {
             return false;
         }
-        int16_t result = VkKeyScanExA(ch, layout_handle);
+        const int16_t result = VkKeyScanExA(ch, layout_handle);
         if (result == -1) {
             return false;
         }
@@ -278,7 +283,7 @@ namespace YanLib::ui::core {
         if (!mod_key || !vk) {
             return false;
         }
-        int16_t result = VkKeyScanExW(ch, layout_handle);
+        const int16_t result = VkKeyScanExW(ch, layout_handle);
         if (result == -1) {
             return false;
         }
@@ -309,8 +314,8 @@ namespace YanLib::ui::core {
             return 0;
         }
         uint16_t ch = 0;
-        int32_t result = ToAscii(static_cast<uint32_t>(vk), scan_code,
-                                 key_state, &ch, menu_active ? 1 : 0);
+        const int32_t result = ToAscii(static_cast<uint32_t>(vk), scan_code,
+                                       key_state, &ch, menu_active ? 1 : 0);
         if (result == 1) {
             *ch1 = static_cast<uint8_t>(ch & 0xFF);
         } else if (result == 2) {
@@ -331,7 +336,7 @@ namespace YanLib::ui::core {
             return 0;
         }
         uint16_t ch = 0;
-        int32_t result =
+        const int32_t result =
                 ToAsciiEx(static_cast<uint32_t>(vk), scan_code, key_state, &ch,
                           menu_active ? 1 : 0, layout_handle);
         if (result == 1) {
@@ -424,7 +429,7 @@ namespace YanLib::ui::core {
     uint32_t keyboard::get_raw_input_buffer(RAWINPUT *buf,
                                             uint32_t *size,
                                             uint32_t header_size) {
-        uint32_t result = GetRawInputBuffer(buf, size, header_size);
+        const uint32_t result = GetRawInputBuffer(buf, size, header_size);
         if (result == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
@@ -443,7 +448,7 @@ namespace YanLib::ui::core {
                                                  uint32_t command,
                                                  void *buf,
                                                  uint32_t *size) {
-        uint32_t result =
+        const uint32_t result =
                 GetRawInputDeviceInfoW(device_handle, command, buf, size);
         error_code = GetLastError();
         return result;
@@ -452,8 +457,9 @@ namespace YanLib::ui::core {
     uint32_t keyboard::get_raw_input_device_list(
             RAWINPUTDEVICELIST raw_input_device_list[],
             uint32_t *real_num) {
-        uint32_t result = GetRawInputDeviceList(raw_input_device_list, real_num,
-                                                sizeof(RAWINPUTDEVICELIST));
+        const uint32_t result =
+                GetRawInputDeviceList(raw_input_device_list, real_num,
+                                      sizeof(RAWINPUTDEVICELIST));
         if (result == static_cast<uint32_t>(-1)) {
             error_code = GetLastError();
         }
@@ -463,7 +469,7 @@ namespace YanLib::ui::core {
     uint32_t keyboard::get_registered_raw_input_devices(
             RAWINPUTDEVICE raw_input_devices[],
             uint32_t *real_num) {
-        uint32_t result =
+        const uint32_t result =
                 GetRegisteredRawInputDevices(raw_input_devices, real_num,
                                              sizeof(RAWINPUTDEVICE));
         if (result == static_cast<uint32_t>(-1)) {

@@ -175,12 +175,13 @@ namespace YanLib::ui::components {
 
     std::pair<uint32_t, uint32_t>
     tab::set_item_size(HWND tab_handle, int32_t width, int32_t height) {
-        uint32_t result = TabCtrl_SetItemSize(tab_handle, width, height);
+        const uint32_t result = TabCtrl_SetItemSize(tab_handle, width, height);
         return std::make_pair(LOWORD(result), HIWORD(result));
     }
 
     SIZE tab::set_item_size(HWND tab_handle, SIZE size) {
-        uint32_t result = TabCtrl_SetItemSize(tab_handle, size.cx, size.cy);
+        const uint32_t result =
+                TabCtrl_SetItemSize(tab_handle, size.cx, size.cy);
         return {LOWORD(result), HIWORD(result)};
     }
 

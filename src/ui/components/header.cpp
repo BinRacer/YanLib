@@ -221,7 +221,7 @@ namespace YanLib::ui::components {
 
     int32_t
     header::set_hot_divider(HWND header_handle, uint32_t x, uint32_t y) {
-        uint32_t pos = MAKEWORD(x, y);
+        const uint32_t pos = MAKEWORD(x, y);
         return Header_SetHotDivider(header_handle, TRUE, pos);
     }
 

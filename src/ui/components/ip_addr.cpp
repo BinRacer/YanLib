@@ -106,8 +106,8 @@ namespace YanLib::ui::components {
         if (!ip) {
             return false;
         }
-        auto result = SendMessageW(ip_addr_handle, IPM_GETADDRESS, 0,
-                                   reinterpret_cast<LPARAM>(ip));
+        const auto result = SendMessageW(ip_addr_handle, IPM_GETADDRESS, 0,
+                                         reinterpret_cast<LPARAM>(ip));
         if (!result) {
             error_code = GetLastError();
             return false;

@@ -69,7 +69,8 @@ namespace YanLib::ui::core {
     }
 
     uint32_t mouse::send_input(std::vector<INPUT> &input) {
-        uint32_t result = SendInput(input.size(), input.data(), sizeof(INPUT));
+        const uint32_t result =
+                SendInput(input.size(), input.data(), sizeof(INPUT));
         if (!result) {
             error_code = GetLastError();
         }
@@ -300,7 +301,7 @@ namespace YanLib::ui::core {
                                    MOUSEMOVEPOINT *mouse_move_point,
                                    std::vector<MOUSEMOVEPOINT> &point,
                                    uint32_t resolution) {
-        int32_t result =
+        const int32_t result =
                 GetMouseMovePointsEx(cb_size, mouse_move_point, point.data(),
                                      static_cast<int32_t>(point.size()),
                                      resolution);

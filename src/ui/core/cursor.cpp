@@ -180,7 +180,7 @@ namespace YanLib::ui::core {
                 break;
             }
             typedef uint32_t(WINAPI * prototype)(uint32_t);
-            auto func = reinterpret_cast<prototype>(
+            const auto func = reinterpret_cast<prototype>(
                     GetProcAddress(user32, "SetThreadCursorCreationScaling"));
             if (!func) {
                 error_code = GetLastError();

@@ -109,8 +109,9 @@ namespace YanLib::ui::components {
 
     bool datetime::get_system_time(HWND datetime_handle,
                                    SYSTEMTIME *system_time) {
-        uint32_t result = DateTime_GetSystemtime(datetime_handle, system_time);
-        if (result == static_cast<uint32_t>(GDT_ERROR)) {
+        if (const uint32_t result =
+                    DateTime_GetSystemtime(datetime_handle, system_time);
+            result == static_cast<uint32_t>(GDT_ERROR)) {
             error_code = GetLastError();
             return false;
         }
@@ -127,8 +128,9 @@ namespace YanLib::ui::components {
     }
 
     bool datetime::get_range(HWND datetime_handle, SYSTEMTIME system_time[2]) {
-        uint32_t result = DateTime_GetRange(datetime_handle, system_time);
-        if ((result & GDTR_MIN) && (result & GDTR_MAX)) {
+        if (const uint32_t result =
+                    DateTime_GetRange(datetime_handle, system_time);
+            (result & GDTR_MIN) && (result & GDTR_MAX)) {
             return true;
         }
         return false;

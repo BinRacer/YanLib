@@ -260,8 +260,8 @@ set_target_properties(YanLib PROPERTIES
 )
 
 set_target_properties(YanLib PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/lib/Debug"
-        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib/Release"
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/build/lib/Debug"
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/build/lib/Release"
 )
 
 set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/dist")
@@ -272,18 +272,18 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         "${OUTPUT_DIR}/${PROJECT_NAME}.zip"
         --format=zip
         --
-        ${PROJECT_SOURCE_DIR}/include
-        ${PROJECT_SOURCE_DIR}/lib
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        ${PROJECT_SOURCE_DIR}/build/include
+        ${PROJECT_SOURCE_DIR}/build/lib
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/build"
         COMMENT "build and create ZIP: ${OUTPUT_DIR}/${PROJECT_NAME}.zip"
         VERBATIM
 )
 
-target_include_directories(YanLib
-        PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
-)
+#target_include_directories(YanLib
+#        PUBLIC
+#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#        $<INSTALL_INTERFACE:include>
+#)
 
 target_include_directories(YanLib
         PRIVATE

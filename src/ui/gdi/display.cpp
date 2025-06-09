@@ -71,7 +71,7 @@ namespace YanLib::ui::gdi {
             return false;
         }
         auto temp = static_cast<ORIENTATION_PREFERENCE>(*orientation);
-        bool is_ok = GetDisplayAutoRotationPreferences(&temp);
+        const bool is_ok = GetDisplayAutoRotationPreferences(&temp);
         *orientation = static_cast<OrientationPreference>(temp);
         return is_ok;
     }
@@ -98,7 +98,7 @@ namespace YanLib::ui::gdi {
             typedef int32_t(WINAPI * prototype)(_In_ uint32_t,
                                                 _Out_ ORIENTATION_PREFERENCE *,
                                                 _Out_ int32_t *);
-            auto func = reinterpret_cast<prototype>(GetProcAddress(
+            const auto func = reinterpret_cast<prototype>(GetProcAddress(
                     kernel32, "GetDisplayAutoRotationPreferencesByProcessId"));
             if (!func) {
                 break;
@@ -132,7 +132,7 @@ namespace YanLib::ui::gdi {
                 return ERROR_INVALID_PARAMETER;
             }
             auto temp = static_cast<DISPLAYCONFIG_TOPOLOGY_ID>(*id);
-            bool is_ok =
+            const bool is_ok =
                     QueryDisplayConfig(static_cast<uint32_t>(flag),
                                        real_path_info_num, path_info,
                                        real_model_info_num, mode_info, &temp);

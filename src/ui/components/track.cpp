@@ -216,8 +216,9 @@ namespace YanLib::ui::components {
     }
 
     std::vector<uint32_t> track::get_ticks(HWND track_handle) {
-        int64_t num_ticks = SendMessageW(track_handle, TBM_GETNUMTICS, 0, 0);
-        auto *ticks = reinterpret_cast<uint32_t *>(
+        const int64_t num_ticks =
+                SendMessageW(track_handle, TBM_GETNUMTICS, 0, 0);
+        const auto *ticks = reinterpret_cast<uint32_t *>(
                 SendMessageW(track_handle, TBM_GETPTICS, 0, 0));
         if (num_ticks <= 2) {
             return {};

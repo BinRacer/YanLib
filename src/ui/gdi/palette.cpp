@@ -86,7 +86,7 @@ namespace YanLib::ui::gdi {
 
     bool palette::animate(HPALETTE palette_handle,
                           uint32_t index,
-                          std::vector<PALETTEENTRY> &palette_entry) {
+                          const std::vector<PALETTEENTRY> &palette_entry) {
         return AnimatePalette(palette_handle, index, palette_entry.size(),
                               palette_entry.data());
     }

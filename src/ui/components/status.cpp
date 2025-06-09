@@ -150,7 +150,7 @@ namespace YanLib::ui::components {
                      std::string &text,
                      helper::CodePage code_page) {
         std::wstring temp(text.size(), L'\0');
-        auto result = static_cast<int32_t>(
+        const auto result = static_cast<int32_t>(
                 SendMessageW(status_handle, SB_GETTEXT, index,
                              reinterpret_cast<LPARAM>(temp.data())));
         text.clear();
@@ -161,7 +161,7 @@ namespace YanLib::ui::components {
 
     std::pair<uint32_t, StatusTextFlag>
     status::get_text(HWND status_handle, uint8_t index, std::wstring &text) {
-        auto result = static_cast<int32_t>(
+        const auto result = static_cast<int32_t>(
                 SendMessageW(status_handle, SB_GETTEXT, index,
                              reinterpret_cast<LPARAM>(text.data())));
         return std::make_pair(LOWORD(result),
@@ -190,7 +190,7 @@ namespace YanLib::ui::components {
 
     std::pair<uint32_t, StatusTextFlag> status::get_text_len(HWND status_handle,
                                                              uint8_t index) {
-        auto result = static_cast<int32_t>(
+        const auto result = static_cast<int32_t>(
                 SendMessageW(status_handle, SB_GETTEXTLENGTH, index, 0));
         return std::make_pair(LOWORD(result),
                               static_cast<StatusTextFlag>(HIWORD(result)));

@@ -61,7 +61,7 @@ namespace YanLib::ui::core {
     }
 
     ATOM window_class::register_class(const WNDCLASSEXA *window_class) {
-        ATOM result = RegisterClassExA(window_class);
+        const ATOM result = RegisterClassExA(window_class);
         if (!result) {
             error_code = GetLastError();
         }
@@ -69,7 +69,7 @@ namespace YanLib::ui::core {
     }
 
     ATOM window_class::register_class(const WNDCLASSEXW *window_class) {
-        ATOM result = RegisterClassExW(window_class);
+        const ATOM result = RegisterClassExW(window_class);
         if (!result) {
             error_code = GetLastError();
         }
@@ -135,7 +135,7 @@ namespace YanLib::ui::core {
     }
 
     uint32_t window_class::get_long(HWND window_handle, int32_t index) {
-        uint32_t result = GetClassLongW(window_handle, index);
+        const uint32_t result = GetClassLongW(window_handle, index);
         if (!result) {
             error_code = GetLastError();
         }
@@ -144,7 +144,7 @@ namespace YanLib::ui::core {
 
     uint32_t
     window_class::set_long(HWND window_handle, int32_t index, int32_t value) {
-        uint32_t result = SetClassLongW(window_handle, index, value);
+        const uint32_t result = SetClassLongW(window_handle, index, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -152,7 +152,7 @@ namespace YanLib::ui::core {
     }
 
     uintptr_t window_class::get_long_ptr(HWND window_handle, int32_t index) {
-        uintptr_t result = GetClassLongPtrW(window_handle, index);
+        const uintptr_t result = GetClassLongPtrW(window_handle, index);
         if (!result) {
             error_code = GetLastError();
         }
@@ -162,7 +162,7 @@ namespace YanLib::ui::core {
     uintptr_t window_class::set_long_ptr(HWND window_handle,
                                          int32_t index,
                                          intptr_t value) {
-        uintptr_t result = SetClassLongPtrW(window_handle, index, value);
+        const uintptr_t result = SetClassLongPtrW(window_handle, index, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -170,7 +170,7 @@ namespace YanLib::ui::core {
     }
 
     uint16_t window_class::get_word(HWND window_handle, int32_t index) {
-        uint16_t result = GetClassWord(window_handle, index);
+        const uint16_t result = GetClassWord(window_handle, index);
         if (!result) {
             error_code = GetLastError();
         }
@@ -179,7 +179,7 @@ namespace YanLib::ui::core {
 
     uint16_t
     window_class::set_word(HWND window_handle, int32_t index, uint16_t value) {
-        uint16_t result = SetClassWord(window_handle, index, value);
+        const uint16_t result = SetClassWord(window_handle, index, value);
         if (!result) {
             error_code = GetLastError();
         }
@@ -188,8 +188,9 @@ namespace YanLib::ui::core {
 
     int32_t window_class::get_name(HWND window_handle,
                                    std::string &class_name) {
-        int32_t result = GetClassNameA(window_handle, class_name.data(),
-                                       static_cast<int32_t>(class_name.size()));
+        const int32_t result =
+                GetClassNameA(window_handle, class_name.data(),
+                              static_cast<int32_t>(class_name.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -198,8 +199,9 @@ namespace YanLib::ui::core {
 
     int32_t window_class::get_name(HWND window_handle,
                                    std::wstring &class_name) {
-        int32_t result = GetClassNameW(window_handle, class_name.data(),
-                                       static_cast<int32_t>(class_name.size()));
+        const int32_t result =
+                GetClassNameW(window_handle, class_name.data(),
+                              static_cast<int32_t>(class_name.size()));
         if (!result) {
             error_code = GetLastError();
         }

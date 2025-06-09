@@ -343,7 +343,7 @@ namespace YanLib::ui::components {
 
     std::pair<uint32_t, uint32_t>
     tool_bar::get_button_size(HWND tool_bar_handle) {
-        auto result = static_cast<uint32_t>(
+        const auto result = static_cast<uint32_t>(
                 SendMessageW(tool_bar_handle, TB_GETBUTTONSIZE, 0, 0));
         return std::make_pair(LOWORD(result), HIWORD(result));
     }
@@ -352,7 +352,7 @@ namespace YanLib::ui::components {
         if (!size) {
             return false;
         }
-        auto result = static_cast<uint32_t>(
+        const auto result = static_cast<uint32_t>(
                 SendMessageW(tool_bar_handle, TB_GETBUTTONSIZE, 0, 0));
         size->cx = LOWORD(result);
         size->cy = HIWORD(result);
@@ -558,7 +558,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<uint32_t, uint32_t> tool_bar::get_padding(HWND tool_bar_handle) {
-        auto result = static_cast<uint32_t>(
+        const auto result = static_cast<uint32_t>(
                 SendMessageW(tool_bar_handle, TB_GETPADDING, 0, 0));
         return std::make_pair(LOWORD(result), HIWORD(result));
     }

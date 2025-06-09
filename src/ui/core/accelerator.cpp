@@ -64,7 +64,7 @@ namespace YanLib::ui::core {
 
     int32_t
     accelerator::translate(HWND window_handle, HACCEL accel_handle, MSG *msg) {
-        int32_t result =
+        const int32_t result =
                 TranslateAcceleratorW(window_handle, accel_handle, msg);
         if (!result) {
             error_code = GetLastError();

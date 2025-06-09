@@ -43,12 +43,12 @@ namespace YanLib::ui::gdi {
     }
 
     bool clip::contains(HDC dc_handle, const RECT *rect) {
-        int32_t is_ok = RectVisible(dc_handle, rect);
+        const int32_t is_ok = RectVisible(dc_handle, rect);
         return is_ok == TRUE || is_ok == 2;
     }
 
     bool clip::contains(HDC dc_handle, int32_t x, int32_t y) {
-        int32_t is_ok = PtVisible(dc_handle, x, y);
+        const int32_t is_ok = PtVisible(dc_handle, x, y);
         return is_ok == TRUE;
     }
 

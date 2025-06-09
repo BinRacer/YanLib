@@ -32,12 +32,12 @@ namespace YanLib::ui::core {
 
     HBITMAP image::load_bitmap(HINSTANCE instance_handle,
                                const char *image_name,
-                               int32_t cx,
-                               int32_t cy,
+                               int32_t width,
+                               int32_t height,
                                ImageFlag flag) {
         auto bitmap = static_cast<HBITMAP>(
-                LoadImageA(instance_handle, image_name, IMAGE_BITMAP, cx, cy,
-                           static_cast<uint32_t>(flag)));
+                LoadImageA(instance_handle, image_name, IMAGE_BITMAP, width,
+                           height, static_cast<uint32_t>(flag)));
         if (!bitmap) {
             error_code = GetLastError();
             return nullptr;
@@ -53,12 +53,12 @@ namespace YanLib::ui::core {
 
     HBITMAP image::load_bitmap(HINSTANCE instance_handle,
                                const wchar_t *image_name,
-                               int32_t cx,
-                               int32_t cy,
+                               int32_t width,
+                               int32_t height,
                                ImageFlag flag) {
         auto bitmap = static_cast<HBITMAP>(
-                LoadImageW(instance_handle, image_name, IMAGE_BITMAP, cx, cy,
-                           static_cast<uint32_t>(flag)));
+                LoadImageW(instance_handle, image_name, IMAGE_BITMAP, width,
+                           height, static_cast<uint32_t>(flag)));
         if (!bitmap) {
             error_code = GetLastError();
             return nullptr;
@@ -74,11 +74,11 @@ namespace YanLib::ui::core {
 
     HICON image::load_icon(HINSTANCE instance_handle,
                            const char *image_name,
-                           int32_t cx,
-                           int32_t cy,
+                           int32_t width,
+                           int32_t height,
                            ImageFlag flag) {
         auto icon = static_cast<HICON>(LoadImageA(instance_handle, image_name,
-                                                  IMAGE_ICON, cx, cy,
+                                                  IMAGE_ICON, width, height,
                                                   static_cast<uint32_t>(flag)));
         if (!icon) {
             error_code = GetLastError();
@@ -95,11 +95,11 @@ namespace YanLib::ui::core {
 
     HICON image::load_icon(HINSTANCE instance_handle,
                            const wchar_t *image_name,
-                           int32_t cx,
-                           int32_t cy,
+                           int32_t width,
+                           int32_t height,
                            ImageFlag flag) {
         auto icon = static_cast<HICON>(LoadImageW(instance_handle, image_name,
-                                                  IMAGE_ICON, cx, cy,
+                                                  IMAGE_ICON, width, height,
                                                   static_cast<uint32_t>(flag)));
         if (!icon) {
             error_code = GetLastError();
@@ -116,12 +116,12 @@ namespace YanLib::ui::core {
 
     HCURSOR image::load_cursor(HINSTANCE instance_handle,
                                const char *image_name,
-                               int32_t cx,
-                               int32_t cy,
+                               int32_t width,
+                               int32_t height,
                                ImageFlag flag) {
         auto cursor = static_cast<HCURSOR>(
-                LoadImageA(instance_handle, image_name, IMAGE_CURSOR, cx, cy,
-                           static_cast<uint32_t>(flag)));
+                LoadImageA(instance_handle, image_name, IMAGE_CURSOR, width,
+                           height, static_cast<uint32_t>(flag)));
         if (!cursor) {
             error_code = GetLastError();
             return nullptr;
@@ -137,12 +137,12 @@ namespace YanLib::ui::core {
 
     HCURSOR image::load_cursor(HINSTANCE instance_handle,
                                const wchar_t *image_name,
-                               int32_t cx,
-                               int32_t cy,
+                               int32_t width,
+                               int32_t height,
                                ImageFlag flag) {
         auto cursor = static_cast<HCURSOR>(
-                LoadImageW(instance_handle, image_name, IMAGE_CURSOR, cx, cy,
-                           static_cast<uint32_t>(flag)));
+                LoadImageW(instance_handle, image_name, IMAGE_CURSOR, width,
+                           height, static_cast<uint32_t>(flag)));
         if (!cursor) {
             error_code = GetLastError();
             return nullptr;
@@ -157,11 +157,11 @@ namespace YanLib::ui::core {
     }
 
     HBITMAP image::copy_bitmap(HBITMAP bitmap_handle,
-                               int32_t cx,
-                               int32_t cy,
+                               int32_t width,
+                               int32_t height,
                                ImageFlag flag) {
         auto bitmap = static_cast<HBITMAP>(
-                CopyImage(bitmap_handle, IMAGE_BITMAP, cx, cy,
+                CopyImage(bitmap_handle, IMAGE_BITMAP, width, height,
                           static_cast<uint32_t>(flag)));
         if (!bitmap) {
             error_code = GetLastError();
@@ -177,12 +177,12 @@ namespace YanLib::ui::core {
     }
 
     HICON image::copy_icon(HICON icon_handle,
-                           int32_t cx,
-                           int32_t cy,
+                           int32_t width,
+                           int32_t height,
                            ImageFlag flag) {
-        auto icon =
-                static_cast<HICON>(CopyImage(icon_handle, IMAGE_ICON, cx, cy,
-                                             static_cast<uint32_t>(flag)));
+        auto icon = static_cast<HICON>(CopyImage(icon_handle, IMAGE_ICON, width,
+                                                 height,
+                                                 static_cast<uint32_t>(flag)));
         if (!icon) {
             error_code = GetLastError();
             return nullptr;
@@ -197,11 +197,11 @@ namespace YanLib::ui::core {
     }
 
     HCURSOR image::copy_cursor(HCURSOR cursor_handle,
-                               int32_t cx,
-                               int32_t cy,
+                               int32_t width,
+                               int32_t height,
                                ImageFlag flag) {
         auto cursor = static_cast<HCURSOR>(
-                CopyImage(cursor_handle, IMAGE_CURSOR, cx, cy,
+                CopyImage(cursor_handle, IMAGE_CURSOR, width, height,
                           static_cast<uint32_t>(flag)));
         if (!cursor) {
             error_code = GetLastError();

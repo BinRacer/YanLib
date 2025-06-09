@@ -20,7 +20,7 @@ namespace YanLib::ui::core {
                             const char *template_name,
                             HWND parent_window_handle,
                             DLGPROC dialog_func) {
-        intptr_t result =
+        const intptr_t result =
                 DialogBoxParamA(instance_handle, template_name,
                                 parent_window_handle, dialog_func, 0L);
         if (result == -1) {
@@ -33,7 +33,7 @@ namespace YanLib::ui::core {
                             const wchar_t *template_name,
                             HWND parent_window_handle,
                             DLGPROC dialog_func) {
-        intptr_t result =
+        const intptr_t result =
                 DialogBoxParamW(instance_handle, template_name,
                                 parent_window_handle, dialog_func, 0L);
         if (result == -1) {
@@ -47,7 +47,7 @@ namespace YanLib::ui::core {
                             HWND parent_window_handle,
                             DLGPROC dialog_func,
                             LPARAM init_param) {
-        intptr_t result =
+        const intptr_t result =
                 DialogBoxParamA(instance_handle, template_name,
                                 parent_window_handle, dialog_func, init_param);
         if (result == -1) {
@@ -61,7 +61,7 @@ namespace YanLib::ui::core {
                             HWND parent_window_handle,
                             DLGPROC dialog_func,
                             LPARAM init_param) {
-        intptr_t result =
+        const intptr_t result =
                 DialogBoxParamW(instance_handle, template_name,
                                 parent_window_handle, dialog_func, init_param);
         if (result == -1) {
@@ -74,7 +74,7 @@ namespace YanLib::ui::core {
                             const DLGTEMPLATE *dialog_template,
                             HWND parent_window_handle,
                             DLGPROC dialog_func) {
-        intptr_t result =
+        const intptr_t result =
                 DialogBoxIndirectParamW(instance_handle, dialog_template,
                                         parent_window_handle, dialog_func, 0L);
         if (result == -1) {
@@ -88,7 +88,7 @@ namespace YanLib::ui::core {
                             HWND parent_window_handle,
                             DLGPROC dialog_func,
                             LPARAM init_param) {
-        intptr_t result =
+        const intptr_t result =
                 DialogBoxIndirectParamW(instance_handle, dialog_template,
                                         parent_window_handle, dialog_func,
                                         init_param);
@@ -230,7 +230,7 @@ namespace YanLib::ui::core {
                                   int32_t list_box_id,
                                   int32_t static_id,
                                   FileType file_type) {
-        int32_t result =
+        const int32_t result =
                 DlgDirListA(dialog_handle, path_spec, list_box_id, static_id,
                             static_cast<uint32_t>(file_type));
         if (!result) {
@@ -244,7 +244,7 @@ namespace YanLib::ui::core {
                                   int32_t list_box_id,
                                   int32_t static_id,
                                   FileType file_type) {
-        int32_t result =
+        const int32_t result =
                 DlgDirListW(dialog_handle, path_spec, list_box_id, static_id,
                             static_cast<uint32_t>(file_type));
         if (!result) {
@@ -258,9 +258,10 @@ namespace YanLib::ui::core {
                                    int32_t combo_box_id,
                                    int32_t static_id,
                                    FileType file_type) {
-        int32_t result = DlgDirListComboBoxA(dialog_handle, path_spec,
-                                             combo_box_id, static_id,
-                                             static_cast<uint32_t>(file_type));
+        const int32_t result =
+                DlgDirListComboBoxA(dialog_handle, path_spec, combo_box_id,
+                                    static_id,
+                                    static_cast<uint32_t>(file_type));
         if (!result) {
             error_code = GetLastError();
         }
@@ -272,9 +273,10 @@ namespace YanLib::ui::core {
                                    int32_t combo_box_id,
                                    int32_t static_id,
                                    FileType file_type) {
-        int32_t result = DlgDirListComboBoxW(dialog_handle, path_spec,
-                                             combo_box_id, static_id,
-                                             static_cast<uint32_t>(file_type));
+        const int32_t result =
+                DlgDirListComboBoxW(dialog_handle, path_spec, combo_box_id,
+                                    static_id,
+                                    static_cast<uint32_t>(file_type));
         if (!result) {
             error_code = GetLastError();
         }
@@ -328,7 +330,7 @@ namespace YanLib::ui::core {
     }
 
     int32_t dialog::get_item_id(HWND item_handle) {
-        int32_t result = GetDlgCtrlID(item_handle);
+        const int32_t result = GetDlgCtrlID(item_handle);
         if (!result) {
             error_code = GetLastError();
         }
@@ -375,8 +377,9 @@ namespace YanLib::ui::core {
     uint32_t dialog::get_item_text(HWND dialog_handle,
                                    int32_t item_id,
                                    std::string &text) {
-        uint32_t result = GetDlgItemTextA(dialog_handle, item_id, text.data(),
-                                          static_cast<int32_t>(text.size()));
+        const uint32_t result =
+                GetDlgItemTextA(dialog_handle, item_id, text.data(),
+                                static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -386,8 +389,9 @@ namespace YanLib::ui::core {
     uint32_t dialog::get_item_text(HWND dialog_handle,
                                    int32_t item_id,
                                    std::wstring &text) {
-        uint32_t result = GetDlgItemTextW(dialog_handle, item_id, text.data(),
-                                          static_cast<int32_t>(text.size()));
+        const uint32_t result =
+                GetDlgItemTextW(dialog_handle, item_id, text.data(),
+                                static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }

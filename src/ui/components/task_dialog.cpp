@@ -18,7 +18,7 @@ namespace YanLib::ui::components {
             return false;
         }
         auto temp = static_cast<int32_t>(*button_result);
-        bool is_ok =
+        const bool is_ok =
                 TaskDialog(parent_window_handle, instance_handle, title,
                            main_instruction, content,
                            static_cast<TASKDIALOG_COMMON_BUTTON_FLAGS>(flag),
@@ -37,8 +37,8 @@ namespace YanLib::ui::components {
         auto button_temp = static_cast<int32_t>(*button_result);
         auto radio_temp = static_cast<int32_t>(*radio_result);
         int32_t verify_temp = *verify_checked;
-        bool is_ok = TaskDialogIndirect(config, &button_temp, &radio_temp,
-                                        &verify_temp);
+        const bool is_ok = TaskDialogIndirect(config, &button_temp, &radio_temp,
+                                              &verify_temp);
         *button_result = static_cast<TDButtonResult>(button_temp);
         *radio_result = static_cast<TDButtonResult>(radio_temp);
         *verify_checked = verify_temp;
@@ -247,7 +247,7 @@ namespace YanLib::ui::components {
     task_dialog::set_progress_range(HWND task_dialog_handle,
                                     uint32_t min,
                                     uint32_t max) {
-        int64_t result =
+        const int64_t result =
                 SendMessageW(task_dialog_handle, TDM_SET_PROGRESS_BAR_RANGE, 0,
                              MAKELPARAM(min, max));
         return std::make_pair(LOWORD(result), HIWORD(result));

@@ -59,53 +59,56 @@ namespace YanLib::ui::core {
 
         HBITMAP load_bitmap(HINSTANCE instance_handle,
                             const char *image_name,
-                            int32_t cx,
-                            int32_t cy,
+                            int32_t width,
+                            int32_t height,
                             ImageFlag flag);
 
         HBITMAP load_bitmap(HINSTANCE instance_handle,
                             const wchar_t *image_name,
-                            int32_t cx,
-                            int32_t cy,
+                            int32_t width,
+                            int32_t height,
                             ImageFlag flag);
 
         HICON load_icon(HINSTANCE instance_handle,
                         const char *image_name,
-                        int32_t cx,
-                        int32_t cy,
+                        int32_t width,
+                        int32_t height,
                         ImageFlag flag);
 
         HICON load_icon(HINSTANCE instance_handle,
                         const wchar_t *image_name,
-                        int32_t cx,
-                        int32_t cy,
+                        int32_t width,
+                        int32_t height,
                         ImageFlag flag);
 
         HCURSOR load_cursor(HINSTANCE instance_handle,
                             const char *image_name,
-                            int32_t cx,
-                            int32_t cy,
+                            int32_t width,
+                            int32_t height,
                             ImageFlag flag);
 
         HCURSOR load_cursor(HINSTANCE instance_handle,
                             const wchar_t *image_name,
-                            int32_t cx,
-                            int32_t cy,
+                            int32_t width,
+                            int32_t height,
                             ImageFlag flag);
 
         HBITMAP
         copy_bitmap(HBITMAP bitmap_handle,
-                    int32_t cx,
-                    int32_t cy,
+                    int32_t width,
+                    int32_t height,
                     ImageFlag flag);
 
         HICON
-        copy_icon(HICON icon_handle, int32_t cx, int32_t cy, ImageFlag flag);
+        copy_icon(HICON icon_handle,
+                  int32_t width,
+                  int32_t height,
+                  ImageFlag flag);
 
         HCURSOR
         copy_cursor(HCURSOR cursor_handle,
-                    int32_t cx,
-                    int32_t cy,
+                    int32_t width,
+                    int32_t height,
                     ImageFlag flag);
 
         bool destroy_bitmap(HBITMAP bitmap_handle);

@@ -96,7 +96,7 @@ namespace YanLib::ui::gdi {
 
         static bool animate(HPALETTE palette_handle,
                             uint32_t index,
-                            std::vector<PALETTEENTRY> &palette_entry);
+                            const std::vector<PALETTEENTRY> &palette_entry);
 
         static uint32_t realize(HDC dc_handle);
 

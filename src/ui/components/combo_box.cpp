@@ -89,7 +89,7 @@ namespace YanLib::ui::components {
                             const char *path_spec,
                             FileType type,
                             helper::CodePage code_page) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_Dir(combo_box_handle, static_cast<uint32_t>(type),
                              helper::convert::str_to_wstr(path_spec, code_page)
                                      .data());
@@ -103,8 +103,9 @@ namespace YanLib::ui::components {
 
     int32_t
     combo_box::fill(HWND combo_box_handle, wchar_t *path_spec, FileType type) {
-        int32_t result = ComboBox_Dir(combo_box_handle,
-                                      static_cast<uint32_t>(type), path_spec);
+        const int32_t result =
+                ComboBox_Dir(combo_box_handle, static_cast<uint32_t>(type),
+                             path_spec);
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == CB_ERR) {
@@ -116,7 +117,7 @@ namespace YanLib::ui::components {
     int32_t combo_box::add_text(HWND combo_box_handle,
                                 std::string &text,
                                 helper::CodePage code_page) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_AddString(combo_box_handle,
                                    helper::convert::str_to_wstr(text, code_page)
                                            .data());
@@ -129,7 +130,8 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::add_text(HWND combo_box_handle, std::wstring &text) {
-        int32_t result = ComboBox_AddString(combo_box_handle, text.data());
+        const int32_t result =
+                ComboBox_AddString(combo_box_handle, text.data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == CB_ERR) {
@@ -142,7 +144,7 @@ namespace YanLib::ui::components {
                                    std::string &text,
                                    int32_t index,
                                    helper::CodePage code_page) {
-        int32_t result = ComboBox_InsertString(
+        const int32_t result = ComboBox_InsertString(
                 combo_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == CB_ERRSPACE) {
@@ -156,7 +158,7 @@ namespace YanLib::ui::components {
     int32_t combo_box::insert_text(HWND combo_box_handle,
                                    std::wstring &text,
                                    int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_InsertString(combo_box_handle, index, text.data());
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
@@ -170,7 +172,7 @@ namespace YanLib::ui::components {
                                    std::string &text,
                                    int32_t index,
                                    helper::CodePage code_page) {
-        int32_t result = ComboBox_SelectString(
+        const int32_t result = ComboBox_SelectString(
                 combo_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == CB_ERR) {
@@ -182,7 +184,7 @@ namespace YanLib::ui::components {
     int32_t combo_box::select_text(HWND combo_box_handle,
                                    std::wstring &text,
                                    int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_SelectString(combo_box_handle, index, text.data());
         if (result == CB_ERR) {
             error_code = GetLastError();
@@ -194,7 +196,7 @@ namespace YanLib::ui::components {
                                  std::string &text,
                                  int32_t index,
                                  helper::CodePage code_page) {
-        int32_t result = ComboBox_FindString(
+        const int32_t result = ComboBox_FindString(
                 combo_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == CB_ERR) {
@@ -206,7 +208,7 @@ namespace YanLib::ui::components {
     int32_t combo_box::find_text(HWND combo_box_handle,
                                  std::wstring &text,
                                  int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_FindString(combo_box_handle, index, text.data());
         if (result == CB_ERR) {
             error_code = GetLastError();
@@ -218,7 +220,7 @@ namespace YanLib::ui::components {
                                        std::string &text,
                                        int32_t index,
                                        helper::CodePage code_page) {
-        int32_t result = ComboBox_FindStringExact(
+        const int32_t result = ComboBox_FindStringExact(
                 combo_box_handle, index,
                 helper::convert::str_to_wstr(text, code_page).data());
         if (result == CB_ERR) {
@@ -230,7 +232,7 @@ namespace YanLib::ui::components {
     int32_t combo_box::find_exact_text(HWND combo_box_handle,
                                        std::wstring &text,
                                        int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_FindStringExact(combo_box_handle, index, text.data());
         if (result == CB_ERR) {
             error_code = GetLastError();
@@ -239,7 +241,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::delete_item(HWND combo_box_handle, int32_t index) {
-        int32_t result = ComboBox_DeleteString(combo_box_handle, index);
+        const int32_t result = ComboBox_DeleteString(combo_box_handle, index);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -256,14 +258,15 @@ namespace YanLib::ui::components {
 
     int32_t combo_box::get_text_len(HWND combo_box_handle) {
         SetLastError(ERROR_SUCCESS);
-        int32_t result = GetWindowTextLengthW(combo_box_handle);
+        const int32_t result = GetWindowTextLengthW(combo_box_handle);
         error_code = GetLastError();
         return result;
     }
 
     int32_t combo_box::get_text(HWND combo_box_handle, std::string &text) {
-        int32_t result = GetWindowTextA(combo_box_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextA(combo_box_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -271,8 +274,9 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::get_text(HWND combo_box_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(combo_box_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextW(combo_box_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -291,7 +295,7 @@ namespace YanLib::ui::components {
                                      std::string &text,
                                      int32_t index,
                                      helper::CodePage code_page) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_GetLBText(combo_box_handle, index,
                                    helper::convert::str_to_wstr(text, code_page)
                                            .data());
@@ -304,7 +308,7 @@ namespace YanLib::ui::components {
     int32_t combo_box::get_item_text(HWND combo_box_handle,
                                      std::wstring &text,
                                      int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_GetLBText(combo_box_handle, index, text.data());
         if (result == CB_ERR) {
             error_code = GetLastError();
@@ -352,7 +356,7 @@ namespace YanLib::ui::components {
     bool combo_box::set_item_height(HWND combo_box_handle,
                                     int32_t height,
                                     int32_t index) {
-        int32_t result =
+        const int32_t result =
                 ComboBox_SetItemHeight(combo_box_handle, index, height);
         return result != CB_ERR;
     }
@@ -366,8 +370,9 @@ namespace YanLib::ui::components {
     }
 
     bool combo_box::set_text(HWND combo_box_handle, std::wstring &text) {
-        int32_t result = GetWindowTextW(combo_box_handle, text.data(),
-                                        static_cast<int32_t>(text.size()));
+        const int32_t result =
+                GetWindowTextW(combo_box_handle, text.data(),
+                               static_cast<int32_t>(text.size()));
         if (!result) {
             error_code = GetLastError();
         }
@@ -375,7 +380,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::add_data(HWND combo_box_handle, LPARAM data) {
-        int32_t result = ComboBox_AddItemData(combo_box_handle, data);
+        const int32_t result = ComboBox_AddItemData(combo_box_handle, data);
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == CB_ERR) {
@@ -386,7 +391,8 @@ namespace YanLib::ui::components {
 
     int32_t
     combo_box::insert_data(HWND combo_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ComboBox_InsertItemData(combo_box_handle, index, data);
+        const int32_t result =
+                ComboBox_InsertItemData(combo_box_handle, index, data);
         if (result == CB_ERRSPACE) {
             error_code = ERROR_OUTOFMEMORY;
         } else if (result == CB_ERR) {
@@ -397,7 +403,8 @@ namespace YanLib::ui::components {
 
     int32_t
     combo_box::select_data(HWND combo_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ComboBox_SelectItemData(combo_box_handle, index, data);
+        const int32_t result =
+                ComboBox_SelectItemData(combo_box_handle, index, data);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -406,7 +413,8 @@ namespace YanLib::ui::components {
 
     int32_t
     combo_box::find_data(HWND combo_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ComboBox_FindItemData(combo_box_handle, index, data);
+        const int32_t result =
+                ComboBox_FindItemData(combo_box_handle, index, data);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -419,7 +427,8 @@ namespace YanLib::ui::components {
 
     int32_t
     combo_box::set_data(HWND combo_box_handle, LPARAM data, int32_t index) {
-        int32_t result = ComboBox_SetItemData(combo_box_handle, index, data);
+        const int32_t result =
+                ComboBox_SetItemData(combo_box_handle, index, data);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -430,8 +439,8 @@ namespace YanLib::ui::components {
                                       std::string &text,
                                       helper::CodePage code_page) {
         std::wstring temp(text.size(), L'\0');
-        bool is_ok = ComboBox_GetCueBannerText(combo_box_handle, temp.data(),
-                                               temp.size());
+        const bool is_ok = ComboBox_GetCueBannerText(combo_box_handle,
+                                                     temp.data(), temp.size());
         error_code = GetLastError();
         text.clear();
         text = helper::convert::wstr_to_str(temp, code_page);
@@ -440,8 +449,8 @@ namespace YanLib::ui::components {
 
     bool combo_box::get_prompt_banner(HWND combo_box_handle,
                                       std::wstring &text) {
-        bool is_ok = ComboBox_GetCueBannerText(combo_box_handle, text.data(),
-                                               text.size());
+        const bool is_ok = ComboBox_GetCueBannerText(combo_box_handle,
+                                                     text.data(), text.size());
         error_code = GetLastError();
         return is_ok;
     }
@@ -450,20 +459,22 @@ namespace YanLib::ui::components {
                                       std::string &text,
                                       helper::CodePage code_page) {
         std::wstring temp = helper::convert::str_to_wstr(text, code_page);
-        bool is_ok = ComboBox_SetCueBannerText(combo_box_handle, temp.data());
+        const bool is_ok =
+                ComboBox_SetCueBannerText(combo_box_handle, temp.data());
         error_code = GetLastError();
         return is_ok;
     }
 
     bool combo_box::set_prompt_banner(HWND combo_box_handle,
                                       std::wstring &text) {
-        bool is_ok = ComboBox_SetCueBannerText(combo_box_handle, text.data());
+        const bool is_ok =
+                ComboBox_SetCueBannerText(combo_box_handle, text.data());
         error_code = GetLastError();
         return is_ok;
     }
 
     int32_t combo_box::get_curr_select(HWND combo_box_handle) {
-        int32_t result = ComboBox_GetCurSel(combo_box_handle);
+        const int32_t result = ComboBox_GetCurSel(combo_box_handle);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -471,7 +482,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::set_curr_select(HWND combo_box_handle, int32_t index) {
-        int32_t result = ComboBox_SetCurSel(combo_box_handle, index);
+        const int32_t result = ComboBox_SetCurSel(combo_box_handle, index);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -487,7 +498,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::set_extended_ui(HWND combo_box_handle) {
-        int32_t result = ComboBox_SetExtendedUI(combo_box_handle, TRUE);
+        const int32_t result = ComboBox_SetExtendedUI(combo_box_handle, TRUE);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }
@@ -495,7 +506,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t combo_box::set_default_ui(HWND combo_box_handle) {
-        int32_t result = ComboBox_SetExtendedUI(combo_box_handle, FALSE);
+        const int32_t result = ComboBox_SetExtendedUI(combo_box_handle, FALSE);
         if (result == CB_ERR) {
             error_code = GetLastError();
         }

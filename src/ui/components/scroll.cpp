@@ -137,7 +137,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t scroll::get_pos(HWND window_handle, ScrollType scroll_type) {
-        int32_t result =
+        const int32_t result =
                 GetScrollPos(window_handle, static_cast<int32_t>(scroll_type));
         if (!result) {
             error_code = GetLastError();
@@ -149,7 +149,7 @@ namespace YanLib::ui::components {
                             int32_t pos,
                             ScrollType scroll_type,
                             bool is_redraw) {
-        int32_t result =
+        const int32_t result =
                 SetScrollPos(window_handle, static_cast<int32_t>(scroll_type),
                              pos, is_redraw ? TRUE : FALSE);
         if (!result) {
@@ -218,7 +218,7 @@ namespace YanLib::ui::components {
                                          HRGN region_handle_update,
                                          RECT *rect_update,
                                          ScrollFlag flag) {
-        int32_t result =
+        const int32_t result =
                 ScrollWindowEx(window_handle, dx, dy, rect_scroll, rect_clip,
                                region_handle_update, rect_update,
                                static_cast<uint32_t>(flag));

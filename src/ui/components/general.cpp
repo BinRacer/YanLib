@@ -31,7 +31,7 @@ namespace YanLib::ui::components {
     }
 
     std::pair<GeneralLangID, GeneralSubLangId> general::get_mui_lang2() {
-        LANGID result = GetMUILanguage();
+        const LANGID result = GetMUILanguage();
         return std::make_pair(static_cast<GeneralLangID>(PRIMARYLANGID(result)),
                               static_cast<GeneralSubLangId>(SUBLANGID(result)));
     }
@@ -87,7 +87,7 @@ namespace YanLib::ui::components {
                 break;
             }
             typedef int32_t(WINAPI * prototype)(HICON *, HICON *);
-            auto func = reinterpret_cast<prototype>(
+            const auto func = reinterpret_cast<prototype>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(414)));
             if (!func) {
@@ -135,7 +135,7 @@ namespace YanLib::ui::components {
                             DrawTextWrap)(_In_ HDC, _Inout_ const wchar_t *,
                                           _In_ int32_t, _Inout_ RECT *,
                                           _In_ uint32_t, _In_ DRAWTEXTPARAMS *);
-            auto func = reinterpret_cast<DrawTextWrap>(
+            const auto func = reinterpret_cast<DrawTextWrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(415)));
             if (!func) {
@@ -173,7 +173,7 @@ namespace YanLib::ui::components {
                             DrawTextWrap)(_In_ HDC, _Inout_ const wchar_t *,
                                           _In_ int32_t, _Inout_ RECT *,
                                           _In_ uint32_t, _In_ DRAWTEXTPARAMS *);
-            auto func = reinterpret_cast<DrawTextWrap>(
+            const auto func = reinterpret_cast<DrawTextWrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(415)));
             if (!func) {
@@ -225,7 +225,7 @@ namespace YanLib::ui::components {
                                                 _In_ int32_t, _Inout_ RECT *,
                                                 _In_ uint32_t,
                                                 _In_ DRAWTEXTPARAMS *);
-            auto func = reinterpret_cast<DrawTextExPrivWrap>(
+            const auto func = reinterpret_cast<DrawTextExPrivWrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(416)));
             if (!func) {
@@ -264,7 +264,7 @@ namespace YanLib::ui::components {
                                                 _In_ int32_t, _Inout_ RECT *,
                                                 _In_ uint32_t,
                                                 _In_ DRAWTEXTPARAMS *);
-            auto func = reinterpret_cast<DrawTextExPrivWrap>(
+            const auto func = reinterpret_cast<DrawTextExPrivWrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(416)));
             if (!func) {
@@ -306,7 +306,7 @@ namespace YanLib::ui::components {
                                             _In_ const RECT *,
                                             _In_ const wchar_t *, _In_ uint32_t,
                                             _In_ const int32_t *);
-            auto func = reinterpret_cast<ExtTextOutWrap>(
+            const auto func = reinterpret_cast<ExtTextOutWrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(417)));
             if (!func) {
@@ -347,7 +347,7 @@ namespace YanLib::ui::components {
                                             _In_ const RECT *,
                                             _In_ const wchar_t *, _In_ uint32_t,
                                             _In_ const int32_t *);
-            auto func = reinterpret_cast<ExtTextOutWrap>(
+            const auto func = reinterpret_cast<ExtTextOutWrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(417)));
             if (!func) {
@@ -382,7 +382,7 @@ namespace YanLib::ui::components {
                     WINAPI *
                     GetTextExtentPoint32Wrap)(_In_ HDC, _In_ const wchar_t *,
                                               _In_ uint32_t, _Out_ SIZE *);
-            auto func = reinterpret_cast<GetTextExtentPoint32Wrap>(
+            const auto func = reinterpret_cast<GetTextExtentPoint32Wrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(420)));
             if (!func) {
@@ -416,7 +416,7 @@ namespace YanLib::ui::components {
                     WINAPI *
                     GetTextExtentPoint32Wrap)(_In_ HDC, _In_ const wchar_t *,
                                               _In_ uint32_t, _Out_ SIZE *);
-            auto func = reinterpret_cast<GetTextExtentPoint32Wrap>(
+            const auto func = reinterpret_cast<GetTextExtentPoint32Wrap>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(420)));
             if (!func) {
@@ -461,7 +461,7 @@ namespace YanLib::ui::components {
                 break;
             }
             typedef void(WINAPI * DoReaderMode)(_In_ ReaderModeInfo *);
-            auto func = reinterpret_cast<DoReaderMode>(
+            const auto func = reinterpret_cast<DoReaderMode>(
                     GetProcAddress(comctl32,
                                    reinterpret_cast<const char *>(383)));
             if (!func) {

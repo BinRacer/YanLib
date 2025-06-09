@@ -143,14 +143,14 @@ namespace YanLib::ui::components {
 
     std::pair<bool, CalendarWeekDay>
     calendar::get_first_day_of_week(HWND calendar_handle) {
-        uint32_t result = MonthCal_GetFirstDayOfWeek(calendar_handle);
+        const uint32_t result = MonthCal_GetFirstDayOfWeek(calendar_handle);
         return std::make_pair(HIWORD(result) == LOCALE_IFIRSTDAYOFWEEK,
                               static_cast<CalendarWeekDay>(LOWORD(result)));
     }
 
     std::pair<bool, CalendarWeekDay>
     calendar::set_first_day_of_week(HWND calendar_handle, CalendarWeekDay day) {
-        uint32_t result =
+        const uint32_t result =
                 MonthCal_SetFirstDayOfWeek(calendar_handle,
                                            static_cast<uint32_t>(day));
         return std::make_pair(HIWORD(result) == LOCALE_IFIRSTDAYOFWEEK,

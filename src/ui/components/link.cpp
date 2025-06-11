@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/31.
-//
-
+/* clang-format off */
+/*
+ * @file link.cpp
+ * @date 2025-05-31
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "link.h"
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    link::link() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_LINK_CLASS;
+        InitCommonControlsEx(&icc);
+    }
+
+    link::~link() {
+        for (auto &handle : link_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        link_handles.clear();
+    }
+
     HWND link::create(uintptr_t link_id,
                       HWND parent_window_handle,
                       LPARAM lparam,
@@ -15,10 +55,6 @@ namespace YanLib::ui::components {
                       int32_t height,
                       LinkStyle style,
                       WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_LINK_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysLink", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -29,7 +65,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        link_rwlock.write_lock();
+        link_handles.push_back(result);
+        link_rwlock.write_unlock();
         return result;
     }
 
@@ -44,10 +84,6 @@ namespace YanLib::ui::components {
                       LinkStyle style,
                       WindowStyle window_style,
                       helper::CodePage code_page) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_LINK_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"SysLink",
                 helper::convert::str_to_wstr(link_name, code_page).data(),
@@ -58,7 +94,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        link_rwlock.write_lock();
+        link_handles.push_back(result);
+        link_rwlock.write_unlock();
         return result;
     }
 
@@ -72,10 +112,6 @@ namespace YanLib::ui::components {
                       int32_t height,
                       LinkStyle style,
                       WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_LINK_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysLink", link_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -86,8 +122,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        link_rwlock.write_lock();
+        link_handles.push_back(result);
+        link_rwlock.write_unlock();
         return result;
+    }
+
+    bool link::destroy(HWND link_handle) {
+        if (!link_handle || !IsWindow(link_handle)) {
+            return false;
+        }
+        link_rwlock.write_lock();
+        const auto it = std::find(link_handles.begin(), link_handles.end(),
+                                  link_handle);
+        if (it != link_handles.end()) {
+            *it = nullptr;
+        }
+        link_rwlock.write_unlock();
+        if (!DestroyWindow(link_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     int64_t link::get_ideal_height(HWND link_handle) {

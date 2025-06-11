@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/29.
-//
-
+/* clang-format off */
+/*
+ * @file rebar.cpp
+ * @date 2025-05-29
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "rebar.h"
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    rebar::rebar() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
+        InitCommonControlsEx(&icc);
+    }
+
+    rebar::~rebar() {
+        for (auto &handle : rebar_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        rebar_handles.clear();
+    }
+
     HWND rebar::create(HWND parent_window_handle,
                        LPARAM lparam,
                        int32_t x,
@@ -14,10 +54,6 @@ namespace YanLib::ui::components {
                        int32_t height,
                        RebarStyle style,
                        WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 WS_EX_TOOLWINDOW, L"ReBarWindow32", nullptr,
                 static_cast<uint32_t>(window_style) |
@@ -26,7 +62,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        rebar_rwlock.write_lock();
+        rebar_handles.push_back(result);
+        rebar_rwlock.write_unlock();
         return result;
     }
 
@@ -39,10 +79,6 @@ namespace YanLib::ui::components {
                        int32_t height,
                        RebarStyle style,
                        WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExA(
                 WS_EX_TOOLWINDOW, "ReBarWindow32", rebar_name,
                 static_cast<uint32_t>(window_style) |
@@ -51,7 +87,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        rebar_rwlock.write_lock();
+        rebar_handles.push_back(result);
+        rebar_rwlock.write_unlock();
         return result;
     }
 
@@ -64,10 +104,6 @@ namespace YanLib::ui::components {
                        int32_t height,
                        RebarStyle style,
                        WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_COOL_CLASSES | ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 WS_EX_TOOLWINDOW, L"ReBarWindow32", rebar_name,
                 static_cast<uint32_t>(window_style) |
@@ -76,8 +112,30 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        rebar_rwlock.write_lock();
+        rebar_handles.push_back(result);
+        rebar_rwlock.write_unlock();
         return result;
+    }
+
+    bool rebar::destroy(HWND rebar_handle) {
+        if (!rebar_handle || !IsWindow(rebar_handle)) {
+            return false;
+        }
+        rebar_rwlock.write_lock();
+        const auto it = std::find(rebar_handles.begin(), rebar_handles.end(),
+                                  rebar_handle);
+        if (it != rebar_handles.end()) {
+            *it = nullptr;
+        }
+        rebar_rwlock.write_unlock();
+        if (!DestroyWindow(rebar_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     void rebar::begin_drag(HWND rebar_handle, int32_t index, POINT point) {

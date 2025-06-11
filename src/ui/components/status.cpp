@@ -1,11 +1,44 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/31.
-//
-
+/* clang-format off */
+/*
+ * @file status.cpp
+ * @date 2025-05-31
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "status.h"
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    status::~status() {
+        for (auto &handle : status_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        status_handles.clear();
+    }
+
     HWND status::create(uintptr_t status_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -25,7 +58,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        status_rwlock.write_lock();
+        status_handles.push_back(result);
+        status_rwlock.write_unlock();
         return result;
     }
 
@@ -49,7 +86,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        status_rwlock.write_lock();
+        status_handles.push_back(result);
+        status_rwlock.write_unlock();
         return result;
     }
 
@@ -73,8 +114,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        status_rwlock.write_lock();
+        status_handles.push_back(result);
+        status_rwlock.write_unlock();
         return result;
+    }
+
+    bool status::destroy(HWND status_handle) {
+        if (!status_handle || !IsWindow(status_handle)) {
+            return false;
+        }
+        status_rwlock.write_lock();
+        const auto it = std::find(status_handles.begin(), status_handles.end(),
+                                  status_handle);
+        if (it != status_handles.end()) {
+            *it = nullptr;
+        }
+        status_rwlock.write_unlock();
+        if (!DestroyWindow(status_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     void status::draw_status_text(HDC dc_handle,

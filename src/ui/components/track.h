@@ -1,7 +1,30 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/6/4.
-//
-
+/* clang-format off */
+/*
+ * @file track.h
+ * @date 2025-06-04
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #ifndef TRACK_H
 #define TRACK_H
 #ifndef UNICODE
@@ -15,6 +38,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include "sync/rwlock.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -147,6 +171,8 @@ namespace YanLib::ui::components {
 #endif
     class track {
     private:
+        std::vector<HWND> track_handles = {};
+        sync::rwlock track_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -158,9 +184,9 @@ namespace YanLib::ui::components {
 
         track &operator=(track &&other) = delete;
 
-        track() = default;
+        track();
 
-        ~track() = default;
+        ~track();
 
         HWND create(uintptr_t track_id,
                     HWND parent_window_handle,
@@ -199,6 +225,8 @@ namespace YanLib::ui::components {
                             TrackStyle::EnableSelectRange,
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible);
+
+        bool destroy(HWND track_handle);
 
         void clear_select(HWND track_handle, bool redraw = true);
 

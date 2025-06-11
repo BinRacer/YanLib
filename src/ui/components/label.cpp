@@ -1,11 +1,44 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/31.
-//
-
+/* clang-format off */
+/*
+ * @file label.cpp
+ * @date 2025-05-31
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "label.h"
 #include <windowsx.h>
 #include "helper/convert.h"
 namespace YanLib::ui::components {
+    label::~label() {
+        for (auto &handle : label_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        label_handles.clear();
+    }
+
     HWND label::create(uintptr_t label_id,
                        HWND parent_window_handle,
                        LPARAM lparam,
@@ -25,7 +58,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        label_rwlock.write_lock();
+        label_handles.push_back(result);
+        label_rwlock.write_unlock();
         return result;
     }
 
@@ -49,7 +86,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        label_rwlock.write_lock();
+        label_handles.push_back(result);
+        label_rwlock.write_unlock();
         return result;
     }
 
@@ -73,8 +114,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        label_rwlock.write_lock();
+        label_handles.push_back(result);
+        label_rwlock.write_unlock();
         return result;
+    }
+
+    bool label::destroy(HWND label_handle) {
+        if (!label_handle || !IsWindow(label_handle)) {
+            return false;
+        }
+        label_rwlock.write_lock();
+        const auto it = std::find(label_handles.begin(), label_handles.end(),
+                                  label_handle);
+        if (it != label_handles.end()) {
+            *it = nullptr;
+        }
+        label_rwlock.write_unlock();
+        if (!DestroyWindow(label_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool label::enable(HWND label_handle) {

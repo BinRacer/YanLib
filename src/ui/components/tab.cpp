@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/31.
-//
-
+/* clang-format off */
+/*
+ * @file tab.cpp
+ * @date 2025-05-31
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "tab.h"
 #include <windowsx.h>
 #include "helper/convert.h"
 namespace YanLib::ui::components {
+    tab::tab() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_TAB_CLASSES;
+        InitCommonControlsEx(&icc);
+    }
+
+    tab::~tab() {
+        for (auto &handle : tab_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        tab_handles.clear();
+    }
+
     HWND tab::create(uintptr_t tab_id,
                      HWND parent_window_handle,
                      LPARAM lparam,
@@ -15,10 +55,6 @@ namespace YanLib::ui::components {
                      int32_t height,
                      TabStyle style,
                      WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_TAB_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysTabControl32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -29,7 +65,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        tab_rwlock.write_lock();
+        tab_handles.push_back(result);
+        tab_rwlock.write_unlock();
         return result;
     }
 
@@ -57,7 +97,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        tab_rwlock.write_lock();
+        tab_handles.push_back(result);
+        tab_rwlock.write_unlock();
         return result;
     }
 
@@ -85,8 +129,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        tab_rwlock.write_lock();
+        tab_handles.push_back(result);
+        tab_rwlock.write_unlock();
         return result;
+    }
+
+    bool tab::destroy(HWND tab_handle) {
+        if (!tab_handle || !IsWindow(tab_handle)) {
+            return false;
+        }
+        tab_rwlock.write_lock();
+        const auto it =
+                std::find(tab_handles.begin(), tab_handles.end(), tab_handle);
+        if (it != tab_handles.end()) {
+            *it = nullptr;
+        }
+        tab_rwlock.write_unlock();
+        if (!DestroyWindow(tab_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     int32_t tab::get_curr_focus(HWND tab_handle) {

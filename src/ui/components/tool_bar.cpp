@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/6/1.
-//
-
+/* clang-format off */
+/*
+ * @file tool_bar.cpp
+ * @date 2025-06-01
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "tool_bar.h"
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    tool_bar::tool_bar() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_BAR_CLASSES;
+        InitCommonControlsEx(&icc);
+    }
+
+    tool_bar::~tool_bar() {
+        for (auto &handle : tool_bar_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        tool_bar_handles.clear();
+    }
+
     HWND tool_bar::create(HWND parent_window_handle,
                           LPARAM lparam,
                           int32_t x,
@@ -14,10 +54,6 @@ namespace YanLib::ui::components {
                           int32_t height,
                           ToolBarStyle style,
                           WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"ToolbarWindow32", nullptr,
                 static_cast<uint32_t>(window_style) |
@@ -26,7 +62,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        tool_bar_rwlock.write_lock();
+        tool_bar_handles.push_back(result);
+        tool_bar_rwlock.write_unlock();
         return result;
     }
 
@@ -39,10 +79,6 @@ namespace YanLib::ui::components {
                           int32_t height,
                           ToolBarStyle style,
                           WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExA(
                 0L, "ToolbarWindow32", tool_bar_name,
                 static_cast<uint32_t>(window_style) |
@@ -51,7 +87,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        tool_bar_rwlock.write_lock();
+        tool_bar_handles.push_back(result);
+        tool_bar_rwlock.write_unlock();
         return result;
     }
 
@@ -64,10 +104,6 @@ namespace YanLib::ui::components {
                           int32_t height,
                           ToolBarStyle style,
                           WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_BAR_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"ToolbarWindow32", tool_bar_name,
                 static_cast<uint32_t>(window_style) |
@@ -76,8 +112,30 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        tool_bar_rwlock.write_lock();
+        tool_bar_handles.push_back(result);
+        tool_bar_rwlock.write_unlock();
         return result;
+    }
+
+    bool tool_bar::destroy(HWND tool_bar_handle) {
+        if (!tool_bar_handle || !IsWindow(tool_bar_handle)) {
+            return false;
+        }
+        tool_bar_rwlock.write_lock();
+        const auto it = std::find(tool_bar_handles.begin(),
+                                  tool_bar_handles.end(), tool_bar_handle);
+        if (it != tool_bar_handles.end()) {
+            *it = nullptr;
+        }
+        tool_bar_rwlock.write_unlock();
+        if (!DestroyWindow(tool_bar_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     HBITMAP tool_bar::create_mapped_bitmap(HINSTANCE instance_handle,

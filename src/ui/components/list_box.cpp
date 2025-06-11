@@ -1,11 +1,44 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/26.
-//
-
+/* clang-format off */
+/*
+ * @file list_box.cpp
+ * @date 2025-05-26
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "list_box.h"
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    list_box::~list_box() {
+        for (auto &handle : list_box_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        list_box_handles.clear();
+    }
+
     HWND list_box::create(uintptr_t list_box_id,
                           HWND parent_window_handle,
                           LPARAM lparam,
@@ -25,7 +58,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        list_box_rwlock.write_lock();
+        list_box_handles.push_back(result);
+        list_box_rwlock.write_unlock();
         return result;
     }
 
@@ -49,7 +86,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        list_box_rwlock.write_lock();
+        list_box_handles.push_back(result);
+        list_box_rwlock.write_unlock();
         return result;
     }
 
@@ -73,8 +114,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        list_box_rwlock.write_lock();
+        list_box_handles.push_back(result);
+        list_box_rwlock.write_unlock();
         return result;
+    }
+
+    bool list_box::destroy(HWND list_box_handle) {
+        if (!list_box_handle || !IsWindow(list_box_handle)) {
+            return false;
+        }
+        list_box_rwlock.write_lock();
+        const auto it = std::find(list_box_handles.begin(),
+                                  list_box_handles.end(), list_box_handle);
+        if (it != list_box_handles.end()) {
+            *it = nullptr;
+        }
+        list_box_rwlock.write_unlock();
+        if (!DestroyWindow(list_box_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool list_box::enable(HWND list_box_handle) {

@@ -1,11 +1,44 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/31.
-//
-
+/* clang-format off */
+/*
+ * @file scroll.cpp
+ * @date 2025-05-31
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "scroll.h"
 #include <windowsx.h>
 #include "helper/convert.h"
 namespace YanLib::ui::components {
+    scroll::~scroll() {
+        for (auto &handle : scroll_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        scroll_handles.clear();
+    }
+
     HWND scroll::create(uintptr_t scroll_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -25,7 +58,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        scroll_rwlock.write_lock();
+        scroll_handles.push_back(result);
+        scroll_rwlock.write_unlock();
         return result;
     }
 
@@ -49,7 +86,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        scroll_rwlock.write_lock();
+        scroll_handles.push_back(result);
+        scroll_rwlock.write_unlock();
         return result;
     }
 
@@ -73,14 +114,36 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        scroll_rwlock.write_lock();
+        scroll_handles.push_back(result);
+        scroll_rwlock.write_unlock();
         return result;
     }
 
-    bool scroll::enable(HWND window_handle,
+    bool scroll::destroy(HWND scroll_handle) {
+        if (!scroll_handle || !IsWindow(scroll_handle)) {
+            return false;
+        }
+        scroll_rwlock.write_lock();
+        const auto it = std::find(scroll_handles.begin(), scroll_handles.end(),
+                                  scroll_handle);
+        if (it != scroll_handles.end()) {
+            *it = nullptr;
+        }
+        scroll_rwlock.write_unlock();
+        if (!DestroyWindow(scroll_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
+    }
+
+    bool scroll::enable(HWND scroll_handle,
                         ScrollType scroll_type,
                         ArrowType arrow_type) {
-        if (!EnableScrollBar(window_handle, static_cast<uint32_t>(scroll_type),
+        if (!EnableScrollBar(scroll_handle, static_cast<uint32_t>(scroll_type),
                              static_cast<uint32_t>(arrow_type))) {
             error_code = GetLastError();
             return false;
@@ -88,8 +151,8 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    bool scroll::show(HWND window_handle, ScrollType scroll_type) {
-        if (!ShowScrollBar(window_handle, static_cast<int32_t>(scroll_type),
+    bool scroll::show(HWND scroll_handle, ScrollType scroll_type) {
+        if (!ShowScrollBar(scroll_handle, static_cast<int32_t>(scroll_type),
                            TRUE)) {
             error_code = GetLastError();
             return false;
@@ -97,8 +160,8 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    bool scroll::hide(HWND window_handle, ScrollType scroll_type) {
-        if (!ShowScrollBar(window_handle, static_cast<int32_t>(scroll_type),
+    bool scroll::hide(HWND scroll_handle, ScrollType scroll_type) {
+        if (!ShowScrollBar(scroll_handle, static_cast<int32_t>(scroll_type),
                            FALSE)) {
             error_code = GetLastError();
             return false;
@@ -106,10 +169,10 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    bool scroll::get_info(HWND window_handle,
+    bool scroll::get_info(HWND scroll_handle,
                           SCROLLBARINFO *scroll_bar_info,
                           ObjectID object_id) {
-        if (!GetScrollBarInfo(window_handle, static_cast<int32_t>(object_id),
+        if (!GetScrollBarInfo(scroll_handle, static_cast<int32_t>(object_id),
                               scroll_bar_info)) {
             error_code = GetLastError();
             return false;
@@ -117,10 +180,10 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    bool scroll::get_info(HWND window_handle,
+    bool scroll::get_info(HWND scroll_handle,
                           SCROLLINFO *scroll_info,
                           ScrollType scroll_type) {
-        if (!GetScrollInfo(window_handle, static_cast<int32_t>(scroll_type),
+        if (!GetScrollInfo(scroll_handle, static_cast<int32_t>(scroll_type),
                            scroll_info)) {
             error_code = GetLastError();
             return false;
@@ -128,29 +191,29 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    int32_t scroll::set_info(HWND window_handle,
+    int32_t scroll::set_info(HWND scroll_handle,
                              SCROLLINFO *scroll_info,
                              ScrollType scroll_type,
                              bool is_redraw) {
-        return SetScrollInfo(window_handle, static_cast<int32_t>(scroll_type),
+        return SetScrollInfo(scroll_handle, static_cast<int32_t>(scroll_type),
                              scroll_info, is_redraw ? TRUE : FALSE);
     }
 
-    int32_t scroll::get_pos(HWND window_handle, ScrollType scroll_type) {
+    int32_t scroll::get_pos(HWND scroll_handle, ScrollType scroll_type) {
         const int32_t result =
-                GetScrollPos(window_handle, static_cast<int32_t>(scroll_type));
+                GetScrollPos(scroll_handle, static_cast<int32_t>(scroll_type));
         if (!result) {
             error_code = GetLastError();
         }
         return result;
     }
 
-    int32_t scroll::set_pos(HWND window_handle,
+    int32_t scroll::set_pos(HWND scroll_handle,
                             int32_t pos,
                             ScrollType scroll_type,
                             bool is_redraw) {
         const int32_t result =
-                SetScrollPos(window_handle, static_cast<int32_t>(scroll_type),
+                SetScrollPos(scroll_handle, static_cast<int32_t>(scroll_type),
                              pos, is_redraw ? TRUE : FALSE);
         if (!result) {
             error_code = GetLastError();
@@ -158,11 +221,11 @@ namespace YanLib::ui::components {
         return result;
     }
 
-    bool scroll::get_range(HWND window_handle,
+    bool scroll::get_range(HWND scroll_handle,
                            int32_t *min_pos,
                            int32_t *max_pos,
                            ScrollType scroll_type) {
-        if (!GetScrollRange(window_handle, static_cast<int32_t>(scroll_type),
+        if (!GetScrollRange(scroll_handle, static_cast<int32_t>(scroll_type),
                             min_pos, max_pos)) {
             error_code = GetLastError();
             return false;
@@ -170,12 +233,12 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    bool scroll::set_range(HWND window_handle,
+    bool scroll::set_range(HWND scroll_handle,
                            int32_t min_pos,
                            int32_t max_pos,
                            ScrollType scroll_type,
                            bool is_redraw) {
-        if (!SetScrollRange(window_handle, static_cast<int32_t>(scroll_type),
+        if (!SetScrollRange(scroll_handle, static_cast<int32_t>(scroll_type),
                             min_pos, max_pos, is_redraw ? TRUE : FALSE)) {
             error_code = GetLastError();
             return false;
@@ -198,19 +261,19 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    bool scroll::scroll_window(HWND window_handle,
+    bool scroll::scroll_window(HWND scroll_handle,
                                int32_t x_amount,
                                int32_t y_amount,
                                const RECT *rect,
                                const RECT *clip_rect) {
-        if (!ScrollWindow(window_handle, x_amount, y_amount, rect, clip_rect)) {
+        if (!ScrollWindow(scroll_handle, x_amount, y_amount, rect, clip_rect)) {
             error_code = GetLastError();
             return false;
         }
         return true;
     }
 
-    int32_t scroll::scroll_window_extend(HWND window_handle,
+    int32_t scroll::scroll_window_extend(HWND scroll_handle,
                                          int32_t dx,
                                          int32_t dy,
                                          const RECT *rect_scroll,
@@ -219,7 +282,7 @@ namespace YanLib::ui::components {
                                          RECT *rect_update,
                                          ScrollFlag flag) {
         const int32_t result =
-                ScrollWindowEx(window_handle, dx, dy, rect_scroll, rect_clip,
+                ScrollWindowEx(scroll_handle, dx, dy, rect_scroll, rect_clip,
                                region_handle_update, rect_update,
                                static_cast<uint32_t>(flag));
         if (!result) {

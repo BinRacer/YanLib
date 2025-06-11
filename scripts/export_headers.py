@@ -49,11 +49,11 @@ if __name__ == "__main__":
 
     # 清除并重建include目录（支持嵌套结构）
     if include_dir.exists():
-        shutil.rmtree(include_dir, ignore_errors=True)  # [4,7](@ref)
-    include_dir.mkdir(parents=True, exist_ok=True)  # [6](@ref)
+        shutil.rmtree(include_dir, ignore_errors=True)
+    include_dir.mkdir(parents=True, exist_ok=True)
 
     # 遍历src目录处理文件
-    for root, _, files in os.walk(src_dir):  # [5](@ref)
+    for root, _, files in os.walk(src_dir):
         for file in files:
             if file.lower().endswith(('.h', '.hpp')):
                 src_file = Path(root) / file

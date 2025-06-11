@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/6/4.
-//
-
+/* clang-format off */
+/*
+ * @file up_down.cpp
+ * @date 2025-06-04
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "up_down.h"
 #include <windowsx.h>
 #include "helper/convert.h"
 namespace YanLib::ui::components {
+    up_down::up_down() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_UPDOWN_CLASS;
+        InitCommonControlsEx(&icc);
+    }
+
+    up_down::~up_down() {
+        for (auto &handle : up_down_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        up_down_handles.clear();
+    }
+
     HWND up_down::create(uintptr_t up_down_id,
                          HWND parent_window_handle,
                          LPARAM lparam,
@@ -15,10 +55,6 @@ namespace YanLib::ui::components {
                          int32_t height,
                          UpDownStyle style,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_UPDOWN_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"msctls_updown32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -29,7 +65,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        up_down_rwlock.write_lock();
+        up_down_handles.push_back(result);
+        up_down_rwlock.write_unlock();
         return result;
     }
 
@@ -43,10 +83,6 @@ namespace YanLib::ui::components {
                          int32_t height,
                          UpDownStyle style,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_UPDOWN_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExA(0L, "msctls_updown32", up_down_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -57,7 +93,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        up_down_rwlock.write_lock();
+        up_down_handles.push_back(result);
+        up_down_rwlock.write_unlock();
         return result;
     }
 
@@ -71,10 +111,6 @@ namespace YanLib::ui::components {
                          int32_t height,
                          UpDownStyle style,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_UPDOWN_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"msctls_updown32", up_down_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -85,8 +121,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        up_down_rwlock.write_lock();
+        up_down_handles.push_back(result);
+        up_down_rwlock.write_unlock();
         return result;
+    }
+
+    bool up_down::destroy(HWND up_down_handle) {
+        if (!up_down_handle || !IsWindow(up_down_handle)) {
+            return false;
+        }
+        up_down_rwlock.write_lock();
+        const auto it = std::find(up_down_handles.begin(),
+                                  up_down_handles.end(), up_down_handle);
+        if (it != up_down_handles.end()) {
+            *it = nullptr;
+        }
+        up_down_rwlock.write_unlock();
+        if (!DestroyWindow(up_down_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     HWND up_down::get_buddy(HWND up_down_handle) {

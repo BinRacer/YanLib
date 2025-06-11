@@ -1,7 +1,30 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/30.
-//
-
+/* clang-format off */
+/*
+ * @file rich_edit.cpp
+ * @date 2025-05-30
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "rich_edit.h"
 #include <windowsx.h>
 
@@ -14,6 +37,13 @@ namespace YanLib::ui::components {
     }
 
     rich_edit::~rich_edit() {
+        for (auto &handle : rich_edit_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        rich_edit_handles.clear();
         if (rich_edit_dll) {
             FreeLibrary(rich_edit_dll);
         }
@@ -38,7 +68,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        rich_edit_rwlock.write_lock();
+        rich_edit_handles.push_back(result);
+        rich_edit_rwlock.write_unlock();
         return result;
     }
 
@@ -62,7 +96,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        rich_edit_rwlock.write_lock();
+        rich_edit_handles.push_back(result);
+        rich_edit_rwlock.write_unlock();
         return result;
     }
 
@@ -86,8 +124,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        rich_edit_rwlock.write_lock();
+        rich_edit_handles.push_back(result);
+        rich_edit_rwlock.write_unlock();
         return result;
+    }
+
+    bool rich_edit::destroy(HWND rich_edit_handle) {
+        if (!rich_edit_handle || !IsWindow(rich_edit_handle)) {
+            return false;
+        }
+        rich_edit_rwlock.write_lock();
+        const auto it = std::find(rich_edit_handles.begin(),
+                                  rich_edit_handles.end(), rich_edit_handle);
+        if (it != rich_edit_handles.end()) {
+            *it = nullptr;
+        }
+        rich_edit_rwlock.write_unlock();
+        if (!DestroyWindow(rich_edit_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool rich_edit::is_auto_url_detect_enabled(HWND rich_edit_handle) {

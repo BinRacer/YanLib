@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/27.
-//
-
+/* clang-format off */
+/*
+ * @file list_view.cpp
+ * @date 2025-05-27
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "list_view.h"
 #include <windowsx.h>
 
 namespace YanLib::ui::components {
+    list_view::list_view() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_LISTVIEW_CLASSES;
+        InitCommonControlsEx(&icc);
+    }
+
+    list_view::~list_view() {
+        for (auto &handle : list_view_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        list_view_handles.clear();
+    }
+
     HWND list_view::create(uintptr_t list_view_id,
                            HWND parent_window_handle,
                            LPARAM lparam,
@@ -15,10 +55,6 @@ namespace YanLib::ui::components {
                            int32_t height,
                            ListViewStyle style,
                            WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_LISTVIEW_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysListView32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -29,7 +65,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        list_view_rwlock.write_lock();
+        list_view_handles.push_back(result);
+        list_view_rwlock.write_unlock();
         return result;
     }
 
@@ -43,10 +83,6 @@ namespace YanLib::ui::components {
                            int32_t height,
                            ListViewStyle style,
                            WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_LISTVIEW_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExA(0L, "SysListView32", list_view_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -57,7 +93,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        list_view_rwlock.write_lock();
+        list_view_handles.push_back(result);
+        list_view_rwlock.write_unlock();
         return result;
     }
 
@@ -71,10 +111,6 @@ namespace YanLib::ui::components {
                            int32_t height,
                            ListViewStyle style,
                            WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_LISTVIEW_CLASSES;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(0L, L"SysListView32", list_view_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -85,8 +121,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        list_view_rwlock.write_lock();
+        list_view_handles.push_back(result);
+        list_view_rwlock.write_unlock();
         return result;
+    }
+
+    bool list_view::destroy(HWND list_view_handle) {
+        if (!list_view_handle || !IsWindow(list_view_handle)) {
+            return false;
+        }
+        list_view_rwlock.write_lock();
+        const auto it = std::find(list_view_handles.begin(),
+                                  list_view_handles.end(), list_view_handle);
+        if (it != list_view_handles.end()) {
+            *it = nullptr;
+        }
+        list_view_rwlock.write_unlock();
+        if (!DestroyWindow(list_view_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     HWND list_view::edit_label(HWND list_view_handle, int32_t index) {

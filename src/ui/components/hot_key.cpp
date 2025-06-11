@@ -1,11 +1,51 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/25.
-//
-
+/* clang-format off */
+/*
+ * @file hot_key.cpp
+ * @date 2025-05-25
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "hot_key.h"
 #include <windowsx.h>
 #include "helper/convert.h"
 namespace YanLib::ui::components {
+    hot_key::hot_key() {
+        INITCOMMONCONTROLSEX icc = {};
+        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+        icc.dwICC = ICC_HOTKEY_CLASS;
+        InitCommonControlsEx(&icc);
+    }
+
+    hot_key::~hot_key() {
+        for (auto &handle : hot_key_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        hot_key_handles.clear();
+    }
+
     HWND hot_key::create(uintptr_t hot_key_id,
                          HWND parent_window_handle,
                          LPARAM lparam,
@@ -14,10 +54,6 @@ namespace YanLib::ui::components {
                          int32_t width,
                          int32_t height,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_HOTKEY_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"msctls_hotkey32", nullptr,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -25,7 +61,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        hot_key_rwlock.write_lock();
+        hot_key_handles.push_back(result);
+        hot_key_rwlock.write_unlock();
         return result;
     }
 
@@ -38,10 +78,6 @@ namespace YanLib::ui::components {
                          int32_t width,
                          int32_t height,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_HOTKEY_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExA(
                 0L, "msctls_hotkey32", hot_key_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -49,7 +85,11 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        hot_key_rwlock.write_lock();
+        hot_key_handles.push_back(result);
+        hot_key_rwlock.write_unlock();
         return result;
     }
 
@@ -62,10 +102,6 @@ namespace YanLib::ui::components {
                          int32_t width,
                          int32_t height,
                          WindowStyle window_style) {
-        INITCOMMONCONTROLSEX icc = {};
-        icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
-        icc.dwICC = ICC_HOTKEY_CLASS;
-        InitCommonControlsEx(&icc);
         HWND result = CreateWindowExW(
                 0L, L"msctls_hotkey32", hot_key_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -73,8 +109,30 @@ namespace YanLib::ui::components {
                 reinterpret_cast<CREATESTRUCT *>(lparam)->hInstance, nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        hot_key_rwlock.write_lock();
+        hot_key_handles.push_back(result);
+        hot_key_rwlock.write_unlock();
         return result;
+    }
+
+    bool hot_key::destroy(HWND hot_key_handle) {
+        if (!hot_key_handle || !IsWindow(hot_key_handle)) {
+            return false;
+        }
+        hot_key_rwlock.write_lock();
+        const auto it = std::find(hot_key_handles.begin(),
+                                  hot_key_handles.end(), hot_key_handle);
+        if (it != hot_key_handles.end()) {
+            *it = nullptr;
+        }
+        hot_key_rwlock.write_unlock();
+        if (!DestroyWindow(hot_key_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     std::pair<ModifiersKey, VirtualKey>

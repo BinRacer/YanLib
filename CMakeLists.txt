@@ -279,12 +279,6 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         VERBATIM
 )
 
-#target_include_directories(YanLib
-#        PUBLIC
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#        $<INSTALL_INTERFACE:include>
-#)
-
 target_include_directories(YanLib
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src

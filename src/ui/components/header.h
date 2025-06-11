@@ -1,7 +1,30 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/25.
-//
-
+/* clang-format off */
+/*
+ * @file header.h
+ * @date 2025-05-25
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #ifndef HEADER_H
 #define HEADER_H
 #ifndef UNICODE
@@ -15,6 +38,7 @@
 #include <cstdint>
 #include <vector>
 #include <string>
+#include "sync/rwlock.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -138,6 +162,8 @@ namespace YanLib::ui::components {
 #endif
     class header {
     private:
+        std::vector<HWND> header_handles = {};
+        sync::rwlock header_rwlock = {};
         uint32_t error_code = 0;
 
     public:
@@ -148,6 +174,10 @@ namespace YanLib::ui::components {
         header &operator=(const header &other) = delete;
 
         header &operator=(header &&other) = delete;
+
+        header();
+
+        ~header();
 
         HWND create(uintptr_t header_id,
                     HWND parent_window_handle,
@@ -195,6 +225,8 @@ namespace YanLib::ui::components {
                             HeaderStyle::Horiz,
                     WindowStyle window_style = WindowStyle::Child |
                             WindowStyle::Visible | WindowStyle::Border);
+
+        bool destroy(HWND header_handle);
 
         HIMAGELIST create_drag_image(HWND header_handle, int32_t index);
 

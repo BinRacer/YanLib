@@ -1,10 +1,43 @@
-//
-// Created by BinRacer <native.lab@outlook.com> on 2025/5/23.
-//
-
+/* clang-format off */
+/*
+ * @file button.cpp
+ * @date 2025-05-23
+ * @license MIT License
+ *
+ * Copyright (c) 2025 BinRacer <native.lab@outlook.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+/* clang-format on */
 #include "button.h"
 #include <windowsx.h>
 namespace YanLib::ui::components {
+    button::~button() {
+        for (auto &handle : button_handles) {
+            if (handle && IsWindow(handle)) {
+                DestroyWindow(handle);
+                handle = nullptr;
+            }
+        }
+        button_handles.clear();
+    }
+
     HWND button::create(uintptr_t button_id,
                         HWND parent_window_handle,
                         LPARAM lparam,
@@ -24,7 +57,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        button_rwlock.write_lock();
+        button_handles.push_back(result);
+        button_rwlock.write_unlock();
         return result;
     }
     HWND button::create(const char *button_name,
@@ -47,7 +84,11 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        button_rwlock.write_lock();
+        button_handles.push_back(result);
+        button_rwlock.write_unlock();
         return result;
     }
 
@@ -71,8 +112,30 @@ namespace YanLib::ui::components {
                                       nullptr);
         if (!result) {
             error_code = GetLastError();
+            return nullptr;
         }
+        button_rwlock.write_lock();
+        button_handles.push_back(result);
+        button_rwlock.write_unlock();
         return result;
+    }
+
+    bool button::destroy(HWND button_handle) {
+        if (!button_handle || !IsWindow(button_handle)) {
+            return false;
+        }
+        button_rwlock.write_lock();
+        const auto it = std::find(button_handles.begin(), button_handles.end(),
+                                  button_handle);
+        if (it != button_handles.end()) {
+            *it = nullptr;
+        }
+        button_rwlock.write_unlock();
+        if (!DestroyWindow(button_handle)) {
+            error_code = GetLastError();
+            return false;
+        }
+        return true;
     }
 
     bool button::enable(HWND button_handle) {

@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/4/4.
+// Created by BinRacer <native.lab@outlook.com> on 2025/4/4.
 //
 
 #include "allocate.h"

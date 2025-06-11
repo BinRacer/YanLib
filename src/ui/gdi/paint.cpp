@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/5/5.
+// Created by BinRacer <native.lab@outlook.com> on 2025/5/5.
 //
 
 #include "paint.h"

@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/6/4.
+// Created by BinRacer <native.lab@outlook.com> on 2025/6/4.
 //
 
 #include "track.h"

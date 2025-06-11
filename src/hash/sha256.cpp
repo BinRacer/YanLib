@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/4/8.
+// Created by BinRacer <native.lab@outlook.com> on 2025/4/8.
 //
 
 #include "sha256.h"

@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/6/2.
+// Created by BinRacer <native.lab@outlook.com> on 2025/6/2.
 //
 
 #include "tool_tips.h"

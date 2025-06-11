@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/4/10.
+// Created by BinRacer <native.lab@outlook.com> on 2025/4/10.
 //
 
 #ifndef BASE92_H

@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/5/30.
+// Created by BinRacer <native.lab@outlook.com> on 2025/5/30.
 //
 #ifndef RICH_EDIT_H
 #define RICH_EDIT_H

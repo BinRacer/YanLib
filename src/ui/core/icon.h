@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/4/30.
+// Created by BinRacer <native.lab@outlook.com> on 2025/4/30.
 //
 
 #ifndef ICON_H

@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/4/9.
+// Created by BinRacer <native.lab@outlook.com> on 2025/4/9.
 //
 
 #include "base85.h"

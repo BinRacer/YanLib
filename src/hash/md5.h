@@ -1,5 +1,5 @@
 //
-// Created by forkernel on 2025/4/7.
+// Created by BinRacer <native.lab@outlook.com> on 2025/4/7.
 //
 
 #ifndef MD5_H

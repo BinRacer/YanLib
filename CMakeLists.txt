@@ -267,6 +267,7 @@ set_target_properties(YanLib PROPERTIES
 set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/dist")
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E env PYTHONUTF8=1 python "${PROJECT_SOURCE_DIR}/scripts/export_headers.py"
         COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
         COMMAND ${CMAKE_COMMAND} -E tar "cf"
         "${OUTPUT_DIR}/${PROJECT_NAME}.zip"

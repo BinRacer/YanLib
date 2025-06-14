@@ -273,6 +273,7 @@ ctest --test-dir cmake-build-release/test --output-on-failure -C Release
    ![step06_zh_cn.png](images/HelloWorld/step06_zh_cn.png)
 
 7. 上述文件修改完之后，点击应用和确定按钮，保证配置修改生效。清空默认生成的HelloWorld.cpp文件内容，替换为如下代码：
+
 ```c++
 // HelloWorld.cpp : 定义应用程序的入口点。
 //
@@ -300,6 +301,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MessageBox(NULL, result.data(), L"Hello World!你好世界 SHA1：", MB_OK);
 }
 ```
+
 选择解决方案，右键选择 **重新生成解决方案(R)**，点击 **调试 => 开始执行(不调试)(H)** 🎉，使用快捷键 **Ctrl+F5** 亦可。
 
-   ![step07_zh_cn.png](images/HelloWorld/step07_zh_cn.png)
+![step07_zh_cn.png](images/HelloWorld/step07_zh_cn.png)

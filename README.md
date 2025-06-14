@@ -224,8 +224,8 @@ src
 
 ### Prepare the Environment
 
-Install and configure **git-bash**, **clang-format**, **code editor** (**Visual Studio**, **Visual Studio Code**, *
-*Clion**, etc.), **CMake**, **MSVC compiler**.
+Install and configure **git-bash**, **clang-format**, **code editor** (**Visual Studio**, **Visual Studio Code**,
+**Clion**, etc.), **CMake**, **MSVC compiler**.
 
 ### Build Source Code
 
@@ -256,8 +256,8 @@ while the **dist** directory stores the zipped archive of the build directory.
 
 Unless otherwise specified, **Visual Studio** will be used as the code editor.
 
-1. Open **Visual Studio 2022** code editor, select the **Windows Desktop Wizard**, and set the project name to *
-   *HelloWorld**.
+1. Open **Visual Studio 2022** code editor, select the **Windows Desktop Wizard**,
+   and set the project name to **HelloWorld**.
    ![step01.png](images/HelloWorld/step01.png)
 
 2. Select the **HelloWorld** project, right-click it, and choose **Properties** from the context menu.
@@ -313,7 +313,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MessageBox(NULL, result.data(), L"Hello World!你好世界 SHA1：", MB_OK);
 }
 ```
+
 Select the Solution in Solution Explorer, right-click it, and choose **Rebuild Solution**. Then navigate to the Debug
 menu and select **Start Without Debugging** 🎉 – alternatively, press **Ctrl+F5**.
 
-   ![step07.png](images/HelloWorld/step07.png)
+![step07.png](images/HelloWorld/step07.png)

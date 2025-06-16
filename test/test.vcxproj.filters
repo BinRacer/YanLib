@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="crypto">
+      <UniqueIdentifier>{4de666c7-39eb-4a68-a33a-21aed08e6607}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hash">
+      <UniqueIdentifier>{8101e91b-112a-4bb9-a8b3-5c9f81ab42d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{18a8035c-b7c7-4da1-887c-1b6721a966f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sys">
+      <UniqueIdentifier>{7f6534c8-5df3-4dde-97da-e79d3e51fa4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="testdata">
+      <UniqueIdentifier>{9c0990f0-457a-42a4-a1fb-a0a7683d3353}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="crypto\aes_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\aes192_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\aes256_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base16_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base32_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base58_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base62_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base64_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base85_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base91_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base92_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\base100_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\rsa_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\uuencode_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\vigenere_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\xxencode_test.cpp">
+      <Filter>crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="hash\md5_test.cpp">
+      <Filter>hash</Filter>
+    </ClCompile>
+    <ClCompile Include="hash\sha1_test.cpp">
+      <Filter>hash</Filter>
+    </ClCompile>
+    <ClCompile Include="hash\sha256_test.cpp">
+      <Filter>hash</Filter>
+    </ClCompile>
+    <ClCompile Include="hash\sha384_test.cpp">
+      <Filter>hash</Filter>
+    </ClCompile>
+    <ClCompile Include="hash\sha512_test.cpp">
+      <Filter>hash</Filter>
+    </ClCompile>
+    <ClCompile Include="io\fs_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\fs_wide_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\proc_test.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\security_test.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\snapshot_test.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="testdata\zlibd1_32.dll">
+      <Filter>testdata</Filter>
+    </None>
+    <None Include="testdata\zlibd1_64.dll">
+      <Filter>testdata</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -140,7 +140,7 @@ namespace YanLib::ui::core {
 
     bool window_hook::unset_event(HWINEVENTHOOK event_hook) {
         if (!event_hook) {
-            return nullptr;
+            return false;
         }
         event_rwlock.write_lock();
         const auto it = std::find(event_handles.begin(), event_handles.end(),

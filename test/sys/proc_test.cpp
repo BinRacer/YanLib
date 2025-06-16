@@ -49,33 +49,33 @@ TEST_F(sys_proc, env) {
 TEST_F(sys_proc, cmdline) {
     std::string cmdline;
     proc.get_cmdline(cmdline);
-    EXPECT_GT(cmdline.size(), 0);
-    EXPECT_NE(cmdline.find("proc_test.exe"), std::string::npos);
+    EXPECT_GT(cmdline.size(), 0); 
+    EXPECT_NE(cmdline.find("test.exe"), std::string::npos);
 
     std::wstring cmdline2;
     proc.get_cmdline(cmdline2);
     EXPECT_GT(cmdline2.size(), 0);
-    EXPECT_NE(cmdline2.find(L"proc_test.exe"), std::wstring::npos);
+    EXPECT_NE(cmdline2.find(L"test.exe"), std::wstring::npos);
 
     std::string cmdline3;
     EXPECT_TRUE(proc.get_cmdline(proc.proc_handle(), cmdline3));
     EXPECT_GT(cmdline3.size(), 0);
-    EXPECT_NE(cmdline3.find("proc_test.exe"), std::string::npos);
+    EXPECT_NE(cmdline3.find("test.exe"), std::string::npos);
 
     std::wstring cmdline4;
     EXPECT_TRUE(proc.get_cmdline(proc.proc_handle(), cmdline4));
     EXPECT_GT(cmdline4.size(), 0);
-    EXPECT_NE(cmdline4.find(L"proc_test.exe"), std::wstring::npos);
+    EXPECT_NE(cmdline4.find(L"test.exe"), std::wstring::npos);
 
     std::string cmdline5;
     EXPECT_TRUE(proc.get_cmdline(proc.proc_id(), cmdline5));
     EXPECT_GT(cmdline5.size(), 0);
-    EXPECT_NE(cmdline5.find("proc_test.exe"), std::string::npos);
+    EXPECT_NE(cmdline5.find("test.exe"), std::string::npos);
 
     std::wstring cmdline6;
     EXPECT_TRUE(proc.get_cmdline(proc.proc_id(), cmdline6));
     EXPECT_GT(cmdline6.size(), 0);
-    EXPECT_NE(cmdline6.find(L"proc_test.exe"), std::wstring::npos);
+    EXPECT_NE(cmdline6.find(L"test.exe"), std::wstring::npos);
 }
 
 TEST_F(sys_proc, owner) {
@@ -99,19 +99,19 @@ TEST_F(sys_proc, owner) {
 TEST_F(sys_proc, image_name) {
     std::string image_name;
     EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name));
-    EXPECT_NE(image_name.find("proc_test.exe"), std::string::npos);
+    EXPECT_NE(image_name.find("test.exe"), std::string::npos);
 
     std::wstring image_name2;
     EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name2));
-    EXPECT_NE(image_name2.find(L"proc_test.exe"), std::wstring::npos);
+    EXPECT_NE(image_name2.find(L"test.exe"), std::wstring::npos);
 
     std::string image_name3;
     EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name3, true));
-    EXPECT_NE(image_name3.find("proc_test.exe"), std::string::npos);
+    EXPECT_NE(image_name3.find("test.exe"), std::string::npos);
 
     std::wstring image_name4;
     EXPECT_TRUE(proc.get_image_name(proc.proc_handle(), image_name4, true));
-    EXPECT_NE(image_name4.find(L"proc_test.exe"), std::wstring::npos);
+    EXPECT_NE(image_name4.find(L"test.exe"), std::wstring::npos);
 }
 
 TEST_F(sys_proc, image_base) {

@@ -39,6 +39,8 @@ fabric.properties
 mono_crash.*
 
 # Build results
+vs-build-debug
+vs-build-release
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
@@ -398,3 +400,4 @@ FodyWeavers.xsd
 
 build/
 dist/
+packages/

@@ -2,7 +2,7 @@
 #include "io/fs.h"
 namespace io = YanLib::io;
 
-class io_fs : public testing::Test {
+class io_fs_wide : public testing::Test {
 protected:
     static LARGE_INTEGER date_to_large_integer(const SYSTEMTIME &st) {
         FILETIME ft;
@@ -62,7 +62,7 @@ protected:
     io::fs_util fs_util;
 };
 
-TEST_F(io_fs, read_check) {
+TEST_F(io_fs_wide, read_check) {
     io::fs read_file(read_notepad.data());
     int64_t file_size = read_file.size();
     EXPECT_GT(file_size, 0);
@@ -84,7 +84,7 @@ TEST_F(io_fs, read_check) {
     EXPECT_EQ(read_file.read_string_to_end().size(), file_size);
 }
 
-TEST_F(io_fs, write_check) {
+TEST_F(io_fs_wide, write_check) {
     io::fs read_file(read_notepad.data());
     io::fs write_file(write_notepad.data(),
                       io::DesiredAccess::Read | io::DesiredAccess::Write,
@@ -106,7 +106,7 @@ TEST_F(io_fs, write_check) {
     EXPECT_EQ(write_file.write_string(string), string.size());
 }
 
-TEST_F(io_fs, info_check) {
+TEST_F(io_fs_wide, info_check) {
     io::fs read_file(read_notepad.data());
     auto file_basic_info = std::make_unique<FILE_BASIC_INFO>();
     EXPECT_TRUE(read_file.get_info(FileBasicInfo, file_basic_info.get(),
@@ -125,7 +125,7 @@ TEST_F(io_fs, info_check) {
                                    sizeof(FILE_BASIC_INFO)));
 }
 
-TEST_F(io_fs, lock_check) {
+TEST_F(io_fs_wide, lock_check) {
     io::fs read_file(read_notepad.data());
     io::fs write_file(write_notepad.data(),
                       io::DesiredAccess::Read | io::DesiredAccess::Write,
@@ -138,7 +138,7 @@ TEST_F(io_fs, lock_check) {
     EXPECT_TRUE(write_file.unlock());
 }
 
-TEST_F(io_fs, attr_check) {
+TEST_F(io_fs_wide, attr_check) {
     uint32_t attr = fs_util.get_attr(read_notepad.data());
     EXPECT_EQ(attr, FILE_ATTRIBUTE_ARCHIVE);
     EXPECT_TRUE(fs_util.set_attr(read_notepad.data(),
@@ -147,7 +147,7 @@ TEST_F(io_fs, attr_check) {
                                  attr & ~FILE_ATTRIBUTE_READONLY));
 }
 
-TEST_F(io_fs, volume_info_check) {
+TEST_F(io_fs_wide, volume_info_check) {
     io::fs read_file(read_notepad.data());
     auto info = std::make_unique<io::VolumeInfoW>();
     EXPECT_TRUE(read_file.get_volume_info(info.get()));
@@ -156,13 +156,13 @@ TEST_F(io_fs, volume_info_check) {
     // EXPECT_EQ(info->serial_number, 485725206);
 }
 
-TEST_F(io_fs, type_check) {
+TEST_F(io_fs_wide, type_check) {
     io::fs read_file(read_notepad.data());
     EXPECT_EQ(read_file.file_type(), io::FileType::Disk);
     EXPECT_EQ(fs_util.get_drive_type(L"C:\\"), io::DriveType::Fixed);
 }
 
-TEST_F(io_fs, path_name) {
+TEST_F(io_fs_wide, path_name) {
     io::fs read_file(read_notepad.data());
     std::wstring path_name;
     EXPECT_TRUE(read_file.get_final_path_name(path_name));
@@ -171,7 +171,7 @@ TEST_F(io_fs, path_name) {
     EXPECT_TRUE(read_file.is_short_name_enabled());
 }
 
-TEST_F(io_fs, volume_name) {
+TEST_F(io_fs_wide, volume_name) {
     auto volume_path_name = fs_util.get_volume_path_name(read_notepad.data());
     EXPECT_EQ(wcscmp(volume_path_name.data(), L"C:\\"), 0);
 
@@ -189,7 +189,7 @@ TEST_F(io_fs, volume_name) {
               std::wstring::npos);
 }
 
-TEST_F(io_fs, temp_name) {
+TEST_F(io_fs_wide, temp_name) {
     std::wstring temp;
     EXPECT_TRUE(fs_util.get_temp_path(temp));
     EXPECT_NE(temp.find(temp_path), std::wstring::npos);
@@ -200,14 +200,14 @@ TEST_F(io_fs, temp_name) {
     EXPECT_NE(temp_name.find(L"tmp"), std::wstring::npos);
 }
 
-TEST_F(io_fs, long_short_check) {
+TEST_F(io_fs_wide, long_short_check) {
     auto long_name = fs_util.get_long_path_name(L"C:\\PROGRA~1");
     EXPECT_NE(long_name.find(L"C:\\Program Files"), std::wstring::npos);
     auto short_name = fs_util.get_short_path_name(L"C:\\Program Files\\");
     EXPECT_NE(short_name.find(L"C:\\PROGRA~1"), std::wstring::npos);
 }
 
-TEST_F(io_fs, disk_check) {
+TEST_F(io_fs_wide, disk_check) {
     std::wstring logical_drive_strings;
     EXPECT_TRUE(fs_util.get_logical_drive_strings(logical_drive_strings));
     EXPECT_NE(logical_drive_strings.find(L"C:\\"), std::wstring::npos);
@@ -234,7 +234,7 @@ TEST_F(io_fs, disk_check) {
     EXPECT_GT(compressed_file_size, 0);
 }
 
-TEST_F(io_fs, device_check) {
+TEST_F(io_fs_wide, device_check) {
     auto dos_device = fs_util.get_dos_device(L"C:");
     EXPECT_NE(dos_device.find(L"\\Device\\HarddiskVolume"), std::wstring::npos);
 
@@ -243,7 +243,7 @@ TEST_F(io_fs, device_check) {
     EXPECT_GT(dos_device_list.size(), 0);
 }
 
-TEST_F(io_fs, list_check) {
+TEST_F(io_fs_wide, list_check) {
     std::vector<std::wstring> volume_name_list;
     EXPECT_TRUE(fs_util.ls_volume_name(volume_name_list));
     EXPECT_GT(volume_name_list.size(), 0);
@@ -275,7 +275,7 @@ TEST_F(io_fs, list_check) {
     EXPECT_GT(list_all_dirs.size(), 0);
 }
 
-TEST_F(io_fs, mkdir_and_rm_check) {
+TEST_F(io_fs_wide, mkdir_and_rm_check) {
     for (int i = 0; i < 5; i++) {
         EXPECT_GT(fs_util.get_temp_file_name(fs_test_dir.data(), L"aaa").size(),
                   0);
@@ -315,7 +315,7 @@ TEST_F(io_fs, mkdir_and_rm_check) {
     }
 }
 
-TEST_F(io_fs, copy_check) {
+TEST_F(io_fs_wide, copy_check) {
     std::wstring copy_name = read_notepad;
     copy_name.append(L".copy");
     EXPECT_TRUE(fs_util.copy(read_notepad.data(), copy_name.data()));
@@ -325,7 +325,7 @@ TEST_F(io_fs, copy_check) {
     EXPECT_TRUE(fs_util.copy_all(read_notepad.data(), copy_name2.data()));
 }
 
-TEST_F(io_fs, rename_check) {
+TEST_F(io_fs_wide, rename_check) {
     std::wstring raw_name = read_notepad;
     raw_name.append(L".copy");
     std::wstring rename_name = read_notepad;

@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\crypto\aes.cpp" />
+    <ClCompile Include="src\crypto\aes192.cpp" />
+    <ClCompile Include="src\crypto\aes256.cpp" />
+    <ClCompile Include="src\crypto\base100.cpp" />
+    <ClCompile Include="src\crypto\base16.cpp" />
+    <ClCompile Include="src\crypto\base32.cpp" />
+    <ClCompile Include="src\crypto\base58.cpp" />
+    <ClCompile Include="src\crypto\base62.cpp" />
+    <ClCompile Include="src\crypto\base64.cpp" />
+    <ClCompile Include="src\crypto\base85.cpp" />
+    <ClCompile Include="src\crypto\base91.cpp" />
+    <ClCompile Include="src\crypto\base92.cpp" />
+    <ClCompile Include="src\crypto\rsa.cpp" />
+    <ClCompile Include="src\crypto\uuencode.cpp" />
+    <ClCompile Include="src\crypto\vigenere.cpp" />
+    <ClCompile Include="src\crypto\xxencode.cpp" />
+    <ClCompile Include="src\hash\md5.cpp" />
+    <ClCompile Include="src\hash\sha1.cpp" />
+    <ClCompile Include="src\hash\sha256.cpp" />
+    <ClCompile Include="src\hash\sha384.cpp" />
+    <ClCompile Include="src\hash\sha512.cpp" />
+    <ClCompile Include="src\helper\autoclean.cpp" />
+    <ClCompile Include="src\helper\convert.cpp" />
+    <ClCompile Include="src\helper\string.cpp" />
+    <ClCompile Include="src\io\comp_port.cpp" />
+    <ClCompile Include="src\io\fs.cpp" />
+    <ClCompile Include="src\io\ftp.cpp" />
+    <ClCompile Include="src\io\http.cpp" />
+    <ClCompile Include="src\io\tcp_client.cpp" />
+    <ClCompile Include="src\io\tcp_server.cpp" />
+    <ClCompile Include="src\io\udp_client.cpp" />
+    <ClCompile Include="src\io\udp_server.cpp" />
+    <ClCompile Include="src\mem\allocate.cpp" />
+    <ClCompile Include="src\mem\heap.cpp" />
+    <ClCompile Include="src\mem\mmap.cpp" />
+    <ClCompile Include="src\sync\barrier.cpp" />
+    <ClCompile Include="src\sync\condvar.cpp" />
+    <ClCompile Include="src\sync\event.cpp" />
+    <ClCompile Include="src\sync\fence.cpp" />
+    <ClCompile Include="src\sync\mutex.cpp" />
+    <ClCompile Include="src\sync\rwlock.cpp" />
+    <ClCompile Include="src\sync\semaphore.cpp" />
+    <ClCompile Include="src\sync\timer.cpp" />
+    <ClCompile Include="src\sys\fiber.cpp" />
+    <ClCompile Include="src\sys\job.cpp" />
+    <ClCompile Include="src\sys\proc.cpp" />
+    <ClCompile Include="src\sys\processor.cpp" />
+    <ClCompile Include="src\sys\security.cpp" />
+    <ClCompile Include="src\sys\snapshot.cpp" />
+    <ClCompile Include="src\sys\thread.cpp" />
+    <ClCompile Include="src\sys\thread_pool.cpp" />
+    <ClCompile Include="src\ui\components\animate.cpp" />
+    <ClCompile Include="src\ui\components\button.cpp" />
+    <ClCompile Include="src\ui\components\calendar.cpp" />
+    <ClCompile Include="src\ui\components\combo_box.cpp" />
+    <ClCompile Include="src\ui\components\datetime.cpp" />
+    <ClCompile Include="src\ui\components\edit.cpp" />
+    <ClCompile Include="src\ui\components\general.cpp" />
+    <ClCompile Include="src\ui\components\header.cpp" />
+    <ClCompile Include="src\ui\components\hot_key.cpp" />
+    <ClCompile Include="src\ui\components\image_list.cpp" />
+    <ClCompile Include="src\ui\components\ip_addr.cpp" />
+    <ClCompile Include="src\ui\components\label.cpp" />
+    <ClCompile Include="src\ui\components\link.cpp" />
+    <ClCompile Include="src\ui\components\list_box.cpp" />
+    <ClCompile Include="src\ui\components\list_view.cpp" />
+    <ClCompile Include="src\ui\components\page.cpp" />
+    <ClCompile Include="src\ui\components\progress.cpp" />
+    <ClCompile Include="src\ui\components\property.cpp" />
+    <ClCompile Include="src\ui\components\rebar.cpp" />
+    <ClCompile Include="src\ui\components\rich_edit.cpp" />
+    <ClCompile Include="src\ui\components\scroll.cpp" />
+    <ClCompile Include="src\ui\components\status.cpp" />
+    <ClCompile Include="src\ui\components\tab.cpp" />
+    <ClCompile Include="src\ui\components\task_dialog.cpp" />
+    <ClCompile Include="src\ui\components\tool_bar.cpp" />
+    <ClCompile Include="src\ui\components\tool_tips.cpp" />
+    <ClCompile Include="src\ui\components\track.cpp" />
+    <ClCompile Include="src\ui\components\tree.cpp" />
+    <ClCompile Include="src\ui\components\up_down.cpp" />
+    <ClCompile Include="src\ui\core\accelerator.cpp" />
+    <ClCompile Include="src\ui\core\caret.cpp" />
+    <ClCompile Include="src\ui\core\clipboard.cpp" />
+    <ClCompile Include="src\ui\core\cursor.cpp" />
+    <ClCompile Include="src\ui\core\desktop.cpp" />
+    <ClCompile Include="src\ui\core\dialog.cpp" />
+    <ClCompile Include="src\ui\core\icon.cpp" />
+    <ClCompile Include="src\ui\core\image.cpp" />
+    <ClCompile Include="src\ui\core\keyboard.cpp" />
+    <ClCompile Include="src\ui\core\menu.cpp" />
+    <ClCompile Include="src\ui\core\message.cpp" />
+    <ClCompile Include="src\ui\core\mouse.cpp" />
+    <ClCompile Include="src\ui\core\notify.cpp" />
+    <ClCompile Include="src\ui\core\touch.cpp" />
+    <ClCompile Include="src\ui\core\window.cpp" />
+    <ClCompile Include="src\ui\core\window_aware.cpp" />
+    <ClCompile Include="src\ui\core\window_behavior.cpp" />
+    <ClCompile Include="src\ui\core\window_class.cpp" />
+    <ClCompile Include="src\ui\core\window_hook.cpp" />
+    <ClCompile Include="src\ui\core\window_pos.cpp" />
+    <ClCompile Include="src\ui\core\window_prop.cpp" />
+    <ClCompile Include="src\ui\gdi\arc.cpp" />
+    <ClCompile Include="src\ui\gdi\bezier.cpp" />
+    <ClCompile Include="src\ui\gdi\bitmap.cpp" />
+    <ClCompile Include="src\ui\gdi\brush.cpp" />
+    <ClCompile Include="src\ui\gdi\clip.cpp" />
+    <ClCompile Include="src\ui\gdi\coordinate.cpp" />
+    <ClCompile Include="src\ui\gdi\dc.cpp" />
+    <ClCompile Include="src\ui\gdi\display.cpp" />
+    <ClCompile Include="src\ui\gdi\font.cpp" />
+    <ClCompile Include="src\ui\gdi\line.cpp" />
+    <ClCompile Include="src\ui\gdi\meta.cpp" />
+    <ClCompile Include="src\ui\gdi\monitor.cpp" />
+    <ClCompile Include="src\ui\gdi\paint.cpp" />
+    <ClCompile Include="src\ui\gdi\palette.cpp" />
+    <ClCompile Include="src\ui\gdi\path.cpp" />
+    <ClCompile Include="src\ui\gdi\pen.cpp" />
+    <ClCompile Include="src\ui\gdi\rect.cpp" />
+    <ClCompile Include="src\ui\gdi\region.cpp" />
+    <ClCompile Include="src\ui\gdi\shape.cpp" />
+    <ClCompile Include="src\ui\gdi\text.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\crypto\aes.h" />
+    <ClInclude Include="src\crypto\aes192.h" />
+    <ClInclude Include="src\crypto\aes256.h" />
+    <ClInclude Include="src\crypto\base100.h" />
+    <ClInclude Include="src\crypto\base16.h" />
+    <ClInclude Include="src\crypto\base32.h" />
+    <ClInclude Include="src\crypto\base58.h" />
+    <ClInclude Include="src\crypto\base62.h" />
+    <ClInclude Include="src\crypto\base64.h" />
+    <ClInclude Include="src\crypto\base85.h" />
+    <ClInclude Include="src\crypto\base91.h" />
+    <ClInclude Include="src\crypto\base92.h" />
+    <ClInclude Include="src\crypto\rsa.h" />
+    <ClInclude Include="src\crypto\uuencode.h" />
+    <ClInclude Include="src\crypto\vigenere.h" />
+    <ClInclude Include="src\crypto\xxencode.h" />
+    <ClInclude Include="src\hash\md5.h" />
+    <ClInclude Include="src\hash\sha1.h" />
+    <ClInclude Include="src\hash\sha256.h" />
+    <ClInclude Include="src\hash\sha384.h" />
+    <ClInclude Include="src\hash\sha512.h" />
+    <ClInclude Include="src\helper\autoclean.h" />
+    <ClInclude Include="src\helper\convert.h" />
+    <ClInclude Include="src\helper\string.h" />
+    <ClInclude Include="src\io\comp_port.h" />
+    <ClInclude Include="src\io\fs.h" />
+    <ClInclude Include="src\io\ftp.h" />
+    <ClInclude Include="src\io\http.h" />
+    <ClInclude Include="src\io\tcp_client.h" />
+    <ClInclude Include="src\io\tcp_server.h" />
+    <ClInclude Include="src\io\udp_client.h" />
+    <ClInclude Include="src\io\udp_server.h" />
+    <ClInclude Include="src\mem\allocate.h" />
+    <ClInclude Include="src\mem\heap.h" />
+    <ClInclude Include="src\mem\mmap.h" />
+    <ClInclude Include="src\sync\barrier.h" />
+    <ClInclude Include="src\sync\condvar.h" />
+    <ClInclude Include="src\sync\event.h" />
+    <ClInclude Include="src\sync\fence.h" />
+    <ClInclude Include="src\sync\mutex.h" />
+    <ClInclude Include="src\sync\rwlock.h" />
+    <ClInclude Include="src\sync\semaphore.h" />
+    <ClInclude Include="src\sync\timer.h" />
+    <ClInclude Include="src\sys\fiber.h" />
+    <ClInclude Include="src\sys\job.h" />
+    <ClInclude Include="src\sys\proc.h" />
+    <ClInclude Include="src\sys\processor.h" />
+    <ClInclude Include="src\sys\security.h" />
+    <ClInclude Include="src\sys\snapshot.h" />
+    <ClInclude Include="src\sys\thread.h" />
+    <ClInclude Include="src\sys\thread_pool.h" />
+    <ClInclude Include="src\ui\components\animate.h" />
+    <ClInclude Include="src\ui\components\button.h" />
+    <ClInclude Include="src\ui\components\calendar.h" />
+    <ClInclude Include="src\ui\components\combo_box.h" />
+    <ClInclude Include="src\ui\components\datetime.h" />
+    <ClInclude Include="src\ui\components\edit.h" />
+    <ClInclude Include="src\ui\components\general.h" />
+    <ClInclude Include="src\ui\components\header.h" />
+    <ClInclude Include="src\ui\components\hot_key.h" />
+    <ClInclude Include="src\ui\components\image_list.h" />
+    <ClInclude Include="src\ui\components\ip_addr.h" />
+    <ClInclude Include="src\ui\components\label.h" />
+    <ClInclude Include="src\ui\components\link.h" />
+    <ClInclude Include="src\ui\components\list_box.h" />
+    <ClInclude Include="src\ui\components\list_view.h" />
+    <ClInclude Include="src\ui\components\page.h" />
+    <ClInclude Include="src\ui\components\progress.h" />
+    <ClInclude Include="src\ui\components\property.h" />
+    <ClInclude Include="src\ui\components\rebar.h" />
+    <ClInclude Include="src\ui\components\rich_edit.h" />
+    <ClInclude Include="src\ui\components\scroll.h" />
+    <ClInclude Include="src\ui\components\status.h" />
+    <ClInclude Include="src\ui\components\tab.h" />
+    <ClInclude Include="src\ui\components\task_dialog.h" />
+    <ClInclude Include="src\ui\components\tool_bar.h" />
+    <ClInclude Include="src\ui\components\tool_tips.h" />
+    <ClInclude Include="src\ui\components\track.h" />
+    <ClInclude Include="src\ui\components\tree.h" />
+    <ClInclude Include="src\ui\components\up_down.h" />
+    <ClInclude Include="src\ui\core\accelerator.h" />
+    <ClInclude Include="src\ui\core\caret.h" />
+    <ClInclude Include="src\ui\core\clipboard.h" />
+    <ClInclude Include="src\ui\core\cursor.h" />
+    <ClInclude Include="src\ui\core\desktop.h" />
+    <ClInclude Include="src\ui\core\dialog.h" />
+    <ClInclude Include="src\ui\core\icon.h" />
+    <ClInclude Include="src\ui\core\image.h" />
+    <ClInclude Include="src\ui\core\keyboard.h" />
+    <ClInclude Include="src\ui\core\menu.h" />
+    <ClInclude Include="src\ui\core\message.h" />
+    <ClInclude Include="src\ui\core\mouse.h" />
+    <ClInclude Include="src\ui\core\notify.h" />
+    <ClInclude Include="src\ui\core\touch.h" />
+    <ClInclude Include="src\ui\core\window.h" />
+    <ClInclude Include="src\ui\core\window_aware.h" />
+    <ClInclude Include="src\ui\core\window_behavior.h" />
+    <ClInclude Include="src\ui\core\window_class.h" />
+    <ClInclude Include="src\ui\core\window_hook.h" />
+    <ClInclude Include="src\ui\core\window_pos.h" />
+    <ClInclude Include="src\ui\core\window_prop.h" />
+    <ClInclude Include="src\ui\gdi\arc.h" />
+    <ClInclude Include="src\ui\gdi\bezier.h" />
+    <ClInclude Include="src\ui\gdi\bitmap.h" />
+    <ClInclude Include="src\ui\gdi\brush.h" />
+    <ClInclude Include="src\ui\gdi\clip.h" />
+    <ClInclude Include="src\ui\gdi\coordinate.h" />
+    <ClInclude Include="src\ui\gdi\dc.h" />
+    <ClInclude Include="src\ui\gdi\display.h" />
+    <ClInclude Include="src\ui\gdi\font.h" />
+    <ClInclude Include="src\ui\gdi\line.h" />
+    <ClInclude Include="src\ui\gdi\meta.h" />
+    <ClInclude Include="src\ui\gdi\monitor.h" />
+    <ClInclude Include="src\ui\gdi\paint.h" />
+    <ClInclude Include="src\ui\gdi\palette.h" />
+    <ClInclude Include="src\ui\gdi\path.h" />
+    <ClInclude Include="src\ui\gdi\pen.h" />
+    <ClInclude Include="src\ui\gdi\rect.h" />
+    <ClInclude Include="src\ui\gdi\region.h" />
+    <ClInclude Include="src\ui\gdi\shape.h" />
+    <ClInclude Include="src\ui\gdi\text.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{12776d49-a4b2-4134-bacf-776a6f67d154}</ProjectGuid>
+    <RootNamespace>YanLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IntDir>vs-build-release\$(Platform)\</IntDir>
+    <OutDir>$(SolutionDir)build\lib\$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>vs-build-debug\$(Platform)\</IntDir>
+    <OutDir>$(SolutionDir)build\lib\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>cd "$(SolutionDir)" &amp;&amp; set PYTHONIOENCODING=utf-8 &amp;&amp; python "$(SolutionDir)scripts\export_headers.py"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>cd "$(SolutionDir)" &amp;&amp; set PYTHONIOENCODING=utf-8 &amp;&amp; python "$(SolutionDir)scripts\export_headers.py"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

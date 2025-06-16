@@ -1,0 +1,775 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2f2c623f-22a4-4f7b-a21b-d3f664e72f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\crypto">
+      <UniqueIdentifier>{ff1ceb03-efbb-43da-b76b-56eb0148d44a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\hash">
+      <UniqueIdentifier>{290737f0-1bad-4646-b64b-0382a644b04b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\helper">
+      <UniqueIdentifier>{a9bb1383-2a4e-41e1-b875-c30569a9abb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\io">
+      <UniqueIdentifier>{8d22a259-7c65-480e-8d87-ad4d88c3a392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\mem">
+      <UniqueIdentifier>{7331d3cf-11cc-434e-85bd-16f934ba5e02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sync">
+      <UniqueIdentifier>{230262be-af29-4af4-bd4b-2933f6231610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sys">
+      <UniqueIdentifier>{6982122f-07e9-48e6-b937-cd9818dbac8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui">
+      <UniqueIdentifier>{0c2471a9-da33-4e49-92f8-66941650a366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui\components">
+      <UniqueIdentifier>{d894b6cd-dc14-4170-9119-a933aa809e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui\core">
+      <UniqueIdentifier>{ee410a74-36bb-443d-950a-08d17794afe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ui\gdi">
+      <UniqueIdentifier>{517f9092-a2c8-4a91-bf80-ca4a33f36a5d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\crypto\aes.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\aes192.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\aes256.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base16.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base32.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base58.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base62.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base64.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base85.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base91.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base92.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\base100.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\rsa.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\uuencode.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\vigenere.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\crypto\xxencode.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hash\md5.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hash\sha1.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hash\sha256.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hash\sha384.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\hash\sha512.cpp">
+      <Filter>src\hash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helper\autoclean.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helper\convert.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helper\string.cpp">
+      <Filter>src\helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\comp_port.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\fs.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\ftp.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\http.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\tcp_client.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\tcp_server.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\udp_client.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\udp_server.cpp">
+      <Filter>src\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mem\allocate.cpp">
+      <Filter>src\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mem\heap.cpp">
+      <Filter>src\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mem\mmap.cpp">
+      <Filter>src\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\barrier.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\condvar.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\event.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\fence.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\mutex.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\rwlock.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\semaphore.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sync\timer.cpp">
+      <Filter>src\sync</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\fiber.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\job.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\proc.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\processor.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\security.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\snapshot.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\thread.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sys\thread_pool.cpp">
+      <Filter>src\sys</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\animate.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\button.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\calendar.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\combo_box.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\datetime.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\edit.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\general.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\header.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\hot_key.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\image_list.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\ip_addr.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\label.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\link.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\list_box.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\list_view.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\page.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\progress.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\property.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\rebar.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\rich_edit.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\scroll.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\status.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\tab.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\task_dialog.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\tool_bar.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\tool_tips.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\track.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\tree.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\components\up_down.cpp">
+      <Filter>src\ui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\accelerator.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\caret.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\clipboard.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\cursor.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\desktop.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\dialog.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\icon.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\image.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\keyboard.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\menu.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\message.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\mouse.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\notify.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\touch.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window_aware.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window_behavior.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window_class.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window_hook.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window_pos.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\core\window_prop.cpp">
+      <Filter>src\ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\arc.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\bezier.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\bitmap.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\brush.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\clip.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\coordinate.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\dc.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\display.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\font.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\line.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\meta.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\monitor.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\paint.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\palette.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\path.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\pen.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\rect.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\region.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\shape.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\gdi\text.cpp">
+      <Filter>src\ui\gdi</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\crypto\aes.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\aes192.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\aes256.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base16.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base32.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base58.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base62.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base64.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base85.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base91.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base92.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\base100.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\rsa.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\uuencode.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\vigenere.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\crypto\xxencode.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hash\md5.h">
+      <Filter>src\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hash\sha1.h">
+      <Filter>src\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hash\sha256.h">
+      <Filter>src\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hash\sha384.h">
+      <Filter>src\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\hash\sha512.h">
+      <Filter>src\hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helper\autoclean.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helper\convert.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\helper\string.h">
+      <Filter>src\helper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\comp_port.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\fs.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\ftp.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\http.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\tcp_client.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\tcp_server.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\udp_client.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\udp_server.h">
+      <Filter>src\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem\allocate.h">
+      <Filter>src\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem\heap.h">
+      <Filter>src\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mem\mmap.h">
+      <Filter>src\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\barrier.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\condvar.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\event.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\fence.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\mutex.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\rwlock.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\semaphore.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync\timer.h">
+      <Filter>src\sync</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\fiber.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\job.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\proc.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\processor.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\security.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\snapshot.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\thread.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sys\thread_pool.h">
+      <Filter>src\sys</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\animate.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\button.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\calendar.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\combo_box.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\datetime.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\edit.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\general.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\header.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\hot_key.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\image_list.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\ip_addr.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\label.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\link.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\list_box.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\list_view.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\page.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\progress.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\property.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\rebar.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\rich_edit.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\scroll.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\status.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\tab.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\task_dialog.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\tool_bar.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\tool_tips.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\track.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\tree.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\components\up_down.h">
+      <Filter>src\ui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\accelerator.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\caret.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\clipboard.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\cursor.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\desktop.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\dialog.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\icon.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\image.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\keyboard.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\menu.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\message.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\mouse.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\notify.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\touch.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window_aware.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window_behavior.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window_class.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window_hook.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window_pos.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\core\window_prop.h">
+      <Filter>src\ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\arc.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\bezier.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\bitmap.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\brush.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\clip.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\coordinate.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\dc.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\display.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\font.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\line.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\meta.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\monitor.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\paint.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\palette.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\path.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\pen.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\rect.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\region.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\shape.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\gdi\text.h">
+      <Filter>src\ui\gdi</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

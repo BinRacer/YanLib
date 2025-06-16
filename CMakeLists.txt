@@ -256,8 +256,8 @@ set_target_properties(YanLib PROPERTIES
 )
 
 set_target_properties(YanLib PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/build/lib/Debug"
-        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/build/lib/Release"
+        ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/build/lib/x64/Debug"
+        ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/build/lib/x64/Release"
 )
 
 set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/dist")
@@ -265,14 +265,6 @@ set(OUTPUT_DIR "${PROJECT_SOURCE_DIR}/dist")
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E env PYTHONUTF8=1 python "${PROJECT_SOURCE_DIR}/scripts/export_headers.py"
         COMMAND ${CMAKE_COMMAND} -E make_directory ${OUTPUT_DIR}
-        COMMAND ${CMAKE_COMMAND} -E tar "cf"
-        "${OUTPUT_DIR}/${PROJECT_NAME}.zip"
-        --format=zip
-        --
-        ${PROJECT_SOURCE_DIR}/build/include
-        ${PROJECT_SOURCE_DIR}/build/lib
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/build"
-        COMMENT "build and create ZIP: ${OUTPUT_DIR}/${PROJECT_NAME}.zip"
         VERBATIM
 )
 

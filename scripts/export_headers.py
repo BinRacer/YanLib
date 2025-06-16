@@ -1,37 +1,27 @@
 # -*- coding: utf-8 -*-
 import os
-import re
 import shutil
 import zipfile
 from pathlib import Path
 
 
-def clean_private_section(content: str) -> str:
-    """Remove private sections from header files"""
-    private_section_pattern = re.compile(r'private:[\s\S]*?(?=public:)', re.DOTALL)
-    cleaned_content = private_section_pattern.sub('', content)
-    # Remove extra blank lines
-    return re.sub(r'\n\s*\n', '\n\n', cleaned_content)
-
-
 def process_header_file(source_header: Path, target_directory: Path, source_root: Path):
-    """Process a single header file: clean private section and copy to include directory"""
+    """Copy header files while preserving directory structure"""
     relative_path = source_header.relative_to(source_root)
     destination_file = target_directory / relative_path
+
+    # Ensure target directory exists
     destination_file.parent.mkdir(parents=True, exist_ok=True)
 
     try:
-        with open(source_header, 'r', encoding='utf-8', errors='replace') as source_file:
-            header_content = source_file.read()
-        cleaned_header = clean_private_section(header_content)
-        with open(destination_file, 'w', encoding='utf-8') as target_file:
-            target_file.write(cleaned_header)
-    except UnicodeDecodeError:
-        print(f"[-] Encoding error, skipping file: {source_header}")
+        # Direct binary copy preserving file metadata
+        shutil.copy2(source_header, destination_file)
+    except OSError as e:
+        print(f"[-] File copy error ({e.strerror}): {source_header}")
 
 
 def prepare_build_directory(build_directory: Path):
-    """Prepare build directory: clean old include folder"""
+    """Clean and recreate build directory"""
     if build_directory.exists():
         shutil.rmtree(build_directory, ignore_errors=True)
     build_directory.mkdir(parents=True, exist_ok=True)
@@ -50,41 +40,46 @@ def process_all_header_files(source_directory: Path, include_directory: Path) ->
 
 
 def zip_build_directory(build_directory: Path, output_zip: Path) -> int:
-    """Compress build directory to ZIP file (removing build directory level)"""
+    """Compress build directory to ZIP file (flattening directory structure)"""
     output_zip.parent.mkdir(parents=True, exist_ok=True)
-    print(f"[+] Compressing {build_directory} to {output_zip}...")
-    file_counter = 0
+    print(f"[+] Compressing directory: {build_directory}")
 
-    with zipfile.ZipFile(output_zip, 'w', zipfile.ZIP_DEFLATED) as archive:
-        for root_path, _, file_list in os.walk(build_directory):
-            for filename in file_list:
-                file_path = Path(root_path) / filename
-                relative_in_zip = file_path.relative_to(build_directory)
-                archive.write(file_path, arcname=relative_in_zip)
-                file_counter += 1
+    file_counter = 0
+    try:
+        with zipfile.ZipFile(output_zip, 'w', zipfile.ZIP_DEFLATED) as archive:
+            for root_path, _, file_list in os.walk(build_directory):
+                for filename in file_list:
+                    file_path = Path(root_path) / filename
+                    # Use relative path to maintain directory structure
+                    relative_in_zip = file_path.relative_to(build_directory)
+                    archive.write(file_path, arcname=relative_in_zip)
+                    file_counter += 1
+    except zipfile.BadZipFile as e:
+        print(f"[-] ZIP creation failed: {e}")
+        return 0
 
     print(f"[+] Compression complete! ZIP contains {file_counter} files.")
     return file_counter
 
 
 def main():
-    """Main processing flow"""
+    """Main processing flow with simplified header handling"""
     # Initialize paths
     base_directory = Path(__file__).parent.parent
     source_directory = base_directory / "src"
     include_output_dir = base_directory / "build/include"
     distribution_dir = base_directory / "dist"
 
-    # Phase 1: Process header files
+    # Phase 1: Copy header files
     prepare_build_directory(include_output_dir)
     processed_total = process_all_header_files(source_directory, include_output_dir)
-    print(f"[+] Header processing completed! Processed files: {processed_total}")
+    print(f"[+] Header files copied: {processed_total} files processed")
 
-    # Phase 2: Compress build directory
+    # Phase 2: Create distribution package
     build_root = base_directory / "build"
     final_zip_path = distribution_dir / "YanLib.zip"
     zipped_file_count = zip_build_directory(build_root, final_zip_path)
-    print(f"[+] Final ZIP created with {zipped_file_count} files")
+    print(f"[+] Distribution package created: {final_zip_path}")
 
 
 if __name__ == "__main__":

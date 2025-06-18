@@ -28,8 +28,11 @@
 #ifndef CONDVAR_H
 #define CONDVAR_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <synchapi.h>
+#include <minwinbase.h>
 #include <cstdint>
-
+#include "sync.h"
 namespace YanLib::sync {
     class condVarCS {
     private:
@@ -63,16 +66,7 @@ namespace YanLib::sync {
     };
 } // namespace YanLib::sync
 
-namespace sync {
-#ifndef CONDVARLOCKMODE
-#define CONDVARLOCKMODE
-
-    enum class CondVarLockMode : uint32_t {
-        Exclusive = 0,
-        Shared = CONDITION_VARIABLE_LOCKMODE_SHARED,
-    };
-#endif
-
+namespace YanLib::sync {
     class condVarSRW {
     private:
         CONDITION_VARIABLE condition_variable{};
@@ -110,5 +104,5 @@ namespace sync {
 
         void wake_all();
     };
-} // namespace sync
+} // namespace YanLib::sync
 #endif // CONDVAR_H

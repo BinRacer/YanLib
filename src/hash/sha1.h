@@ -28,6 +28,7 @@
 #ifndef SHA1_H
 #define SHA1_H
 #include <Windows.h>
+#include <wincrypt.h>
 #include <string>
 #include <vector>
 #include "helper/convert.h"

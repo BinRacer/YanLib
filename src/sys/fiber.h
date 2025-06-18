@@ -28,6 +28,8 @@
 #ifndef FIBER_H
 #define FIBER_H
 #include <Windows.h>
+#include <winnt.h>
+#include <WinBase.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"

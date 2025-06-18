@@ -35,141 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef STATUSSTYLE
-#define STATUSSTYLE
-    enum class StatusStyle : uint32_t {
-        SizeGrip = SBARS_SIZEGRIP,
-        ToolTips = SBARS_TOOLTIPS,
-    };
-    inline StatusStyle operator|(StatusStyle a, StatusStyle b) {
-        return static_cast<StatusStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef COMMONSTYLE
-#define COMMONSTYLE
-    enum class CommonStyle : uint32_t {
-        Top = CCS_TOP,
-        NoMoveY = CCS_NOMOVEY,
-        Bottom = CCS_BOTTOM,
-        NoResize = CCS_NORESIZE,
-        NoParentAlign = CCS_NOPARENTALIGN,
-        Adjustable = CCS_ADJUSTABLE,
-        NoDivider = CCS_NODIVIDER,
-        Vert = CCS_VERT,
-        Left = CCS_LEFT,
-        Right = CCS_RIGHT,
-        NoMoveX = CCS_NOMOVEX,
-    };
-    inline CommonStyle operator|(CommonStyle a, CommonStyle b) {
-        return static_cast<CommonStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-    inline StatusStyle operator|(StatusStyle a, CommonStyle b) {
-        return static_cast<StatusStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-    inline StatusStyle operator|(CommonStyle a, StatusStyle b) {
-        return static_cast<StatusStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#ifndef STATUSTEXTFLAG
-#define STATUSTEXTFLAG
-    enum class StatusTextFlag : uint32_t {
-        None = 0,
-        OwnerDraw = SBT_OWNERDRAW,
-        NoBorders = SBT_NOBORDERS,
-        PopOut = SBT_POPOUT,
-        RtlReading = SBT_RTLREADING,
-        NoTabParsing = SBT_NOTABPARSING,
-    };
-    inline StatusTextFlag operator|(StatusTextFlag a, StatusTextFlag b) {
-        return static_cast<StatusTextFlag>(static_cast<uint32_t>(a) |
-                                           static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef STATUSMESSAGE
-#define STATUSMESSAGE
-    enum class StatusMessage : uint32_t {
-        GetBorders = SB_GETBORDERS,
-        GetIcon = SB_GETICON,
-        GetParts = SB_GETPARTS,
-        GetRect = SB_GETRECT,
-        GetText = SB_GETTEXT,
-        GetTextLength = SB_GETTEXTLENGTH,
-        GetTipText = SB_GETTIPTEXT,
-        GetUnicodeFormat = SB_GETUNICODEFORMAT,
-        IsSimple = SB_ISSIMPLE,
-        SetBackgroundColor = SB_SETBKCOLOR,
-        SetIcon = SB_SETICON,
-        SetMinHeight = SB_SETMINHEIGHT,
-        SetParts = SB_SETPARTS,
-        SetText = SB_SETTEXT,
-        SetTipText = SB_SETTIPTEXT,
-        SetUnicodeFormat = SB_SETUNICODEFORMAT,
-        Simple = SB_SIMPLE,
-    };
-#endif
-#ifndef STATUSNOTIFY
-#define STATUSNOTIFY
-    enum class StatusNotify : uint32_t {
-        Click = NM_CLICK,
-        DoubleClick = NM_DBLCLK,
-        RightClick = NM_RCLICK,
-        RightDoubleClick = NM_RDBLCLK,
-        SimpleModeChange = SBN_SIMPLEMODECHANGE,
-    };
-#endif
     class status {
     private:
         std::vector<HWND> status_handles = {};
@@ -198,8 +78,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     StatusStyle style = StatusStyle::SizeGrip |
                             StatusStyle::ToolTips,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const char *status_name,
                     uintptr_t status_id,
@@ -211,8 +91,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     StatusStyle style = StatusStyle::SizeGrip |
                             StatusStyle::ToolTips,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const wchar_t *status_name,
                     uintptr_t status_id,
@@ -224,8 +104,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     StatusStyle style = StatusStyle::SizeGrip |
                             StatusStyle::ToolTips,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         bool destroy(HWND status_handle);
 

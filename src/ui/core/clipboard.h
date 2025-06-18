@@ -28,9 +28,10 @@
 #ifndef CLIPBOARD_H
 #define CLIPBOARD_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <windef.h>
 #include <string>
 #include <vector>
-
 namespace YanLib::ui::core {
     class clipboard {
     private:

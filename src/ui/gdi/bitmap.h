@@ -27,73 +27,16 @@
 /* clang-format on */
 #ifndef BITMAP_H
 #define BITMAP_H
-#include <utility>
 #include <Windows.h>
+#include <minwindef.h>
+#include <winnt.h>
+#include <wingdi.h>
+#include <windef.h>
+#include <utility>
 #include <vector>
+#include "gdi.h"
 #pragma comment(lib, "MSImg32.Lib")
 namespace YanLib::ui::gdi {
-#ifndef TERNARYRASTERCODE
-#define TERNARYRASTERCODE
-
-    enum class TernaryRasterCode : uint32_t {
-        SrcCopy = SRCCOPY,         /* dest = source                   */
-        SrcPaint = SRCPAINT,       /* dest = source OR dest           */
-        SrcAnd = SRCAND,           /* dest = source AND dest          */
-        SrcInvert = SRCINVERT,     /* dest = source XOR dest          */
-        SrcErase = SRCERASE,       /* dest = source AND (NOT dest )   */
-        NotSrcCopy = NOTSRCCOPY,   /* dest = (NOT source)             */
-        NotSrcErase = NOTSRCERASE, /* dest = (NOT src) AND (NOT dest) */
-        MergeCopy = MERGECOPY,     /* dest = (source AND pattern)     */
-        MergePaint = MERGEPAINT,   /* dest = (NOT source) OR dest     */
-        PatCopy = PATCOPY,         /* dest = pattern                  */
-        PatPaint = PATPAINT,       /* dest = DPSnoo                   */
-        PatInvert = PATINVERT,     /* dest = pattern XOR dest         */
-        DstInvert = DSTINVERT,     /* dest = (NOT dest)               */
-        Blackness = BLACKNESS,     /* dest = BLACK                    */
-        Whiteness = WHITENESS,     /* dest = WHITE                    */
-        NoMirrorBitmap = NOMIRRORBITMAP,
-        /* Do not Mirror the bitmap in this call */
-        CaptureBlt = CAPTUREBLT, /* Include layered windows */
-    };
-
-    inline TernaryRasterCode operator|(TernaryRasterCode a,
-                                       TernaryRasterCode b) {
-        return static_cast<TernaryRasterCode>(static_cast<uint32_t>(a) |
-                                              static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef GRADIENTMODE
-#define GRADIENTMODE
-
-    enum class GradientMode : uint32_t {
-        RectH = GRADIENT_FILL_RECT_H,
-        RectV = GRADIENT_FILL_RECT_V,
-        Triangle = GRADIENT_FILL_TRIANGLE,
-    };
-#endif
-#ifndef FLOODFILL
-#define FLOODFILL
-
-    enum class FloodFill : uint32_t {
-        Border = FLOODFILLBORDER,
-        Surface = FLOODFILLSURFACE,
-    };
-#endif
-#ifndef STRETCHMODE
-#define STRETCHMODE
-
-    enum class StretchMode : int32_t {
-        BlackOnWhite = BLACKONWHITE,
-        WhiteOnBlack = WHITEONBLACK,
-        ColorOnColor = COLORONCOLOR,
-        HalfTone = HALFTONE,
-        MaxStretchBltMode = MAXSTRETCHBLTMODE,
-        StretchAndScans = STRETCH_ANDSCANS,
-        StretchOrScans = STRETCH_ORSCANS,
-        StretchDeleteScans = STRETCH_DELETESCANS,
-        StretchHalfTone = STRETCH_HALFTONE,
-    };
-#endif
     class bitmap {
     public:
         bitmap(const bitmap &other) = delete;

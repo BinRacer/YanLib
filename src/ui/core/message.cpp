@@ -29,17 +29,16 @@
 #include "helper/convert.h"
 
 namespace YanLib::ui::core {
-    bool message::get(HWND window_handle,
-                      MSG *msg,
-                      uint32_t filter_min,
-                      uint32_t filter_max) {
+    int32_t message::get(HWND window_handle,
+                         MSG *msg,
+                         uint32_t filter_min,
+                         uint32_t filter_max) {
         const int32_t result =
                 GetMessageW(msg, window_handle, filter_min, filter_max);
         if (result == -1) {
             error_code = GetLastError();
-            return false;
         }
-        return true;
+        return result;
     }
 
     LPARAM message::get_extra_info() {

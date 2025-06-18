@@ -28,35 +28,13 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 #include <Windows.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef IMAGEFLAG
-#define IMAGEFLAG
-
-    enum class ImageFlag : uint32_t {
-        DefaultColor = LR_DEFAULTCOLOR,
-        MonoChrome = LR_MONOCHROME,
-        Color = LR_COLOR,
-        CopyReturnOrg = LR_COPYRETURNORG,
-        CopyDeleteOrg = LR_COPYDELETEORG,
-        LoadFromFile = LR_LOADFROMFILE,
-        LoadTransParent = LR_LOADTRANSPARENT,
-        DefaultSize = LR_DEFAULTSIZE,
-        VgaColor = LR_VGACOLOR,
-        LoadMap3dColors = LR_LOADMAP3DCOLORS,
-        CreateDibSection = LR_CREATEDIBSECTION,
-        CopyFromResource = LR_COPYFROMRESOURCE,
-        Shared = LR_SHARED,
-    };
-
-    inline ImageFlag operator|(ImageFlag a, ImageFlag b) {
-        return static_cast<ImageFlag>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
     class image {
     private:
         std::vector<HBITMAP> bitmap_handles = {};

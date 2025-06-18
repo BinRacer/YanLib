@@ -54,7 +54,7 @@ namespace YanLib::ui::components {
                          int32_t width,
                          int32_t height,
                          UpDownStyle style,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"msctls_updown32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -82,7 +82,7 @@ namespace YanLib::ui::components {
                          int32_t width,
                          int32_t height,
                          UpDownStyle style,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExA(0L, "msctls_updown32", up_down_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -110,7 +110,7 @@ namespace YanLib::ui::components {
                          int32_t width,
                          int32_t height,
                          UpDownStyle style,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"msctls_updown32", up_down_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

@@ -28,34 +28,12 @@
 #ifndef WINDOW_CLASS_H
 #define WINDOW_CLASS_H
 #include <Windows.h>
+#include <minwindef.h>
+#include <wingdi.h>
+#include <WinUser.h>
 #include <string>
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef CLASSSTYLE
-#define CLASSSTYLE
-
-    enum class ClassStyle : uint32_t {
-        VRedraw = CS_VREDRAW,
-        HRedraw = CS_HREDRAW,
-        DoubleClicks = CS_DBLCLKS,
-        OwnDC = CS_OWNDC,
-        ClassDC = CS_CLASSDC,
-        ParentDC = CS_PARENTDC,
-        NoClose = CS_NOCLOSE,
-        SaveBits = CS_SAVEBITS,
-        ByteAlignClient = CS_BYTEALIGNCLIENT,
-        ByteAlignWindow = CS_BYTEALIGNWINDOW,
-        GlobalClass = CS_GLOBALCLASS,
-        Ime = CS_IME,
-        DropShadow = CS_DROPSHADOW,
-    };
-
-    inline ClassStyle operator|(ClassStyle a, ClassStyle b) {
-        return static_cast<ClassStyle>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-
     class window_class {
     private:
         uint32_t error_code = 0;

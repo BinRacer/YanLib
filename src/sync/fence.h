@@ -28,6 +28,7 @@
 #ifndef FENCE_H
 #define FENCE_H
 #include <Windows.h>
+#include <minwinbase.h>
 #include <cstdint>
 
 namespace YanLib::sync {

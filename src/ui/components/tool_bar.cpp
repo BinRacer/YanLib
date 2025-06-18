@@ -53,7 +53,7 @@ namespace YanLib::ui::components {
                           int32_t width,
                           int32_t height,
                           ToolBarStyle style,
-                          WindowStyle window_style) {
+                          core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"ToolbarWindow32", nullptr,
                 static_cast<uint32_t>(window_style) |
@@ -78,7 +78,7 @@ namespace YanLib::ui::components {
                           int32_t width,
                           int32_t height,
                           ToolBarStyle style,
-                          WindowStyle window_style) {
+                          core::WindowStyle window_style) {
         HWND result = CreateWindowExA(
                 0L, "ToolbarWindow32", tool_bar_name,
                 static_cast<uint32_t>(window_style) |
@@ -103,7 +103,7 @@ namespace YanLib::ui::components {
                           int32_t width,
                           int32_t height,
                           ToolBarStyle style,
-                          WindowStyle window_style) {
+                          core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"ToolbarWindow32", tool_bar_name,
                 static_cast<uint32_t>(window_style) |
@@ -728,10 +728,10 @@ namespace YanLib::ui::components {
         return SendMessageW(tool_bar_handle, TB_SETCMDID, index, command_id);
     }
 
-    TextFormat tool_bar::set_draw_text_flag(HWND tool_bar_handle,
-                                            TextFormat format,
-                                            TextFormat mask) {
-        return static_cast<TextFormat>(
+    gdi::TextFormat tool_bar::set_draw_text_flag(HWND tool_bar_handle,
+                                            gdi::TextFormat format,
+                                            gdi::TextFormat mask) {
+        return static_cast<gdi::TextFormat>(
                 SendMessageW(tool_bar_handle, TB_SETDRAWTEXTFLAGS,
                              static_cast<uint32_t>(mask),
                              static_cast<uint32_t>(format)));

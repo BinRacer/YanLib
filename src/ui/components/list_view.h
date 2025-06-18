@@ -35,405 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LISTVIEWSTYLE
-#define LISTVIEWSTYLE
-    enum class ListViewStyle : uint32_t {
-        Icon = LVS_ICON,
-        Report = LVS_REPORT,
-        SmallIcon = LVS_SMALLICON,
-        List = LVS_LIST,
-        TypeMask = LVS_TYPEMASK,
-        SingleSel = LVS_SINGLESEL,
-        ShowSelAlways = LVS_SHOWSELALWAYS,
-        SortAscending = LVS_SORTASCENDING,
-        SortDescending = LVS_SORTDESCENDING,
-        ShareImageLists = LVS_SHAREIMAGELISTS,
-        NoLabelWrap = LVS_NOLABELWRAP,
-        AutoArrange = LVS_AUTOARRANGE,
-        EditLabels = LVS_EDITLABELS,
-        OwnerData = LVS_OWNERDATA,
-        NoScroll = LVS_NOSCROLL,
-        TypeStyleMask = LVS_TYPESTYLEMASK,
-        AlignTop = LVS_ALIGNTOP,
-        AlignLeft = LVS_ALIGNLEFT,
-        AlignMask = LVS_ALIGNMASK,
-        OwnerDrawFixed = LVS_OWNERDRAWFIXED,
-        NoColumnHeader = LVS_NOCOLUMNHEADER,
-        NoSortHeader = LVS_NOSORTHEADER
-    };
-    inline ListViewStyle operator|(ListViewStyle a, ListViewStyle b) {
-        return static_cast<ListViewStyle>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LISTVIEWEXTENDSTYLE
-#define LISTVIEWEXTENDSTYLE
-    enum class ListViewExtendStyle : uint32_t {
-        GridLines = LVS_EX_GRIDLINES,
-        SubItemImages = LVS_EX_SUBITEMIMAGES,
-        CheckBoxes = LVS_EX_CHECKBOXES,
-        TrackSelect = LVS_EX_TRACKSELECT,
-        HeaderDragDrop = LVS_EX_HEADERDRAGDROP,
-        FullRowSelect = LVS_EX_FULLROWSELECT,
-        OneClickActivate = LVS_EX_ONECLICKACTIVATE,
-        TwoClickActivate = LVS_EX_TWOCLICKACTIVATE,
-        FlatScrollBar = LVS_EX_FLATSB,
-        Regional = LVS_EX_REGIONAL,
-        InfoTip = LVS_EX_INFOTIP,
-        UnderlineHot = LVS_EX_UNDERLINEHOT,
-        UnderlineCold = LVS_EX_UNDERLINECOLD,
-        MultiWorkAreas = LVS_EX_MULTIWORKAREAS,
-        LabelTip = LVS_EX_LABELTIP,
-        BorderSelect = LVS_EX_BORDERSELECT,
-        DoubleBuffer = LVS_EX_DOUBLEBUFFER,
-        HideLabels = LVS_EX_HIDELABELS,
-        SingleRow = LVS_EX_SINGLEROW,
-        SnapToGrid = LVS_EX_SNAPTOGRID,
-        SimpleSelect = LVS_EX_SIMPLESELECT,
-        JustifyColumns = LVS_EX_JUSTIFYCOLUMNS,
-        TransparentBackground = LVS_EX_TRANSPARENTBKGND,
-        TransparentShadowText = LVS_EX_TRANSPARENTSHADOWTEXT,
-        AutoAutoArrange = LVS_EX_AUTOAUTOARRANGE,
-        HeaderInAllViews = LVS_EX_HEADERINALLVIEWS,
-        AutoCheckSelect = LVS_EX_AUTOCHECKSELECT,
-        AutoSizeColumns = LVS_EX_AUTOSIZECOLUMNS,
-        ColumnSnapPoints = LVS_EX_COLUMNSNAPPOINTS,
-        ColumnOverflow = LVS_EX_COLUMNOVERFLOW
-    };
-    inline ListViewExtendStyle operator|(ListViewExtendStyle a,
-                                         ListViewExtendStyle b) {
-        return static_cast<ListViewExtendStyle>(static_cast<uint32_t>(a) |
-                                                static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LVALIGNSTYLE
-#define LVALIGNSTYLE
-    enum class LVAlignStyle : uint32_t {
-        Default = LVA_DEFAULT,
-        Left = LVA_ALIGNLEFT,
-        Top = LVA_ALIGNTOP,
-        SnapToGrid = LVA_SNAPTOGRID,
-    };
-#endif
-#ifndef LVITEMSTATE
-#define LVITEMSTATE
-    enum class LVItemState : uint32_t {
-        Focused = LVIS_FOCUSED,
-        Selected = LVIS_SELECTED,
-        Cut = LVIS_CUT,
-        DropHilited = LVIS_DROPHILITED,
-        Glow = LVIS_GLOW,
-        Activating = LVIS_ACTIVATING,
-        OverlayMask = LVIS_OVERLAYMASK,
-        StateImageMask = LVIS_STATEIMAGEMASK,
-    };
-    inline LVItemState operator|(LVItemState a, LVItemState b) {
-        return static_cast<LVItemState>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef GROUPRECTTYPE
-#define GROUPRECTTYPE
-    enum class GroupRectType : uint32_t {
-        Group = LVGGR_GROUP,
-        Header = LVGGR_HEADER,
-        Label = LVGGR_LABEL,
-        SubSetLink = LVGGR_SUBSETLINK,
-    };
-#endif
-#ifndef GROUPSTATE
-#define GROUPSTATE
-    enum class GroupState : uint32_t {
-        Normal = LVGS_NORMAL,
-        Collapsed = LVGS_COLLAPSED,
-        Hidden = LVGS_HIDDEN,
-        NoHeader = LVGS_NOHEADER,
-        Collapsible = LVGS_COLLAPSIBLE,
-        Focused = LVGS_FOCUSED,
-        Selected = LVGS_SELECTED,
-        Subseted = LVGS_SUBSETED,
-        SubsetLinkFocused = LVGS_SUBSETLINKFOCUSED,
-    };
-    inline GroupState operator|(GroupState a, GroupState b) {
-        return static_cast<GroupState>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LVILSTYLE
-#define LVILSTYLE
-    enum class LVILStyle : int32_t {
-        Normal = LVSIL_NORMAL,
-        Small = LVSIL_SMALL,
-        State = LVSIL_STATE,
-        GroupHeader = LVSIL_GROUPHEADER,
-    };
-#endif
-#ifndef LVICFLAG
-#define LVICFLAG
-    enum class LVICFlag : uint32_t {
-        NoInvalidateAll = LVSICF_NOINVALIDATEALL,
-        NoScroll = LVSICF_NOSCROLL,
-    };
-    inline LVICFlag operator|(LVICFlag a, LVICFlag b) {
-        return static_cast<LVICFlag>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LVIRCODE
-#define LVIRCODE
-    enum class LVIRCode : int32_t {
-        Bounds = LVIR_BOUNDS,
-        Icon = LVIR_ICON,
-        Label = LVIR_LABEL,
-        SelectBounds = LVIR_SELECTBOUNDS,
-    };
-#endif
-#ifndef LVNIFLAG
-#define LVNIFLAG
-    enum class LVNIFlag : uint32_t {
-        All = LVNI_ALL,
-        Focused = LVNI_FOCUSED,
-        Selected = LVNI_SELECTED,
-        Cut = LVNI_CUT,
-        DropHilited = LVNI_DROPHILITED,
-        StateMask = LVNI_STATEMASK,
-        VisibleOrder = LVNI_VISIBLEORDER,
-        Previous = LVNI_PREVIOUS,
-        VisibleOnly = LVNI_VISIBLEONLY,
-        SameGroupOnly = LVNI_SAMEGROUPONLY,
-        Above = LVNI_ABOVE,
-        Below = LVNI_BELOW,
-        ToLeft = LVNI_TOLEFT,
-        ToRight = LVNI_TORIGHT,
-        DirectionMask = LVNI_DIRECTIONMASK,
-    };
-    inline LVNIFlag operator|(LVNIFlag a, LVNIFlag b) {
-        return static_cast<LVNIFlag>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LISTVIEMESSAGE
-#define LISTVIEMESSAGE
-    enum class ListViewMessage : uint32_t {
-        ApproximateViewRect = LVM_APPROXIMATEVIEWRECT,
-        Arrange = LVM_ARRANGE,
-        CancelEditLabel = LVM_CANCELEDITLABEL,
-        CreateDragImage = LVM_CREATEDRAGIMAGE,
-        DeleteAllItems = LVM_DELETEALLITEMS,
-        DeleteColumn = LVM_DELETECOLUMN,
-        DeleteItem = LVM_DELETEITEM,
-        EditLabel = LVM_EDITLABEL,
-        EnableGroupView = LVM_ENABLEGROUPVIEW,
-        EnsureVisible = LVM_ENSUREVISIBLE,
-        FindItem = LVM_FINDITEM,
-        GetBackgroundColor = LVM_GETBKCOLOR,
-        GetBackgroundImage = LVM_GETBKIMAGE,
-        GetCallbackMask = LVM_GETCALLBACKMASK,
-        GetColumn = LVM_GETCOLUMN,
-        GetColumnOrderArray = LVM_GETCOLUMNORDERARRAY,
-        GetColumnWidth = LVM_GETCOLUMNWIDTH,
-        GetCountPerPage = LVM_GETCOUNTPERPAGE,
-        GetEditControl = LVM_GETEDITCONTROL,
-        GetEmptyText = LVM_GETEMPTYTEXT,
-        GetExtendedListViewStyle = LVM_GETEXTENDEDLISTVIEWSTYLE,
-        GetFocusedGroup = LVM_GETFOCUSEDGROUP,
-        GetFooterInfo = LVM_GETFOOTERINFO,
-        GetFooterItem = LVM_GETFOOTERITEM,
-        GetFooterItemRect = LVM_GETFOOTERITEMRECT,
-        GetFooterRect = LVM_GETFOOTERRECT,
-        GetGroupCount = LVM_GETGROUPCOUNT,
-        GetGroupInfo = LVM_GETGROUPINFO,
-        GetGroupInfoByIndex = LVM_GETGROUPINFOBYINDEX,
-        GetGroupMetrics = LVM_GETGROUPMETRICS,
-        GetGroupRect = LVM_GETGROUPRECT,
-        GetGroupState = LVM_GETGROUPSTATE,
-        GetHeader = LVM_GETHEADER,
-        GetHotCursor = LVM_GETHOTCURSOR,
-        GetHotItem = LVM_GETHOTITEM,
-        GetHoverTime = LVM_GETHOVERTIME,
-        GetImageList = LVM_GETIMAGELIST,
-        GetInsertMark = LVM_GETINSERTMARK,
-        GetInsertMarkColor = LVM_GETINSERTMARKCOLOR,
-        GetInsertMarkRect = LVM_GETINSERTMARKRECT,
-        GetISearchString = LVM_GETISEARCHSTRING,
-        GetItem = LVM_GETITEM,
-        GetItemCount = LVM_GETITEMCOUNT,
-        GetItemIndexRect = LVM_GETITEMINDEXRECT,
-        GetItemPosition = LVM_GETITEMPOSITION,
-        GetItemRect = LVM_GETITEMRECT,
-        GetItemSpacing = LVM_GETITEMSPACING,
-        GetItemState = LVM_GETITEMSTATE,
-        GetItemText = LVM_GETITEMTEXT,
-        GetNextItem = LVM_GETNEXTITEM,
-        GetNextItemIndex = LVM_GETNEXTITEMINDEX,
-        GetNumberOfWorkAreas = LVM_GETNUMBEROFWORKAREAS,
-        GetOrigin = LVM_GETORIGIN,
-        GetOutlineColor = LVM_GETOUTLINECOLOR,
-        GetSelectedColumn = LVM_GETSELECTEDCOLUMN,
-        GetSelectedCount = LVM_GETSELECTEDCOUNT,
-        GetSelectionMark = LVM_GETSELECTIONMARK,
-        GetStringWidth = LVM_GETSTRINGWIDTH,
-        GetSubItemRect = LVM_GETSUBITEMRECT,
-        GetTextBackgroundColor = LVM_GETTEXTBKCOLOR,
-        GetTextColor = LVM_GETTEXTCOLOR,
-        GetTileInfo = LVM_GETTILEINFO,
-        GetTileViewInfo = LVM_GETTILEVIEWINFO,
-        GetToolTips = LVM_GETTOOLTIPS,
-        GetTopIndex = LVM_GETTOPINDEX,
-        GetUnicodeFormat = LVM_GETUNICODEFORMAT,
-        GetView = LVM_GETVIEW,
-        GetViewRect = LVM_GETVIEWRECT,
-        GetWorkAreas = LVM_GETWORKAREAS,
-        HasGroup = LVM_HASGROUP,
-        HitTest = LVM_HITTEST,
-        InsertColumn = LVM_INSERTCOLUMN,
-        InsertGroup = LVM_INSERTGROUP,
-        InsertGroupSorted = LVM_INSERTGROUPSORTED,
-        InsertItem = LVM_INSERTITEM,
-        InsertMarkHitTest = LVM_INSERTMARKHITTEST,
-        IsGroupViewEnabled = LVM_ISGROUPVIEWENABLED,
-        IsItemVisible = LVM_ISITEMVISIBLE,
-        MapIdToIndex = LVM_MAPIDTOINDEX,
-        MapIndexToId = LVM_MAPINDEXTOID,
-        MoveGroup = LVM_MOVEGROUP,
-        MoveItemToGroup = LVM_MOVEITEMTOGROUP,
-        RedrawItems = LVM_REDRAWITEMS,
-        RemoveAllGroups = LVM_REMOVEALLGROUPS,
-        RemoveGroup = LVM_REMOVEGROUP,
-        Scroll = LVM_SCROLL,
-        SetBackgroundColor = LVM_SETBKCOLOR,
-        SetBackgroundImage = LVM_SETBKIMAGE,
-        SetCallbackMask = LVM_SETCALLBACKMASK,
-        SetColumn = LVM_SETCOLUMN,
-        SetColumnOrderArray = LVM_SETCOLUMNORDERARRAY,
-        SetColumnWidth = LVM_SETCOLUMNWIDTH,
-        SetExtendedListViewStyle = LVM_SETEXTENDEDLISTVIEWSTYLE,
-        SetGroupInfo = LVM_SETGROUPINFO,
-        SetGroupMetrics = LVM_SETGROUPMETRICS,
-        SetHotCursor = LVM_SETHOTCURSOR,
-        SetHotItem = LVM_SETHOTITEM,
-        SetHoverTime = LVM_SETHOVERTIME,
-        SetIconSpacing = LVM_SETICONSPACING,
-        SetImageList = LVM_SETIMAGELIST,
-        SetInfoTip = LVM_SETINFOTIP,
-        SetInsertMark = LVM_SETINSERTMARK,
-        SetInsertMarkColor = LVM_SETINSERTMARKCOLOR,
-        SetItem = LVM_SETITEM,
-        SetItemCount = LVM_SETITEMCOUNT,
-        SetItemIndexState = LVM_SETITEMINDEXSTATE,
-        SetItemPosition = LVM_SETITEMPOSITION,
-        SetItemPosition32 = LVM_SETITEMPOSITION32,
-        SetItemState = LVM_SETITEMSTATE,
-        SetItemText = LVM_SETITEMTEXT,
-        SetOutlineColor = LVM_SETOUTLINECOLOR,
-        SetSelectedColumn = LVM_SETSELECTEDCOLUMN,
-        SetSelectionMark = LVM_SETSELECTIONMARK,
-        SetTextBackgroundColor = LVM_SETTEXTBKCOLOR,
-        SetTextColor = LVM_SETTEXTCOLOR,
-        SetTileInfo = LVM_SETTILEINFO,
-        SetTileViewInfo = LVM_SETTILEVIEWINFO,
-        SetToolTips = LVM_SETTOOLTIPS,
-        SetUnicodeFormat = LVM_SETUNICODEFORMAT,
-        SetView = LVM_SETVIEW,
-        SetWorkAreas = LVM_SETWORKAREAS,
-        SortGroups = LVM_SORTGROUPS,
-        SortItems = LVM_SORTITEMS,
-        SortItemsEx = LVM_SORTITEMSEX,
-        SubItemHitTest = LVM_SUBITEMHITTEST,
-        Update = LVM_UPDATE
-    };
-#endif
-#ifndef LISTVIENOTIFY
-#define LISTVIENOTIFY
-    enum class ListViewNotify : uint32_t {
-        BeginDrag = LVN_BEGINDRAG,
-        BeginLabelEdit = LVN_BEGINLABELEDIT,
-        BeginRightDrag = LVN_BEGINRDRAG,
-        BeginScroll = LVN_BEGINSCROLL,
-        ColumnClick = LVN_COLUMNCLICK,
-        ColumnDropDown = LVN_COLUMNDROPDOWN,
-        ColumnOverflowClick = LVN_COLUMNOVERFLOWCLICK,
-        DeleteAllItems = LVN_DELETEALLITEMS,
-        DeleteItem = LVN_DELETEITEM,
-        EndLabelEdit = LVN_ENDLABELEDIT,
-        EndScroll = LVN_ENDSCROLL,
-        GetDispInfo = LVN_GETDISPINFO,
-        GetEmptyMarkup = LVN_GETEMPTYMARKUP,
-        GetInfoTip = LVN_GETINFOTIP,
-        HotTrack = LVN_HOTTRACK,
-        IncrementalSearch = LVN_INCREMENTALSEARCH,
-        InsertItem = LVN_INSERTITEM,
-        ItemActivate = LVN_ITEMACTIVATE,
-        ItemChanged = LVN_ITEMCHANGED,
-        ItemChanging = LVN_ITEMCHANGING,
-        KeyDown = LVN_KEYDOWN,
-        LinkClick = LVN_LINKCLICK,
-        MarqueeBegin = LVN_MARQUEEBEGIN,
-        OdCacheHint = LVN_ODCACHEHINT,
-        OdFindItem = LVN_ODFINDITEM,
-        OdStateChanged = LVN_ODSTATECHANGED,
-        SetDispInfo = LVN_SETDISPINFO,
-        Click = NM_CLICK,
-        CustomDraw = NM_CUSTOMDRAW,
-        DoubleClick = NM_DBLCLK,
-        Hover = NM_HOVER,
-        KillFocus = NM_KILLFOCUS,
-        RightClick = NM_RCLICK,
-        RightDoubleClick = NM_RDBLCLK,
-        ReleasedCapture = NM_RELEASEDCAPTURE,
-        Return = NM_RETURN,
-        SetFocus = NM_SETFOCUS
-    };
-#endif
     class list_view {
     private:
         std::vector<HWND> list_view_handles = {};
@@ -462,8 +78,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     ListViewStyle style = ListViewStyle::Report |
                             ListViewStyle::EditLabels,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const char *list_view_name,
                     uintptr_t list_view_id,
@@ -475,8 +91,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     ListViewStyle style = ListViewStyle::Report |
                             ListViewStyle::EditLabels,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const wchar_t *list_view_name,
                     uintptr_t list_view_id,
@@ -488,8 +104,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     ListViewStyle style = ListViewStyle::Report |
                             ListViewStyle::EditLabels,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         bool destroy(HWND list_view_handle);
 

@@ -28,7 +28,7 @@
 #ifndef WINDOW_BEHAVIOR_H
 #define WINDOW_BEHAVIOR_H
 #include <Windows.h>
-
+#include <windef.h>
 namespace YanLib::ui::core {
     class window_behavior {
     public:

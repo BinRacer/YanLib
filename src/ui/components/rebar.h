@@ -35,169 +35,23 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <Uxtheme.h>
+#include <oleidl.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef REBARSTYLE
-#define REBARSTYLE
-    enum class RebarStyle : uint32_t {
-        ToolTips = RBS_TOOLTIPS,
-        VarHeight = RBS_VARHEIGHT,
-        BandBorders = RBS_BANDBORDERS,
-        FixedOrder = RBS_FIXEDORDER,
-        RegisterDrop = RBS_REGISTERDROP,
-        AutoSize = RBS_AUTOSIZE,
-        VerticalGripper = RBS_VERTICALGRIPPER,
-        DoubleClickToggle = RBS_DBLCLKTOGGLE,
-    };
-    inline RebarStyle operator|(RebarStyle a, RebarStyle b) {
-        return static_cast<RebarStyle>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef COMMONSTYLE
-#define COMMONSTYLE
-    enum class CommonStyle : uint32_t {
-        Top = CCS_TOP,
-        NoMoveY = CCS_NOMOVEY,
-        Bottom = CCS_BOTTOM,
-        NoResize = CCS_NORESIZE,
-        NoParentAlign = CCS_NOPARENTALIGN,
-        Adjustable = CCS_ADJUSTABLE,
-        NoDivider = CCS_NODIVIDER,
-        Vert = CCS_VERT,
-        Left = CCS_LEFT,
-        Right = CCS_RIGHT,
-        NoMoveX = CCS_NOMOVEX,
-    };
-    inline CommonStyle operator|(CommonStyle a, CommonStyle b) {
-        return static_cast<CommonStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-    inline RebarStyle operator|(RebarStyle a, CommonStyle b) {
-        return static_cast<RebarStyle>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-    inline RebarStyle operator|(CommonStyle a, RebarStyle b) {
-        return static_cast<RebarStyle>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#ifndef REBARMESSAGE
-#define REBARMESSAGE
-    enum class RebarMessage : uint32_t {
-        BeginDrag = RB_BEGINDRAG,
-        DeleteBand = RB_DELETEBAND,
-        DragMove = RB_DRAGMOVE,
-        EndDrag = RB_ENDDRAG,
-        GetBandBorders = RB_GETBANDBORDERS,
-        GetBandCount = RB_GETBANDCOUNT,
-        GetBandInfo = RB_GETBANDINFO,
-        GetBandMargins = RB_GETBANDMARGINS,
-        GetBarHeight = RB_GETBARHEIGHT,
-        GetBarInfo = RB_GETBARINFO,
-        GetBackgroundColor = RB_GETBKCOLOR,
-        GetColorScheme = RB_GETCOLORSCHEME,
-        GetDropTarget = RB_GETDROPTARGET,
-        GetExtendedStyle = RB_GETEXTENDEDSTYLE,
-        GetPalette = RB_GETPALETTE,
-        GetRect = RB_GETRECT,
-        GetRowCount = RB_GETROWCOUNT,
-        GetRowHeight = RB_GETROWHEIGHT,
-        GetTextColor = RB_GETTEXTCOLOR,
-        GetToolTips = RB_GETTOOLTIPS,
-        GetUnicodeFormat = RB_GETUNICODEFORMAT,
-        HitTest = RB_HITTEST,
-        IdToIndex = RB_IDTOINDEX,
-        InsertBand = RB_INSERTBAND,
-        MaximizeBand = RB_MAXIMIZEBAND,
-        MinimizeBand = RB_MINIMIZEBAND,
-        MoveBand = RB_MOVEBAND,
-        PushChevron = RB_PUSHCHEVRON,
-        SetBandInfo = RB_SETBANDINFO,
-        SetBandWidth = RB_SETBANDWIDTH,
-        SetBarInfo = RB_SETBARINFO,
-        SetBackgroundColor = RB_SETBKCOLOR,
-        SetColorScheme = RB_SETCOLORSCHEME,
-        SetExtendedStyle = RB_SETEXTENDEDSTYLE,
-        SetPalette = RB_SETPALETTE,
-        SetParent = RB_SETPARENT,
-        SetTextColor = RB_SETTEXTCOLOR,
-        SetToolTips = RB_SETTOOLTIPS,
-        SetUnicodeFormat = RB_SETUNICODEFORMAT,
-        SetWindowTheme = RB_SETWINDOWTHEME,
-        ShowBand = RB_SHOWBAND,
-        SizeToRect = RB_SIZETORECT
-    };
-#endif
-#ifndef REBARNOTIFY
-#define REBARNOTIFY
-    enum class RebarNotify : uint32_t {
-        CustomDraw = NM_CUSTOMDRAW,
-        NcHitTest = NM_NCHITTEST,
-        ReleasedCapture = NM_RELEASEDCAPTURE,
-        AutoBreak = RBN_AUTOBREAK,
-        AutoSize = RBN_AUTOSIZE,
-        BeginDrag = RBN_BEGINDRAG,
-        ChevronPushed = RBN_CHEVRONPUSHED,
-        ChildSize = RBN_CHILDSIZE,
-        DeletedBand = RBN_DELETEDBAND,
-        DeletingBand = RBN_DELETINGBAND,
-        EndDrag = RBN_ENDDRAG,
-        GetObj = RBN_GETOBJECT,
-        HeightChange = RBN_HEIGHTCHANGE,
-        LayoutChanged = RBN_LAYOUTCHANGED,
-        MinMax = RBN_MINMAX,
-        SplitterDrag = RBN_SPLITTERDRAG
-    };
-#endif
     class rebar {
     private:
         std::vector<HWND> rebar_handles = {};
@@ -226,9 +80,9 @@ namespace YanLib::ui::components {
                     RebarStyle style = RebarStyle::VarHeight |
                             RebarStyle::BandBorders | RebarStyle::AutoSize |
                             CommonStyle::Adjustable,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::ClipSiblings |
-                            WindowStyle::ClipChildren);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::ClipSiblings |
+                            core::WindowStyle::ClipChildren);
 
         HWND create(const char *rebar_name,
                     HWND parent_window_handle,
@@ -240,9 +94,9 @@ namespace YanLib::ui::components {
                     RebarStyle style = RebarStyle::VarHeight |
                             RebarStyle::BandBorders | RebarStyle::AutoSize |
                             CommonStyle::Adjustable,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::ClipSiblings |
-                            WindowStyle::ClipChildren);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::ClipSiblings |
+                            core::WindowStyle::ClipChildren);
 
         HWND create(const wchar_t *rebar_name,
                     HWND parent_window_handle,
@@ -254,9 +108,9 @@ namespace YanLib::ui::components {
                     RebarStyle style = RebarStyle::VarHeight |
                             RebarStyle::BandBorders | RebarStyle::AutoSize |
                             CommonStyle::Adjustable,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::ClipSiblings |
-                            WindowStyle::ClipChildren);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::ClipSiblings |
+                            core::WindowStyle::ClipChildren);
 
         bool destroy(HWND rebar_handle);
 

@@ -27,41 +27,14 @@
 /* clang-format on */
 #ifndef REGION_H
 #define REGION_H
-#include <utility>
 #include <Windows.h>
+#include <wingdi.h>
+#include <windef.h>
+#include <minwindef.h>
+#include <utility>
 #include <vector>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef FILLMODE
-#define FILLMODE
-
-    enum class FillMode : int32_t {
-        Error = 0,
-        Alternate = ALTERNATE,
-        Winding = WINDING,
-    };
-#endif
-#ifndef REGIONSTYLE
-#define REGIONSTYLE
-
-    enum class RegionStyle : int32_t {
-        And = RGN_AND,
-        Or = RGN_OR,
-        Xor = RGN_XOR,
-        Diff = RGN_DIFF,
-        Copy = RGN_COPY,
-    };
-#endif
-#ifndef REGIONFLAG
-#define REGIONFLAG
-
-    enum class RegionFlag : int32_t {
-        Error = ERROR,
-        NullRegion = NULLREGION,
-        SimpleRegion = SIMPLEREGION,
-        ComplexRegion = COMPLEXREGION,
-    };
-#endif
     class region {
     public:
         region(const region &other) = delete;

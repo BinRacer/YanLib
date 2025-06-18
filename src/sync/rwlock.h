@@ -28,7 +28,7 @@
 #ifndef RWLOCK_H
 #define RWLOCK_H
 #include <Windows.h>
-
+#include <synchapi.h>
 namespace YanLib::sync {
     class rwlock {
     private:

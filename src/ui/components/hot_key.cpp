@@ -53,7 +53,7 @@ namespace YanLib::ui::components {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"msctls_hotkey32", nullptr,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -77,7 +77,7 @@ namespace YanLib::ui::components {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExA(
                 0L, "msctls_hotkey32", hot_key_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -101,7 +101,7 @@ namespace YanLib::ui::components {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"msctls_hotkey32", hot_key_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -135,16 +135,16 @@ namespace YanLib::ui::components {
         return true;
     }
 
-    std::pair<ModifiersKey, VirtualKey>
+    std::pair<HotKeyModifiersKey, HotKeyVirtualKey>
     hot_key::get_hotkey(HWND hot_key_handle) {
         const auto hot_key = static_cast<uint16_t>(
                 SendMessageW(hot_key_handle, HKM_GETHOTKEY, 0, 0));
-        return std::make_pair(static_cast<ModifiersKey>(LOBYTE(hot_key)),
-                              static_cast<VirtualKey>(HIBYTE(hot_key)));
+        return std::make_pair(static_cast<HotKeyModifiersKey>(LOBYTE(hot_key)),
+                              static_cast<HotKeyVirtualKey>(HIBYTE(hot_key)));
     }
 
     void
-    hot_key::set_hotkey(HWND hot_key_handle, ModifiersKey mod, VirtualKey vk) {
+    hot_key::set_hotkey(HWND hot_key_handle, HotKeyModifiersKey mod, HotKeyVirtualKey vk) {
         const uint16_t hot_key =
                 static_cast<uint8_t>(mod) | (static_cast<uint8_t>(vk) << 8);
         SendMessageW(hot_key_handle, HKM_SETHOTKEY, hot_key, 0);
@@ -153,7 +153,7 @@ namespace YanLib::ui::components {
     void hot_key::set_rules(
             HWND hot_key_handle,
             RuleFlag rule,
-            std::vector<std::pair<ModifiersKey, VirtualKey>> &hot_key) {
+            std::vector<std::pair<HotKeyModifiersKey, HotKeyVirtualKey>> &hot_key) {
         std::vector<uint32_t> temp = {};
         temp.reserve(hot_key.size());
         for (const auto &[mod, vk] : hot_key) {

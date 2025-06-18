@@ -28,6 +28,9 @@
 #ifndef NOTIFY_H
 #define NOTIFY_H
 #include <Windows.h>
+#include <guiddef.h>
+#include <windef.h>
+#include <WinUser.h>
 #include <Powrprof.h>
 #include <string>
 #include <vector>

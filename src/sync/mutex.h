@@ -28,27 +28,12 @@
 #ifndef MUTEX_H
 #define MUTEX_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <winnt.h>
+#include <minwinbase.h>
 #include <string>
-
+#include "sync.h"
 namespace YanLib::sync {
-#ifndef MUTEXACCESS
-#define MUTEXACCESS
-
-    enum class MutexAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = MUTEX_ALL_ACCESS,
-        Modify = MUTEX_MODIFY_STATE,
-    };
-
-    inline MutexAccess operator|(MutexAccess a, MutexAccess b) {
-        return static_cast<MutexAccess>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
     class mutex {
     private:
         HANDLE mutex_handle;

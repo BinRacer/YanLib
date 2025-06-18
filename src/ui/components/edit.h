@@ -34,148 +34,23 @@
 #define _UNICODE
 #endif
 #include <Windows.h>
+#include <WinUser.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <vector>
 #include <string>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef EDITSTYLE
-#define EDITSTYLE
-    enum class EditStyle : uint32_t {
-        Left = ES_LEFT,
-        Center = ES_CENTER,
-        Right = ES_RIGHT,
-        Multiline = ES_MULTILINE,
-        Uppercase = ES_UPPERCASE,
-        Lowercase = ES_LOWERCASE,
-        Password = ES_PASSWORD,
-        AutoVScroll = ES_AUTOVSCROLL,
-        AutoHScroll = ES_AUTOHSCROLL,
-        NoHideSel = ES_NOHIDESEL,
-        OemConvert = ES_OEMCONVERT,
-        ReadOnly = ES_READONLY,
-        WantReturn = ES_WANTRETURN,
-        Number = ES_NUMBER
-    };
-    inline EditStyle operator|(EditStyle a, EditStyle b) {
-        return static_cast<EditStyle>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef EDITMESSAGE
-#define EDITMESSAGE
-    enum class EditMessage : uint32_t {
-        CanUndo = EM_CANUNDO,
-        CharFromPos = EM_CHARFROMPOS,
-        EmptyUndoBuffer = EM_EMPTYUNDOBUFFER,
-        FmtLines = EM_FMTLINES,
-        GetCueBanner = EM_GETCUEBANNER,
-        GetFirstVisibleLine = EM_GETFIRSTVISIBLELINE,
-        GetHandle = EM_GETHANDLE,
-        GetHiLite = EM_GETHILITE,
-        GetImeStatus = EM_GETIMESTATUS,
-        GetLimitText = EM_GETLIMITTEXT,
-        GetLine = EM_GETLINE,
-        GetLineCount = EM_GETLINECOUNT,
-        GetMargins = EM_GETMARGINS,
-        GetModify = EM_GETMODIFY,
-        GetPasswordChar = EM_GETPASSWORDCHAR,
-        GetRect = EM_GETRECT,
-        GetSelect = EM_GETSEL,
-        GetThumb = EM_GETTHUMB,
-        GetWordBreakProc = EM_GETWORDBREAKPROC,
-        HideBalloonTip = EM_HIDEBALLOONTIP,
-        LimitText = EM_LIMITTEXT,
-        LineFromChar = EM_LINEFROMCHAR,
-        LineIndex = EM_LINEINDEX,
-        LineLength = EM_LINELENGTH,
-        LineScroll = EM_LINESCROLL,
-        NoSetFocus = EM_NOSETFOCUS,
-        PosFromChar = EM_POSFROMCHAR,
-        ReplaceSel = EM_REPLACESEL,
-        Scroll = EM_SCROLL,
-        ScrollCaret = EM_SCROLLCARET,
-        SetCueBanner = EM_SETCUEBANNER,
-        SetHandle = EM_SETHANDLE,
-        SetHiLite = EM_SETHILITE,
-        SetImeStatus = EM_SETIMESTATUS,
-        SetLimitText = EM_SETLIMITTEXT,
-        SetMargins = EM_SETMARGINS,
-        SetModify = EM_SETMODIFY,
-        SetPasswordChar = EM_SETPASSWORDCHAR,
-        SetReadOnly = EM_SETREADONLY,
-        SetRect = EM_SETRECT,
-        SetRectNP = EM_SETRECTNP,
-        SetSelect = EM_SETSEL,
-        SetTabStops = EM_SETTABSTOPS,
-        SetWordBreakProc = EM_SETWORDBREAKPROC,
-        ShowBalloonTip = EM_SHOWBALLOONTIP,
-        TakeFocus = EM_TAKEFOCUS,
-        Undo = EM_UNDO,
-        WmUndo = WM_UNDO
-    };
-#endif
-#ifndef EDITNOTIFY
-#define EDITNOTIFY
-    enum class EditNotify : uint32_t {
-        AlignLtrEc = EN_ALIGN_LTR_EC,
-        AlignRtlEc = EN_ALIGN_RTL_EC,
-        Change = EN_CHANGE,
-        ErrSpace = EN_ERRSPACE,
-        HScroll = EN_HSCROLL,
-        KillFocus = EN_KILLFOCUS,
-        MaxText = EN_MAXTEXT,
-        SetFocus = EN_SETFOCUS,
-        Update = EN_UPDATE,
-        VScroll = EN_VSCROLL,
-        CtlColorEdit = WM_CTLCOLOREDIT,
-    };
-#endif
     class edit {
     private:
         std::vector<HWND> edit_handles = {};
@@ -203,8 +78,8 @@ namespace YanLib::ui::components {
                   int32_t width,
                   int32_t height,
                   EditStyle style = EditStyle::AutoHScroll | EditStyle::Left,
-                  WindowStyle window_style = WindowStyle::Child |
-                          WindowStyle::Visible | WindowStyle::Border);
+                  core::WindowStyle window_style = core::WindowStyle::Child |
+                          core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND line(const char *edit_name,
                   uintptr_t edit_id,
@@ -215,8 +90,8 @@ namespace YanLib::ui::components {
                   int32_t width,
                   int32_t height,
                   EditStyle style = EditStyle::AutoHScroll | EditStyle::Left,
-                  WindowStyle window_style = WindowStyle::Child |
-                          WindowStyle::Visible | WindowStyle::Border);
+                  core::WindowStyle window_style = core::WindowStyle::Child |
+                          core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND line(const wchar_t *edit_name,
                   uintptr_t edit_id,
@@ -227,8 +102,8 @@ namespace YanLib::ui::components {
                   int32_t width,
                   int32_t height,
                   EditStyle style = EditStyle::AutoHScroll | EditStyle::Left,
-                  WindowStyle window_style = WindowStyle::Child |
-                          WindowStyle::Visible | WindowStyle::Border);
+                  core::WindowStyle window_style = core::WindowStyle::Child |
+                          core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND multi_line(uintptr_t edit_id,
                         HWND parent_window_handle,
@@ -241,9 +116,9 @@ namespace YanLib::ui::components {
                                 EditStyle::AutoHScroll |
                                 EditStyle::AutoVScroll | EditStyle::Left |
                                 EditStyle::WantReturn,
-                        WindowStyle window_style = WindowStyle::Child |
-                                WindowStyle::Visible | WindowStyle::Border |
-                                WindowStyle::HScroll | WindowStyle::VScroll);
+                        core::WindowStyle window_style = core::WindowStyle::Child |
+                                core::WindowStyle::Visible | core::WindowStyle::Border |
+                                core::WindowStyle::HScroll | core::WindowStyle::VScroll);
 
         HWND multi_line(const char *edit_name,
                         uintptr_t edit_id,
@@ -257,9 +132,9 @@ namespace YanLib::ui::components {
                                 EditStyle::AutoHScroll |
                                 EditStyle::AutoVScroll | EditStyle::Left |
                                 EditStyle::WantReturn,
-                        WindowStyle window_style = WindowStyle::Child |
-                                WindowStyle::Visible | WindowStyle::Border |
-                                WindowStyle::HScroll | WindowStyle::VScroll);
+                        core::WindowStyle window_style = core::WindowStyle::Child |
+                                core::WindowStyle::Visible | core::WindowStyle::Border |
+                                core::WindowStyle::HScroll | core::WindowStyle::VScroll);
 
         HWND multi_line(const wchar_t *edit_name,
                         uintptr_t edit_id,
@@ -273,9 +148,9 @@ namespace YanLib::ui::components {
                                 EditStyle::AutoHScroll |
                                 EditStyle::AutoVScroll | EditStyle::Left |
                                 EditStyle::WantReturn,
-                        WindowStyle window_style = WindowStyle::Child |
-                                WindowStyle::Visible | WindowStyle::Border |
-                                WindowStyle::HScroll | WindowStyle::VScroll);
+                        core::WindowStyle window_style = core::WindowStyle::Child |
+                                core::WindowStyle::Visible | core::WindowStyle::Border |
+                                core::WindowStyle::HScroll | core::WindowStyle::VScroll);
 
         HWND password(uintptr_t edit_id,
                       HWND parent_window_handle,
@@ -286,8 +161,8 @@ namespace YanLib::ui::components {
                       int32_t height,
                       EditStyle style = EditStyle::Password |
                               EditStyle::AutoHScroll | EditStyle::Left,
-                      WindowStyle window_style = WindowStyle::Child |
-                              WindowStyle::Visible | WindowStyle::Border);
+                      core::WindowStyle window_style = core::WindowStyle::Child |
+                              core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND password(const char *edit_name,
                       uintptr_t edit_id,
@@ -299,8 +174,8 @@ namespace YanLib::ui::components {
                       int32_t height,
                       EditStyle style = EditStyle::Password |
                               EditStyle::AutoHScroll | EditStyle::Left,
-                      WindowStyle window_style = WindowStyle::Child |
-                              WindowStyle::Visible | WindowStyle::Border);
+                      core::WindowStyle window_style = core::WindowStyle::Child |
+                              core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND password(const wchar_t *edit_name,
                       uintptr_t edit_id,
@@ -312,8 +187,8 @@ namespace YanLib::ui::components {
                       int32_t height,
                       EditStyle style = EditStyle::Password |
                               EditStyle::AutoHScroll | EditStyle::Left,
-                      WindowStyle window_style = WindowStyle::Child |
-                              WindowStyle::Visible | WindowStyle::Border);
+                      core::WindowStyle window_style = core::WindowStyle::Child |
+                              core::WindowStyle::Visible | core::WindowStyle::Border);
 
         bool destroy(HWND edit_handle);
 

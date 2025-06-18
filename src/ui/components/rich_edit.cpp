@@ -57,7 +57,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            RichEditStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"RICHEDIT50W", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -85,7 +85,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            RichEditStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExA(0L, "RICHEDIT50W", rich_edit_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -113,7 +113,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            RichEditStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"RICHEDIT50W", rich_edit_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

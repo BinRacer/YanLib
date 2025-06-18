@@ -28,92 +28,13 @@
 #ifndef SECURITY_H
 #define SECURITY_H
 #include <Windows.h>
+#include <winnt.h>
+#include <minwinbase.h>
 #include <string>
-#include <tuple>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "sys.h"
 namespace YanLib::sys {
-#ifndef SECURITYLEVEL
-#define SECURITYLEVEL
-
-    enum class SecurityLevel : uint8_t {
-        Untrusted,
-        Low,
-        Medium,
-        MediumPlus,
-        High,
-        System,
-        ProtectedProcess,
-        Unknown,
-    };
-#endif
-#ifndef TOKENPOLICY
-#define TOKENPOLICY
-
-    enum class TokenPolicy : uint8_t { Off, NoWriteUp, NewProcessMin, Unknown };
-#endif
-#ifndef RESOURCELEVEL
-#define RESOURCELEVEL
-
-    enum class ResourceLevel : uint8_t {
-        Low,
-        Medium,
-        MediumPlus,
-        High,
-        System,
-        ProtectedProcess,
-        NotSet,
-        Unknown,
-    };
-#endif
-#ifndef SYSTEMPOLICY
-#define SYSTEMPOLICY
-
-    enum class SystemPolicy : uint8_t {
-        Zero,
-        NoReadUp,
-        NoWriteUp,
-        NoExecuteUp,
-        Unknown
-    };
-#endif
-    typedef std::tuple<SecurityLevel, TokenPolicy, ResourceLevel, SystemPolicy>
-            IntegrityLevel;
-
-#ifndef TOKENACCESS
-#define TOKENACCESS
-
-    enum class TokenAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        All = TOKEN_ALL_ACCESS,
-        Read = TOKEN_READ,
-        Write = TOKEN_WRITE,
-        Execute = TOKEN_EXECUTE,
-        Query = TOKEN_QUERY,
-        QuerySource = TOKEN_QUERY_SOURCE,
-        Duplicate = TOKEN_DUPLICATE,
-        Impersonate = TOKEN_IMPERSONATE,
-        AssignPrimary = TOKEN_ASSIGN_PRIMARY,
-        AdjustPrivileges = TOKEN_ADJUST_PRIVILEGES,
-        AdjustGroups = TOKEN_ADJUST_GROUPS,
-        AdjustDefault = TOKEN_ADJUST_DEFAULT,
-        AdjustSessionId = TOKEN_ADJUST_SESSIONID,
-        TrustConstraintMask = TOKEN_TRUST_CONSTRAINT_MASK,
-        TrustAllowedMask = TOKEN_TRUST_ALLOWED_MASK,
-        AccessPseudoHandleWin8 = TOKEN_ACCESS_PSEUDO_HANDLE_WIN8,
-        AccessPseudoHandle = TOKEN_ACCESS_PSEUDO_HANDLE,
-    };
-
-    inline TokenAccess operator|(TokenAccess a, TokenAccess b) {
-        return static_cast<TokenAccess>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-
     class security {
     private:
         void *env = nullptr;

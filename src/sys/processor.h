@@ -28,6 +28,7 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 #include <Windows.h>
+#include <winnt.h>
 #include <string>
 
 namespace YanLib::sys {

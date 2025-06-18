@@ -28,35 +28,11 @@
 #ifndef WINDOW_POS_H
 #define WINDOW_POS_H
 #include <Windows.h>
+#include <windef.h>
+#include <WinUser.h>
 #include <string>
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef POSFLAG
-#define POSFLAG
-
-    enum class PosFlag : uint32_t {
-        NoSize = SWP_NOSIZE,
-        NoMove = SWP_NOMOVE,
-        NoZOrder = SWP_NOZORDER,
-        NoRedraw = SWP_NOREDRAW,
-        NoActivate = SWP_NOACTIVATE,
-        FrameChanged = SWP_FRAMECHANGED,
-        ShowWindow = SWP_SHOWWINDOW,
-        HideWindow = SWP_HIDEWINDOW,
-        NoCopyBits = SWP_NOCOPYBITS,
-        NoOwnerZOrder = SWP_NOOWNERZORDER,
-        NoSendChanging = SWP_NOSENDCHANGING,
-        DrawFrame = SWP_DRAWFRAME,
-        NoRepos = SWP_NOREPOSITION,
-        DeferErase = SWP_DEFERERASE,
-        AsyncWindowPos = SWP_ASYNCWINDOWPOS,
-    };
-
-    inline PosFlag operator|(PosFlag a, PosFlag b) {
-        return static_cast<PosFlag>(static_cast<uint32_t>(a) |
-                                    static_cast<uint32_t>(b));
-    }
-#endif
     class window_pos {
     private:
         uint32_t error_code = 0;

@@ -28,28 +28,12 @@
 #ifndef EVENT_H
 #define EVENT_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <minwinbase.h>
+#include <winnt.h>
 #include <string>
-
+#include "sync.h"
 namespace YanLib::sync {
-#ifndef EVENTACCESS
-#define EVENTACCESS
-
-    enum class EventAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = EVENT_ALL_ACCESS,
-        Modify = EVENT_MODIFY_STATE,
-    };
-
-    inline EventAccess operator|(EventAccess a, EventAccess b) {
-        return static_cast<EventAccess>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-
     class event {
     private:
         HANDLE event_handle;

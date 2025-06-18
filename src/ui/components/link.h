@@ -35,86 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LINKSTYLE
-#define LINKSTYLE
-    enum class LinkStyle : uint32_t {
-        Transparent = LWS_TRANSPARENT,
-        IgnoreReturn = LWS_IGNORERETURN,
-        NoPrefix = LWS_NOPREFIX,
-        UseVisualStyle = LWS_USEVISUALSTYLE,
-        UseCustomText = LWS_USECUSTOMTEXT,
-        Right = LWS_RIGHT,
-    };
-    inline LinkStyle operator|(LinkStyle a, LinkStyle b) {
-        return static_cast<LinkStyle>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LINKMESSAGE
-#define LINKMESSAGE
-    enum class LinkMessage : uint32_t {
-        GetIdealHeight = LM_GETIDEALHEIGHT,
-        GetIdealSize = LM_GETIDEALSIZE,
-        GetItem = LM_GETITEM,
-        HitTest = LM_HITTEST,
-        SetItem = LM_SETITEM,
-    };
-#endif
-#ifndef LINKNOTIFY
-#define LINKNOTIFY
-    enum class LinkNotify : uint32_t {
-        Click = NM_CLICK,
-    };
-#endif
     class link {
     private:
         std::vector<HWND> link_handles = {};
@@ -144,8 +79,8 @@ namespace YanLib::ui::components {
                     LinkStyle style = LinkStyle::NoPrefix |
                             LinkStyle::UseVisualStyle |
                             LinkStyle::UseCustomText,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::TabStop);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::TabStop);
 
         HWND create(const char *link_name,
                     uintptr_t link_id,
@@ -158,8 +93,8 @@ namespace YanLib::ui::components {
                     LinkStyle style = LinkStyle::NoPrefix |
                             LinkStyle::UseVisualStyle |
                             LinkStyle::UseCustomText,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::TabStop,
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::TabStop,
                     helper::CodePage code_page = helper::curr_code_page());
 
         HWND create(const wchar_t *link_name,
@@ -173,8 +108,8 @@ namespace YanLib::ui::components {
                     LinkStyle style = LinkStyle::NoPrefix |
                             LinkStyle::UseVisualStyle |
                             LinkStyle::UseCustomText,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::TabStop);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::TabStop);
 
         bool destroy(HWND link_handle);
 

@@ -28,64 +28,15 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <CommCtrl.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef BUTTONSTATE
-#define BUTTONSTATE
-
-    enum class ButtonState : uint32_t {
-        Unchecked = BST_UNCHECKED,
-        Checked = BST_CHECKED,
-        Indeterminate = BST_INDETERMINATE,
-        Pushed = BST_PUSHED,
-        Focus = BST_FOCUS,
-        DropDownPushed = BST_DROPDOWNPUSHED,
-        Hot = BST_HOT,
-    };
-#endif
-#ifndef FILETYPE
-#define FILETYPE
-
-    enum class FileType : uint32_t {
-        ReadWrite = DDL_READWRITE,
-        ReadOnly = DDL_READONLY,
-        Hidden = DDL_HIDDEN,
-        System = DDL_SYSTEM,
-        Directory = DDL_DIRECTORY,
-        Archive = DDL_ARCHIVE,
-        PostMsgs = DDL_POSTMSGS,
-        Drives = DDL_DRIVES,
-        Exclusive = DDL_EXCLUSIVE,
-    };
-
-    inline FileType operator|(FileType a, FileType b) {
-        return static_cast<FileType>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef ITEMDPIBEHAVIORS
-#define ITEMDPIBEHAVIORS
-
-    enum class ItemDpiBehavior : uint32_t {
-        Default = DCDC_DEFAULT,
-        DisableFontUpdate = DCDC_DISABLE_FONT_UPDATE,
-        DisableReLayout = DCDC_DISABLE_RELAYOUT,
-    };
-#endif
-#ifndef DIALOGDPIBEHAVIORS
-#define DIALOGDPIBEHAVIORS
-
-    enum class DialogDpiBehavior : uint32_t {
-        Default = DDC_DEFAULT,
-        DisableAll = DDC_DISABLE_ALL,
-        DisableResize = DDC_DISABLE_RESIZE,
-        DisableItemReLayout = DDC_DISABLE_CONTROL_RELAYOUT,
-    };
-#endif
     class dialog {
     private:
         std::vector<HWND> dialog_modeless_handle = {};
@@ -182,33 +133,33 @@ namespace YanLib::ui::core {
                               char *path_spec,
                               int32_t list_box_id,
                               int32_t static_id,
-                              FileType file_type = FileType::Drives |
-                                      FileType::Directory |
-                                      FileType::ReadWrite);
+                              DialogFileType file_type = DialogFileType::Drives |
+                                      DialogFileType::Directory |
+                                      DialogFileType::ReadWrite);
 
         int32_t fill_list_box(HWND dialog_handle,
                               wchar_t *path_spec,
                               int32_t list_box_id,
                               int32_t static_id,
-                              FileType file_type = FileType::Drives |
-                                      FileType::Directory |
-                                      FileType::ReadWrite);
+                              DialogFileType file_type = DialogFileType::Drives |
+                                      DialogFileType::Directory |
+                                      DialogFileType::ReadWrite);
 
         int32_t fill_combo_box(HWND dialog_handle,
                                char *path_spec,
                                int32_t combo_box_id,
                                int32_t static_id,
-                               FileType file_type = FileType::Drives |
-                                       FileType::Directory |
-                                       FileType::ReadWrite);
+                               DialogFileType file_type = DialogFileType::Drives |
+                                       DialogFileType::Directory |
+                                       DialogFileType::ReadWrite);
 
         int32_t fill_combo_box(HWND dialog_handle,
                                wchar_t *path_spec,
                                int32_t combo_box_id,
                                int32_t static_id,
-                               FileType file_type = FileType::Drives |
-                                       FileType::Directory |
-                                       FileType::ReadWrite);
+                               DialogFileType file_type = DialogFileType::Drives |
+                                       DialogFileType::Directory |
+                                       DialogFileType::ReadWrite);
 
         bool get_select_combo_box(HWND dialog_handle,
                                   std::string &path,

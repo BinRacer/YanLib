@@ -35,138 +35,19 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "helper/convert.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef TDBUTTONFLAG
-#define TDBUTTONFLAG
-    enum class TDButtonFlag : uint32_t {
-        None = 0,
-        Ok = TDCBF_OK_BUTTON,
-        Yes = TDCBF_YES_BUTTON,
-        No = TDCBF_NO_BUTTON,
-        Cancel = TDCBF_CANCEL_BUTTON,
-        Retry = TDCBF_RETRY_BUTTON,
-        Close = TDCBF_CLOSE_BUTTON,
-    };
-    inline TDButtonFlag operator|(TDButtonFlag a, TDButtonFlag b) {
-        return static_cast<TDButtonFlag>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TDBUTTONRESULT
-#define TDBUTTONRESULT
-    enum class TDButtonResult : int32_t {
-        Error = 0,
-        Ok = IDOK,
-        Cancel = IDCANCEL,
-        Abort = IDABORT,
-        Retry = IDRETRY,
-        Ignore = IDIGNORE,
-        Yes = IDYES,
-        No = IDNO,
-        Close = IDCLOSE,
-        Help = IDHELP,
-        TryAgain = IDTRYAGAIN,
-        Continue = IDCONTINUE,
-        Timeout = IDTIMEOUT,
-    };
-#endif
-#ifndef TASKDIALOGFLAG
-#define TASKDIALOGFLAG
-    enum class TaskDialogFlag : uint32_t {
-        EnableHyperlinks = TDF_ENABLE_HYPERLINKS,
-        UseHiconMain = TDF_USE_HICON_MAIN,
-        UseHiconFooter = TDF_USE_HICON_FOOTER,
-        AllowDialogCancellation = TDF_ALLOW_DIALOG_CANCELLATION,
-        UseCommandLinks = TDF_USE_COMMAND_LINKS,
-        UseCommandLinksNoIcon = TDF_USE_COMMAND_LINKS_NO_ICON,
-        ExpandFooterArea = TDF_EXPAND_FOOTER_AREA,
-        ExpandedByDefault = TDF_EXPANDED_BY_DEFAULT,
-        VerificationFlagChecked = TDF_VERIFICATION_FLAG_CHECKED,
-        ShowProgressBar = TDF_SHOW_PROGRESS_BAR,
-        ShowMarqueeProgressBar = TDF_SHOW_MARQUEE_PROGRESS_BAR,
-        CallbackTimer = TDF_CALLBACK_TIMER,
-        PositionRelativeToWindow = TDF_POSITION_RELATIVE_TO_WINDOW,
-        RtlLayout = TDF_RTL_LAYOUT,
-        NoDefaultRadioButton = TDF_NO_DEFAULT_RADIO_BUTTON,
-        CanBeMinimized = TDF_CAN_BE_MINIMIZED,
-        NoSetForeground = TDF_NO_SET_FOREGROUND,
-        SizeToContent = TDF_SIZE_TO_CONTENT,
-    };
-    inline TaskDialogFlag operator|(TaskDialogFlag a, TaskDialogFlag b) {
-        return static_cast<TaskDialogFlag>(static_cast<uint32_t>(a) |
-                                           static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TASKDIALOGELEMENT
-#define TASKDIALOGELEMENT
-    enum class TaskDialogElement : uint32_t {
-        Content = TDE_CONTENT,
-        ExpandedInformation = TDE_EXPANDED_INFORMATION,
-        Footer = TDE_FOOTER,
-        MainInstruction = TDE_MAIN_INSTRUCTION,
-    };
-#endif
-#ifndef PROGRESSSTATE
-#define PROGRESSSTATE
-    enum class ProgressState : uint32_t {
-        Normal = PBST_NORMAL,
-        Error = PBST_ERROR,
-        Paused = PBST_PAUSED,
-    };
-#endif
-#ifndef TASKDIALOGICONTYPE
-#define TASKDIALOGICONTYPE
-    enum class TaskDialogIconType : uint32_t {
-        Main = TDIE_ICON_MAIN,
-        Footer = TDIE_ICON_FOOTER,
-    };
-#endif
-#ifndef TASKDIALOGMESSAGE
-#define TASKDIALOGMESSAGE
-    enum class TaskDialogMessage : uint32_t {
-        NavigatePage = TDM_NAVIGATE_PAGE,
-        ClickButton = TDM_CLICK_BUTTON,
-        SetMarqueeProgressBar = TDM_SET_MARQUEE_PROGRESS_BAR,
-        SetProgressBarState = TDM_SET_PROGRESS_BAR_STATE,
-        SetProgressBarRange = TDM_SET_PROGRESS_BAR_RANGE,
-        SetProgressBarPos = TDM_SET_PROGRESS_BAR_POS,
-        SetProgressBarMarquee = TDM_SET_PROGRESS_BAR_MARQUEE,
-        SetElementText = TDM_SET_ELEMENT_TEXT,
-        ClickRadioButton = TDM_CLICK_RADIO_BUTTON,
-        EnableButton = TDM_ENABLE_BUTTON,
-        EnableRadioButton = TDM_ENABLE_RADIO_BUTTON,
-        ClickVerification = TDM_CLICK_VERIFICATION,
-        UpdateElementText = TDM_UPDATE_ELEMENT_TEXT,
-        SetButtonElevationRequiredState =
-                TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE,
-        UpdateIcon = TDM_UPDATE_ICON,
-    };
-#endif
-#ifndef TASKDIALOGNOTIFY
-#define TASKDIALOGNOTIFY
-    enum class TaskDialogNotify : uint32_t {
-        ButtonClicked = TDN_BUTTON_CLICKED,
-        Created = TDN_CREATED,
-        Destroyed = TDN_DESTROYED,
-        DialogConstructed = TDN_DIALOG_CONSTRUCTED,
-        ExpandoButtonClicked = TDN_EXPANDO_BUTTON_CLICKED,
-        Help = TDN_HELP,
-        HyperlinkClicked = TDN_HYPERLINK_CLICKED,
-        Navigated = TDN_NAVIGATED,
-        RadioButtonClicked = TDN_RADIO_BUTTON_CLICKED,
-        Timer = TDN_TIMER,
-        VerificationClicked = TDN_VERIFICATION_CLICKED,
-    };
-#endif
     class task_dialog {
     public:
         task_dialog(const task_dialog &other) = delete;

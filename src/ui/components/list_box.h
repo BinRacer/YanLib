@@ -35,166 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LISTBOXSTYLE
-#define LISTBOXSTYLE
-    enum class ListBoxStyle : uint32_t {
-        Notify = LBS_NOTIFY,
-        Sort = LBS_SORT,
-        NoRedraw = LBS_NOREDRAW,
-        MultipleSelect = LBS_MULTIPLESEL,
-        OwnerDrawFixed = LBS_OWNERDRAWFIXED,
-        OwnerDrawVariable = LBS_OWNERDRAWVARIABLE,
-        HasStrings = LBS_HASSTRINGS,
-        UseTabStops = LBS_USETABSTOPS,
-        NoIntegralHeight = LBS_NOINTEGRALHEIGHT,
-        MultiColumn = LBS_MULTICOLUMN,
-        WantKeyboardInput = LBS_WANTKEYBOARDINPUT,
-        ExtendedSelect = LBS_EXTENDEDSEL,
-        DisableNoScroll = LBS_DISABLENOSCROLL,
-        NoData = LBS_NODATA,
-        NoSelect = LBS_NOSEL,
-        ComboBox = LBS_COMBOBOX,
-        Standard = LBS_STANDARD
-    };
-    inline ListBoxStyle operator|(ListBoxStyle a, ListBoxStyle b) {
-        return static_cast<ListBoxStyle>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef FILETYPE
-#define FILETYPE
-
-    enum class FileType : uint32_t {
-        ReadWrite = DDL_READWRITE,
-        ReadOnly = DDL_READONLY,
-        Hidden = DDL_HIDDEN,
-        System = DDL_SYSTEM,
-        Directory = DDL_DIRECTORY,
-        Archive = DDL_ARCHIVE,
-        PostMsgs = DDL_POSTMSGS,
-        Drives = DDL_DRIVES,
-        Exclusive = DDL_EXCLUSIVE,
-    };
-
-    inline FileType operator|(FileType a, FileType b) {
-        return static_cast<FileType>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LISTBOXMESSAGE
-#define LISTBOXMESSAGE
-    enum class ListBoxMessage : uint32_t {
-        AddFile = LB_ADDFILE,
-        AddString = LB_ADDSTRING,
-        DeleteString = LB_DELETESTRING,
-        Dir = LB_DIR,
-        FindString = LB_FINDSTRING,
-        FindStringExact = LB_FINDSTRINGEXACT,
-        GetAnchorIndex = LB_GETANCHORINDEX,
-        GetCaretIndex = LB_GETCARETINDEX,
-        GetCount = LB_GETCOUNT,
-        GetCurrentSelect = LB_GETCURSEL,
-        GetHorizontalExtent = LB_GETHORIZONTALEXTENT,
-        GetItemData = LB_GETITEMDATA,
-        GetItemHeight = LB_GETITEMHEIGHT,
-        GetItemRect = LB_GETITEMRECT,
-        GetListBoxInfo = LB_GETLISTBOXINFO,
-        GetLocale = LB_GETLOCALE,
-        GetSelect = LB_GETSEL,
-        GetSelCount = LB_GETSELCOUNT,
-        GetSelItems = LB_GETSELITEMS,
-        GetText = LB_GETTEXT,
-        GetTextLen = LB_GETTEXTLEN,
-        GetTopIndex = LB_GETTOPINDEX,
-        InitStorage = LB_INITSTORAGE,
-        InsertString = LB_INSERTSTRING,
-        ItemFromPoint = LB_ITEMFROMPOINT,
-        ResetContent = LB_RESETCONTENT,
-        SelectString = LB_SELECTSTRING,
-        SelItemRange = LB_SELITEMRANGE,
-        SelItemRangeEx = LB_SELITEMRANGEEX,
-        SetAnchorIndex = LB_SETANCHORINDEX,
-        SetCaretIndex = LB_SETCARETINDEX,
-        SetColumnWidth = LB_SETCOLUMNWIDTH,
-        SetCount = LB_SETCOUNT,
-        SetCurrentSelect = LB_SETCURSEL,
-        SetHorizontalExtent = LB_SETHORIZONTALEXTENT,
-        SetItemData = LB_SETITEMDATA,
-        SetItemHeight = LB_SETITEMHEIGHT,
-        SetLocale = LB_SETLOCALE,
-        SetSelect = LB_SETSEL,
-        SetTabStops = LB_SETTABSTOPS,
-        SetTopIndex = LB_SETTOPINDEX
-    };
-#endif
-#ifndef LISTBOXNOTIFY
-#define LISTBOXNOTIFY
-    enum class ListBoxNotify : int32_t {
-        BeginDrag = DL_BEGINDRAG,
-        CancelDrag = DL_CANCELDRAG,
-        Dragging = DL_DRAGGING,
-        Dropped = DL_DROPPED,
-        DoubleClick = LBN_DBLCLK,
-        ErrSpace = LBN_ERRSPACE,
-        KillFocus = LBN_KILLFOCUS,
-        SelectCancel = LBN_SELCANCEL,
-        SelectChange = LBN_SELCHANGE,
-        SetFocus = LBN_SETFOCUS,
-        CharToItem = WM_CHARTOITEM,
-        CtlColorListBox = WM_CTLCOLORLISTBOX,
-        DeleteItem = WM_DELETEITEM,
-        VKeyToItem = WM_VKEYTOITEM
-    };
-#endif
     class list_box {
     private:
         std::vector<HWND> list_box_handles = {};
@@ -227,8 +82,8 @@ namespace YanLib::ui::components {
                             ListBoxStyle::MultipleSelect |
                             ListBoxStyle::Notify | ListBoxStyle::UseTabStops |
                             ListBoxStyle::WantKeyboardInput,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::VScroll);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::VScroll);
 
         HWND create(const char *list_box_name,
                     uintptr_t list_box_id,
@@ -244,8 +99,8 @@ namespace YanLib::ui::components {
                             ListBoxStyle::MultipleSelect |
                             ListBoxStyle::Notify | ListBoxStyle::UseTabStops |
                             ListBoxStyle::WantKeyboardInput,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::VScroll);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::VScroll);
 
         HWND create(const wchar_t *list_box_name,
                     uintptr_t list_box_id,
@@ -261,8 +116,8 @@ namespace YanLib::ui::components {
                             ListBoxStyle::MultipleSelect |
                             ListBoxStyle::Notify | ListBoxStyle::UseTabStops |
                             ListBoxStyle::WantKeyboardInput,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::VScroll);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::VScroll);
 
         bool destroy(HWND list_box_handle);
 
@@ -272,14 +127,14 @@ namespace YanLib::ui::components {
 
         int32_t fill(HWND list_box_handle,
                      const char *path_spec,
-                     FileType type = FileType::Drives | FileType::Directory |
-                             FileType::ReadWrite,
+                     ListFileType type = ListFileType::Drives | ListFileType::Directory |
+                             ListFileType::ReadWrite,
                      helper::CodePage code_page = helper::curr_code_page());
 
         int32_t fill(HWND list_box_handle,
                      const wchar_t *path_spec,
-                     FileType type = FileType::Drives | FileType::Directory |
-                             FileType::ReadWrite);
+                     ListFileType type = ListFileType::Drives | ListFileType::Directory |
+                             ListFileType::ReadWrite);
 
         int32_t add_text(HWND list_box_handle,
                          std::string &text,

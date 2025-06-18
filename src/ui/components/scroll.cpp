@@ -47,7 +47,7 @@ namespace YanLib::ui::components {
                         int32_t width,
                         int32_t height,
                         ScrollStyle style,
-                        WindowStyle window_style) {
+                        core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"ScrollBar", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -75,7 +75,7 @@ namespace YanLib::ui::components {
                         int32_t width,
                         int32_t height,
                         ScrollStyle style,
-                        WindowStyle window_style) {
+                        core::WindowStyle window_style) {
         HWND result = CreateWindowExA(0L, "ScrollBar", scroll_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -103,7 +103,7 @@ namespace YanLib::ui::components {
                         int32_t width,
                         int32_t height,
                         ScrollStyle style,
-                        WindowStyle window_style) {
+                        core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"ScrollBar", scroll_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -171,7 +171,7 @@ namespace YanLib::ui::components {
 
     bool scroll::get_info(HWND scroll_handle,
                           SCROLLBARINFO *scroll_bar_info,
-                          ObjectID object_id) {
+                          core::ObjectID object_id) {
         if (!GetScrollBarInfo(scroll_handle, static_cast<int32_t>(object_id),
                               scroll_bar_info)) {
             error_code = GetLastError();

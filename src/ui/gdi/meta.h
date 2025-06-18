@@ -27,31 +27,14 @@
 /* clang-format on */
 #ifndef META_H
 #define META_H
+#include <Windows.h>
+#include <wingdi.h>
+#include <windef.h>
 #include <cstdint>
 #include <vector>
 #include <string>
-#include <Windows.h>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef MAPPINGMODE
-#define MAPPINGMODE
-
-    enum class MappingMode : int32_t {
-        Text = MM_TEXT,
-        LoMetric = MM_LOMETRIC,
-        HiMetric = MM_HIMETRIC,
-        LoEnglish = MM_LOENGLISH,
-        HiEnglish = MM_HIENGLISH,
-        TwIps = MM_TWIPS,
-        IsoTropic = MM_ISOTROPIC,
-        AnIsoTropic = MM_ANISOTROPIC,
-    };
-
-    inline MappingMode operator|(MappingMode a, MappingMode b) {
-        return static_cast<MappingMode>(static_cast<int32_t>(a) |
-                                        static_cast<int32_t>(b));
-    }
-#endif
     class meta {
     public:
         meta(const meta &other) = delete;

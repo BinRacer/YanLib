@@ -200,6 +200,12 @@ namespace YanLib::ui::gdi {
         return DeleteObject(font_handle);
     }
 
+    void font::set(HWND window_handle, HFONT font_handle, bool is_redraw) {
+        SendMessageW(window_handle, WM_SETFONT,
+                     reinterpret_cast<WPARAM>(font_handle),
+                     is_redraw ? TRUE : FALSE);
+    }
+
     HANDLE font::add_mem_resource(void *file_view,
                                   uint32_t file_view_size,
                                   uint32_t *num_fonts) {

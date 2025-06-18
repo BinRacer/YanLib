@@ -28,7 +28,8 @@
 #ifndef FTP_H
 #define FTP_H
 #include <Windows.h>
-#include <WinInet.h>
+#include <wininet.h>
+#include <winnt.h>
 #include <string>
 #include <vector>
 #include "helper/convert.h"

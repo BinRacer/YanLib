@@ -54,7 +54,7 @@ namespace YanLib::ui::components {
                       int32_t width,
                       int32_t height,
                       LinkStyle style,
-                      WindowStyle window_style) {
+                      core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"SysLink", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -82,7 +82,7 @@ namespace YanLib::ui::components {
                       int32_t width,
                       int32_t height,
                       LinkStyle style,
-                      WindowStyle window_style,
+                      core::WindowStyle window_style,
                       helper::CodePage code_page) {
         HWND result = CreateWindowExW(
                 0L, L"SysLink",
@@ -111,7 +111,7 @@ namespace YanLib::ui::components {
                       int32_t width,
                       int32_t height,
                       LinkStyle style,
-                      WindowStyle window_style) {
+                      core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"SysLink", link_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

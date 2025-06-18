@@ -28,23 +28,12 @@
 #ifndef BARRIER_H
 #define BARRIER_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <synchapi.h>
+#include <winnt.h>
 #include <string>
-
+#include "sync.h"
 namespace YanLib::sync {
-#ifndef BARRIERFLAG
-#define BARRIERFLAG
-
-    enum class BarrierFlag : uint32_t {
-        SpinOnly = SYNCHRONIZATION_BARRIER_FLAGS_SPIN_ONLY,
-        BlockOnly = SYNCHRONIZATION_BARRIER_FLAGS_BLOCK_ONLY,
-        NoDelete = SYNCHRONIZATION_BARRIER_FLAGS_NO_DELETE,
-    };
-
-    inline BarrierFlag operator|(BarrierFlag a, BarrierFlag b) {
-        return static_cast<BarrierFlag>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
     class barrier {
     private:
         SYNCHRONIZATION_BARRIER synchronization_barrier{};

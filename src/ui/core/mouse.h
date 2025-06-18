@@ -28,76 +28,13 @@
 #ifndef MOUSE_H
 #define MOUSE_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <windef.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef MOUSEEVENT
-#define MOUSEEVENT
-
-    enum class MouseEvent : uint32_t {
-        Move = MOUSEEVENTF_MOVE,
-        LeftDown = MOUSEEVENTF_LEFTDOWN,
-        LeftUp = MOUSEEVENTF_LEFTUP,
-        RightDown = MOUSEEVENTF_RIGHTDOWN,
-        RightUp = MOUSEEVENTF_RIGHTUP,
-        MiddleDown = MOUSEEVENTF_MIDDLEDOWN,
-        MiddleUp = MOUSEEVENTF_MIDDLEUP,
-        XDown = MOUSEEVENTF_XDOWN,
-        XUp = MOUSEEVENTF_XUP,
-        Wheel = MOUSEEVENTF_WHEEL,
-        MoveNoCoalesce = MOUSEEVENTF_MOVE_NOCOALESCE,
-        VirtualDesk = MOUSEEVENTF_VIRTUALDESK,
-        Absolute = MOUSEEVENTF_ABSOLUTE,
-    };
-
-    inline MouseEvent operator|(MouseEvent a, MouseEvent b) {
-        return static_cast<MouseEvent>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef POINTERTYPE
-#define POINTERTYPE
-
-    enum class PointerInputType : uint32_t {
-        Pointer = PT_POINTER,
-        Touch = PT_TOUCH,
-        Pen = PT_PEN,
-        Mouse = PT_MOUSE,
-        TouchPad = PT_TOUCHPAD,
-    };
-#endif
-#ifndef POINTERFLAG
-#define POINTERFLAG
-
-    enum class PointerFlag : uint32_t {
-        None = POINTER_FLAG_NONE,
-        New = POINTER_FLAG_NEW,
-        InRange = POINTER_FLAG_INRANGE,
-        InContact = POINTER_FLAG_INCONTACT,
-        FirstButton = POINTER_FLAG_FIRSTBUTTON,
-        SecondButton = POINTER_FLAG_SECONDBUTTON,
-        ThirdButton = POINTER_FLAG_THIRDBUTTON,
-        FourthButton = POINTER_FLAG_FOURTHBUTTON,
-        FifthButton = POINTER_FLAG_FIFTHBUTTON,
-        Primary = POINTER_FLAG_PRIMARY,
-        Confidence = POINTER_FLAG_CONFIDENCE,
-        Canceled = POINTER_FLAG_CANCELED,
-        Down = POINTER_FLAG_DOWN,
-        Update = POINTER_FLAG_UPDATE,
-        Up = POINTER_FLAG_UP,
-        Wheel = POINTER_FLAG_WHEEL,
-        HWheel = POINTER_FLAG_HWHEEL,
-        CaptureChanged = POINTER_FLAG_CAPTURECHANGED,
-        HasTransform = POINTER_FLAG_HASTRANSFORM,
-    };
-
-    inline PointerFlag operator|(PointerFlag a, PointerFlag b) {
-        return static_cast<PointerFlag>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-
     class mouse {
     private:
         std::vector<std::pair<HWND, PointerInputType>> pointers = {};

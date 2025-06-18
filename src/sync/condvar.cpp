@@ -64,7 +64,7 @@ namespace YanLib::sync {
     }
 } // namespace YanLib::sync
 
-namespace sync {
+namespace YanLib::sync {
     condVarSRW::condVarSRW() {
         InitializeConditionVariable(&condition_variable);
         InitializeSRWLock(&rw_lock);
@@ -108,4 +108,4 @@ namespace sync {
     void condVarSRW::wake_all() {
         WakeAllConditionVariable(&condition_variable);
     }
-} // namespace sync
+} // namespace YanLib::sync

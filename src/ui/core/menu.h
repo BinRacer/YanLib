@@ -28,136 +28,14 @@
 #ifndef MENU_H
 #define MENU_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef MENUFLAG
-#define MENUFLAG
-
-    enum class MenuFlag : uint32_t {
-        // MF_* flag
-        Insert = MF_INSERT,
-        Change = MF_CHANGE,
-        Append = MF_APPEND,
-        Delete = MF_DELETE,
-        Remove = MF_REMOVE,
-        ByCommand = MF_BYCOMMAND,
-        ByPosition = MF_BYPOSITION,
-        Separator = MF_SEPARATOR,
-        Enabled = MF_ENABLED,
-        Grayed = MF_GRAYED,
-        Disabled = MF_DISABLED,
-        Unchecked = MF_UNCHECKED,
-        Checked = MF_CHECKED,
-        UseCheckBitmaps = MF_USECHECKBITMAPS,
-        String = MF_STRING,
-        Bitmap = MF_BITMAP,
-        OwnerDraw = MF_OWNERDRAW,
-        Popup = MF_POPUP,
-        MenuBarBreak = MF_MENUBARBREAK,
-        MenuBreak = MF_MENUBREAK,
-        UnHiLite = MF_UNHILITE,
-        HiLite = MF_HILITE,
-        Default = MF_DEFAULT,
-        SysMenu = MF_SYSMENU,
-        Help = MF_HELP,
-        RightJustify = MF_RIGHTJUSTIFY,
-        MouseSelect = MF_MOUSESELECT,
-        End = MF_END,
-        // MFT_* flag
-        TString = MFT_STRING,
-        TBitmap = MFT_BITMAP,
-        TMenuBarBreak = MFT_MENUBARBREAK,
-        TMenuBreak = MFT_MENUBREAK,
-        TOwnerDraw = MFT_OWNERDRAW,
-        TRadioCheck = MFT_RADIOCHECK,
-        TSeparator = MFT_SEPARATOR,
-        TRightOrder = MFT_RIGHTORDER,
-        TRightJustify = MFT_RIGHTJUSTIFY,
-        // MFS_* flag
-        SGrayed = MFS_GRAYED,
-        SDisabled = MFS_DISABLED,
-        SChecked = MFS_CHECKED,
-        SHiLite = MFS_HILITE,
-        SEnabled = MFS_ENABLED,
-        SUnchecked = MFS_UNCHECKED,
-        SUnHiLite = MFS_UNHILITE,
-        SDefault = MFS_DEFAULT,
-    };
-
-    inline MenuFlag operator|(MenuFlag a, MenuFlag b) {
-        return static_cast<MenuFlag>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef OBJECTID
-#define OBJECTID
-
-    enum class ObjectID : int32_t {
-        Window = OBJID_WINDOW,
-        SysMenu = OBJID_SYSMENU,
-        TitleBar = OBJID_TITLEBAR,
-        Menu = OBJID_MENU,
-        Client = OBJID_CLIENT,
-        VScroll = OBJID_VSCROLL,
-        HScroll = OBJID_HSCROLL,
-        SizeGrip = OBJID_SIZEGRIP,
-        Caret = OBJID_CARET,
-        Cursor = OBJID_CURSOR,
-        Alert = OBJID_ALERT,
-        Sound = OBJID_SOUND,
-        QueryClassNameIDX = OBJID_QUERYCLASSNAMEIDX,
-        NativeOM = OBJID_NATIVEOM,
-    };
-#endif
-#ifndef MENUSEARCH
-#define MENUSEARCH
-
-    enum class MenuSearch : uint32_t {
-        Default = 0,
-        ShowDisabled = GMDI_USEDISABLED,
-        Recursion = GMDI_GOINTOPOPUPS,
-    };
-
-    inline MenuSearch operator|(MenuSearch a, MenuSearch b) {
-        return static_cast<MenuSearch>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TRACKPOPUPMENU
-#define TRACKPOPUPMENU
-
-    enum class TrackPopup : uint32_t {
-        LeftButton = TPM_LEFTBUTTON,
-        RightButton = TPM_RIGHTBUTTON,
-        LeftAlign = TPM_LEFTALIGN,
-        CenterAlign = TPM_CENTERALIGN,
-        RightAlign = TPM_RIGHTALIGN,
-        TopAlign = TPM_TOPALIGN,
-        VCenterAlign = TPM_VCENTERALIGN,
-        BottomAlign = TPM_BOTTOMALIGN,
-        Horizontal = TPM_HORIZONTAL,
-        Vertical = TPM_VERTICAL,
-        NoNotify = TPM_NONOTIFY,
-        ReturnCmd = TPM_RETURNCMD,
-        Recurse = TPM_RECURSE,
-        HorPosAnimation = TPM_HORPOSANIMATION,
-        HorNegAnimation = TPM_HORNEGANIMATION,
-        VerPosAnimation = TPM_VERPOSANIMATION,
-        VerNegAnimation = TPM_VERNEGANIMATION,
-        NoAnimation = TPM_NOANIMATION,
-        LayoutRtl = TPM_LAYOUTRTL,
-        WorkArea = TPM_WORKAREA,
-    };
-
-    inline TrackPopup operator|(TrackPopup a, TrackPopup b) {
-        return static_cast<TrackPopup>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-
-#endif
     class menu {
     private:
         std::vector<HMENU> menu_handles = {};

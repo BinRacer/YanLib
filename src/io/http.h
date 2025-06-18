@@ -28,7 +28,7 @@
 #ifndef HTTP_H
 #define HTTP_H
 #include <Windows.h>
-#include <WinInet.h>
+#include <wininet.h>
 #include <string>
 #include <vector>
 #include <unordered_map>

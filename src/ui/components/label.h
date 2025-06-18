@@ -35,114 +35,20 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LABELSTYLE
-#define LABELSTYLE
-    enum class LabelStyle : uint32_t {
-        Left = SS_LEFT,
-        Center = SS_CENTER,
-        Right = SS_RIGHT,
-        Icon = SS_ICON,
-        BlackRect = SS_BLACKRECT,
-        GrayRect = SS_GRAYRECT,
-        WhiteRect = SS_WHITERECT,
-        BlackFrame = SS_BLACKFRAME,
-        GrayFrame = SS_GRAYFRAME,
-        WhiteFrame = SS_WHITEFRAME,
-        UserItem = SS_USERITEM,
-        Simple = SS_SIMPLE,
-        LeftNoWordWrap = SS_LEFTNOWORDWRAP,
-        OwnerDraw = SS_OWNERDRAW,
-        Bitmap = SS_BITMAP,
-        EnhMetaFile = SS_ENHMETAFILE,
-        EtchedHorz = SS_ETCHEDHORZ,
-        EtchedVert = SS_ETCHEDVERT,
-        EtchedFrame = SS_ETCHEDFRAME,
-        TypeMask = SS_TYPEMASK,
-        RealSizeControl = SS_REALSIZECONTROL,
-        NoPrefix = SS_NOPREFIX,
-        Notify = SS_NOTIFY,
-        CenterImage = SS_CENTERIMAGE,
-        RightJust = SS_RIGHTJUST,
-        RealSizeImage = SS_REALSIZEIMAGE,
-        Sunken = SS_SUNKEN,
-        EditControl = SS_EDITCONTROL,
-        EndEllipsis = SS_ENDELLIPSIS,
-        PathEllipsis = SS_PATHELLIPSIS,
-        WordEllipsis = SS_WORDELLIPSIS,
-        EllipsisMask = SS_ELLIPSISMASK
-    };
-    inline LabelStyle operator|(LabelStyle a, LabelStyle b) {
-        return static_cast<LabelStyle>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LABELMESSAGE
-#define LABELMESSAGE
-    enum class LabelMessage : uint32_t {
-        GetIcon = STM_GETICON,
-        GetImage = STM_GETIMAGE,
-        SetIcon = STM_SETICON,
-        SetImage = STM_SETIMAGE,
-    };
-#endif
-#ifndef LABELNOTIFY
-#define LABELNOTIFY
-    enum class LabelNotify : uint32_t {
-        Clicked = STN_CLICKED,
-        DoubleClick = STN_DBLCLK,
-        Disable = STN_DISABLE,
-        Enable = STN_ENABLE,
-        CtlColorStatic = WM_CTLCOLORSTATIC,
-    };
-#endif
     class label {
     private:
         std::vector<HWND> label_handles = {};
@@ -170,8 +76,8 @@ namespace YanLib::ui::components {
                     int32_t width,
                     int32_t height,
                     LabelStyle style = LabelStyle::Center,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const char *label_name,
                     uintptr_t label_id,
@@ -182,8 +88,8 @@ namespace YanLib::ui::components {
                     int32_t width,
                     int32_t height,
                     LabelStyle style = LabelStyle::Center,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const wchar_t *label_name,
                     uintptr_t label_id,
@@ -194,8 +100,8 @@ namespace YanLib::ui::components {
                     int32_t width,
                     int32_t height,
                     LabelStyle style = LabelStyle::Center,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         bool destroy(HWND label_handle);
 

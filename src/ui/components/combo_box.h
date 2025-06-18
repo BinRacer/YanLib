@@ -35,162 +35,22 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <WinUser.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef COMBOBOXSTYLE
-#define COMBOBOXSTYLE
-
-    enum class ComboBoxStyle : uint32_t {
-        Simple = CBS_SIMPLE,
-        DropDown = CBS_DROPDOWN,
-        DropDownList = CBS_DROPDOWNLIST,
-        OwnerDrawFixed = CBS_OWNERDRAWFIXED,
-        OwnerDrawVariable = CBS_OWNERDRAWVARIABLE,
-        AutoHorizScroll = CBS_AUTOHSCROLL,
-        OemConvert = CBS_OEMCONVERT,
-        Sort = CBS_SORT,
-        HasStrings = CBS_HASSTRINGS,
-        NoIntegralHeight = CBS_NOINTEGRALHEIGHT,
-        DisableNoScroll = CBS_DISABLENOSCROLL,
-        Uppercase = CBS_UPPERCASE,
-        Lowercase = CBS_LOWERCASE,
-    };
-
-    inline ComboBoxStyle operator|(ComboBoxStyle a, ComboBoxStyle b) {
-        return static_cast<ComboBoxStyle>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef FILETYPE
-#define FILETYPE
-
-    enum class FileType : uint32_t {
-        ReadWrite = DDL_READWRITE,
-        ReadOnly = DDL_READONLY,
-        Hidden = DDL_HIDDEN,
-        System = DDL_SYSTEM,
-        Directory = DDL_DIRECTORY,
-        Archive = DDL_ARCHIVE,
-        PostMsgs = DDL_POSTMSGS,
-        Drives = DDL_DRIVES,
-        Exclusive = DDL_EXCLUSIVE,
-    };
-
-    inline FileType operator|(FileType a, FileType b) {
-        return static_cast<FileType>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef COMBOBOXMESSAGE
-#define COMBOBOXMESSAGE
-    enum class ComboBoxMessage : uint32_t {
-        AddString = CB_ADDSTRING,
-        DeleteString = CB_DELETESTRING,
-        Dir = CB_DIR,
-        FindString = CB_FINDSTRING,
-        FindStringExact = CB_FINDSTRINGEXACT,
-        GetComboBoxInfo = CB_GETCOMBOBOXINFO,
-        GetCount = CB_GETCOUNT,
-        GetCueBanner = CB_GETCUEBANNER,
-        GetCurrentSelect = CB_GETCURSEL,
-        GetDroppedControlRect = CB_GETDROPPEDCONTROLRECT,
-        GetDroppedState = CB_GETDROPPEDSTATE,
-        GetDroppedWidth = CB_GETDROPPEDWIDTH,
-        GetEditSel = CB_GETEDITSEL,
-        GetExtendedUI = CB_GETEXTENDEDUI,
-        GetHorizontalExtent = CB_GETHORIZONTALEXTENT,
-        GetItemData = CB_GETITEMDATA,
-        GetItemHeight = CB_GETITEMHEIGHT,
-        GetLBText = CB_GETLBTEXT,
-        GetLBTextLen = CB_GETLBTEXTLEN,
-        GetLocale = CB_GETLOCALE,
-        GetMinVisible = CB_GETMINVISIBLE,
-        GetTopIndex = CB_GETTOPINDEX,
-        InitStorage = CB_INITSTORAGE,
-        InsertString = CB_INSERTSTRING,
-        LimitText = CB_LIMITTEXT,
-        ResetContent = CB_RESETCONTENT,
-        SelectString = CB_SELECTSTRING,
-        SetCueBanner = CB_SETCUEBANNER,
-        SetCurrentSelect = CB_SETCURSEL,
-        SetDroppedWidth = CB_SETDROPPEDWIDTH,
-        SetEditSel = CB_SETEDITSEL,
-        SetExtendedUI = CB_SETEXTENDEDUI,
-        SetHorizontalExtent = CB_SETHORIZONTALEXTENT,
-        SetItemData = CB_SETITEMDATA,
-        SetItemHeight = CB_SETITEMHEIGHT,
-        SetLocale = CB_SETLOCALE,
-        SetMinVisible = CB_SETMINVISIBLE,
-        SetTopIndex = CB_SETTOPINDEX,
-        ShowDropDown = CB_SHOWDROPDOWN,
-    };
-#endif
-#ifndef COMBOBOXNOTIFY
-#define COMBOBOXNOTIFY
-    enum class ComboBoxNotify : int32_t {
-        CloseUp = CBN_CLOSEUP,
-        DoubleClick = CBN_DBLCLK,
-        DropDown = CBN_DROPDOWN,
-        EditChange = CBN_EDITCHANGE,
-        EditUpdate = CBN_EDITUPDATE,
-        ErrSpace = CBN_ERRSPACE,
-        KillFocus = CBN_KILLFOCUS,
-        SelChange = CBN_SELCHANGE,
-        SelEndCancel = CBN_SELENDCANCEL,
-        SelEndOK = CBN_SELENDOK,
-        SetFocus = CBN_SETFOCUS,
-        CompareItem = WM_COMPAREITEM,
-        DrawItem = WM_DRAWITEM,
-        MeasureItem = WM_MEASUREITEM
-    };
-#endif
     class combo_box {
     private:
         std::vector<HWND> combo_box_handles = {};
@@ -220,8 +80,8 @@ namespace YanLib::ui::components {
                     ComboBoxStyle style = ComboBoxStyle::DropDownList |
                             ComboBoxStyle::AutoHorizScroll |
                             ComboBoxStyle::HasStrings,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::VScroll);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::VScroll);
 
         HWND create(const char *combo_box_name,
                     uintptr_t combo_box_id,
@@ -234,8 +94,8 @@ namespace YanLib::ui::components {
                     ComboBoxStyle style = ComboBoxStyle::DropDownList |
                             ComboBoxStyle::AutoHorizScroll |
                             ComboBoxStyle::HasStrings,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::VScroll);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::VScroll);
 
         HWND create(const wchar_t *combo_box_name,
                     uintptr_t combo_box_id,
@@ -248,8 +108,8 @@ namespace YanLib::ui::components {
                     ComboBoxStyle style = ComboBoxStyle::DropDownList |
                             ComboBoxStyle::AutoHorizScroll |
                             ComboBoxStyle::HasStrings,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::VScroll);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::VScroll);
 
         bool destroy(HWND combo_box_handle);
 
@@ -259,14 +119,14 @@ namespace YanLib::ui::components {
 
         int32_t fill(HWND combo_box_handle,
                      const char *path_spec,
-                     FileType type = FileType::Drives | FileType::Directory |
-                             FileType::ReadWrite,
+                     ComboFileType type = ComboFileType::Drives | ComboFileType::Directory |
+                             ComboFileType::ReadWrite,
                      helper::CodePage code_page = helper::curr_code_page());
 
         int32_t fill(HWND combo_box_handle,
                      wchar_t *path_spec,
-                     FileType type = FileType::Drives | FileType::Directory |
-                             FileType::ReadWrite);
+                     ComboFileType type = ComboFileType::Drives | ComboFileType::Directory |
+                             ComboFileType::ReadWrite);
 
         int32_t add_text(HWND combo_box_handle,
                          std::string &text,

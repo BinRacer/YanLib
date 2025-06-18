@@ -47,7 +47,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            ComboBoxStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"ComboBox", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -75,7 +75,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            ComboBoxStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExA(0L, "ComboBox", combo_box_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -103,7 +103,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            ComboBoxStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"ComboBox", combo_box_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -150,7 +150,7 @@ namespace YanLib::ui::components {
 
     int32_t combo_box::fill(HWND combo_box_handle,
                             const char *path_spec,
-                            FileType type,
+                            ComboFileType type,
                             helper::CodePage code_page) {
         const int32_t result =
                 ComboBox_Dir(combo_box_handle, static_cast<uint32_t>(type),
@@ -165,7 +165,7 @@ namespace YanLib::ui::components {
     }
 
     int32_t
-    combo_box::fill(HWND combo_box_handle, wchar_t *path_spec, FileType type) {
+    combo_box::fill(HWND combo_box_handle, wchar_t *path_spec, ComboFileType type) {
         const int32_t result =
                 ComboBox_Dir(combo_box_handle, static_cast<uint32_t>(type),
                              path_spec);

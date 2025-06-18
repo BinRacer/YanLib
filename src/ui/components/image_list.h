@@ -36,84 +36,21 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <commoncontrols.h>
+#include <minwindef.h>
+#include <objidlbase.h>
+#include <winnt.h>
+#include <Unknwnbase.h>
+#include <windef.h>
 #include <cstdint>
 #include <vector>
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef ILCREATEFLAG
-#define ILCREATEFLAG
-    enum class ILCreateFlag : uint32_t {
-        Mask = ILC_MASK,
-        Color = ILC_COLOR,
-        ColorDdb = ILC_COLORDDB,
-        Color4 = ILC_COLOR4,
-        Color8 = ILC_COLOR8,
-        Color16 = ILC_COLOR16,
-        Color24 = ILC_COLOR24,
-        Color32 = ILC_COLOR32,
-        Palette = ILC_PALETTE,
-        Mirror = ILC_MIRROR,
-        PerItemMirror = ILC_PERITEMMIRROR,
-        OriginalSize = ILC_ORIGINALSIZE,
-        HighQualityScale = ILC_HIGHQUALITYSCALE,
-    };
-    inline ILCreateFlag operator|(ILCreateFlag a, ILCreateFlag b) {
-        return static_cast<ILCreateFlag>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef IMAGEFLAG
-#define IMAGEFLAG
-
-    enum class ImageFlag : uint32_t {
-        DefaultColor = LR_DEFAULTCOLOR,
-        MonoChrome = LR_MONOCHROME,
-        Color = LR_COLOR,
-        CopyReturnOrg = LR_COPYRETURNORG,
-        CopyDeleteOrg = LR_COPYDELETEORG,
-        LoadFromFile = LR_LOADFROMFILE,
-        LoadTransParent = LR_LOADTRANSPARENT,
-        DefaultSize = LR_DEFAULTSIZE,
-        VgaColor = LR_VGACOLOR,
-        LoadMap3dColors = LR_LOADMAP3DCOLORS,
-        CreateDibSection = LR_CREATEDIBSECTION,
-        CopyFromResource = LR_COPYFROMRESOURCE,
-        Shared = LR_SHARED,
-    };
-
-    inline ImageFlag operator|(ImageFlag a, ImageFlag b) {
-        return static_cast<ImageFlag>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef ILDRAWFLAG
-#define ILDRAWFLAG
-    enum class ILDrawFlag : uint32_t {
-        Normal = ILD_NORMAL,
-        Transparent = ILD_TRANSPARENT,
-        Mask = ILD_MASK,
-        Image = ILD_IMAGE,
-        Rop = ILD_ROP,
-        Blend25 = ILD_BLEND25,
-        Blend50 = ILD_BLEND50,
-        OverlayMask = ILD_OVERLAYMASK,
-        PreserveAlpha = ILD_PRESERVEALPHA,
-        Scale = ILD_SCALE,
-        DpiScale = ILD_DPISCALE,
-        Async = ILD_ASYNC,
-        Selected = ILD_SELECTED,
-        Focus = ILD_FOCUS,
-        Blend = ILD_BLEND,
-    };
-    inline ILDrawFlag operator|(ILDrawFlag a, ILDrawFlag b) {
-        return static_cast<ILDrawFlag>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
     class image_list {
     public:
         image_list(const image_list &other) = delete;
@@ -224,15 +161,15 @@ namespace YanLib::ui::components {
                                      int32_t width,
                                      COLORREF mask = CLR_DEFAULT,
                                      HINSTANCE instance_handle = nullptr,
-                                     ImageFlag flag = ImageFlag::LoadFromFile |
-                                             ImageFlag::CreateDibSection);
+                                     core::ImageFlag flag = core::ImageFlag::LoadFromFile |
+                                             core::ImageFlag::CreateDibSection);
 
         static HIMAGELIST load_image(const wchar_t *file_path,
                                      int32_t width,
                                      COLORREF mask = CLR_DEFAULT,
                                      HINSTANCE instance_handle = nullptr,
-                                     ImageFlag flag = ImageFlag::LoadFromFile |
-                                             ImageFlag::CreateDibSection);
+                                     core::ImageFlag flag = core::ImageFlag::LoadFromFile |
+                                             core::ImageFlag::CreateDibSection);
 
         static int32_t get_image_count(HIMAGELIST image_list_handle);
 

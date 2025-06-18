@@ -252,7 +252,7 @@ namespace YanLib::ui::core {
                                   char *path_spec,
                                   int32_t list_box_id,
                                   int32_t static_id,
-                                  FileType file_type) {
+                                  DialogFileType file_type) {
         const int32_t result =
                 DlgDirListA(dialog_handle, path_spec, list_box_id, static_id,
                             static_cast<uint32_t>(file_type));
@@ -266,7 +266,7 @@ namespace YanLib::ui::core {
                                   wchar_t *path_spec,
                                   int32_t list_box_id,
                                   int32_t static_id,
-                                  FileType file_type) {
+                                  DialogFileType file_type) {
         const int32_t result =
                 DlgDirListW(dialog_handle, path_spec, list_box_id, static_id,
                             static_cast<uint32_t>(file_type));
@@ -280,7 +280,7 @@ namespace YanLib::ui::core {
                                    char *path_spec,
                                    int32_t combo_box_id,
                                    int32_t static_id,
-                                   FileType file_type) {
+                                   DialogFileType file_type) {
         const int32_t result =
                 DlgDirListComboBoxA(dialog_handle, path_spec, combo_box_id,
                                     static_id,
@@ -295,7 +295,7 @@ namespace YanLib::ui::core {
                                    wchar_t *path_spec,
                                    int32_t combo_box_id,
                                    int32_t static_id,
-                                   FileType file_type) {
+                                   DialogFileType file_type) {
         const int32_t result =
                 DlgDirListComboBoxW(dialog_handle, path_spec, combo_box_id,
                                     static_id,

@@ -35,279 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TREESTYLE
-#define TREESTYLE
-    enum class TreeStyle : uint32_t {
-        HasButtons = TVS_HASBUTTONS,
-        HasLines = TVS_HASLINES,
-        LinesAtRoot = TVS_LINESATROOT,
-        EditLabels = TVS_EDITLABELS,
-        DisableDragDrop = TVS_DISABLEDRAGDROP,
-        ShowSelectAlways = TVS_SHOWSELALWAYS,
-        RtlReading = TVS_RTLREADING,
-        NoToolTips = TVS_NOTOOLTIPS,
-        CheckBoxes = TVS_CHECKBOXES,
-        TrackSelect = TVS_TRACKSELECT,
-        SingleExpand = TVS_SINGLEEXPAND,
-        InfoTip = TVS_INFOTIP,
-        FullRowSelect = TVS_FULLROWSELECT,
-        NoScroll = TVS_NOSCROLL,
-        NoEvenHeight = TVS_NONEVENHEIGHT,
-        NoHScroll = TVS_NOHSCROLL,
-    };
-    inline TreeStyle operator|(TreeStyle a, TreeStyle b) {
-        return static_cast<TreeStyle>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TREEEXTENDSTYLE
-#define TREEEXTENDSTYLE
-    enum class TreeExtendStyle : uint32_t {
-        NoSingleCollapse = TVS_EX_NOSINGLECOLLAPSE,
-        MultiSelect = TVS_EX_MULTISELECT,
-        DoubleBuffer = TVS_EX_DOUBLEBUFFER,
-        NoIndentState = TVS_EX_NOINDENTSTATE,
-        RichToolTip = TVS_EX_RICHTOOLTIP,
-        AutoHScroll = TVS_EX_AUTOHSCROLL,
-        FadeInOutExpandOs = TVS_EX_FADEINOUTEXPANDOS,
-        PartialCheckBoxes = TVS_EX_PARTIALCHECKBOXES,
-        ExclusionCheckBoxes = TVS_EX_EXCLUSIONCHECKBOXES,
-        DimmedCheckBoxes = TVS_EX_DIMMEDCHECKBOXES,
-        DrawImageAsync = TVS_EX_DRAWIMAGEASYNC
-    };
-    inline TreeExtendStyle operator|(TreeExtendStyle a, TreeExtendStyle b) {
-        return static_cast<TreeExtendStyle>(static_cast<uint32_t>(a) |
-                                            static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TREEITEMSTATE
-#define TREEITEMSTATE
-    enum class TreeItemState : uint32_t {
-        Selected = TVIS_SELECTED,
-        Cut = TVIS_CUT,
-        DropHilited = TVIS_DROPHILITED,
-        Bold = TVIS_BOLD,
-        Expanded = TVIS_EXPANDED,
-        ExpandedOnce = TVIS_EXPANDEDONCE,
-        ExpandPartial = TVIS_EXPANDPARTIAL,
-        OverlayMask = TVIS_OVERLAYMASK,
-        StateImageMask = TVIS_STATEIMAGEMASK,
-        UserMask = TVIS_USERMASK,
-    };
-    inline TreeItemState operator|(TreeItemState a, TreeItemState b) {
-        return static_cast<TreeItemState>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TREEITEMEXSTATE
-#define TREEITEMEXSTATE
-    enum class TreeItemExState : uint32_t {
-        Flat = TVIS_EX_FLAT,
-        Disabled = TVIS_EX_DISABLED,
-        All = TVIS_EX_ALL,
-    };
-    inline TreeItemExState operator|(TreeItemExState a, TreeItemExState b) {
-        return static_cast<TreeItemExState>(static_cast<uint32_t>(a) |
-                                            static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TREEITEMFLAG
-#define TREEITEMFLAG
-    enum class TreeItemFlag : uint32_t {
-        Text = TVIF_TEXT,
-        Image = TVIF_IMAGE,
-        Param = TVIF_PARAM,
-        State = TVIF_STATE,
-        Handle = TVIF_HANDLE,
-        SelectedImage = TVIF_SELECTEDIMAGE,
-        Children = TVIF_CHILDREN,
-        Integral = TVIF_INTEGRAL,
-        StateEx = TVIF_STATEEX,
-        ExpandedImage = TVIF_EXPANDEDIMAGE,
-    };
-#endif
-#ifndef TREEITEMCHECKSTATE
-#define TREEITEMCHECKSTATE
-    enum class TreeItemCheckState : int32_t {
-        Checked = 1,
-        Unchecked = 0,
-        Intermediate = -1,
-    };
-#endif
-#ifndef TREEIMAGELISTTYPE
-#define TREEIMAGELISTTYPE
-    enum class TreeImageListType : int32_t {
-        Normal = TVSIL_NORMAL,
-        State = TVSIL_STATE,
-    };
-#endif
-#ifndef TREEOPFLAG
-#define TREEOPFLAG
-    enum class TreeOpFlag : uint32_t {
-        Root = TVGN_ROOT,
-        Next = TVGN_NEXT,
-        Previous = TVGN_PREVIOUS,
-        Parent = TVGN_PARENT,
-        Child = TVGN_CHILD,
-        FirstVisible = TVGN_FIRSTVISIBLE,
-        NextVisible = TVGN_NEXTVISIBLE,
-        PreviousVisible = TVGN_PREVIOUSVISIBLE,
-        DropHilite = TVGN_DROPHILITE,
-        Caret = TVGN_CARET,
-        LastVisible = TVGN_LASTVISIBLE,
-        NextSelected = TVGN_NEXTSELECTED,
-    };
-#endif
-#ifndef TREEEXPANDFLAG
-#define TREEEXPANDFLAG
-    enum class TreeExpandFlag : uint32_t {
-        Collapse = TVE_COLLAPSE,
-        Expand = TVE_EXPAND,
-        Toggle = TVE_TOGGLE,
-        ExpandPartial = TVE_EXPANDPARTIAL,
-        CollapseReset = TVE_COLLAPSERESET,
-    };
-    inline TreeExpandFlag operator|(TreeExpandFlag a, TreeExpandFlag b) {
-        return static_cast<TreeExpandFlag>(static_cast<uint32_t>(a) |
-                                           static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TREEMESSAGE
-#define TREEMESSAGE
-    enum class TreeMessage : uint32_t {
-        CreateDragImage = TVM_CREATEDRAGIMAGE,
-        DeleteItem = TVM_DELETEITEM,
-        EditLabel = TVM_EDITLABEL,
-        EndEditLabelNow = TVM_ENDEDITLABELNOW,
-        EnsureVisible = TVM_ENSUREVISIBLE,
-        Expand = TVM_EXPAND,
-        GetBackgroundColor = TVM_GETBKCOLOR,
-        GetCount = TVM_GETCOUNT,
-        GetEditControl = TVM_GETEDITCONTROL,
-        GetExtendedStyle = TVM_GETEXTENDEDSTYLE,
-        GetImageList = TVM_GETIMAGELIST,
-        GetIndent = TVM_GETINDENT,
-        GetInsertMarkColor = TVM_GETINSERTMARKCOLOR,
-        GetISearchString = TVM_GETISEARCHSTRING,
-        GetItem = TVM_GETITEM,
-        GetItemHeight = TVM_GETITEMHEIGHT,
-        GetItemPartRect = TVM_GETITEMPARTRECT,
-        GetItemRect = TVM_GETITEMRECT,
-        GetItemState = TVM_GETITEMSTATE,
-        GetLineColor = TVM_GETLINECOLOR,
-        GetNextItem = TVM_GETNEXTITEM,
-        GetScrollTime = TVM_GETSCROLLTIME,
-        GetSelectedCount = TVM_GETSELECTEDCOUNT,
-        GetTextColor = TVM_GETTEXTCOLOR,
-        GetToolTips = TVM_GETTOOLTIPS,
-        GetUnicodeFormat = TVM_GETUNICODEFORMAT,
-        GetVisibleCount = TVM_GETVISIBLECOUNT,
-        HitTest = TVM_HITTEST,
-        InsertItem = TVM_INSERTITEM,
-        MapAccessIdToHTreeItem = TVM_MAPACCIDTOHTREEITEM,
-        MapHTreeItemToAccessId = TVM_MAPHTREEITEMTOACCID,
-        SelectItem = TVM_SELECTITEM,
-        SetAutoScrollInfo = TVM_SETAUTOSCROLLINFO,
-        SetBackgroundColor = TVM_SETBKCOLOR,
-        SetBorder = TVM_SETBORDER,
-        SetExtendedStyle = TVM_SETEXTENDEDSTYLE,
-        SetHot = TVM_SETHOT,
-        SetImageList = TVM_SETIMAGELIST,
-        SetIndent = TVM_SETINDENT,
-        SetInsertMark = TVM_SETINSERTMARK,
-        SetInsertMarkColor = TVM_SETINSERTMARKCOLOR,
-        SetItem = TVM_SETITEM,
-        SetItemHeight = TVM_SETITEMHEIGHT,
-        SetLineColor = TVM_SETLINECOLOR,
-        SetScrollTime = TVM_SETSCROLLTIME,
-        SetTextColor = TVM_SETTEXTCOLOR,
-        SetToolTips = TVM_SETTOOLTIPS,
-        SetUnicodeFormat = TVM_SETUNICODEFORMAT,
-        ShowInfoTip = TVM_SHOWINFOTIP,
-        SortChildren = TVM_SORTCHILDREN,
-        SortChildrenCallback = TVM_SORTCHILDRENCB,
-    };
-#endif
-#ifndef TREENOTIFY
-#define TREENOTIFY
-    enum class TreeNotify : uint32_t {
-        Click = NM_CLICK,
-        CustomDraw = NM_CUSTOMDRAW,
-        DoubleClick = NM_DBLCLK,
-        KillFocus = NM_KILLFOCUS,
-        RightClick = NM_RCLICK,
-        RightDoubleClick = NM_RDBLCLK,
-        Return = NM_RETURN,
-        SetCursor = NM_SETCURSOR,
-        SetFocus = NM_SETFOCUS,
-        AsyncDraw = TVN_ASYNCDRAW,
-        BeginDrag = TVN_BEGINDRAG,
-        BeginLabelEdit = TVN_BEGINLABELEDIT,
-        BeginRDrag = TVN_BEGINRDRAG,
-        DeleteItem = TVN_DELETEITEM,
-        EndLabelEdit = TVN_ENDLABELEDIT,
-        GetDispInfo = TVN_GETDISPINFO,
-        GetInfoTip = TVN_GETINFOTIP,
-        ItemChanged = TVN_ITEMCHANGED,
-        ItemChanging = TVN_ITEMCHANGING,
-        ItemExpanded = TVN_ITEMEXPANDED,
-        ItemExpanding = TVN_ITEMEXPANDING,
-        KeyDown = TVN_KEYDOWN,
-        SelChanged = TVN_SELCHANGED,
-        SelChanging = TVN_SELCHANGING,
-        SetDispInfo = TVN_SETDISPINFO,
-        SingleExpand = TVN_SINGLEEXPAND
-    };
-#endif
     class tree {
     private:
         std::vector<HWND> tree_handles = {};
@@ -339,8 +81,8 @@ namespace YanLib::ui::components {
                             TreeStyle::LinesAtRoot | TreeStyle::InfoTip |
                             TreeStyle::ShowSelectAlways |
                             TreeStyle::SingleExpand | TreeStyle::TrackSelect,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::Border);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND create(const char *tree_name,
                     uintptr_t tree_id,
@@ -355,8 +97,8 @@ namespace YanLib::ui::components {
                             TreeStyle::LinesAtRoot | TreeStyle::InfoTip |
                             TreeStyle::ShowSelectAlways |
                             TreeStyle::SingleExpand | TreeStyle::TrackSelect,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::Border);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND create(const wchar_t *tree_name,
                     uintptr_t tree_id,
@@ -371,8 +113,8 @@ namespace YanLib::ui::components {
                             TreeStyle::LinesAtRoot | TreeStyle::InfoTip |
                             TreeStyle::ShowSelectAlways |
                             TreeStyle::SingleExpand | TreeStyle::TrackSelect,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::Border);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::Border);
 
         bool destroy(HWND tree_handle);
 

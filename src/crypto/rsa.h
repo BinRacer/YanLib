@@ -28,26 +28,11 @@
 #ifndef RSA_H
 #define RSA_H
 #include <Windows.h>
+#include <wincrypt.h>
 #include <string>
 #include <vector>
-
+#include "crypto.h"
 namespace YanLib::crypto {
-#ifndef RSABITSLENGTH
-#define RSABITSLENGTH
-
-    enum class RsaKeyBits : uint32_t {
-        Bit384 = 0x01800000,  // 384 bits
-        Bit512 = 0x02000000,  // 512 bits
-        Bit768 = 0x03000000,  // 768 bits
-        Bit1024 = 0x04000000, // 1024 bits
-        Bit1536 = 0x06000000, // 1536 bits
-        Bit2048 = 0x08000000, // 2048 bits
-        Bit3072 = 0x0C000000, // 3072 bits
-        Bit4096 = 0x10000000, // 4096 bits
-        Bit8192 = 0x20000000, // 8192 bits
-        Bit16384 = 0x40000000 // 16,384 bits
-    };
-#endif
     class rsa {
     private:
         HCRYPTPROV crypt_prov_handle = 0;

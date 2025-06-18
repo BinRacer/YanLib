@@ -27,7 +27,7 @@
 /* clang-format on */
 #ifndef TCP_CLIENT_H
 #define TCP_CLIENT_H
-#include <winsock2.h>
+#include <WinSock2.h>
 #include <string>
 #include <vector>
 #pragma comment(lib, "WS2_32.Lib")

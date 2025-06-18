@@ -35,116 +35,20 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef PAGESTYLE
-#define PAGESTYLE
-    enum class PageStyle : uint32_t {
-        Vertical = PGS_VERT,
-        Horizontal = PGS_HORZ,
-        AutoScroll = PGS_AUTOSCROLL,
-        DragnDrop = PGS_DRAGNDROP,
-    };
-    inline PageStyle operator|(PageStyle a, PageStyle b) {
-        return static_cast<PageStyle>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef PAGEBUTTONINDEX
-#define PAGEBUTTONINDEX
-    enum class PageButtonIndex : uint32_t {
-        TopOrLeft = PGB_TOPORLEFT,
-        BottomOrRight = PGB_BOTTOMORRIGHT,
-    };
-#endif
-#ifndef PAGEBUTTONSTATE
-#define PAGEBUTTONSTATE
-    enum class PageButtonState : uint32_t {
-        Invisible = PGF_INVISIBLE,
-        Normal = PGF_NORMAL,
-        Grayed = PGF_GRAYED,
-        Depressed = PGF_DEPRESSED,
-        Hot = PGF_HOT,
-    };
-    inline PageButtonState operator|(PageButtonState a, PageButtonState b) {
-        return static_cast<PageButtonState>(static_cast<uint32_t>(a) |
-                                            static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef PAGEMESSAGE
-#define PAGEMESSAGE
-    enum class PageMessage : uint32_t {
-        ForwardMouse = PGM_FORWARDMOUSE,
-        GetBackgroundColor = PGM_GETBKCOLOR,
-        GetBorder = PGM_GETBORDER,
-        GetButtonSize = PGM_GETBUTTONSIZE,
-        GetButtonState = PGM_GETBUTTONSTATE,
-        GetDropTarget = PGM_GETDROPTARGET,
-        GetPos = PGM_GETPOS,
-        RecalcSize = PGM_RECALCSIZE,
-        SetBackgroundColor = PGM_SETBKCOLOR,
-        SetBorder = PGM_SETBORDER,
-        SetButtonSize = PGM_SETBUTTONSIZE,
-        SetChild = PGM_SETCHILD,
-        SetPos = PGM_SETPOS,
-        SetScrollInfo = PGM_SETSCROLLINFO
-    };
-#endif
-#ifndef PAGENOTIFY
-#define PAGENOTIFY
-    enum class PageNotify : uint32_t {
-        ReleasedCapture = NM_RELEASEDCAPTURE,
-        CalcSize = PGN_CALCSIZE,
-        HotItemChange = PGN_HOTITEMCHANGE,
-        Scroll = PGN_SCROLL,
-    };
-#endif
     class page {
     private:
         std::vector<HWND> pages_handles = {};
@@ -173,8 +77,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     PageStyle style = PageStyle::Horizontal |
                             PageStyle::AutoScroll,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const char *page_name,
                     uintptr_t page_id,
@@ -186,8 +90,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     PageStyle style = PageStyle::Horizontal |
                             PageStyle::AutoScroll,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const wchar_t *page_name,
                     uintptr_t page_id,
@@ -199,8 +103,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     PageStyle style = PageStyle::Horizontal |
                             PageStyle::AutoScroll,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         bool destroy(HWND page_handle);
 

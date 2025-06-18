@@ -28,6 +28,7 @@
 #ifndef MD5_H
 #define MD5_H
 #include <Windows.h>
+#include <wincrypt.h>
 #include <string>
 #include <vector>
 #include "helper/convert.h"

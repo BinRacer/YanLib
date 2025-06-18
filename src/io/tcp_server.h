@@ -27,7 +27,7 @@
 /* clang-format on */
 #ifndef TCP_H
 #define TCP_H
-#include <winsock2.h>
+#include <WinSock2.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"

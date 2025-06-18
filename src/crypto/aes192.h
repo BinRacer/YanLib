@@ -28,30 +28,11 @@
 #ifndef AES192_H
 #define AES192_H
 #include <Windows.h>
+#include <wincrypt.h>
 #include <string>
 #include <vector>
-
+#include "crypto.h"
 namespace YanLib::crypto {
-#ifndef AESPADDING
-#define AESPADDING
-
-    enum class AesPadding : uint8_t {
-        PKCS7,
-        ISO10126,
-        ANSIX923,
-    };
-#endif
-#ifndef AESMODE
-#define AESMODE
-
-    enum class AesMode : uint32_t {
-        CBC = CRYPT_MODE_CBC,
-        ECB = CRYPT_MODE_ECB,
-        // OFB = CRYPT_OFB,
-        CFB = CRYPT_MODE_CFB,
-        // CTS = CRYPT_CTS,
-    };
-#endif
     class aes192 {
     private:
         HCRYPTPROV crypt_prov_handle;

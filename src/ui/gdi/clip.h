@@ -28,30 +28,11 @@
 #ifndef CLIP_H
 #define CLIP_H
 #include <Windows.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef REGIONSTYLE
-#define REGIONSTYLE
-
-    enum class RegionStyle : int32_t {
-        And = RGN_AND,
-        Or = RGN_OR,
-        Xor = RGN_XOR,
-        Diff = RGN_DIFF,
-        Copy = RGN_COPY,
-    };
-#endif
-#ifndef REGIONFLAG
-#define REGIONFLAG
-
-    enum class RegionFlag : int32_t {
-        Error = ERROR,
-        NullRegion = NULLREGION,
-        SimpleRegion = SIMPLEREGION,
-        ComplexRegion = COMPLEXREGION,
-    };
-#endif
     class clip {
     public:
         clip(const clip &other) = delete;

@@ -28,6 +28,10 @@
 #ifndef COMP_PORT_H
 #define COMP_PORT_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <minwinbase.h>
+#include <winsock.h>
+#include <winnt.h>
 #include <vector>
 #include <string>
 

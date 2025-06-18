@@ -6,12 +6,14 @@ set(CMAKE_CXX_STANDARD 17)
 add_compile_definitions(UNICODE _UNICODE)
 
 add_library(YanLib STATIC
+        src/helper/helper.h
         src/helper/convert.cpp
         src/helper/convert.h
         src/helper/string.cpp
         src/helper/string.h
         src/helper/autoclean.cpp
         src/helper/autoclean.h
+        src/sync/sync.h
         src/sync/mutex.cpp
         src/sync/mutex.h
         src/sync/fence.cpp
@@ -28,12 +30,14 @@ add_library(YanLib STATIC
         src/sync/barrier.h
         src/sync/condvar.cpp
         src/sync/condvar.h
+        src/mem/mem.h
         src/mem/mmap.cpp
         src/mem/mmap.h
         src/mem/allocate.cpp
         src/mem/allocate.h
         src/mem/heap.cpp
         src/mem/heap.h
+        src/io/io.h
         src/io/fs.cpp
         src/io/fs.h
         src/io/comp_port.cpp
@@ -60,6 +64,7 @@ add_library(YanLib STATIC
         src/hash/sha384.h
         src/hash/sha512.cpp
         src/hash/sha512.h
+        src/crypto/crypto.h
         src/crypto/base16.cpp
         src/crypto/base16.h
         src/crypto/base32.cpp
@@ -92,6 +97,7 @@ add_library(YanLib STATIC
         src/crypto/aes256.h
         src/crypto/rsa.cpp
         src/crypto/rsa.h
+        src/sys/sys.h
         src/sys/security.cpp
         src/sys/security.h
         src/sys/proc.cpp
@@ -108,6 +114,7 @@ add_library(YanLib STATIC
         src/sys/snapshot.h
         src/sys/processor.cpp
         src/sys/processor.h
+        src/ui/core/core.h
         src/ui/core/window.cpp
         src/ui/core/window.h
         src/ui/core/window_class.cpp
@@ -150,6 +157,7 @@ add_library(YanLib STATIC
         src/ui/core/accelerator.h
         src/ui/core/notify.cpp
         src/ui/core/notify.h
+        src/ui/gdi/gdi.h
         src/ui/gdi/bitmap.cpp
         src/ui/gdi/bitmap.h
         src/ui/gdi/display.cpp
@@ -190,6 +198,7 @@ add_library(YanLib STATIC
         src/ui/gdi/meta.h
         src/ui/gdi/paint.cpp
         src/ui/gdi/paint.h
+        src/ui/components/components.h
         src/ui/components/button.cpp
         src/ui/components/button.h
         src/ui/components/animate.cpp

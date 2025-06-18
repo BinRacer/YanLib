@@ -27,65 +27,13 @@
 /* clang-format on */
 #ifndef COORDINATE_H
 #define COORDINATE_H
-#include <utility>
 #include <Windows.h>
+#include <wingdi.h>
+#include <windef.h>
+#include <utility>
 #include <vector>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef ORIENTATIONPREFERENCE
-#define ORIENTATIONPREFERENCE
-
-    enum class OrientationPreference : int32_t {
-        None = ORIENTATION_PREFERENCE_NONE,
-        Landscape = ORIENTATION_PREFERENCE_LANDSCAPE,
-        Portrait = ORIENTATION_PREFERENCE_PORTRAIT,
-        LandscapeFlipped = ORIENTATION_PREFERENCE_LANDSCAPE_FLIPPED,
-        PortraitFlipped = ORIENTATION_PREFERENCE_PORTRAIT_FLIPPED,
-    };
-
-    inline OrientationPreference operator|(OrientationPreference a,
-                                           OrientationPreference b) {
-        return static_cast<OrientationPreference>(static_cast<int32_t>(a) |
-                                                  static_cast<int32_t>(b));
-    }
-#endif
-#ifndef GRAPHICSMODE
-#define GRAPHICSMODE
-
-    enum class GraphicsMode : int32_t {
-        None = 0,
-        Compatible = GM_COMPATIBLE,
-        Advanced = GM_ADVANCED,
-    };
-#endif
-#ifndef MAPPINGMODE
-#define MAPPINGMODE
-
-    enum class MappingMode : int32_t {
-        Text = MM_TEXT,
-        LoMetric = MM_LOMETRIC,
-        HiMetric = MM_HIMETRIC,
-        LoEnglish = MM_LOENGLISH,
-        HiEnglish = MM_HIENGLISH,
-        TwIps = MM_TWIPS,
-        IsoTropic = MM_ISOTROPIC,
-        AnIsoTropic = MM_ANISOTROPIC,
-    };
-
-    inline MappingMode operator|(MappingMode a, MappingMode b) {
-        return static_cast<MappingMode>(static_cast<int32_t>(a) |
-                                        static_cast<int32_t>(b));
-    }
-#endif
-#ifndef XFORMMODE
-#define XFORMMODE
-
-    enum class XFormMode : uint32_t {
-        Identity = MWT_IDENTITY,
-        LeftMultiply = MWT_LEFTMULTIPLY,
-        RightMultiply = MWT_RIGHTMULTIPLY,
-    };
-#endif
     class coordinate {
     public:
         coordinate(const coordinate &other) = delete;

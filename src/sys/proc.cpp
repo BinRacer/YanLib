@@ -383,7 +383,7 @@ namespace YanLib::sys {
         return pi;
     }
 
-    bool proc::win_exec(const char *cmdline, ShowType show_flag) {
+    bool proc::win_exec(const char *cmdline, ShowFlag show_flag) {
         const uint32_t ret = WinExec(cmdline, static_cast<uint32_t>(show_flag));
         if (ret <= 31 && ret > 0) {
             error_code = ret;
@@ -399,7 +399,7 @@ namespace YanLib::sys {
     bool proc::shell_exec(const char *file_name,
                           const char *params,
                           const char *dir,
-                          ShowType show_flag,
+                          ShowFlag show_flag,
                           HWND window_handle,
                           const char *operation) {
         HINSTANCE instance =
@@ -421,7 +421,7 @@ namespace YanLib::sys {
     bool proc::shell_exec(const wchar_t *file_name,
                           const wchar_t *params,
                           const wchar_t *dir,
-                          ShowType show_flag,
+                          ShowFlag show_flag,
                           HWND window_handle,
                           const wchar_t *operation) {
         HINSTANCE instance =
@@ -570,7 +570,7 @@ namespace YanLib::sys {
                        size_t size,
                        void *addr,
                        AllocateType type,
-                       MemoryProtect protect) {
+                       mem::MemoryProtect protect) {
         void *address = VirtualAllocEx(proc_handle, addr, size,
                                        static_cast<uint32_t>(type),
                                        static_cast<uint32_t>(protect));
@@ -597,7 +597,7 @@ namespace YanLib::sys {
                                size_t size,
                                void *addr,
                                AllocateType type,
-                               MemoryProtect protect) {
+                               mem::MemoryProtect protect) {
         void *address = VirtualAllocEx(proc_handle, addr, size,
                                        static_cast<uint32_t>(type),
                                        static_cast<uint32_t>(protect));
@@ -622,8 +622,8 @@ namespace YanLib::sys {
     bool proc::mem_guard_attr(HANDLE proc_handle,
                               void *addr,
                               size_t size,
-                              MemoryProtect protect,
-                              MemoryProtect *old_protect) {
+                              mem::MemoryProtect protect,
+                              mem::MemoryProtect *old_protect) {
         if (!old_protect) {
             error_code = STATUS_ACCESS_VIOLATION;
             return false;
@@ -632,10 +632,10 @@ namespace YanLib::sys {
         if (!VirtualProtectEx(proc_handle, addr, size,
                               static_cast<uint32_t>(protect), &temp)) {
             error_code = GetLastError();
-            *old_protect = static_cast<MemoryProtect>(temp);
+            *old_protect = static_cast<mem::MemoryProtect>(temp);
             return false;
         }
-        *old_protect = static_cast<MemoryProtect>(temp);
+        *old_protect = static_cast<mem::MemoryProtect>(temp);
         return true;
     }
 

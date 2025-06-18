@@ -35,187 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <minwinbase.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef CALENDARSTYLE
-#define CALENDARSTYLE
-    enum class CalendarStyle : uint32_t {
-        DayState = MCS_DAYSTATE,
-        MultiSelect = MCS_MULTISELECT,
-        WeekNumbers = MCS_WEEKNUMBERS,
-        NoTodayCircle = MCS_NOTODAYCIRCLE,
-        NoToday = MCS_NOTODAY,
-        NoTrailingDates = MCS_NOTRAILINGDATES,
-        ShortDaysOfWeek = MCS_SHORTDAYSOFWEEK,
-        NoSelectChangeOnNav = MCS_NOSELCHANGEONNAV,
-    };
-    inline CalendarStyle operator|(CalendarStyle a, CalendarStyle b) {
-        return static_cast<CalendarStyle>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef CALENDARID
-#define CALENDARID
-    enum class CalendarId : uint32_t {
-        GREGORIAN = CAL_GREGORIAN,
-        GREGORIAN_US = CAL_GREGORIAN_US,
-        JAPAN = CAL_JAPAN,
-        TAIWAN = CAL_TAIWAN,
-        KOREA = CAL_KOREA,
-        HIJRI = CAL_HIJRI,
-        THAI = CAL_THAI,
-        HEBREW = CAL_HEBREW,
-        GREGORIAN_ME_FRENCH = CAL_GREGORIAN_ME_FRENCH,
-        GREGORIAN_ARABIC = CAL_GREGORIAN_ARABIC,
-        GREGORIAN_XLIT_ENGLISH = CAL_GREGORIAN_XLIT_ENGLISH,
-        GREGORIAN_XLIT_FRENCH = CAL_GREGORIAN_XLIT_FRENCH,
-        PERSIAN = CAL_PERSIAN,
-        UMALQURA = CAL_UMALQURA,
-
-    };
-#endif
-#ifndef CALENDARCOLORCODE
-#define CALENDARCOLORCODE
-    enum class CalendarColorCode : uint32_t {
-        Background = MCSC_BACKGROUND,
-        Text = MCSC_TEXT,
-        TitleBackground = MCSC_TITLEBK,
-        TitleText = MCSC_TITLETEXT,
-        MonthBackground = MCSC_MONTHBK,
-        TrailingText = MCSC_TRAILINGTEXT,
-    };
-#endif
-#ifndef CALENDARVIEW
-#define CALENDARVIEW
-    enum class CalendarView : uint32_t {
-        Month = MCMV_MONTH,
-        Year = MCMV_YEAR,
-        Decade = MCMV_DECADE,
-        Century = MCMV_CENTURY,
-    };
-#endif
-#ifndef CALENDARWEEKDAY
-#define CALENDARWEEKDAY
-    enum class CalendarWeekDay : uint32_t {
-        Monday = 0,
-        Tuesday,
-        Wednesday,
-        Thursday,
-        Friday,
-        Saturday,
-        Sunday
-    };
-#endif
-#ifndef CALENDARMONTH
-#define CALENDARMONTH
-    enum class CalendarMonth : uint32_t {
-        January = 1,
-        February,
-        March,
-        April,
-        May,
-        June,
-        July,
-        August,
-        September,
-        October,
-        November,
-        December
-    };
-#endif
-#ifndef CALENDARMESSAGE
-#define CALENDARMESSAGE
-    enum class CalendarMessage : uint32_t {
-        GetCalendarBorder = MCM_GETCALENDARBORDER,
-        GetCalendarCount = MCM_GETCALENDARCOUNT,
-        GetCalendarGridInfo = MCM_GETCALENDARGRIDINFO,
-        GetCalendarId = MCM_GETCALID,
-        GetColor = MCM_GETCOLOR,
-        GetCurrentView = MCM_GETCURRENTVIEW,
-        GetCurrentSelect = MCM_GETCURSEL,
-        GetFirstDayOfWeek = MCM_GETFIRSTDAYOFWEEK,
-        GetMaxSelCount = MCM_GETMAXSELCOUNT,
-        GetMaxTodayWidth = MCM_GETMAXTODAYWIDTH,
-        GetMinRequestRect = MCM_GETMINREQRECT,
-        GetMonthDelta = MCM_GETMONTHDELTA,
-        GetMonthRange = MCM_GETMONTHRANGE,
-        GetRange = MCM_GETRANGE,
-        GetSelectRange = MCM_GETSELRANGE,
-        GetToday = MCM_GETTODAY,
-        GetUnicodeFormat = MCM_GETUNICODEFORMAT,
-        HitTest = MCM_HITTEST,
-        SetCalendarBorder = MCM_SETCALENDARBORDER,
-        SetCalendarId = MCM_SETCALID,
-        SetColor = MCM_SETCOLOR,
-        SetCurrentView = MCM_SETCURRENTVIEW,
-        SetCurrentSelect = MCM_SETCURSEL,
-        SetDayState = MCM_SETDAYSTATE,
-        SetFirstDayOfWeek = MCM_SETFIRSTDAYOFWEEK,
-        SetMaxSelectCount = MCM_SETMAXSELCOUNT,
-        SetMonthDelta = MCM_SETMONTHDELTA,
-        SetRange = MCM_SETRANGE,
-        SetSelectRange = MCM_SETSELRANGE,
-        SetToday = MCM_SETTODAY,
-        SetUnicodeFormat = MCM_SETUNICODEFORMAT,
-        SizeRectToMin = MCM_SIZERECTTOMIN
-    };
-#endif
-#ifndef CALENDARNOTIFY
-#define CALENDARNOTIFY
-    enum class CalendarNotify : uint32_t {
-        GetDayState = MCN_GETDAYSTATE,
-        SelectChange = MCN_SELCHANGE,
-        Select = MCN_SELECT,
-        ViewChange = MCN_VIEWCHANGE,
-        ReleasedCapture = NM_RELEASEDCAPTURE,
-    };
-#endif
     class calendar {
     private:
         std::vector<HWND> calendar_handles = {};
@@ -246,8 +80,8 @@ namespace YanLib::ui::components {
                             CalendarStyle::WeekNumbers |
                             CalendarStyle::ShortDaysOfWeek |
                             CalendarStyle::NoSelectChangeOnNav,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::Border);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND create(const char *calendar_name,
                     uintptr_t calendar_id,
@@ -261,8 +95,8 @@ namespace YanLib::ui::components {
                             CalendarStyle::WeekNumbers |
                             CalendarStyle::ShortDaysOfWeek |
                             CalendarStyle::NoSelectChangeOnNav,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::Border);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND create(const wchar_t *calendar_name,
                     uintptr_t calendar_id,
@@ -276,8 +110,8 @@ namespace YanLib::ui::components {
                             CalendarStyle::WeekNumbers |
                             CalendarStyle::ShortDaysOfWeek |
                             CalendarStyle::NoSelectChangeOnNav,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible | WindowStyle::Border);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible | core::WindowStyle::Border);
 
         bool destroy(HWND calendar_handle);
 

@@ -35,159 +35,22 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <WinUser.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TOOLTIPSSTYLE
-#define TOOLTIPSSTYLE
-    enum class ToolTipStyle : uint32_t {
-        AlwaysTip = TTS_ALWAYSTIP,
-        NoPrefix = TTS_NOPREFIX,
-        NoAnimate = TTS_NOANIMATE,
-        NoFade = TTS_NOFADE,
-        Balloon = TTS_BALLOON,
-        Close = TTS_CLOSE,
-        UseVisualStyle = TTS_USEVISUALSTYLE,
-    };
-    inline ToolTipStyle operator|(ToolTipStyle a, ToolTipStyle b) {
-        return static_cast<ToolTipStyle>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TTINFOFLAG
-#define TTINFOFLAG
-    enum class TTInfoFlag : uint32_t {
-        CenterTip = TTF_CENTERTIP,
-        RtlReading = TTF_RTLREADING,
-        SubClass = TTF_SUBCLASS,
-        Track = TTF_TRACK,
-        Absolute = TTF_ABSOLUTE,
-        Transparent = TTF_TRANSPARENT,
-        ParseLinks = TTF_PARSELINKS,
-        DiSetItem = TTF_DI_SETITEM,
-    };
-    inline TTInfoFlag operator|(TTInfoFlag a, TTInfoFlag b) {
-        return static_cast<TTInfoFlag>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TTDELAYTIME
-#define TTDELAYTIME
-    enum class TTDelayTime : uint32_t {
-        Automatic = TTDT_AUTOMATIC,
-        ReShow = TTDT_RESHOW,
-        AutoPop = TTDT_AUTOPOP,
-        Initial = TTDT_INITIAL,
-    };
-#endif
-#ifndef TTTITLETYPE
-#define TTTITLETYPE
-    enum class TTTitleType : uint32_t {
-        None = TTI_NONE,
-        Info = TTI_INFO,
-        Warning = TTI_WARNING,
-        Error = TTI_ERROR,
-        InfoLarge = TTI_INFO_LARGE,
-        WarningLarge = TTI_WARNING_LARGE,
-        ErrorLarge = TTI_ERROR_LARGE,
-    };
-#endif
-#ifndef TOOLTIPSMESSAGE
-#define TOOLTIPSMESSAGE
-    enum class ToolTipsMessage : uint32_t {
-        Activate = TTM_ACTIVATE,
-        AddTool = TTM_ADDTOOL,
-        AdjustRect = TTM_ADJUSTRECT,
-        DeleteTool = TTM_DELTOOL,
-        EnumTools = TTM_ENUMTOOLS,
-        GetBubbleSize = TTM_GETBUBBLESIZE,
-        GetCurrentTool = TTM_GETCURRENTTOOL,
-        GetDelayTime = TTM_GETDELAYTIME,
-        GetMargin = TTM_GETMARGIN,
-        GetMaxTipWidth = TTM_GETMAXTIPWIDTH,
-        GetText = TTM_GETTEXT,
-        GetTipBackgroundColor = TTM_GETTIPBKCOLOR,
-        GetTipTextColor = TTM_GETTIPTEXTCOLOR,
-        GetTitle = TTM_GETTITLE,
-        GetToolCount = TTM_GETTOOLCOUNT,
-        GetToolInfo = TTM_GETTOOLINFO,
-        HitTest = TTM_HITTEST,
-        NewToolRect = TTM_NEWTOOLRECT,
-        Pop = TTM_POP,
-        Popup = TTM_POPUP,
-        RelayEvent = TTM_RELAYEVENT,
-        SetDelayTime = TTM_SETDELAYTIME,
-        SetMargin = TTM_SETMARGIN,
-        SetMaxTipWidth = TTM_SETMAXTIPWIDTH,
-        SetTipBackgroundColor = TTM_SETTIPBKCOLOR,
-        SetTipTextColor = TTM_SETTIPTEXTCOLOR,
-        SetTitle = TTM_SETTITLE,
-        SetToolInfo = TTM_SETTOOLINFO,
-        SetWindowTheme = TTM_SETWINDOWTHEME,
-        TrackActivate = TTM_TRACKACTIVATE,
-        TrackPosition = TTM_TRACKPOSITION,
-        Update = TTM_UPDATE,
-        UpdateTipText = TTM_UPDATETIPTEXT,
-        WindowFromPoint = TTM_WINDOWFROMPOINT,
-    };
-#endif
-#ifndef TOOLTIPSNOTIFY
-#define TOOLTIPSNOTIFY
-    enum class ToolTipsNotify : uint32_t {
-        CustomDraw = NM_CUSTOMDRAW,
-        GetDispInfo = TTN_GETDISPINFO,
-        LinkClick = TTN_LINKCLICK,
-        NeedText = TTN_NEEDTEXT,
-        Pop = TTN_POP,
-        Show = TTN_SHOW,
-    };
-#endif
     class tool_tips {
     private:
         std::vector<HWND> tool_tips_handles = {};
@@ -215,7 +78,7 @@ namespace YanLib::ui::components {
                     int32_t height = CW_USEDEFAULT,
                     ToolTipStyle style = ToolTipStyle::AlwaysTip |
                             ToolTipStyle::Balloon | ToolTipStyle::Close,
-                    WindowStyle window_style = WindowStyle::Popup);
+                    core::WindowStyle window_style = core::WindowStyle::Popup);
 
         HWND create(const char *tool_tips_name,
                     HWND parent_window_handle,
@@ -226,7 +89,7 @@ namespace YanLib::ui::components {
                     int32_t height = CW_USEDEFAULT,
                     ToolTipStyle style = ToolTipStyle::AlwaysTip |
                             ToolTipStyle::Balloon | ToolTipStyle::Close,
-                    WindowStyle window_style = WindowStyle::Popup);
+                    core::WindowStyle window_style = core::WindowStyle::Popup);
 
         HWND create(const wchar_t *tool_tips_name,
                     HWND parent_window_handle,
@@ -237,7 +100,7 @@ namespace YanLib::ui::components {
                     int32_t height = CW_USEDEFAULT,
                     ToolTipStyle style = ToolTipStyle::AlwaysTip |
                             ToolTipStyle::Balloon | ToolTipStyle::Close,
-                    WindowStyle window_style = WindowStyle::Popup);
+                    core::WindowStyle window_style = core::WindowStyle::Popup);
 
         bool destroy(HWND tool_tips_handle);
 

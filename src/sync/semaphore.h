@@ -28,28 +28,12 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <winnt.h>
+#include <minwinbase.h>
 #include <string>
-
+#include "sync.h"
 namespace YanLib::sync {
-#ifndef SEMAPHOREACCESS
-#define SEMAPHOREACCESS
-
-    enum class SemaphoreAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = SEMAPHORE_ALL_ACCESS,
-        Modify = SEMAPHORE_MODIFY_STATE,
-    };
-
-    inline SemaphoreAccess operator|(SemaphoreAccess a, SemaphoreAccess b) {
-        return static_cast<SemaphoreAccess>(static_cast<uint32_t>(a) |
-                                            static_cast<uint32_t>(b));
-    }
-#endif
-
     class semaphore {
     private:
         HANDLE semaphore_handle;

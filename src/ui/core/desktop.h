@@ -28,40 +28,15 @@
 #ifndef DESKTOP_H
 #define DESKTOP_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <windef.h>
+#include <winnt.h>
+#include <minwinbase.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef DESKTOPACCESS
-#define DESKTOPACCESS
-
-    enum class DesktopAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        ReadObjects = DESKTOP_READOBJECTS,
-        CreateWindows = DESKTOP_CREATEWINDOW,
-        CreateMenu = DESKTOP_CREATEMENU,
-        HookControl = DESKTOP_HOOKCONTROL,
-        JournalRecord = DESKTOP_JOURNALRECORD,
-        JournalPlayback = DESKTOP_JOURNALPLAYBACK,
-        Enumerate = DESKTOP_ENUMERATE,
-        WriteObjects = DESKTOP_WRITEOBJECTS,
-        SwitchDesktop = DESKTOP_SWITCHDESKTOP,
-        GenericRead = GENERIC_READ,
-        GenericWrite = GENERIC_WRITE,
-        GenericExecute = GENERIC_EXECUTE,
-        GenericAll = GENERIC_ALL,
-    };
-
-    inline DesktopAccess operator|(DesktopAccess a, DesktopAccess b) {
-        return static_cast<DesktopAccess>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
     class desktop {
     private:
         std::vector<HDESK> desktop_handles = {};
@@ -145,36 +120,6 @@ namespace YanLib::ui::core {
 } // namespace YanLib::ui::core
 
 namespace YanLib::ui::core {
-#ifndef WINDOWSTATION
-#define WINDOWSTATION
-
-    enum class StationAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = WINSTA_ALL_ACCESS,
-        EnumDesktop = WINSTA_ENUMDESKTOPS,
-        ReadAttrs = WINSTA_READATTRIBUTES,
-        AccessClipboard = WINSTA_ACCESSCLIPBOARD,
-        CreateDesktops = WINSTA_CREATEDESKTOP,
-        WriteAttrs = WINSTA_WRITEATTRIBUTES,
-        AccessGlobalAtoms = WINSTA_ACCESSGLOBALATOMS,
-        ExitWindows = WINSTA_EXITWINDOWS,
-        Enumerate = WINSTA_ENUMERATE,
-        ReadScreen = WINSTA_READSCREEN,
-        GenericRead = GENERIC_READ,
-        GenericWrite = GENERIC_WRITE,
-        GenericExecute = GENERIC_EXECUTE,
-        GenericAll = GENERIC_ALL,
-    };
-
-    inline StationAccess operator|(StationAccess a, StationAccess b) {
-        return static_cast<StationAccess>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
     class window_station {
     private:
         std::vector<HWINSTA> window_station_handles = {};

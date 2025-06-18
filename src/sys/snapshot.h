@@ -28,44 +28,15 @@
 #ifndef SNAPSHOT_H
 #define SNAPSHOT_H
 #include <Windows.h>
-#include <tlhelp32.h>
+#include <TlHelp32.h>
+#include <minwindef.h>
+#include <handleapi.h>
+#include <winnt.h>
 #include <vector>
 #include <unordered_set>
 #include <string>
-
+#include "sys.h"
 namespace YanLib::sys {
-#ifndef TOKENACCESS
-#define TOKENACCESS
-
-    enum class ProcAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = PROCESS_ALL_ACCESS,
-        Terminate = PROCESS_TERMINATE,
-        CreateThread = PROCESS_CREATE_THREAD,
-        SetSessionId = PROCESS_SET_SESSIONID,
-        VmOperation = PROCESS_VM_OPERATION,
-        VmRead = PROCESS_VM_READ,
-        VmWrite = PROCESS_VM_WRITE,
-        DupHandle = PROCESS_DUP_HANDLE,
-        Create = PROCESS_CREATE_PROCESS,
-        SetQuota = PROCESS_SET_QUOTA,
-        SetInfo = PROCESS_SET_INFORMATION,
-        QueryInfo = PROCESS_QUERY_INFORMATION,
-        SuspendResume = PROCESS_SUSPEND_RESUME,
-        QueryLimitedInfo = PROCESS_QUERY_LIMITED_INFORMATION,
-        SetLimitedInfo = PROCESS_SET_LIMITED_INFORMATION,
-    };
-
-    inline ProcAccess operator|(ProcAccess a, ProcAccess b) {
-        return static_cast<ProcAccess>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-
     class snapshot {
     private:
         HANDLE snapshot_handle = INVALID_HANDLE_VALUE;

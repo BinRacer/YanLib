@@ -29,6 +29,8 @@
 #define WINDOW_AWARE_H
 #include <Windows.h>
 #include <shellscalingapi.h>
+#include <winnt.h>
+#include <windef.h>
 #include <string>
 #pragma comment(lib, "shcore.lib")
 namespace YanLib::ui::core {

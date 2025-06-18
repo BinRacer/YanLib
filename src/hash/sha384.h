@@ -28,6 +28,7 @@
 #ifndef SHA384_H
 #define SHA384_H
 #include <Windows.h>
+#include <wincrypt.h>
 #include <string>
 #include <vector>
 #include "helper/convert.h"

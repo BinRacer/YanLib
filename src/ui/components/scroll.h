@@ -35,186 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <WinUser.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef SCROLLSTYLE
-#define SCROLLSTYLE
-    enum class ScrollStyle : uint32_t {
-        Horiz = SBS_HORZ,
-        Vert = SBS_VERT,
-        TopAlign = SBS_TOPALIGN,
-        LeftAlign = SBS_LEFTALIGN,
-        BottomAlign = SBS_BOTTOMALIGN,
-        RightAlign = SBS_RIGHTALIGN,
-        SizeBoxTopLeftAlign = SBS_SIZEBOXTOPLEFTALIGN,
-        SizeBoxBottomRightAlign = SBS_SIZEBOXBOTTOMRIGHTALIGN,
-        SizeBox = SBS_SIZEBOX,
-        SizeGrip = SBS_SIZEGRIP,
-    };
-    inline ScrollStyle operator|(ScrollStyle a, ScrollStyle b) {
-        return static_cast<ScrollStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef SCROLLTYPE
-#define SCROLLTYPE
-    enum class ScrollType : uint32_t {
-        Horiz = SB_HORZ,
-        Vert = SB_VERT,
-        Ctl = SB_CTL,
-        Both = SB_BOTH,
-    };
-    inline ScrollType operator|(ScrollType a, ScrollType b) {
-        return static_cast<ScrollType>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef ARROWTYPE
-#define ARROWTYPE
-    enum class ArrowType : uint32_t {
-        EnableBoth = ESB_ENABLE_BOTH,
-        DisableBoth = ESB_DISABLE_BOTH,
-        DisableLeft = ESB_DISABLE_LEFT,
-        DisableRight = ESB_DISABLE_RIGHT,
-        DisableUp = ESB_DISABLE_UP,
-        DisableDown = ESB_DISABLE_DOWN,
-        DisableLeftUp = ESB_DISABLE_LTUP,
-        DisableRightDown = ESB_DISABLE_RTDN,
-    };
-    inline ArrowType operator|(ArrowType a, ArrowType b) {
-        return static_cast<ArrowType>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef SCROLLCOMMAND
-#define SCROLLCOMMAND
-
-    enum class ScrollCommand : uint32_t {
-        LineUp = SB_LINEUP,
-        LineLeft = SB_LINELEFT,
-        LineDown = SB_LINEDOWN,
-        LineRight = SB_LINERIGHT,
-        PageUp = SB_PAGEUP,
-        PageLeft = SB_PAGELEFT,
-        PageDown = SB_PAGEDOWN,
-        PageRight = SB_PAGERIGHT,
-        ThumbPosition = SB_THUMBPOSITION,
-        ThumbTrack = SB_THUMBTRACK,
-        Top = SB_TOP,
-        Left = SB_LEFT,
-        Bottom = SB_BOTTOM,
-        Right = SB_RIGHT,
-        EndScroll = SB_ENDSCROLL,
-    };
-
-    inline ScrollCommand operator|(ScrollCommand a, ScrollCommand b) {
-        return static_cast<ScrollCommand>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef OBJECTID
-#define OBJECTID
-
-    enum class ObjectID : int32_t {
-        Window = OBJID_WINDOW,
-        SysMenu = OBJID_SYSMENU,
-        TitleBar = OBJID_TITLEBAR,
-        Menu = OBJID_MENU,
-        Client = OBJID_CLIENT,
-        VScroll = OBJID_VSCROLL,
-        HScroll = OBJID_HSCROLL,
-        SizeGrip = OBJID_SIZEGRIP,
-        Caret = OBJID_CARET,
-        Cursor = OBJID_CURSOR,
-        Alert = OBJID_ALERT,
-        Sound = OBJID_SOUND,
-        QueryClassNameIDX = OBJID_QUERYCLASSNAMEIDX,
-        NativeOM = OBJID_NATIVEOM,
-    };
-#endif
-#ifndef SCROLLFLAG
-#define SCROLLFLAG
-
-    enum class ScrollFlag : uint32_t {
-        ScrollChildren = SW_SCROLLCHILDREN,
-        InValidate = SW_INVALIDATE,
-        Erase = SW_ERASE,
-        SmoothScroll = SW_SMOOTHSCROLL,
-    };
-
-    inline ScrollFlag operator|(ScrollFlag a, ScrollFlag b) {
-        return static_cast<ScrollFlag>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef SCROLLMESSAGE
-#define SCROLLMESSAGE
-    enum class ScrollMessage : uint32_t {
-        EnableArrows = SBM_ENABLE_ARROWS,
-        GetPos = SBM_GETPOS,
-        GetRange = SBM_GETRANGE,
-        GetScrollBarInfo = SBM_GETSCROLLBARINFO,
-        GetScrollInfo = SBM_GETSCROLLINFO,
-        SetPos = SBM_SETPOS,
-        SetRange = SBM_SETRANGE,
-        SetRangeRedraw = SBM_SETRANGEREDRAW,
-        SetScrollInfo = SBM_SETSCROLLINFO,
-    };
-#endif
-#ifndef SCROLLNOTIFY
-#define SCROLLNOTIFY
-    enum class ScrollNotify : uint32_t {
-        CtlColorScrollBar = WM_CTLCOLORSCROLLBAR,
-        HScroll = WM_HSCROLL,
-        VScroll = WM_VSCROLL,
-    };
-#endif
     class scroll {
     private:
         std::vector<HWND> scroll_handles = {};
@@ -243,8 +78,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     ScrollStyle style = ScrollStyle::Vert |
                             ScrollStyle::RightAlign,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const char *scroll_name,
                     uintptr_t scroll_id,
@@ -256,8 +91,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     ScrollStyle style = ScrollStyle::Vert |
                             ScrollStyle::RightAlign,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const wchar_t *scroll_name,
                     uintptr_t scroll_id,
@@ -269,8 +104,8 @@ namespace YanLib::ui::components {
                     int32_t height,
                     ScrollStyle style = ScrollStyle::Vert |
                             ScrollStyle::RightAlign,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         bool destroy(HWND scroll_handle);
 
@@ -286,7 +121,7 @@ namespace YanLib::ui::components {
 
         bool get_info(HWND scroll_handle,
                       SCROLLBARINFO *scroll_bar_info,
-                      ObjectID object_id = ObjectID::VScroll);
+                      core::ObjectID object_id = core::ObjectID::VScroll);
 
         bool get_info(HWND scroll_handle,
                       SCROLLINFO *scroll_info,

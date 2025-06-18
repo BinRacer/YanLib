@@ -35,139 +35,22 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <minwinbase.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef DATETIMESTYLE
-#define DATETIMESTYLE
-    enum class DateTimeStyle : uint32_t {
-        UpDown = DTS_UPDOWN,
-        ShowNone = DTS_SHOWNONE,
-        ShortDateFormat = DTS_SHORTDATEFORMAT,
-        LongDateFormat = DTS_LONGDATEFORMAT,
-        ShortDateCenturyFormat = DTS_SHORTDATECENTURYFORMAT,
-        TimeFormat = DTS_TIMEFORMAT,
-        AppCanParse = DTS_APPCANPARSE,
-        RightAlign = DTS_RIGHTALIGN,
-
-    };
-    inline DateTimeStyle operator|(DateTimeStyle a, DateTimeStyle b) {
-        return static_cast<DateTimeStyle>(static_cast<uint32_t>(a) |
-                                          static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef MONTHCODE
-#define MONTHCODE
-    enum class MonthCode : int32_t {
-        Background = MCSC_BACKGROUND,
-        Text = MCSC_TEXT,
-        TitleBackground = MCSC_TITLEBK,
-        TitleText = MCSC_TITLETEXT,
-        MonthBackground = MCSC_MONTHBK,
-        TrailingText = MCSC_TRAILINGTEXT,
-    };
-    inline MonthCode operator|(MonthCode a, MonthCode b) {
-        return static_cast<MonthCode>(static_cast<int32_t>(a) |
-                                      static_cast<int32_t>(b));
-    }
-#endif
-#ifndef MONTHSTYLE
-#define MONTHSTYLE
-    enum class MonthStyle : uint32_t {
-        DayState = MCS_DAYSTATE,
-        MultiSelect = MCS_MULTISELECT,
-        WeekNumbers = MCS_WEEKNUMBERS,
-        NoTodayCircle = MCS_NOTODAYCIRCLE,
-        NoToday = MCS_NOTODAY,
-        NoTrailingDates = MCS_NOTRAILINGDATES,
-        ShortDaysOfWeek = MCS_SHORTDAYSOFWEEK,
-        NoSelChangeOnNav = MCS_NOSELCHANGEONNAV,
-    };
-    inline MonthStyle operator|(MonthStyle a, MonthStyle b) {
-        return static_cast<MonthStyle>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef DATETIMEMESSAGE
-#define DATETIMEMESSAGE
-    enum class DateTimeMessage : uint32_t {
-        CloseMonthCalendar = DTM_CLOSEMONTHCAL,
-        GetDateTimePickerInfo = DTM_GETDATETIMEPICKERINFO,
-        GetIdealSize = DTM_GETIDEALSIZE,
-        GetMonthControlColor = DTM_GETMCCOLOR,
-        GetMonthControlFont = DTM_GETMCFONT,
-        GetMonthControlStyle = DTM_GETMCSTYLE,
-        GetMonthCalendar = DTM_GETMONTHCAL,
-        GetRange = DTM_GETRANGE,
-        GetSystemTime = DTM_GETSYSTEMTIME,
-        SetFormat = DTM_SETFORMAT,
-        SetMonthControlColor = DTM_SETMCCOLOR,
-        SetMonthControlFont = DTM_SETMCFONT,
-        SetMonthControlStyle = DTM_SETMCSTYLE,
-        SetRange = DTM_SETRANGE,
-        SetSystemTime = DTM_SETSYSTEMTIME,
-    };
-#endif
-#ifndef DATATIMENOTIFY
-#define DATATIMENOTIFY
-    enum class DateTimeNotify : uint32_t {
-        CloseUp = DTN_CLOSEUP,
-        DatetimeChange = DTN_DATETIMECHANGE,
-        DropDown = DTN_DROPDOWN,
-        Format = DTN_FORMAT,
-        FormatQuery = DTN_FORMATQUERY,
-        UserString = DTN_USERSTRING,
-        Keydown = DTN_WMKEYDOWN,
-        KillFocus = NM_KILLFOCUS,
-        SetFocus = NM_SETFOCUS,
-    };
-#endif
     class datetime {
     private:
         std::vector<HWND> datetime_handles = {};
@@ -197,8 +80,8 @@ namespace YanLib::ui::components {
                int32_t height,
                DateTimeStyle style = DateTimeStyle::ShortDateCenturyFormat |
                        DateTimeStyle::TimeFormat | DateTimeStyle::UpDown,
-               WindowStyle window_style = WindowStyle::Child |
-                       WindowStyle::Visible | WindowStyle::Border);
+               core::WindowStyle window_style = core::WindowStyle::Child |
+                       core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND
         create(const char *datatime_name,
@@ -211,8 +94,8 @@ namespace YanLib::ui::components {
                int32_t height,
                DateTimeStyle style = DateTimeStyle::ShortDateCenturyFormat |
                        DateTimeStyle::TimeFormat | DateTimeStyle::UpDown,
-               WindowStyle window_style = WindowStyle::Child |
-                       WindowStyle::Visible | WindowStyle::Border);
+               core::WindowStyle window_style = core::WindowStyle::Child |
+                       core::WindowStyle::Visible | core::WindowStyle::Border);
 
         HWND
         create(const wchar_t *datatime_name,
@@ -225,8 +108,8 @@ namespace YanLib::ui::components {
                int32_t height,
                DateTimeStyle style = DateTimeStyle::ShortDateCenturyFormat |
                        DateTimeStyle::TimeFormat | DateTimeStyle::UpDown,
-               WindowStyle window_style = WindowStyle::Child |
-                       WindowStyle::Visible | WindowStyle::Border);
+               core::WindowStyle window_style = core::WindowStyle::Child |
+                       core::WindowStyle::Visible | core::WindowStyle::Border);
 
         bool destroy(HWND datetime_handle);
 

@@ -28,40 +28,16 @@
 #ifndef THREAD_H
 #define THREAD_H
 #include <Windows.h>
+#include <minwindef.h>
+#include <WinBase.h>
+#include <winnt.h>
+#include <processthreadsapi.h>
+#include <minwinbase.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "sys.h"
 namespace YanLib::sys {
-#ifndef THREADACCESS
-#define THREADACCESS
-
-    enum class ThreadAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = THREAD_ALL_ACCESS,
-        Terminate = THREAD_TERMINATE,
-        SuspendResume = THREAD_SUSPEND_RESUME,
-        GetContext = THREAD_GET_CONTEXT,
-        SetContext = THREAD_SET_CONTEXT,
-        QueryInfo = THREAD_QUERY_INFORMATION,
-        SetInfo = THREAD_SET_INFORMATION,
-        SetThreadToken = THREAD_SET_THREAD_TOKEN,
-        Impersonate = THREAD_IMPERSONATE,
-        DirectImpersonation = THREAD_DIRECT_IMPERSONATION,
-        SetLimitedInfo = THREAD_SET_LIMITED_INFORMATION,
-        QueryLimitedInfo = THREAD_QUERY_LIMITED_INFORMATION,
-        Resume = THREAD_RESUME,
-    };
-
-    inline ThreadAccess operator|(ThreadAccess a, ThreadAccess b) {
-        return static_cast<ThreadAccess>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
     class thread {
     private:
         std::vector<std::pair<uint32_t, HANDLE>> thread_records = {};

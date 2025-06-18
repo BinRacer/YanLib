@@ -89,17 +89,17 @@ namespace YanLib::ui::gdi {
         return std::make_pair(true, error_code);
     }
 
-    std::pair<Layout, uint32_t> dc::get_layout(HDC dc_handle) {
-        auto result = static_cast<Layout>(GetLayout(dc_handle));
+    std::pair<core::Layout, uint32_t> dc::get_layout(HDC dc_handle) {
+        auto result = static_cast<core::Layout>(GetLayout(dc_handle));
         uint32_t error_code = 0;
-        if (result == Layout::Error) {
+        if (result == core::Layout::Error) {
             error_code = GetLastError();
         }
         return std::make_pair(result, error_code);
     }
 
-    Layout dc::set_layout(HDC dc_handle, Layout layout) {
-        return static_cast<Layout>(
+    core::Layout dc::set_layout(HDC dc_handle, core::Layout layout) {
+        return static_cast<core::Layout>(
                 SetLayout(dc_handle, static_cast<uint32_t>(layout)));
     }
 

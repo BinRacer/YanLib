@@ -54,7 +54,7 @@ namespace YanLib::ui::components {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"SysIPAddress32", nullptr,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -78,7 +78,7 @@ namespace YanLib::ui::components {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExA(
                 0L, "SysIPAddress32", ip_addr_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,
@@ -102,7 +102,7 @@ namespace YanLib::ui::components {
                          int32_t y,
                          int32_t width,
                          int32_t height,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"SysIPAddress32", ip_addr_name,
                 static_cast<uint32_t>(window_style), x, y, width, height,

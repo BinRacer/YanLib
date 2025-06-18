@@ -28,8 +28,10 @@
 #ifndef WINDOW_PROP_H
 #define WINDOW_PROP_H
 #include <Windows.h>
+#include <minwindef.h>
+#include <WinUser.h>
+#include <windef.h>
 #include <string>
-
 namespace YanLib::ui::core {
     class window_prop {
     private:

@@ -35,172 +35,21 @@
 #endif
 #include <Windows.h>
 #include <CommCtrl.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
 #include "helper/convert.h"
+#include "ui/core/core.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef WINDOWSTYLE
-#define WINDOWSTYLE
-
-    enum class WindowStyle : uint32_t {
-        Overlapped = WS_OVERLAPPED,
-        Popup = WS_POPUP,
-        Child = WS_CHILD,
-        Minimize = WS_MINIMIZE,
-        Visible = WS_VISIBLE,
-        Disabled = WS_DISABLED,
-        ClipSiblings = WS_CLIPSIBLINGS,
-        ClipChildren = WS_CLIPCHILDREN,
-        Maximize = WS_MAXIMIZE,
-        Caption = WS_CAPTION,
-        Border = WS_BORDER,
-        DialogFrame = WS_DLGFRAME,
-        VScroll = WS_VSCROLL,
-        HScroll = WS_HSCROLL,
-        SysMenu = WS_SYSMENU,
-        ThickFrame = WS_THICKFRAME,
-        Group = WS_GROUP,
-        TabStop = WS_TABSTOP,
-        MinimizeBox = WS_MINIMIZEBOX,
-        MaximizeBox = WS_MAXIMIZEBOX,
-        Tiled = WS_TILED,
-        Iconic = WS_ICONIC,
-        SizeBox = WS_SIZEBOX,
-        TiledWindow = WS_TILEDWINDOW,
-        OverlappedWindow = WS_OVERLAPPEDWINDOW,
-        PopupWindow = WS_POPUPWINDOW,
-        ChildWindow = WS_CHILDWINDOW,
-    };
-
-    inline WindowStyle operator|(WindowStyle a, WindowStyle b) {
-        return static_cast<WindowStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef BUTTONSTYLE
-#define BUTTONSTYLE
-
-    enum class ButtonStyle : uint32_t {
-        PushButton = BS_PUSHBUTTON,
-        DefPushButton = BS_DEFPUSHBUTTON,
-        CheckBox = BS_CHECKBOX,
-        AutoCheckBox = BS_AUTOCHECKBOX,
-        RadioButton = BS_RADIOBUTTON,
-        ThreeState = BS_3STATE,
-        AutoThreeState = BS_AUTO3STATE,
-        GroupBox = BS_GROUPBOX,
-        UserButton = BS_USERBUTTON,
-        AutoRadioButton = BS_AUTORADIOBUTTON,
-        PushBox = BS_PUSHBOX,
-        OwnerDraw = BS_OWNERDRAW,
-        TypeMask = BS_TYPEMASK,
-        LeftText = BS_LEFTTEXT,
-        Text = BS_TEXT,
-        Icon = BS_ICON,
-        Bitmap = BS_BITMAP,
-        Left = BS_LEFT,
-        Right = BS_RIGHT,
-        Center = BS_CENTER,
-        Top = BS_TOP,
-        Bottom = BS_BOTTOM,
-        VertCenter = BS_VCENTER,
-        PushLike = BS_PUSHLIKE,
-        MultiLine = BS_MULTILINE,
-        Notify = BS_NOTIFY,
-        Flat = BS_FLAT,
-        RightButton = BS_RIGHTBUTTON,
-    };
-
-    inline ButtonStyle operator|(ButtonStyle a, ButtonStyle b) {
-        return static_cast<ButtonStyle>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef BUTTONSTATE
-#define BUTTONSTATE
-
-    enum class ButtonState : uint32_t {
-        Unchecked = BST_UNCHECKED,
-        Checked = BST_CHECKED,
-        Indeterminate = BST_INDETERMINATE,
-        Pushed = BST_PUSHED,
-        Focus = BST_FOCUS,
-        DropDownPushed = BST_DROPDOWNPUSHED,
-        Hot = BST_HOT,
-    };
-#endif
-#ifndef TEXTALIGN
-#define TEXTALIGN
-
-    enum class TextAlign : uint32_t {
-        Left = BS_LEFT,
-        Right = BS_RIGHT,
-        Center = BS_CENTER,
-        Top = BS_TOP,
-        Bottom = BS_BOTTOM,
-        VertCenter = BS_VCENTER,
-    };
-
-    inline TextAlign operator|(TextAlign a, TextAlign b) {
-        return static_cast<TextAlign>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef BUTTONMESSAGE
-#define BUTTONMESSAGE
-
-    enum class ButtonMessage : uint32_t {
-        GetIdealSize = BCM_GETIDEALSIZE,
-        GetImageList = BCM_GETIMAGELIST,
-        GetNote = BCM_GETNOTE,
-        GetNoteLength = BCM_GETNOTELENGTH,
-        GetSplitInfo = BCM_GETSPLITINFO,
-        GetTextMargin = BCM_GETTEXTMARGIN,
-        SetDropDownState = BCM_SETDROPDOWNSTATE,
-        SetImageList = BCM_SETIMAGELIST,
-        SetNote = BCM_SETNOTE,
-        SetShield = BCM_SETSHIELD,
-        SetSplitInfo = BCM_SETSPLITINFO,
-        SetTextMargin = BCM_SETTEXTMARGIN,
-        Click = BM_CLICK,
-        GetCheck = BM_GETCHECK,
-        GetImage = BM_GETIMAGE,
-        GetState = BM_GETSTATE,
-        SetCheck = BM_SETCHECK,
-        SetDontClick = BM_SETDONTCLICK,
-        SetImage = BM_SETIMAGE,
-        SetState = BM_SETSTATE,
-        SetStyle = BM_SETSTYLE,
-    };
-#endif
-#ifndef BUTTONNOTIFY
-#define BUTTONNOTIFY
-
-    enum class ButtonNotify : uint32_t {
-        DropDown = BCN_DROPDOWN,
-        HotItemChange = BCN_HOTITEMCHANGE,
-        Clicked = BN_CLICKED,
-        DoubleClick = BN_DBLCLK,
-        Disable = BN_DISABLE,
-        DoubleClicked = BN_DOUBLECLICKED,
-        HiLite = BN_HILITE,
-        KillFocus = BN_KILLFOCUS,
-        Paint = BN_PAINT,
-        Pushed = BN_PUSHED,
-        SetFocus = BN_SETFOCUS,
-        UnHiLite = BN_UNHILITE,
-        Unpushed = BN_UNPUSHED,
-        CustomDraw = NM_CUSTOMDRAW,
-        CtlColorBtn = WM_CTLCOLORBTN,
-    };
-#endif
     class button {
     private:
         std::vector<HWND> button_handles = {};
@@ -228,8 +77,8 @@ namespace YanLib::ui::components {
                     int32_t width = 100,
                     int32_t height = 30,
                     ButtonStyle style = ButtonStyle::PushButton,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const char *button_name,
                     uintptr_t button_id,
@@ -240,8 +89,8 @@ namespace YanLib::ui::components {
                     int32_t width = 100,
                     int32_t height = 30,
                     ButtonStyle style = ButtonStyle::PushButton,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         HWND create(const wchar_t *button_name,
                     uintptr_t button_id,
@@ -252,8 +101,8 @@ namespace YanLib::ui::components {
                     int32_t width = 100,
                     int32_t height = 30,
                     ButtonStyle style = ButtonStyle::PushButton,
-                    WindowStyle window_style = WindowStyle::Child |
-                            WindowStyle::Visible);
+                    core::WindowStyle window_style = core::WindowStyle::Child |
+                            core::WindowStyle::Visible);
 
         bool destroy(HWND button_handle);
 
@@ -261,9 +110,9 @@ namespace YanLib::ui::components {
 
         bool disable(HWND button_handle);
 
-        ButtonState get_check(HWND button_handle);
+        core::ButtonState get_check(HWND button_handle);
 
-        void set_check(HWND button_handle, ButtonState state);
+        void set_check(HWND button_handle, core::ButtonState state);
 
         bool get_ideal_size(HWND button_handle, SIZE *size);
 
@@ -307,7 +156,7 @@ namespace YanLib::ui::components {
 
         bool set_text_margin(HWND button_handle, RECT *margin);
 
-        ButtonState get_state(HWND button_handle);
+        core::ButtonState get_state(HWND button_handle);
 
         void hilite(HWND button_handle);
 

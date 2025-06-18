@@ -28,35 +28,13 @@
 #ifndef JOB_H
 #define JOB_H
 #include <Windows.h>
+#include <winnt.h>
+#include <minwinbase.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
+#include "sys.h"
 namespace YanLib::sys {
-#ifndef JOBACCESS
-#define JOBACCESS
-
-    enum class JobAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        AssignProcess = JOB_OBJECT_ASSIGN_PROCESS,
-        SetAttributes = JOB_OBJECT_SET_ATTRIBUTES,
-        Query = JOB_OBJECT_QUERY,
-        Terminate = JOB_OBJECT_TERMINATE,
-        SetSecurityAttributes = JOB_OBJECT_SET_SECURITY_ATTRIBUTES,
-        Impersonate = JOB_OBJECT_IMPERSONATE,
-        All = JOB_OBJECT_ALL_ACCESS,
-    };
-
-    inline JobAccess operator|(JobAccess a, JobAccess b) {
-        return static_cast<JobAccess>(static_cast<uint32_t>(a) |
-                                      static_cast<uint32_t>(b));
-    }
-#endif
-
     class job {
     private:
         std::vector<HANDLE> job_handles = {};

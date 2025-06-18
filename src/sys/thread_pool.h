@@ -28,6 +28,10 @@
 #ifndef THREAD_POOL_H
 #define THREAD_POOL_H
 #include <Windows.h>
+#include <minwinbase.h>
+#include <threadpoolapiset.h>
+#include <minwindef.h>
+#include <winnt.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"

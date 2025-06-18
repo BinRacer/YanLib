@@ -28,29 +28,13 @@
 #ifndef TIMER_H
 #define TIMER_H
 #include <Windows.h>
+#include <WinBase.h>
+#include <winnt.h>
+#include <minwinbase.h>
+#include <synchapi.h>
 #include <string>
-
+#include "sync.h"
 namespace YanLib::sync {
-#ifndef TIMERACCESS
-#define TIMERACCESS
-
-    enum class TimerAccess : uint32_t {
-        Delete = DELETE,
-        ReadControl = READ_CONTROL,
-        WriteDac = WRITE_DAC,
-        WriteOwner = WRITE_OWNER,
-        Synchronize = SYNCHRONIZE,
-        All = TIMER_ALL_ACCESS,
-        Modify = TIMER_MODIFY_STATE,
-        Query = TIMER_QUERY_STATE,
-    };
-
-    inline TimerAccess operator|(TimerAccess a, TimerAccess b) {
-        return static_cast<TimerAccess>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
-
     class timer {
     private:
         HANDLE timer_handle;

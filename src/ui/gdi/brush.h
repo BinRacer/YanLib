@@ -27,80 +27,13 @@
 /* clang-format on */
 #ifndef BRUSH_H
 #define BRUSH_H
-#include <utility>
 #include <Windows.h>
+#include <wingdi.h>
+#include <windef.h>
+#include <utility>
 #include <vector>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef BRUSHSTYLE
-#define BRUSHSTYLE
-
-    enum class BrushStyle : uint32_t {
-        Solid = BS_SOLID,
-        Null = BS_NULL,
-        Hollow = BS_HOLLOW,
-        Hatched = BS_HATCHED,
-        Pattern = BS_PATTERN,
-        Indexed = BS_INDEXED,
-        DibPattern = BS_DIBPATTERN,
-        DibPatternPt = BS_DIBPATTERNPT,
-        Pattern8X8 = BS_PATTERN8X8,
-        DibPattern8X8 = BS_DIBPATTERN8X8,
-        MonoPattern = BS_MONOPATTERN,
-    };
-#endif
-#ifndef HATCHSTYLE
-#define HATCHSTYLE
-
-    enum class HatchStyle : int32_t {
-        Horizontal = HS_HORIZONTAL, /* ----- */
-        Vertical = HS_VERTICAL,     /* ||||| */
-        FDiagonal = HS_FDIAGONAL,   /* \\\\\ */
-        BDiagonal = HS_BDIAGONAL,   /* ///// */
-        Cross = HS_CROSS,           /* +++++ */
-        DiagCross = HS_DIAGCROSS,   /* xxxxx */
-    };
-#endif
-#ifndef COLORTYPE
-#define COLORTYPE
-
-    enum class ColorType : int32_t {
-        Scrollbar = COLOR_SCROLLBAR,
-        Background = COLOR_BACKGROUND,
-        ActiveCaption = COLOR_ACTIVECAPTION,
-        InactiveCaption = COLOR_INACTIVECAPTION,
-        Menu = COLOR_MENU,
-        Window = COLOR_WINDOW,
-        WindowFrame = COLOR_WINDOWFRAME,
-        MenuText = COLOR_MENUTEXT,
-        WindowText = COLOR_WINDOWTEXT,
-        CaptionText = COLOR_CAPTIONTEXT,
-        ActiveBorder = COLOR_ACTIVEBORDER,
-        InactiveBorder = COLOR_INACTIVEBORDER,
-        AppWorkspace = COLOR_APPWORKSPACE,
-        Highlight = COLOR_HIGHLIGHT,
-        HighlightText = COLOR_HIGHLIGHTTEXT,
-        ButtonFace = COLOR_BTNFACE,
-        ButtonShadow = COLOR_BTNSHADOW,
-        GrayText = COLOR_GRAYTEXT,
-        ButtonText = COLOR_BTNTEXT,
-        InactiveCaptionText = COLOR_INACTIVECAPTIONTEXT,
-        ButtonHighlight = COLOR_BTNHIGHLIGHT,
-        DkShadow3d = COLOR_3DDKSHADOW,
-        Light3d = COLOR_3DLIGHT,
-        InfoText = COLOR_INFOTEXT,
-        InfoBackground = COLOR_INFOBK,
-        HotLight = COLOR_HOTLIGHT,
-        GradientActiveCaption = COLOR_GRADIENTACTIVECAPTION,
-        GradientInactiveCaption = COLOR_GRADIENTINACTIVECAPTION,
-        MenuHighlight = COLOR_MENUHILIGHT,
-        MenuBar = COLOR_MENUBAR,
-        Desktop = COLOR_DESKTOP,
-        Face3d = COLOR_3DFACE,
-        Shadow3d = COLOR_3DSHADOW,
-        Highlight3d = COLOR_3DHIGHLIGHT,
-    };
-#endif
     class brush {
     public:
         brush(const brush &other) = delete;

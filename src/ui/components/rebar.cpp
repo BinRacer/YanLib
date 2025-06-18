@@ -53,7 +53,7 @@ namespace YanLib::ui::components {
                        int32_t width,
                        int32_t height,
                        RebarStyle style,
-                       WindowStyle window_style) {
+                       core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 WS_EX_TOOLWINDOW, L"ReBarWindow32", nullptr,
                 static_cast<uint32_t>(window_style) |
@@ -78,7 +78,7 @@ namespace YanLib::ui::components {
                        int32_t width,
                        int32_t height,
                        RebarStyle style,
-                       WindowStyle window_style) {
+                       core::WindowStyle window_style) {
         HWND result = CreateWindowExA(
                 WS_EX_TOOLWINDOW, "ReBarWindow32", rebar_name,
                 static_cast<uint32_t>(window_style) |
@@ -103,7 +103,7 @@ namespace YanLib::ui::components {
                        int32_t width,
                        int32_t height,
                        RebarStyle style,
-                       WindowStyle window_style) {
+                       core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 WS_EX_TOOLWINDOW, L"ReBarWindow32", rebar_name,
                 static_cast<uint32_t>(window_style) |

@@ -53,7 +53,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            ToolTipStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"tooltips_class32", nullptr,
                 static_cast<uint32_t>(window_style) |
@@ -78,7 +78,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            ToolTipStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExA(
                 0L, "tooltips_class32", tool_tips_name,
                 static_cast<uint32_t>(window_style) |
@@ -103,7 +103,7 @@ namespace YanLib::ui::components {
                            int32_t width,
                            int32_t height,
                            ToolTipStyle style,
-                           WindowStyle window_style) {
+                           core::WindowStyle window_style) {
         HWND result = CreateWindowExW(
                 0L, L"tooltips_class32", tool_tips_name,
                 static_cast<uint32_t>(window_style) |

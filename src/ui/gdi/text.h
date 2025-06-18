@@ -28,140 +28,14 @@
 #ifndef TEXT_H
 #define TEXT_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <wingdi.h>
+#include <windef.h>
 #include <cstdint>
 #include <vector>
 #include <string>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef OUTPUTOPTION
-#define OUTPUTOPTION
-
-    enum class OutputOption : uint32_t {
-        Opaque = ETO_OPAQUE,
-        Clipped = ETO_CLIPPED,
-        GlyphIndex = ETO_GLYPH_INDEX,
-        RtlReading = ETO_RTLREADING,
-        NumericsLocal = ETO_NUMERICSLOCAL,
-        NumericsLatin = ETO_NUMERICSLATIN,
-        IgnoreLanguage = ETO_IGNORELANGUAGE,
-        PDY = ETO_PDY,
-        ReverseIndexMap = ETO_REVERSE_INDEX_MAP,
-    };
-
-    inline OutputOption operator|(OutputOption a, OutputOption b) {
-        return static_cast<OutputOption>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef TEXTFORMAT
-#define TEXTFORMAT
-
-    enum class TextFormat : uint32_t {
-        top = DT_TOP,
-        left = DT_LEFT,
-        center = DT_CENTER,
-        right = DT_RIGHT,
-        vCenter = DT_VCENTER,
-        bottom = DT_BOTTOM,
-        wordBreak = DT_WORDBREAK,
-        singleLine = DT_SINGLELINE,
-        expandTabs = DT_EXPANDTABS,
-        tabStop = DT_TABSTOP,
-        noClip = DT_NOCLIP,
-        externalLeading = DT_EXTERNALLEADING,
-        calcRect = DT_CALCRECT,
-        noPrefix = DT_NOPREFIX,
-        internal = DT_INTERNAL,
-        editControl = DT_EDITCONTROL,
-        pathEllipsis = DT_PATH_ELLIPSIS,
-        endEllipsis = DT_END_ELLIPSIS,
-        modifyString = DT_MODIFYSTRING,
-        rtlReading = DT_RTLREADING,
-        wordEllipsis = DT_WORD_ELLIPSIS,
-        noFullwidthCharBreak = DT_NOFULLWIDTHCHARBREAK,
-        hidePrefix = DT_HIDEPREFIX,
-        prefixOnly = DT_PREFIXONLY,
-    };
-
-    inline TextFormat operator|(TextFormat a, TextFormat b) {
-        return static_cast<TextFormat>(static_cast<uint32_t>(a) |
-                                       static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef LANGINFO
-#define LANGINFO
-
-    enum class LangInfo : uint32_t {
-        DBCS = GCP_DBCS,
-        ReOrder = GCP_REORDER,
-        UseKerning = GCP_USEKERNING,
-        GlyphShape = GCP_GLYPHSHAPE,
-        Ligate = GCP_LIGATE,
-        Diacritic = GCP_DIACRITIC,
-        Kashida = GCP_KASHIDA,
-        Error = GCP_ERROR,
-        Mask = FLI_MASK,
-        Justify = GCP_JUSTIFY,
-        Glyphs = FLI_GLYPHS,
-        ClassIn = GCP_CLASSIN,
-        MaxExtent = GCP_MAXEXTENT,
-        JustifyIn = GCP_JUSTIFYIN,
-        DisplayZWG = GCP_DISPLAYZWG,
-        SymSwapOff = GCP_SYMSWAPOFF,
-        NumericOverride = GCP_NUMERICOVERRIDE,
-        NeutralOverride = GCP_NEUTRALOVERRIDE,
-        NumericsLatin = GCP_NUMERICSLATIN,
-        NumericsLocal = GCP_NUMERICSLOCAL,
-    };
-
-    inline LangInfo operator|(LangInfo a, LangInfo b) {
-        return static_cast<LangInfo>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef DATAFORMAT
-#define DATAFORMAT
-
-    enum class DataFormat : uint32_t {
-        Metrics = GGO_METRICS,
-        Bitmap = GGO_BITMAP,
-        Native = GGO_NATIVE,
-        Bezier = GGO_BEZIER,
-        Gray2Bitmap = GGO_GRAY2_BITMAP,
-        Gray4Bitmap = GGO_GRAY4_BITMAP,
-        Gray8Bitmap = GGO_GRAY8_BITMAP,
-        GlyphIndex = GGO_GLYPH_INDEX,
-        UnHinted = GGO_UNHINTED,
-    };
-#endif
-#ifndef ALIGNOPTION
-#define ALIGNOPTION
-
-    enum class AlignOption : uint32_t {
-        Error = 0,
-        NoUpdateCP = TA_NOUPDATECP,
-        UpdateCP = TA_UPDATECP,
-        Left = TA_LEFT,
-        Right = TA_RIGHT,
-        Center = TA_CENTER,
-        Top = TA_TOP,
-        Bottom = TA_BOTTOM,
-        Baseline = TA_BASELINE,
-        RtlReading = TA_RTLREADING,
-        Mask = TA_MASK,
-        VBaseline = VTA_BASELINE,
-        VertLeft = VTA_LEFT,
-        VertRight = VTA_RIGHT,
-        VertCenter = VTA_CENTER,
-        VertBottom = VTA_BOTTOM,
-        VertTop = VTA_TOP,
-    };
-
-    inline AlignOption operator|(AlignOption a, AlignOption b) {
-        return static_cast<AlignOption>(static_cast<uint32_t>(a) |
-                                        static_cast<uint32_t>(b));
-    }
-#endif
     class text {
     public:
         text(const text &other) = delete;

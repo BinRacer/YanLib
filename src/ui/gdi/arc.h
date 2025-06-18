@@ -27,26 +27,12 @@
 /* clang-format on */
 #ifndef ARC_H
 #define ARC_H
-#include <cstdint>
 #include <Windows.h>
+#include <windef.h>
 #include <vector>
-
+#include <cstdint>
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef POINTTYPE
-#define POINTTYPE
-
-    enum class PointType : uint8_t {
-        CloseFigure = PT_CLOSEFIGURE,
-        LineTo = PT_LINETO,
-        BezierTo = PT_BEZIERTO,
-        MoveTo = PT_MOVETO,
-    };
-
-    inline PointType operator|(PointType a, PointType b) {
-        return static_cast<PointType>(static_cast<uint8_t>(a) |
-                                      static_cast<uint8_t>(b));
-    }
-#endif
     class arc {
     public:
         arc(const arc &other) = delete;

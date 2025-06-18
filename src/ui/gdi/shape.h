@@ -28,9 +28,9 @@
 #ifndef SHAPE_H
 #define SHAPE_H
 #include <Windows.h>
+#include <windef.h>
 #include <cstdint>
 #include <vector>
-
 namespace YanLib::ui::gdi {
     class shape {
     public:

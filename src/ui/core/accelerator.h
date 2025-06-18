@@ -28,10 +28,11 @@
 #ifndef ACCELERATOR_H
 #define ACCELERATOR_H
 #include <Windows.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
 namespace YanLib::ui::core {
     class accelerator {
     private:

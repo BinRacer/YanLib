@@ -216,7 +216,7 @@ namespace YanLib::ui::components {
                                       int32_t width,
                                       COLORREF mask,
                                       HINSTANCE instance_handle,
-                                      ImageFlag flag) {
+                                      core::ImageFlag flag) {
         return ImageList_LoadImageA(instance_handle, file_path, width, 0, mask,
                                     IMAGE_BITMAP, static_cast<uint32_t>(flag));
     }
@@ -225,7 +225,7 @@ namespace YanLib::ui::components {
                                       int32_t width,
                                       COLORREF mask,
                                       HINSTANCE instance_handle,
-                                      ImageFlag flag) {
+                                      core::ImageFlag flag) {
         return ImageList_LoadImageW(instance_handle, file_path, width, 0, mask,
                                     IMAGE_BITMAP, static_cast<uint32_t>(flag));
     }

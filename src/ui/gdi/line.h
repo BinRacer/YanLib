@@ -27,26 +27,14 @@
 /* clang-format on */
 #ifndef LINE_H
 #define LINE_H
-#include <cstdint>
 #include <Windows.h>
+#include <minwindef.h>
+#include <wingdi.h>
+#include <windef.h>
+#include <cstdint>
 #include <vector>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef POINTTYPE
-#define POINTTYPE
-
-    enum class PointType : uint8_t {
-        CloseFigure = PT_CLOSEFIGURE,
-        LineTo = PT_LINETO,
-        BezierTo = PT_BEZIERTO,
-        MoveTo = PT_MOVETO,
-    };
-
-    inline PointType operator|(PointType a, PointType b) {
-        return static_cast<PointType>(static_cast<uint8_t>(a) |
-                                      static_cast<uint8_t>(b));
-    }
-#endif
     class line {
     public:
         line(const line &other) = delete;

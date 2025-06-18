@@ -27,31 +27,11 @@
 /* clang-format on */
 #ifndef RECT_H
 #define RECT_H
-#include <utility>
 #include <Windows.h>
-
+#include <windef.h>
+#include <utility>
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef ANIMATIONTYPE
-#define ANIMATIONTYPE
-
-    enum class AnimationType : int32_t {
-        Open = IDANI_OPEN,
-        Caption = IDANI_CAPTION,
-    };
-#endif
-#ifndef BOUNDFLAG
-#define BOUNDFLAG
-
-    enum class BoundFlag : uint32_t {
-        Error = 0,
-        Reset = DCB_RESET,
-        Accumulate = DCB_ACCUMULATE,
-        Dirty = DCB_DIRTY,
-        Set = DCB_SET,
-        Enable = DCB_ENABLE,
-        Disable = DCB_DISABLE,
-    };
-#endif
     class rect {
     public:
         rect(const rect &other) = delete;

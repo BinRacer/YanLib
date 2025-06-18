@@ -28,53 +28,13 @@
 #ifndef TOUCH_H
 #define TOUCH_H
 #include <Windows.h>
+#include <windef.h>
+#include <WinUser.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef REGISTERFLAG
-#define REGISTERFLAG
-    enum class RegisterFlag : uint32_t {
-        Default = 0,
-        FineTouch = TWF_FINETOUCH,
-        WantPalm = TWF_WANTPALM,
-    };
-    inline RegisterFlag operator|(RegisterFlag f1, RegisterFlag f2) {
-        return static_cast<RegisterFlag>(static_cast<uint32_t>(f1) |
-                                         static_cast<uint32_t>(f2));
-    }
-#endif
-#ifndef POINTERTYPE
-#define POINTERTYPE
-
-    enum class PointerInputType : uint32_t {
-        Pointer = PT_POINTER,
-        Touch = PT_TOUCH,
-        Pen = PT_PEN,
-        Mouse = PT_MOUSE,
-        TouchPad = PT_TOUCHPAD,
-    };
-#endif
-#ifndef POINTERFEEDBACK
-#define POINTERFEEDBACK
-    enum class PointerFeedback {
-        Default = POINTER_FEEDBACK_DEFAULT,
-        Indirect = POINTER_FEEDBACK_INDIRECT,
-        None = POINTER_FEEDBACK_NONE,
-    };
-    inline PointerFeedback operator|(PointerFeedback f1, PointerFeedback f2) {
-        return static_cast<PointerFeedback>(static_cast<uint32_t>(f1) |
-                                            static_cast<uint32_t>(f2));
-    }
-#endif
-#ifndef TOUCHHITTESTING
-#define TOUCHHITTESTING
-    enum class TouchHitTesting : uint32_t {
-        Default = TOUCH_HIT_TESTING_DEFAULT,
-        Client = TOUCH_HIT_TESTING_CLIENT,
-        None = TOUCH_HIT_TESTING_NONE,
-    };
-#endif
     class touch {
     private:
         std::vector<HSYNTHETICPOINTERDEVICE> device_handles = {};

@@ -28,6 +28,7 @@
 #ifndef HEAP_H
 #define HEAP_H
 #include <Windows.h>
+#include <winnt.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"

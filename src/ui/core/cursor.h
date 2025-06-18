@@ -28,10 +28,13 @@
 #ifndef CURSOR_H
 #define CURSOR_H
 #include <Windows.h>
+#include <winnt.h>
+#include <WinUser.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <string>
 #include <vector>
 #include "sync/rwlock.h"
-
 namespace YanLib::ui::core {
     class cursor {
     private:

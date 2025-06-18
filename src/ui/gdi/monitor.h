@@ -28,18 +28,11 @@
 #ifndef MONITOR_H
 #define MONITOR_H
 #include <Windows.h>
-#include <cstdint>
-
+#include <minwindef.h>
+#include <WinUser.h>
+#include <windef.h>
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef MONITORFLAG
-#define MONITORFLAG
-
-    enum class MonitorFlag : uint32_t {
-        Null = MONITOR_DEFAULTTONULL,
-        Primary = MONITOR_DEFAULTTOPRIMARY,
-        Nearest = MONITOR_DEFAULTTONEAREST,
-    };
-#endif
     class monitor {
     public:
         monitor(const monitor &other) = delete;

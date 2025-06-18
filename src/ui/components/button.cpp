@@ -46,7 +46,7 @@ namespace YanLib::ui::components {
                         int32_t width,
                         int32_t height,
                         ButtonStyle style,
-                        WindowStyle window_style) {
+                        core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"Button", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -73,7 +73,7 @@ namespace YanLib::ui::components {
                         int32_t width,
                         int32_t height,
                         ButtonStyle style,
-                        WindowStyle window_style) {
+                        core::WindowStyle window_style) {
         HWND result = CreateWindowExA(0L, "Button", button_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -101,7 +101,7 @@ namespace YanLib::ui::components {
                         int32_t width,
                         int32_t height,
                         ButtonStyle style,
-                        WindowStyle window_style) {
+                        core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"Button", button_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -146,11 +146,11 @@ namespace YanLib::ui::components {
         return Button_Enable(button_handle, FALSE);
     }
 
-    ButtonState button::get_check(HWND button_handle) {
-        return static_cast<ButtonState>(Button_GetCheck(button_handle));
+    core::ButtonState button::get_check(HWND button_handle) {
+        return static_cast<core::ButtonState>(Button_GetCheck(button_handle));
     }
 
-    void button::set_check(HWND button_handle, ButtonState state) {
+    void button::set_check(HWND button_handle, core::ButtonState state) {
         Button_SetCheck(button_handle, static_cast<uint32_t>(state));
     }
 
@@ -273,8 +273,8 @@ namespace YanLib::ui::components {
         return Button_SetTextMargin(button_handle, margin);
     }
 
-    ButtonState button::get_state(HWND button_handle) {
-        return static_cast<ButtonState>(Button_GetState(button_handle));
+    core::ButtonState button::get_state(HWND button_handle) {
+        return static_cast<core::ButtonState>(Button_GetState(button_handle));
     }
 
     void button::hilite(HWND button_handle) {

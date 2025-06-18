@@ -28,53 +28,14 @@
 #ifndef ICON_H
 #define ICON_H
 #include <Windows.h>
+#include <WinUser.h>
+#include <minwindef.h>
+#include <windef.h>
 #include <vector>
 #include <string>
 #include "sync/rwlock.h"
-
+#include "core.h"
 namespace YanLib::ui::core {
-#ifndef ICONFLAG
-#define ICONFLAG
-
-    enum class IconFlag : uint32_t {
-        DefaultColor = LR_DEFAULTCOLOR,
-        MonoChrome = LR_MONOCHROME,
-        Color = LR_COLOR,
-        CopyReturnOrg = LR_COPYRETURNORG,
-        CopyDeleteOrg = LR_COPYDELETEORG,
-        LoadFromFile = LR_LOADFROMFILE,
-        LoadTransParent = LR_LOADTRANSPARENT,
-        DefaultSize = LR_DEFAULTSIZE,
-        VgaColor = LR_VGACOLOR,
-        LoadMap3dColors = LR_LOADMAP3DCOLORS,
-        CreateDibSection = LR_CREATEDIBSECTION,
-        CopyFromResource = LR_COPYFROMRESOURCE,
-        Shared = LR_SHARED,
-    };
-
-    inline IconFlag operator|(IconFlag a, IconFlag b) {
-        return static_cast<IconFlag>(static_cast<uint32_t>(a) |
-                                     static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef DRAWICONFLAG
-#define DRAWICONFLAG
-
-    enum class DrawIconFlag : uint32_t {
-        Mask = DI_MASK,
-        Image = DI_IMAGE,
-        Normal = DI_NORMAL,
-        Compat = DI_COMPAT,
-        DefaultSize = DI_DEFAULTSIZE,
-        NoMirror = DI_NOMIRROR,
-    };
-
-    inline DrawIconFlag operator|(DrawIconFlag a, DrawIconFlag b) {
-        return static_cast<DrawIconFlag>(static_cast<uint32_t>(a) |
-                                         static_cast<uint32_t>(b));
-    }
-#endif
-
     class icon {
     private:
         std::vector<HICON> icon_handles = {};

@@ -28,8 +28,8 @@
 #ifndef CARET_H
 #define CARET_H
 #include <Windows.h>
+#include <windef.h>
 #include <string>
-
 namespace YanLib::ui::core {
     class caret {
     private:

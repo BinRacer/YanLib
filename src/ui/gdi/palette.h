@@ -28,36 +28,13 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 #include <Windows.h>
+#include <wingdi.h>
+#include <windef.h>
 #include <cstdint>
 #include <memory>
 #include <vector>
-
+#include "gdi.h"
 namespace YanLib::ui::gdi {
-#ifndef PALETTEENTRYFLAG
-#define PALETTEENTRYFLAG
-
-    enum class PaletteEntryFlag : uint8_t {
-        None = 0,
-        Reserved = PC_RESERVED,
-        Explicit = PC_EXPLICIT,
-        NoCollapse = PC_NOCOLLAPSE,
-    };
-
-    inline PaletteEntryFlag operator|(PaletteEntryFlag a, PaletteEntryFlag b) {
-        return static_cast<PaletteEntryFlag>(static_cast<uint8_t>(a) |
-                                             static_cast<uint8_t>(b));
-    }
-#endif
-#ifndef PALETTESTATE
-#define PALETTESTATE
-
-    enum class PaletteState : uint32_t {
-        Error = SYSPAL_ERROR,
-        Static = SYSPAL_STATIC,
-        NoStatic = SYSPAL_NOSTATIC,
-        NoStatic256 = SYSPAL_NOSTATIC256,
-    };
-#endif
     class palette {
     public:
         palette(const palette &other) = delete;

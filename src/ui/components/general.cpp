@@ -128,7 +128,7 @@ namespace YanLib::ui::components {
     int32_t general::draw_shadow_text(HDC dc_handle,
                                       std::string &text,
                                       RECT *rect,
-                                      TextFormat format,
+                                      gdi::TextFormat format,
                                       COLORREF text_color,
                                       COLORREF shadow_color,
                                       int32_t offset_x,
@@ -143,7 +143,7 @@ namespace YanLib::ui::components {
     int32_t general::draw_text_wrap(HDC dc_handle,
                                     std::string &text,
                                     RECT *rect,
-                                    TextFormat format,
+                                    gdi::TextFormat format,
                                     DRAWTEXTPARAMS *param,
                                     helper::CodePage code_page) {
         HMODULE comctl32 = nullptr;
@@ -182,7 +182,7 @@ namespace YanLib::ui::components {
     int32_t general::draw_text_wrap(HDC dc_handle,
                                     std::wstring &text,
                                     RECT *rect,
-                                    TextFormat format,
+                                    gdi::TextFormat format,
                                     DRAWTEXTPARAMS *param) {
         HMODULE comctl32 = nullptr;
         int32_t result = 0;
@@ -219,7 +219,7 @@ namespace YanLib::ui::components {
     int32_t general::draw_shadow_text(HDC dc_handle,
                                       std::wstring &text,
                                       RECT *rect,
-                                      TextFormat format,
+                                      gdi::TextFormat format,
                                       COLORREF text_color,
                                       COLORREF shadow_color,
                                       int32_t offset_x,
@@ -232,7 +232,7 @@ namespace YanLib::ui::components {
     int32_t general::draw_text_priv_wrap(HDC dc_handle,
                                          std::string &text,
                                          RECT *rect,
-                                         TextFormat format,
+                                         gdi::TextFormat format,
                                          DRAWTEXTPARAMS *param,
                                          helper::CodePage code_page) {
         HMODULE comctl32 = nullptr;
@@ -272,7 +272,7 @@ namespace YanLib::ui::components {
     int32_t general::draw_text_priv_wrap(HDC dc_handle,
                                          std::wstring &text,
                                          RECT *rect,
-                                         TextFormat format,
+                                         gdi::TextFormat format,
                                          DRAWTEXTPARAMS *param) {
         HMODULE comctl32 = nullptr;
         int32_t result = 0;
@@ -310,7 +310,7 @@ namespace YanLib::ui::components {
     bool general::text_out_wrap(HDC dc_handle,
                                 int32_t x,
                                 int32_t y,
-                                OutputOption option,
+                                gdi::OutputOption option,
                                 const RECT *rect,
                                 std::string &text,
                                 const int32_t dx[],
@@ -352,7 +352,7 @@ namespace YanLib::ui::components {
     bool general::text_out_wrap(HDC dc_handle,
                                 int32_t x,
                                 int32_t y,
-                                OutputOption option,
+                                gdi::OutputOption option,
                                 const RECT *rect,
                                 std::wstring &text,
                                 const int32_t dx[]) {

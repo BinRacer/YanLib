@@ -36,148 +36,21 @@
 #include <Windows.h>
 #include <CommCtrl.h>
 #include <commoncontrols.h>
+#include <WinUser.h>
+#include <minwindef.h>
+#include <windef.h>
+#include <prsht.h>
 #include <cstdint>
 #include <string>
 #include <vector>
 #include "helper/convert.h"
+#include "components.h"
 #pragma comment(lib, "ComCtl32.Lib")
 #pragma comment(linker, "\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #pragma comment(lib, "User32.Lib")
 namespace YanLib::ui::components {
-#ifndef PROPERTYHEADERFLAG
-#define PROPERTYHEADERFLAG
-    enum class PropertyHeaderFlag : uint32_t {
-        Default = PSH_DEFAULT,
-        PropTitle = PSH_PROPTITLE,
-        UseHIcon = PSH_USEHICON,
-        UseIconId = PSH_USEICONID,
-        PropSheetPage = PSH_PROPSHEETPAGE,
-        WizardHasFinish = PSH_WIZARDHASFINISH,
-        Wizard = PSH_WIZARD,
-        UsePStartPage = PSH_USEPSTARTPAGE,
-        NoApplyNow = PSH_NOAPPLYNOW,
-        UseCallback = PSH_USECALLBACK,
-        HasHelp = PSH_HASHELP,
-        Modeless = PSH_MODELESS,
-        RtlReading = PSH_RTLREADING,
-        WizardContextHelp = PSH_WIZARDCONTEXTHELP,
-        Wizard97 = PSH_WIZARD97,
-        Watermark = PSH_WATERMARK,
-        UseHbmWatermark = PSH_USEHBMWATERMARK,
-        UseHplWatermark = PSH_USEHPLWATERMARK,
-        StretchWatermark = PSH_STRETCHWATERMARK,
-        Header = PSH_HEADER,
-        UseHbmHeader = PSH_USEHBMHEADER,
-        UsePageLang = PSH_USEPAGELANG,
-        WizardLite = PSH_WIZARD_LITE,
-        NoContextHelp = PSH_NOCONTEXTHELP,
-        AeroWizard = PSH_AEROWIZARD,
-        Resizable = PSH_RESIZABLE,
-        HeaderBitmap = PSH_HEADERBITMAP,
-        NoMargin = PSH_NOMARGIN
-    };
-    inline PropertyHeaderFlag operator|(PropertyHeaderFlag a,
-                                        PropertyHeaderFlag b) {
-        return static_cast<PropertyHeaderFlag>(static_cast<uint32_t>(a) |
-                                               static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef PROPERTYPAGEFLAG
-#define PROPERTYPAGEFLAG
-    enum class PropertyPageFlag : uint32_t {
-        Default = PSP_DEFAULT,
-        DialogInDirect = PSP_DLGINDIRECT,
-        UseHIcon = PSP_USEHICON,
-        UseIconId = PSP_USEICONID,
-        UseTitle = PSP_USETITLE,
-        RtlReading = PSP_RTLREADING,
-        HasHelp = PSP_HASHELP,
-        UseRefParent = PSP_USEREFPARENT,
-        UseCallback = PSP_USECALLBACK,
-        Premature = PSP_PREMATURE,
-        HideHeader = PSP_HIDEHEADER,
-        UseHeaderTitle = PSP_USEHEADERTITLE,
-        UseHeaderSubTitle = PSP_USEHEADERSUBTITLE,
-        UseFusionContext = PSP_USEFUSIONCONTEXT,
-    };
-    inline PropertyPageFlag operator|(PropertyPageFlag a, PropertyPageFlag b) {
-        return static_cast<PropertyPageFlag>(static_cast<uint32_t>(a) |
-                                             static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef PROPERTYBUTTON
-#define PROPERTYBUTTON
-    enum class PropertyButton : uint32_t {
-        Back = PSWIZB_BACK,
-        Next = PSWIZB_NEXT,
-        Finish = PSWIZB_FINISH,
-        Cancel = PSWIZB_CANCEL,
-        Show = PSWIZB_SHOW,
-        Restore = PSWIZB_RESTORE,
-        DisabledFinish = PSWIZB_DISABLEDFINISH,
-    };
-    inline PropertyButton operator|(PropertyButton a, PropertyButton b) {
-        return static_cast<PropertyButton>(static_cast<uint32_t>(a) |
-                                           static_cast<uint32_t>(b));
-    }
-#endif
-#ifndef PROPERTYMESSAGE
-#define PROPERTYMESSAGE
-    enum class PropertyMessage : uint32_t {
-        AddPage = PSM_ADDPAGE,
-        Apply = PSM_APPLY,
-        CancelToClose = PSM_CANCELTOCLOSE,
-        Changed = PSM_CHANGED,
-        EnableWizButtons = PSM_ENABLEWIZBUTTONS,
-        GetCurrentPageHwnd = PSM_GETCURRENTPAGEHWND,
-        GetResult = PSM_GETRESULT,
-        GetTabControl = PSM_GETTABCONTROL,
-        HwndToIndex = PSM_HWNDTOINDEX,
-        IdToIndex = PSM_IDTOINDEX,
-        IndexToHwnd = PSM_INDEXTOHWND,
-        IndexToId = PSM_INDEXTOID,
-        IndexToPage = PSM_INDEXTOPAGE,
-        InsertPage = PSM_INSERTPAGE,
-        IsDialogMsg = PSM_ISDIALOGMESSAGE,
-        PageToIndex = PSM_PAGETOINDEX,
-        PressButton = PSM_PRESSBUTTON,
-        QuerySiblings = PSM_QUERYSIBLINGS,
-        RebootSystem = PSM_REBOOTSYSTEM,
-        RecalcPageSizes = PSM_RECALCPAGESIZES,
-        RemovePage = PSM_REMOVEPAGE,
-        RestartWindows = PSM_RESTARTWINDOWS,
-        SetButtonText = PSM_SETBUTTONTEXT,
-        SetCurrentSelect = PSM_SETCURSEL,
-        SetCurrentSelectId = PSM_SETCURSELID,
-        SetFinishText = PSM_SETFINISHTEXT,
-        SetHeaderSubtitle = PSM_SETHEADERSUBTITLE,
-        SetHeaderTitle = PSM_SETHEADERTITLE,
-        SetNextText = PSM_SETNEXTTEXT,
-        SetTitle = PSM_SETTITLE,
-        SetWizButtons = PSM_SETWIZBUTTONS,
-        ShowWizButtons = PSM_SHOWWIZBUTTONS,
-        Unchanged = PSM_UNCHANGED
-    };
-#endif
-#ifndef PROPERTYNOTIFY
-#define PROPERTYNOTIFY
-    enum class PropertyNotify : uint32_t {
-        Apply = PSN_APPLY,
-        GetObj = PSN_GETOBJECT,
-        Help = PSN_HELP,
-        KillActive = PSN_KILLACTIVE,
-        QueryCancel = PSN_QUERYCANCEL,
-        QueryInitialFocus = PSN_QUERYINITIALFOCUS,
-        Reset = PSN_RESET,
-        SetActive = PSN_SETACTIVE,
-        TranslateAccel = PSN_TRANSLATEACCELERATOR,
-        WizBack = PSN_WIZBACK,
-        WizFinish = PSN_WIZFINISH,
-        WizNext = PSN_WIZNEXT,
-    };
-#endif
     class property {
     public:
         property(const property &other) = delete;

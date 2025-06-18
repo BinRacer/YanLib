@@ -56,7 +56,7 @@ namespace YanLib::ui::components {
                          HWND parent_window_handle,
                          LPARAM lparam,
                          AnimateStyle style,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"SysAnimate32", nullptr,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -80,7 +80,7 @@ namespace YanLib::ui::components {
                          HWND parent_window_handle,
                          LPARAM lparam,
                          AnimateStyle style,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExA(0L, "SysAnimate32", animate_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),
@@ -104,7 +104,7 @@ namespace YanLib::ui::components {
                          HWND parent_window_handle,
                          LPARAM lparam,
                          AnimateStyle style,
-                         WindowStyle window_style) {
+                         core::WindowStyle window_style) {
         HWND result = CreateWindowExW(0L, L"SysAnimate32", animate_name,
                                       static_cast<uint32_t>(window_style) |
                                               static_cast<uint32_t>(style),

@@ -104,5 +104,6 @@
     <None Include="testdata\zlibd1_64.dll">
       <Filter>testdata</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

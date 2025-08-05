@@ -105,14 +105,27 @@ ctest --test-dir cmake-build-release/test --output-on-failure -C Release
 
 #### 示例代码
 ```cpp
-#include <YanLib/hash/sha1.h>
-#include <YanLib/helper/convert.h>
+#include "framework.h"
+#include "HelloWorld.h"
+#include <hash/sha1.h>
+#include <helper/convert.h>
+namespace hash = YanLib::hash;
+namespace helper = YanLib::helper;
 
-int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int) {
-    auto text = L"Hello World!你好世界";
-    auto utf8 = YanLib::helper::convert::wstr_to_str(text); // UTF-8 转换
-    auto sha1 = YanLib::hash::sha1(utf8).hash_wstring();    // SHA1 哈希计算
-    MessageBox(nullptr, sha1.c_str(), L"文本哈希值", MB_OK);
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+                     _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPWSTR    lpCmdLine,
+                     _In_ int       nCmdShow)
+{
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
+
+    auto data_str = L"Hello World!你好世界";
+    auto convert = helper::convert::wstr_to_str(data_str,
+        helper::CodePage::UTF8);
+    hash::sha1 sha1(convert);
+    auto result = sha1.hash_wstring();
+    MessageBox(NULL, result.data(), L"Hello World!你好世界 SHA1：", MB_OK);
 }
 ```
 > 输出效果：弹出对话框显示 `Hello World!你好世界` 的 SHA1 值。

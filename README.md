@@ -105,14 +105,27 @@ ctest --test-dir cmake-build-release/test --output-on-failure -C Release
 
 #### Sample Code
 ```cpp
-#include <YanLib/hash/sha1.h>
-#include <YanLib/helper/convert.h>
+#include "framework.h"
+#include "HelloWorld.h"
+#include <hash/sha1.h>
+#include <helper/convert.h>
+namespace hash = YanLib::hash;
+namespace helper = YanLib::helper;
 
-int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int) {
-    auto text = L"Hello World!你好世界";
-    auto utf8 = YanLib::Convert::WstrToStr(text);  // UTF-8 Conversion
-    auto sha1 = YanLib::SHA1(utf8).ToWString();    // SHA1 Hashing
-    MessageBox(nullptr, sha1.c_str(), L"Text Digest", MB_OK);
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
+                     _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPWSTR    lpCmdLine,
+                     _In_ int       nCmdShow)
+{
+    UNREFERENCED_PARAMETER(hPrevInstance);
+    UNREFERENCED_PARAMETER(lpCmdLine);
+
+    auto data_str = L"Hello World!你好世界";
+    auto convert = helper::convert::wstr_to_str(data_str,
+        helper::CodePage::UTF8);
+    hash::sha1 sha1(convert);
+    auto result = sha1.hash_wstring();
+    MessageBox(NULL, result.data(), L"Hello World!你好世界 SHA1：", MB_OK);
 }
 ```
 > **Output**: Dialog displays SHA1 digest of `Hello World!你好世界`
